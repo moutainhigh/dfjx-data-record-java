@@ -37,7 +37,7 @@ CREATE TABLE `app_module` (
 
 LOCK TABLES `app_module` WRITE;
 /*!40000 ALTER TABLE `app_module` DISABLE KEYS */;
-INSERT INTO `app_module` VALUES (1,0,'系统管理','/system'),(2,0,'配置管理','/dataexchange'),(3,0,'监控管理','/watcher'),(6,0,'权限管理','/sys'),(11,1,'联系人管理','/system/contacts'),(12,1,'应用项目管理','/system/appProjectAdministration'),(13,1,'系统参数配置','/system/sysParamsConfig'),(21,2,'数据消费计划','/dataexchange/dataConsumptionPlan'),(23,2,'数据生产计划','/dataexchange/dataProductionPlan'),(24,2,'数据集管理','/dataexchange/dataAdministration'),(31,3,'Agent状态','/watcher/AgentStatus'),(32,3,'server状态','/watcher/serverStatus'),(33,3,'传输状态查询','/watcher/transStatusQuery'),(34,3,'传输日志','/watcher/transLog'),(61,6,'功能查看','/sys/menu'),(62,6,'用户管理','/sys/user'),(63,6,'角色管理','/sys/role'),(64,6,'机构管理','/record/submitAUmanager'),(65,6,'行政机构管理','/record/administrative'),(66,6,'监管用户管理','/sys/supervisionUser'),(67,6,'短信发送设置','/sms/smsMain');
+INSERT INTO `app_module` VALUES (1,0,'填报指标','/rcdconfig'),(2,0,'填报任务','/rcdjobconfig'),(3,0,'填报','/rcdjob'),(6,0,'权限管理','/sys'),(11,1,'填报指标体系','/rcdconfig/fldconfig'),(12,1,'数据字典','/rcdconfig/dictconfig'),(21,2,'填报任务维护','/rcdjobconfig/jobconfig'),(22,2,'填报组维护','/rcdjobconfig/unitconfig'),(23,2,'填报人维护','/rcdjobconfig/rcdusercg'),(24,2,'填报提醒维护','/rcdjobconfig/rcdnotice'),(31,3,'数据填报','/rcdjob/datareport'),(61,6,'功能查看','/sys/menu'),(62,6,'用户管理','/sys/user'),(63,6,'角色管理','/sys/role'),(64,6,'机构管理','/record/submitAUmanager'),(65,6,'行政机构管理','/record/administrative'),(66,6,'监管用户管理','/sys/supervisionUser'),(67,6,'短信发送设置','/sms/smsMain');
 /*!40000 ALTER TABLE `app_module` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -52,6 +52,7 @@ CREATE TABLE `rcd_dt_catg` (
   `catg_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '类型编码',
   `catg_name` varchar(45) NOT NULL COMMENT '类型名称',
   `proj_id` int(11) NOT NULL COMMENT '基本类型编码',
+  `is_actived` int(11) DEFAULT '0' COMMENT '是否有效\n0:有效\n1:无效',
   PRIMARY KEY (`catg_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -127,6 +128,8 @@ CREATE TABLE `rcd_dt_fld` (
   `fld_point` varchar(45) NOT NULL COMMENT '指标单位',
   `fld_data_type` varchar(45) NOT NULL COMMENT '指标数据类型\n0:字符串\r\n1:数字\r\n2:日期\r\n3:数据字典',
   `fld_type` int(11) NOT NULL COMMENT '指标类型\n0:通用指标\r\n1:突发指标',
+  `fld_is_null` int(11) NOT NULL DEFAULT '0' COMMENT '0:可以\r\n1:不可以',
+  `is_actived` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`fld_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -172,6 +175,7 @@ DROP TABLE IF EXISTS `rcd_dt_proj`;
 CREATE TABLE `rcd_dt_proj` (
   `proj_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '类型编码',
   `proj_name` varchar(40) DEFAULT NULL COMMENT '类型名称',
+  `is_actived` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`proj_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -372,7 +376,7 @@ CREATE TABLE `user_role_privilege` (
 
 LOCK TABLES `user_role_privilege` WRITE;
 /*!40000 ALTER TABLE `user_role_privilege` DISABLE KEYS */;
-INSERT INTO `user_role_privilege` VALUES (1,1,NULL),(1,2,NULL),(1,3,NULL),(1,6,NULL),(1,11,NULL),(1,12,NULL),(1,13,NULL),(1,21,NULL),(1,23,NULL),(1,24,NULL),(1,31,NULL),(1,32,NULL),(1,33,NULL),(1,34,NULL),(1,61,NULL),(1,62,NULL),(1,63,NULL),(1,64,NULL),(1,65,NULL),(1,66,NULL),(1,67,NULL);
+INSERT INTO `user_role_privilege` VALUES (1,1,NULL),(1,2,NULL),(1,3,NULL),(1,6,NULL),(1,11,NULL),(1,12,NULL),(1,21,NULL),(1,22,NULL),(1,23,NULL),(1,24,NULL),(1,31,NULL),(1,61,NULL),(1,62,NULL),(1,63,NULL),(1,64,NULL),(1,65,NULL),(1,66,NULL),(1,67,NULL);
 /*!40000 ALTER TABLE `user_role_privilege` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -385,4 +389,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-09  9:52:02
+-- Dump completed on 2020-01-09 16:34:51
