@@ -4,13 +4,18 @@ import com.github.pagehelper.Page;
 import com.webapp.support.page.PageResult;
 import datadictionary.bean.DataDictionary;
 import datadictionary.service.imp.DataDictionaryServiceImp;
-import dataindex.bean.RcdDt;
+import dataindex.bean.RcdDtFld;
+import dataindex.bean.RcddtCatg;
+import dataindex.bean.Rcddtproj;
 import dataindex.dao.RcdDtDao;
 import dataindex.service.RcdDtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 
 @Service("rcdDtService")
 public class RcdDtServiceImp  implements RcdDtService {
@@ -73,6 +78,22 @@ public class RcdDtServiceImp  implements RcdDtService {
     @Override
     public void updatercddtfld(String fld_id, String catg_id, String fld_name, String fld_point, String fld_type, String fld_data_type, String fld_is_null) {
         rcdDtDao.updatercddtfld(fld_id,catg_id,fld_name,fld_point,fld_type,fld_data_type,fld_is_null);
+    }
+
+
+    @Override
+    public List<Rcddtproj> leftrcddtprojjblx() {
+        return rcdDtDao.leftrcddtprojjblx();
+    }
+
+    @Override
+    public List<RcddtCatg> leftrcddtcatglx(String proj_id) {
+        return rcdDtDao.leftrcddtcatglx(proj_id);
+    }
+
+    @Override
+    public List<RcdDtFld> leftrcddtfld(String catg_id) {
+        return rcdDtDao.leftrcddtfld(catg_id);
     }
 
 

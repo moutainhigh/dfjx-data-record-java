@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("dataDictionaryService")
 public class DataDictionaryServiceImp  implements DataDictionaryService {
 
@@ -40,5 +42,10 @@ public class DataDictionaryServiceImp  implements DataDictionaryService {
     @Override
     public void updateDataDictionary(String dict_content_id, String dict_id, String dict_content_name, String dict_content_value) {
         dataDictionaryDao.updateDataDictionary(dict_content_id,dict_id,dict_content_name,dict_content_value);
+    }
+
+    @Override
+    public List selectleftDataDictionary() {
+        return dataDictionaryDao.selectleftDataDictionary();
     }
 }

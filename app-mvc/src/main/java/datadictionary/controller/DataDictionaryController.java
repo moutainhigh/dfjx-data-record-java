@@ -2,6 +2,7 @@ package datadictionary.controller;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
+import datadictionary.bean.DataDictionary;
 import datadictionary.service.DataDictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 数据字典Controller
@@ -111,7 +115,21 @@ public class DataDictionaryController {
         return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "数据字段内容修改成功", null, "success");
     }
 
-
+    //左侧菜单数据
+    @RequestMapping("/selectleftDataDictionary")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String selectleftDataDictionary(){
+      List ll= new ArrayList<DataDictionary>();
+        String jsonResult = "";
+        try{
+            ll = dataDictionaryService.selectleftDataDictionary();
+        }catch(Exception e){
+            jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取菜单列表失败", null, "error");
+        }
+        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取菜单列表成功", null, ll);
+        return jsonResult;
+    }
 
 
 }
