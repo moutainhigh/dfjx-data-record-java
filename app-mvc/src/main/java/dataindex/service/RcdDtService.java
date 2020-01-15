@@ -1,6 +1,12 @@
 package dataindex.service;
 
 import com.webapp.support.page.PageResult;
+import dataindex.bean.RcdDtFld;
+import dataindex.bean.RcddtCatg;
+import dataindex.bean.Rcddtproj;
+
+import java.util.HashMap;
+import java.util.List;
 
 public interface RcdDtService {
 
@@ -21,4 +27,12 @@ public interface RcdDtService {
     void deletercddtfldctassign(String fld_id);
 
     void updatercddtfld(String fld_id, String catg_id, String fld_name, String fld_point, String fld_type, String fld_data_type, String fld_is_null);
+
+
+
+    List<Rcddtproj> leftrcddtprojjblx();
+
+    List<RcddtCatg> leftrcddtcatglx(String proj_id);
+
+    List<RcdDtFld> leftrcddtfld(String catg_id);
 }

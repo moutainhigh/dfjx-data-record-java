@@ -2,6 +2,8 @@ package datadictionary.service;
 
 import com.webapp.support.page.PageResult;
 
+import java.util.List;
+
 public interface DataDictionaryService {
 
     void insertDataDictionary(String dict_name);
@@ -11,4 +13,6 @@ public interface DataDictionaryService {
     void inserttypeDataDictionary(String dict_id, String dict_content_name, String dict_content_value);
 
     void updateDataDictionary(String dict_content_id, String dict_id, String dict_content_name, String dict_content_value);
+
+    List selectleftDataDictionary();
 }

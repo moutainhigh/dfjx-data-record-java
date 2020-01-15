@@ -3,6 +3,9 @@ package dataindex.controller;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
+import dataindex.bean.RcdDtFld;
+import dataindex.bean.RcddtCatg;
+import dataindex.bean.Rcddtproj;
 import dataindex.service.RcdDtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +13,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * 指标Controller
@@ -121,7 +128,7 @@ public class RcdDtController {
             @RequestParam("catg_id") String catg_id,
             @RequestParam("fld_name") String fld_name,    // 名称
             @RequestParam("fld_point") String fld_point,  //单位
-           @RequestParam("fld_type") String fld_type,  //类型
+            @RequestParam("fld_type") String fld_type,  //类型
             @RequestParam("fld_data_type") String fld_data_type,
             @RequestParam("fld_is_null") String fld_is_null,
             @RequestParam("fld_id") String fld_id,    //指标id
@@ -182,6 +189,53 @@ public class RcdDtController {
         return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增指标类型成功", null, "success");
     }
 
+
+
+
+    //left基本类型
+    @RequestMapping("/leftrcddtproj")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String leftrcddtproj(){
+       List<Rcddtproj> ll = new ArrayList<Rcddtproj>();
+        String jsonResult = "";
+        try{
+            ll  = rcdDtService.leftrcddtprojjblx();
+        }catch(Exception e){
+           return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "基本类型获取失败", null, "error");
+        }
+        return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "基本类型获取成功", null, ll);
+    }
+
+    //left类型
+    @RequestMapping("/leftrcddtcatg")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String leftrcddtcatg( @RequestParam("proj_id") String proj_id){
+        List<RcddtCatg> ll = new ArrayList<RcddtCatg>();
+        String jsonResult = "";
+        try{
+            ll  = rcdDtService.leftrcddtcatglx(proj_id);
+        }catch(Exception e){
+            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "类型获取失败", null, "error");
+        }
+        return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "类型获取成功", null, ll);
+    }
+
+    //left指标类型
+    @RequestMapping("/leftrcddtfld")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String leftrcddtfld( @RequestParam("catg_id") String catg_id){
+        List<RcdDtFld> ll = new ArrayList<RcdDtFld>();
+        String jsonResult = "";
+        try{
+            ll  = rcdDtService.leftrcddtfld(catg_id);
+        }catch(Exception e){
+            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标类型获取失败", null, "error");
+        }
+        return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "指标类型获取成功", null, ll);
+    }
 
 
 

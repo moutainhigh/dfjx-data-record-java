@@ -1,8 +1,14 @@
 package dataindex.dao;
 
 import com.github.pagehelper.Page;
+import com.webapp.support.page.PageResult;
 import datadictionary.bean.DataDictionary;
+import dataindex.bean.RcdDtFld;
+import dataindex.bean.RcddtCatg;
+import dataindex.bean.Rcddtproj;
 import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 public interface RcdDtDao {
 
@@ -53,4 +59,12 @@ public interface RcdDtDao {
     @Update("UPDATE rcd_dt_fld  catg_id =#{catg_id},fld_name =#{fld_name}, fld_point =#{fld_point}, fld_type =#{fld_type}, fld_data_type =#{fld_data_type},fld_is_null =#{fld_is_null} where fld_id =#{fld_id}")
     void updatercddtfld(@Param("fld_id")String fld_id,@Param("catg_id")String catg_id, @Param("fld_name")String fld_name,@Param("fld_point") String fld_point,@Param("fld_type") String fld_type,@Param("fld_data_type") String fld_data_type,@Param("fld_is_null") String fld_is_null);
 
+    @Select("SELECT proj_id,proj_name FROM rcd_dt_proj ")
+    List<Rcddtproj> leftrcddtprojjblx();
+
+    @Select("SELECT catg_id,catg_name FROM rcd_dt_catg  where  proj_id = #{proj_id}")
+    List<RcddtCatg> leftrcddtcatglx(@Param("proj_id")String proj_id);
+
+    @Select("SELECT fld_id,fld_name FROM rcd_dt_fld  where  catg_id = #{catg_id}")
+    List<RcdDtFld> leftrcddtfld(@Param("catg_id")String catg_id);
 }
