@@ -1,7 +1,6 @@
 package reportinggroup.dao;
 
         import com.github.pagehelper.Page;
-        import datadictionary.bean.DataDictionary;
         import org.apache.ibatis.annotations.Delete;
         import org.apache.ibatis.annotations.Insert;
         import org.apache.ibatis.annotations.Param;

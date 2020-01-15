@@ -23,7 +23,7 @@ public interface SubmittedByDao {
     List<EntityTree> listOrgData(@Param("orgId") String orgId);
 
 
-    @Select("SELECT\n" +
+    @Select("<script>SELECT\n" +
             "\ta.*, b.user_name,\n" +
             "\tc.origin_name\n" +
             "FROM\n" +
@@ -31,10 +31,10 @@ public interface SubmittedByDao {
             "LEFT JOIN USER b ON a.user_id = b.user_id\n" +
             "LEFT JOIN sys_origin c ON a.origin_id = c.origin_id" +
             " WHERE  1=1  " +
-            "<if test = \"user_name != null and user_name != ''\"> AND b.user_name like concat('%',#{user_name},'%') </if>")
+            "<if test = \"user_name != null and user_name != ''\"> AND b.user_name like concat('%',#{user_name},'%') </if> </script>")
     Page<SubmittedBy> rcdpersonconfiglist(@Param("currPage")int currPage,@Param("pageSize") int pageSize, @Param("user_name")String user_name);
 
-    @Select("SELECT\n" +
+    @Select("<script> SELECT\n" +
             "\ta.user_id,\n" +
             "\tb.user_name\n" +
             "FROM\n" +
@@ -42,7 +42,7 @@ public interface SubmittedByDao {
             "LEFT JOIN USER b ON a.user_id = b.user_id\n" +
             "WHERE\n" +
             "\t1 = 1\n" +
-            "<if test = \"origin_id != null and origin_id != ''\"> AND a.origin_id =#{origin_id} </if>")
+            "<if test = \"origin_id != null and origin_id != ''\"> AND a.origin_id =#{origin_id} </if> </script>")
     List<Useroriginassign> useroriginassignlist(@Param("origin_id")String origin_id);
 
 
