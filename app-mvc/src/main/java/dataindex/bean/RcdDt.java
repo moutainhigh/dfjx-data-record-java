@@ -90,7 +90,7 @@ public class RcdDt {
 
     @Override
     public String toString() {
-        return "RcdDt{" +
+        return "ReportFldConfig{" +
                 "proj_id=" + proj_id +
                 ", proj_name='" + proj_name + '\'' +
                 ", catg_id=" + catg_id +

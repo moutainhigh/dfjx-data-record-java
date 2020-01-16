@@ -3,11 +3,14 @@ package com.datarecord.webapp.process.service.imp;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessService;
-import dataindex.bean.RcdDt;
+import com.github.pagehelper.Page;
+import com.google.common.base.Strings;
+import com.webapp.support.page.PageResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,29 +38,41 @@ public class RecordProcessServiceImp implements RecordProcessService {
 
         new Thread(new Runnable() {
             @Override
+            @Transactional(rollbackFor = Exception.class)
             public void run() {
                 logger.info("开始发布填报任务:{}",jobConfigEntity.getJob_name());
                 recordProcessDao.changeRecordJobStatus(jobId, JobConfigStatus.SUBMITING.value() );
 
                 List<JobUnitConfig> jobUnits = jobConfigEntity.getJobUnits();
                 for (JobUnitConfig jobUnit : jobUnits) {
-                    List<RcdDt> unitFlds = jobUnit.getUnitFlds();
+                    List<dataindex.bean.RcdDt> unitFlds = jobUnit.getUnitFlds();
                     List<JobPerson> allJobPerson = jobConfigEntity.getJobPersons();
-                    RcdReportJobEntity rcdReportJobEntity = new RcdReportJobEntity();
-                    rcdReportJobEntity.setUnit_id(jobUnit.getJob_unit_id());
-                    rcdReportJobEntity.setColum_id(0);
-                    rcdReportJobEntity.setRecord_data("预设值");
-                    for (RcdDt unitFld : unitFlds) {
-                        int fldId = unitFld.getFld_id();
-                        rcdReportJobEntity.setFld_id(fldId);
-                        for (JobPerson jobPerson : allJobPerson) {
-                            Integer originId = jobPerson.getOrigin_id();
-                            Integer userId = jobPerson.getUser_id();
-                            rcdReportJobEntity.setRecord_origin_id(originId);
-                            rcdReportJobEntity.setRecord_user_id(userId);
-                            recordProcessDao.createRcdReortJobData(rcdReportJobEntity,jobId);
+
+
+                    for (JobPerson jobPerson : allJobPerson) {
+                        Integer originId = jobPerson.getOrigin_id();
+                        Integer userId = jobPerson.getUser_id();
+                        ReportJobInfo reportJobInfo = new ReportJobInfo();
+                        reportJobInfo.setJob_id(new Integer(jobId));
+                        reportJobInfo.setRecord_origin_id(originId);
+                        reportJobInfo.setRecord_status(JobConfigStatus.NORMAL.value());
+                        reportJobInfo.setRecord_user_id(userId);
+
+                        recordProcessDao.createReportJobInfo(reportJobInfo);
+                        Integer reportId = reportJobInfo.getReport_id();
+
+                        for (dataindex.bean.RcdDt unitFld : unitFlds) {
+                            int fldId = unitFld.getFld_id();
+                            ReportJobData reportJobData = new ReportJobData();
+                            reportJobData.setColum_id(0);
+                            reportJobData.setFld_id(fldId);
+                            reportJobData.setReport_id(reportId);
+                            reportJobData.setUnit_id(jobUnit.getJob_unit_id());
+                            reportJobData.setRecord_data("预设值");
+                            recordProcessDao.createRcdReortJobData(reportJobData,jobId);
                         }
                     }
+
                 }
 
                 logger.info("填报任务发布完成:{}",jobConfigEntity.getJob_name());
@@ -67,7 +82,6 @@ public class RecordProcessServiceImp implements RecordProcessService {
                         debuggerMainThreadWait.notify();
                     }
                 }
-
             }
         },new StringBuilder().append("填报任务发布").append("-").append(jobId).append("-").append(jobConfigEntity.getJob_name()).toString()).start();
 
@@ -81,5 +95,37 @@ public class RecordProcessServiceImp implements RecordProcessService {
             }
         }
 
+    }
+
+    @Override
+    public PageResult pageJob(int user_id, String currPage, String pageSize) {
+        if(Strings.isNullOrEmpty(currPage))
+            currPage = "1";
+        if(Strings.isNullOrEmpty(pageSize))
+            pageSize = "10";
+        Page<ReportJobInfo> pageData = recordProcessDao.pageJob(new Integer(currPage),new Integer(pageSize),user_id);
+        PageResult pageResult = PageResult.pageHelperList2PageResult(pageData);
+        logger.debug("Page Result :{}",pageResult);
+        return pageResult;
+    }
+
+    @Override
+    public JobConfig getJobConfigByReportId(String reportId) {
+        ReportJobInfo reportJobInfo = recordProcessDao.getReportJobInfoByReportId(reportId);
+        JobConfig jobConfigEntity = recordProcessDao.getJobConfigByJobId(reportJobInfo.getJob_id().toString());
+
+        return jobConfigEntity;
+    }
+
+    @Override
+    public List<ReportFldConfig> getFldByUnitId(String unitId) {
+        List<ReportFldConfig> unitFlds = recordProcessDao.getFldByUnitId(unitId);
+        return unitFlds;
+    }
+
+    @Override
+    public List<ReportJobData> getFldReportDatas(String jobId,String reportId, String groupId) {
+        List<ReportJobData> result = recordProcessDao.getReportDataByUnitId(jobId,reportId,groupId);
+        return result;
     }
 }

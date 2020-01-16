@@ -18,4 +18,9 @@ public class RecordProcessServiceImpTest extends AbstractTestService {
         recordProcessService.makeJob("1");
 
     }
+
+    @Test
+    public void pageJob() {
+        recordProcessService.pageJob(2727024,"1","10");
+    }
 }
