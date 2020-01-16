@@ -1,13 +1,29 @@
 package com.datarecord.webapp.process.entity;
 
-public class RcdReportJobEntity {
+public class ReportJobData {
+
+    private Integer id;
+    private Integer report_id ;
     private Integer unit_id;
     private Integer colum_id;
     private Integer fld_id;
     private String record_data;
-    private Integer record_origin_id;
-    private Integer record_user_id;
-    private Integer record_status;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getReport_id() {
+        return report_id;
+    }
+
+    public void setReport_id(Integer report_id) {
+        this.report_id = report_id;
+    }
 
     public Integer getUnit_id() {
         return unit_id;
@@ -39,29 +55,5 @@ public class RcdReportJobEntity {
 
     public void setRecord_data(String record_data) {
         this.record_data = record_data;
-    }
-
-    public Integer getRecord_origin_id() {
-        return record_origin_id;
-    }
-
-    public void setRecord_origin_id(Integer record_origin_id) {
-        this.record_origin_id = record_origin_id;
-    }
-
-    public Integer getRecord_user_id() {
-        return record_user_id;
-    }
-
-    public void setRecord_user_id(Integer record_user_id) {
-        this.record_user_id = record_user_id;
-    }
-
-    public Integer getRecord_status() {
-        return record_status;
-    }
-
-    public void setRecord_status(Integer record_status) {
-        this.record_status = record_status;
     }
 }
