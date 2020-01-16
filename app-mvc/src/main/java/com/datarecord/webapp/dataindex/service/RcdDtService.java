@@ -34,4 +34,6 @@ public interface RcdDtService {
     List<RcddtCatg> leftrcddtcatglx(String proj_id);
 
     List<RcdDtFld> leftrcddtfld(String catg_id);
+
+    PageResult selecttixircddtprojer(int currPage, int pageSize, String proj_id);
 }

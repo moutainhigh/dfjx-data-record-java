@@ -66,4 +66,8 @@ public interface RcdDtDao {
 
     @Select("SELECT fld_id,fld_name FROM rcd_dt_fld  where  catg_id = #{catg_id}")
     List<RcdDtFld> leftrcddtfld(@Param("catg_id") String catg_id);
+
+
+    @Select("SELECT  a.catg_id,b.proj_name,a.catg_name FROM rcd_dt_catg a    LEFT JOIN rcd_dt_proj  b on a.proj_id  = b.proj_id\n")
+    Page<DataDictionary> selecttixircddtprojer(@Param("currPage")int currPage, @Param("pageSize")int pageSize,@Param("proj_id") String proj_id);
 }

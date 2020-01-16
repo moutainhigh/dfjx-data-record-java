@@ -1,6 +1,7 @@
 package com.datarecord.webapp.process.entity;
 
-import dataindex.bean.RcdDt;
+
+import com.datarecord.webapp.dataindex.bean.RcdDt;
 
 import java.util.List;
 

@@ -100,14 +100,14 @@ public class RcdDtController {
 
 
 
-  //根据指标类别查询指标体系类别列表
+  //根据指标类别查询指标体系类别列表  三级
   @RequestMapping("/selecttixircddtproj")
   @ResponseBody
   @CrossOrigin(allowCredentials="true")
   public String selecttixircddtproj(
           @RequestParam("currPage") int currPage,
           @RequestParam("pageSize")int pageSize,
-          @RequestParam("catg_id")String catg_id     //rcd_dt_catg 指标类别编码
+          @RequestParam("catg_id")String catg_id     // 指标类别编码
   ){
       PageResult pageResult = null;
       String jsonResult = "";
@@ -119,6 +119,48 @@ public class RcdDtController {
       jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标体系类别列表成功", null, pageResult);
       return jsonResult;
   }
+
+    //根据指标类别查询指标体系类别列表  二级
+    @RequestMapping("/selecttixircddtprojer")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String selecttixircddtprojer(
+            @RequestParam("currPage") int currPage,
+            @RequestParam("pageSize")int pageSize,
+            @RequestParam("proj_id")String proj_id     // 指标类别编码
+    ){
+        PageResult pageResult = null;
+        String jsonResult = "";
+        try{
+            pageResult = rcdDtService.selecttixircddtprojer(currPage,pageSize,proj_id);
+        }catch(Exception e){
+            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标二级体系类别列表失败", null, "error");
+        }
+        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标二级体系类别列表成功", null, pageResult);
+        return jsonResult;
+    }
+
+
+    //新增指标体系类别列表  二级
+    @RequestMapping("/inserttixircddtprojer")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String inserttixircddtprojer(
+            @RequestParam("currPage") int currPage,
+            @RequestParam("pageSize")int pageSize,
+            @RequestParam("proj_id")String proj_id     // 指标类别编码
+    ){
+        PageResult pageResult = null;
+        String jsonResult = "";
+        try{
+            pageResult = rcdDtService.selecttixircddtprojer(currPage,pageSize,proj_id);
+        }catch(Exception e){
+            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标二级体系类别列表失败", null, "error");
+        }
+        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标二级体系类别列表成功", null, pageResult);
+        return jsonResult;
+    }
+
 
     //新增指标类型
     @RequestMapping("/insertrcddtfld")

@@ -1,9 +1,9 @@
 package com.datarecord.webapp.process.service.imp;
 
+import com.datarecord.webapp.dataindex.bean.RcdDt;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessService;
-import dataindex.bean.RcdDt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

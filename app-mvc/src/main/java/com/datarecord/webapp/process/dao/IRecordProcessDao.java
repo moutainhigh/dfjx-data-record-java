@@ -1,10 +1,10 @@
 package com.datarecord.webapp.process.dao;
 
+import com.datarecord.webapp.dataindex.bean.RcdDt;
 import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.process.entity.JobPerson;
 import com.datarecord.webapp.process.entity.JobUnitConfig;
 import com.datarecord.webapp.process.entity.RcdReportJobEntity;
-import dataindex.bean.RcdDt;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Service;
 

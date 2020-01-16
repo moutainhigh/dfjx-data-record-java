@@ -96,5 +96,14 @@ public class RcdDtServiceImp  implements RcdDtService {
         return rcdDtDao.leftrcddtfld(catg_id);
     }
 
+    @Override
+    public PageResult selecttixircddtprojer(int currPage, int pageSize, String proj_id) {
+        logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
+        Page<DataDictionary> contactPageDatas = rcdDtDao.selecttixircddtprojer(currPage, pageSize,proj_id);
+        PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
+        logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
+        return pageContactResult;
+    }
+
 
 }
