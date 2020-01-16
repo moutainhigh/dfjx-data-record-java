@@ -1,6 +1,7 @@
 package com.datarecord.webapp.process.controller;
 
 
+import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.process.entity.ReportFldConfig;
 import com.datarecord.webapp.process.entity.ReportJobData;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("record/process")
@@ -72,9 +74,9 @@ public class RecordProcessController {
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
     public JsonResult getUnitDictFldContent(@RequestParam("groupId") String groupId){
-//        List<DataDictionary> jobConfig = recordProcessService.getUnitDictFldContent(groupId);
+        Map<Integer,List<DataDictionary>> fldDicts = recordProcessService.getUnitDictFldContent(groupId);
         JsonResult successResult = JsonSupport.makeJsonpResult(
-                JsonResult.RESULT.SUCCESS, "获取成功", null, null);
+                JsonResult.RESULT.SUCCESS, "获取成功", null, fldDicts);
         return successResult;
     }
 

@@ -1,6 +1,5 @@
 package com.datarecord.webapp.process.entity;
 
-import dataindex.bean.RcdDt;
 
 import java.util.List;
 
@@ -10,7 +9,7 @@ public class JobUnitConfig {
     private Integer job_id;
     private Integer job_unit_active;
     private Integer job_unit_type;
-    private List<RcdDt> unitFlds;
+    private List<ReportFldConfig> unitFlds;
 
     public Integer getJob_unit_id() {
         return job_unit_id;
@@ -52,11 +51,11 @@ public class JobUnitConfig {
         this.job_unit_type = job_unit_type;
     }
 
-    public List<RcdDt> getUnitFlds() {
+    public List<ReportFldConfig> getUnitFlds() {
         return unitFlds;
     }
 
-    public void setUnitFlds(List<RcdDt> unitFlds) {
+    public void setUnitFlds(List<ReportFldConfig> unitFlds) {
         this.unitFlds = unitFlds;
     }
 

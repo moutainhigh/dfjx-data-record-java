@@ -1,5 +1,7 @@
 package com.datarecord.webapp.process.service.imp;
 
+import com.datarecord.webapp.datadictionary.bean.DataDictionary;
+import com.datarecord.webapp.dataindex.bean.FldDataTypes;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessService;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service("recordProcessService")
 public class RecordProcessServiceImp implements RecordProcessService {
@@ -45,7 +48,7 @@ public class RecordProcessServiceImp implements RecordProcessService {
 
                 List<JobUnitConfig> jobUnits = jobConfigEntity.getJobUnits();
                 for (JobUnitConfig jobUnit : jobUnits) {
-                    List<dataindex.bean.RcdDt> unitFlds = jobUnit.getUnitFlds();
+                    List<ReportFldConfig> unitFlds = jobUnit.getUnitFlds();
                     List<JobPerson> allJobPerson = jobConfigEntity.getJobPersons();
 
 
@@ -61,7 +64,7 @@ public class RecordProcessServiceImp implements RecordProcessService {
                         recordProcessDao.createReportJobInfo(reportJobInfo);
                         Integer reportId = reportJobInfo.getReport_id();
 
-                        for (dataindex.bean.RcdDt unitFld : unitFlds) {
+                        for (ReportFldConfig unitFld : unitFlds) {
                             int fldId = unitFld.getFld_id();
                             ReportJobData reportJobData = new ReportJobData();
                             reportJobData.setColum_id(0);
@@ -127,5 +130,22 @@ public class RecordProcessServiceImp implements RecordProcessService {
     public List<ReportJobData> getFldReportDatas(String jobId,String reportId, String groupId) {
         List<ReportJobData> result = recordProcessDao.getReportDataByUnitId(jobId,reportId,groupId);
         return result;
+    }
+
+    @Override
+    public Map<Integer, List<DataDictionary>> getUnitDictFldContent(String groupId) {
+        List<ReportFldConfig> unitFlds = recordProcessDao.getFldByUnitId(groupId);
+        if(unitFlds!=null&&unitFlds.size()>0){
+            for (ReportFldConfig unitFld : unitFlds) {
+                String fldDataType = unitFld.getFld_data_type();
+                if(FldDataTypes.DICT.compareTo(fldDataType)){
+
+                }
+
+            }
+        }
+
+//        recordProcessDao.getUnitDictFldContent(groupId);
+        return null;
     }
 }
