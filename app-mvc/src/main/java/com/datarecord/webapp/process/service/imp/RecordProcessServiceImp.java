@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +51,6 @@ public class RecordProcessServiceImp implements RecordProcessService {
                 for (JobUnitConfig jobUnit : jobUnits) {
                     List<ReportFldConfig> unitFlds = jobUnit.getUnitFlds();
                     List<JobPerson> allJobPerson = jobConfigEntity.getJobPersons();
-
 
                     for (JobPerson jobPerson : allJobPerson) {
                         Integer originId = jobPerson.getOrigin_id();
@@ -134,18 +134,18 @@ public class RecordProcessServiceImp implements RecordProcessService {
 
     @Override
     public Map<Integer, List<DataDictionary>> getUnitDictFldContent(String groupId) {
+        Map<Integer,List<DataDictionary>> result = new HashMap<>();
+
         List<ReportFldConfig> unitFlds = recordProcessDao.getFldByUnitId(groupId);
         if(unitFlds!=null&&unitFlds.size()>0){
             for (ReportFldConfig unitFld : unitFlds) {
                 String fldDataType = unitFld.getFld_data_type();
                 if(FldDataTypes.DICT.compareTo(fldDataType)){
-
+                    List<DataDictionary> dictContext = recordProcessDao.getDictcontent4Fld(unitFld.getFld_id());
+                    result.put(unitFld.getFld_id(),dictContext);
                 }
-
             }
         }
-
-//        recordProcessDao.getUnitDictFldContent(groupId);
-        return null;
+        return result;
     }
 }

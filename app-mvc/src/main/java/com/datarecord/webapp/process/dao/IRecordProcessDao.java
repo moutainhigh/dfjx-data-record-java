@@ -1,5 +1,6 @@
 package com.datarecord.webapp.process.dao;
 
+import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.process.entity.*;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
@@ -115,4 +116,14 @@ public interface IRecordProcessDao {
 
     @Select("select id,report_id,unit_id,colum_id,fld_id,record_data from rcd_report_data_job${jobId} where report_id = #{reportId} and unit_id = #{unitId}")
     List<ReportJobData> getReportDataByUnitId(@Param("jobId") String jobId,@Param("reportId") String reportId,@Param("unitId") String unitId);
+
+    @Select("SELECT  " +
+            "rddc.dict_content_id, " +
+            "rddc.dict_content_name, " +
+            "rddc.dict_content_value, " +
+            "rddc.dict_id FROM rcd_dt_fld_ct_assign rdfca left join  " +
+            "rcd_dt_dict_content rddc on  " +
+            "rdfca.dict_content_id = rddc.dict_content_id where  " +
+            "rdfca.fld_id = #{fld_id}")
+    List<DataDictionary> getDictcontent4Fld(Integer fld_id);
 }
