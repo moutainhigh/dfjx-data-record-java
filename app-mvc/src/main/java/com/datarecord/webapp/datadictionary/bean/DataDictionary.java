@@ -9,6 +9,33 @@ public class DataDictionary {
     private String dict_content_name;  //数据字典内容名称
    private String dict_content_value;   //数据字典内容值
 
+   private int   proj_id;
+   private int  is_actived;
+   private String proj_name;
+
+    public int getProj_id() {
+        return proj_id;
+    }
+
+    public void setProj_id(int proj_id) {
+        this.proj_id = proj_id;
+    }
+
+    public int getIs_actived() {
+        return is_actived;
+    }
+
+    public void setIs_actived(int is_actived) {
+        this.is_actived = is_actived;
+    }
+
+    public String getProj_name() {
+        return proj_name;
+    }
+
+    public void setProj_name(String proj_name) {
+        this.proj_name = proj_name;
+    }
 
     public int getDict_id() {
         return dict_id;

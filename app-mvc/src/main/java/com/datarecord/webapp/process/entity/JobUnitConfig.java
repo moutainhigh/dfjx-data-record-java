@@ -1,6 +1,9 @@
 package com.datarecord.webapp.process.entity;
 
 
+
+
+
 import java.util.List;
 
 public class JobUnitConfig {

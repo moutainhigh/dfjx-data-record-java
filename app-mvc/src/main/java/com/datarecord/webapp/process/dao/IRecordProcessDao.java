@@ -1,6 +1,9 @@
 package com.datarecord.webapp.process.dao;
 
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
+import com.datarecord.webapp.process.entity.JobConfig;
+import com.datarecord.webapp.process.entity.JobPerson;
+import com.datarecord.webapp.process.entity.JobUnitConfig;
 import com.datarecord.webapp.process.entity.*;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;

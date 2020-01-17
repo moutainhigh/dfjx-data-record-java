@@ -35,7 +35,7 @@ public interface DataDictionaryDao {
     @Update("UPDATE rcd_dt_dict_content SET dict_id=#{dict_id}, dict_content_name =#{dict_content_name}, dict_content_value=#{dict_content_value} WHERE  dict_content_id = #{dict_content_id}")
     void updateDataDictionary(@Param("dict_content_id") String dict_content_id, @Param("dict_id") String dict_id, @Param("dict_content_name") String dict_content_name, @Param("dict_content_value") String dict_content_value);
 
-    @Select("SELECT * FROM rcd_dt_dict")
+    @Select("SELECT dict_id,dict_name FROM rcd_dt_dict")
     List<DataDictionary>  selectleftDataDictionary();
 
     @Update("UPDATE rcd_dt_dict SET dict_name=#{dict_name} WHERE  dict_id = #{dict_id}")

@@ -5,6 +5,8 @@ public class Rcddtproj {
     private int proj_id;
     private String proj_name;
 
+
+
     public int getProj_id() {
         return proj_id;
     }
