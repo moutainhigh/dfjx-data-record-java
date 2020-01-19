@@ -23,7 +23,7 @@ public class MenuTreeUtil {
                 mapArr.put("id", x.getId());
                 mapArr.put("name", x.getName());
                 mapArr.put("pid", x.getpId());
-                mapArr.put("childList", menuChild(x.getId()));
+                mapArr.put("children", menuChild(x.getId()));
                 list.add(mapArr);
             }
         }
@@ -38,7 +38,7 @@ public class MenuTreeUtil {
                 childArray.put("id", a.getId());
                 childArray.put("name", a.getName());
                 childArray.put("pid", a.getpId());
-                childArray.put("childList", menuChild(a.getId()));
+                childArray.put("children", menuChild(a.getId()));
                 lists.add(childArray);
             }
         }
