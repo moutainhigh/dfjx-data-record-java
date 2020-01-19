@@ -7,49 +7,36 @@ import java.util.List;
  * Modify By weiyy on 2019/08/11  （antdesign树的格式）
  *
  */
-public class EntityTree implements ITree<EntityTree> {
+public class EntityTree  {
 
-	private String value;
+	private String id;
 	
-	private String parentId;
+	private String pId;
 	
-	private String title;
-	
-	private List<EntityTree> children;
+	private String name;
 
-	@Override
-	public String getValue() {
-		return value;
+
+	public String getId() {
+		return id;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	@Override
-	public String getParentId() {
-		return parentId;
+	public String getpId() {
+		return pId;
 	}
 
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
+	public void setpId(String pId) {
+		this.pId = pId;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getName() {
+		return name;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	@Override
-	public List<EntityTree> getChildren() {
-		return children;
-	}
-
-	@Override
-	public void setChildren(List<EntityTree> children) {
-		this.children = children;
+	public void setName(String name) {
+		this.name = name;
 	}
 }

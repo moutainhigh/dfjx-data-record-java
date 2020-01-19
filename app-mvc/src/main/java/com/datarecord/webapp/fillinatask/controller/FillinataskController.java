@@ -95,7 +95,7 @@ public class FillinataskController {
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public String insertrcdjobpersonassign(
-            @RequestParam("userid")String[] userid,
+            @RequestParam("userid")String userid,
             @RequestParam("job_id")String job_id
     ){
         String jsonResult = "";
@@ -152,7 +152,7 @@ public class FillinataskController {
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public String updateRcdJobUnitConfigyi(
-            @RequestParam("jobunitid")String[] jobunitid,
+            @RequestParam("jobunitid")String jobunitid,
             @RequestParam("job_id")String job_id
     ){
         String jsonResult = "";

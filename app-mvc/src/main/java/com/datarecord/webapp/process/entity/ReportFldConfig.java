@@ -2,6 +2,12 @@ package com.datarecord.webapp.process.entity;
 
 public class ReportFldConfig {
 
+
+
+
+
+
+
     private Integer job_unit_id;
     private String job_unit_name;
     private Integer fld_id;

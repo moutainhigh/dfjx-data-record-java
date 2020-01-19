@@ -22,12 +22,15 @@ public interface ReportingGroupDao {
     @Delete("DELETE FROM rcd_job_unit_config WHERE  job_unit_id =#{job_unit_id}")
     void deletercdjobunitconfig(@Param("job_unit_id") String job_unit_id);
 
-    @Insert("INSERT  INTO rcd_job_unit_fld(job_unit_id,fld_id) VALUES(#{s},#{fld_id})")
-    void rcdjobunitfld(@Param("fld_id") String fld_id, @Param("s") String s);
+    @Insert("INSERT  INTO rcd_job_unit_fld(job_unit_id,fld_id) VALUES(#{jobunitid},#{fldid})")
+    void rcdjobunitfld(@Param("fldid") String fldid, @Param("jobunitid") String jobunitid);
 
-    @Delete("DELETE FROM rcd_job_unit_fld WHERE  fld_id =#{fld_id}")
-    void rcdjobunitflddelete(@Param("fld_id") String fld_id);
+    @Delete("DELETE FROM rcd_job_unit_fld WHERE  job_unit_id =#{jobunitid}")
+    void rcdjobunitflddelete(@Param("jobunitid") String jobunitid);
 
     @Select("SELECT fld_id FROM rcd_job_unit_fld where job_unit_id = #{job_unit_id}")
     List<RcdJobUnitFld> selectrcdjobunitfld(@Param("job_unit_id") String job_unit_id);
+
+    @Insert("INSERT  INTO rcd_job_unit_config(job_unit_name,job_id,job_unit_active) VALUES(#{job_unit_name},#{job_id},#{job_unit_active})")
+    void insertrcdjobunitconfig(@Param("job_id") String job_id, @Param("job_unit_name") String job_unit_name, @Param("job_unit_active") String job_unit_active);
 }

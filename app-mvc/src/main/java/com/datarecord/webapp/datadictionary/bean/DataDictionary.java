@@ -9,9 +9,47 @@ public class DataDictionary {
     private String dict_content_name;  //数据字典内容名称
    private String dict_content_value;   //数据字典内容值
 
+    private int  fld_id;
+    private String fld_name;
+
+    private int  catg_id;
+    private String catg_name;
+
    private int   proj_id;
    private int  is_actived;
    private String proj_name;
+
+    public String getFld_name() {
+        return fld_name;
+    }
+
+    public void setFld_name(String fld_name) {
+        this.fld_name = fld_name;
+    }
+
+    public int getFld_id() {
+        return fld_id;
+    }
+
+    public void setFld_id(int fld_id) {
+        this.fld_id = fld_id;
+    }
+
+    public int getCatg_id() {
+        return catg_id;
+    }
+
+    public void setCatg_id(int catg_id) {
+        this.catg_id = catg_id;
+    }
+
+    public String getCatg_name() {
+        return catg_name;
+    }
+
+    public void setCatg_name(String catg_name) {
+        this.catg_name = catg_name;
+    }
 
     public int getProj_id() {
         return proj_id;
@@ -85,6 +123,10 @@ public class DataDictionary {
                 ", dict_content_id=" + dict_content_id +
                 ", dict_content_name='" + dict_content_name + '\'' +
                 ", dict_content_value='" + dict_content_value + '\'' +
+                ", catg_name='" + catg_name + '\'' +
+                ", proj_id=" + proj_id +
+                ", is_actived=" + is_actived +
+                ", proj_name='" + proj_name + '\'' +
                 '}';
     }
 }

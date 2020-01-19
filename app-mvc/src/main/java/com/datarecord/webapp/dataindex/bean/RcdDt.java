@@ -14,7 +14,15 @@ public class RcdDt {
     private int  fld_type;   //指标类型 0:通用指标 1:突发指标
     private String fld_point;    //指标单位
     private String fld_data_type;  //0:字符串 1:数字 2:日期 3:数据字典
+    private int  fld_is_null;
 
+    public int getFld_is_null() {
+        return fld_is_null;
+    }
+
+    public void setFld_is_null(int fld_is_null) {
+        this.fld_is_null = fld_is_null;
+    }
 
     public int getProj_id() {
         return proj_id;
@@ -90,7 +98,7 @@ public class RcdDt {
 
     @Override
     public String toString() {
-        return "ReportFldConfig{" +
+        return "RcdDt{" +
                 "proj_id=" + proj_id +
                 ", proj_name='" + proj_name + '\'' +
                 ", catg_id=" + catg_id +
@@ -100,6 +108,7 @@ public class RcdDt {
                 ", fld_type=" + fld_type +
                 ", fld_point='" + fld_point + '\'' +
                 ", fld_data_type='" + fld_data_type + '\'' +
+                ", fld_is_null=" + fld_is_null +
                 '}';
     }
 }

@@ -37,9 +37,12 @@ public class FillinataskServiceImp implements FillinataskService {
     }
 
     @Override
-    public void insertrcdjobpersonassign(String job_id, String[] userid) {
-        for (int i = 0; i<userid.length;i++){
-            fillinataskDao.insertrcdjobpersonassign(job_id,userid[i]);
+    public void insertrcdjobpersonassign(String job_id, String userid) {
+       /* userid.substring(1);
+        userid.substring(0,userid.length()-1);*/
+        String[] split = userid.split(",");
+        for (String user_id : split){
+            fillinataskDao.insertrcdjobpersonassign(job_id,user_id);
         }
     }
 
@@ -64,9 +67,12 @@ public class FillinataskServiceImp implements FillinataskService {
     }
 
     @Override
-    public void updateRcdJobUnitConfigyi(String[] jobunitid,String job_id) {
-        for(int i=0 ; i<jobunitid.length;i++){
-            fillinataskDao.updateRcdJobUnitConfigyi(jobunitid[i],job_id);
+    public void updateRcdJobUnitConfigyi(String jobunitid,String job_id) {
+        /*jobunitid.substring(1);
+        jobunitid.substring(0,jobunitid.length()-1);*/
+        String[] split = jobunitid.split(",");
+        for (String job_unit_id : split){
+            fillinataskDao.updateRcdJobUnitConfigyi(job_unit_id,job_id);
         }
     }
 

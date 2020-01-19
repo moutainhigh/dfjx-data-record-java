@@ -3,6 +3,7 @@ package com.datarecord.webapp.submittedBy.controller;
 import com.datarecord.webapp.submittedBy.bean.Useroriginassign;
 import com.datarecord.webapp.submittedBy.service.SubmittedByService;
 import com.datarecord.webapp.utils.EntityTree;
+import com.datarecord.webapp.utils.MenuTreeUtil;
 import com.datarecord.webapp.utils.TreeUtil;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 填报人Controller
@@ -38,14 +40,22 @@ public class SubmittedByController {
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public String getOriginDatas(){
-        HashMap<Object, Object> reslltMap = new HashMap<>();
+
+        //判断用户是否登录然后查出用户所在组织机构id
+        /*HashMap<Object, Object> reslltMap = new HashMap<>();
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         String orgId = submittedByService.selectOrgId(user.getUser_id());
-        List<EntityTree> orgTree = submittedByService.listOrgData(orgId);
-        List<EntityTree> formatTree = TreeUtil.getTreeList(orgId, orgTree);
-        reslltMap.put("orgId",orgId);
-        reslltMap.put("orgTree",formatTree);
-        String jsonpResponse = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取成功", null, reslltMap);
+     */
+
+        String orgId = "0";
+        Map<String, Object> returnmap = new HashMap<>();
+        MenuTreeUtil menuTree = new MenuTreeUtil();
+        List<EntityTree> list =  submittedByService.listOrgData();
+        List<Object> menuList = menuTree.menuList(list,orgId);
+        returnmap.put("list", menuList);
+
+
+        String jsonpResponse = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取成功", null, returnmap);
         return jsonpResponse;
     }
 
@@ -96,7 +106,7 @@ public class SubmittedByController {
     @CrossOrigin(allowCredentials="true")
     public String insertrcdpersonconfig(
             @RequestParam("origin_id")String origin_id,
-            @RequestParam("userid")String[] userid
+            @RequestParam("userid")String userid
     ){
         String jsonResult = "";
         try{

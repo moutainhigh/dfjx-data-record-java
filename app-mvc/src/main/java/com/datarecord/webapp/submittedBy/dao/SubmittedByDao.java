@@ -10,17 +10,21 @@ import java.util.List;
 
 public interface SubmittedByDao {
 
-    @Select("SELECT origin_id FROM user_origin_assign WHERE user_id = #{userId}")
+    @Select("SELECT origin_id FROM user_origin_assign WHERE user_id = #{user_id}")
     @Options(useCache = false)
     String getOrgId(@Param("user_id") int user_id);//通过用户查询机构id
 
 
-
-    @Select("SELECT origin_id AS  VALUE,origin_name AS  title,parent_origin_id AS parentId\n" +
+   /* FIND_IN_SET(parent_origin_id, GET_CHILD_NODE(#{orgId}))*/
+   /* @Select("SELECT origin_id AS  VALUE,origin_name AS  title,parent_origin_id AS parentId\n" +
             "FROM sys_origin \n" +
-            "WHERE  FIND_IN_SET(parent_origin_id, GET_CHILD_NODE(#{orgId}))\n")
+            "WHERE  origin = #{orgId}\n")
+    @Options(useCache = false)*/
+
+    @Select("SELECT origin_id AS  id,origin_name AS  name,parent_origin_id AS pId\n" +
+            "FROM sys_origin ")
     @Options(useCache = false)
-    List<EntityTree> listOrgData(@Param("orgId") String orgId);
+    List<EntityTree> listOrgData();
 
 
     @Select("<script>SELECT\n" +
@@ -47,7 +51,7 @@ public interface SubmittedByDao {
 
 
     @Insert("insert into rcd_person_config (user_id,origin_id) values(#{s},#{origin_id})")
-    void insertrcdpersonconfig(@Param("origin_id") String origin_id, @Param("s") String s);
+    void insertrcdpersonconfig(@Param("origin_id") String origin_id, @Param("user_id") String user_id);
 
 
     @Select("SELECT user_id from rcd_person_config where origin_id = #{origin_id} ")
