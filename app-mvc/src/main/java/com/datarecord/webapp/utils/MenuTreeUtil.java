@@ -5,6 +5,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 生成树数据的工具类
+ * Modify By ppj on 2020/01/19
+ *
+ */
 public class MenuTreeUtil {
     public static Map<String,Object> mapArray = new LinkedHashMap<String, Object>();
     public List<EntityTree> menuCommon;

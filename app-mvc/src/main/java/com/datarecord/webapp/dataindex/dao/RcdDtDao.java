@@ -1,10 +1,7 @@
 package com.datarecord.webapp.dataindex.dao;
 
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
-import com.datarecord.webapp.dataindex.bean.RcdDt;
-import com.datarecord.webapp.dataindex.bean.RcdDtFld;
-import com.datarecord.webapp.dataindex.bean.RcddtCatg;
-import com.datarecord.webapp.dataindex.bean.Rcddtproj;
+import com.datarecord.webapp.dataindex.bean.*;
 import com.datarecord.webapp.process.entity.ReportFldConfig;
 import com.github.pagehelper.Page;
 import com.webapp.support.page.PageResult;
@@ -82,4 +79,7 @@ public interface RcdDtDao {
 
     @Update("update rcd_dt_catg set catg_name = #{catg_name},proj_id =#{proj_id} where  catg_id =#{catg_id}")
     void updatetixircddtprojer(@Param("catg_id")String catg_id, @Param("catg_name")String catg_name, @Param("proj_id")String proj_id);
+
+    @Select("SELECT dict_content_id  FROM rcd_dt_fld_ct_assign WHERE fld_id = #{fld_id} ")
+    List<RcdDtFldCtAssign> updatehuixianrcddtfldctassign(@Param("fld_id")String fld_id);
 }

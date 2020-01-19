@@ -1,6 +1,7 @@
 package com.datarecord.webapp.dataindex.controller;
 
 import com.datarecord.webapp.dataindex.bean.RcdDtFld;
+import com.datarecord.webapp.dataindex.bean.RcdDtFldCtAssign;
 import com.datarecord.webapp.dataindex.bean.RcddtCatg;
 import com.datarecord.webapp.dataindex.bean.Rcddtproj;
 import com.datarecord.webapp.dataindex.service.RcdDtService;
@@ -254,6 +255,24 @@ public class RcdDtController {
             return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
         }
         return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改指标类型成功", null, "success");
+    }
+
+
+    //三级修改回显对应数据字典
+    @RequestMapping("/updatehuixianrcddtfldctassign")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String updatehuixianrcddtfldctassign(
+            @RequestParam("fld_id") String fld_id
+            ){
+        List<RcdDtFldCtAssign> ll = new ArrayList<RcdDtFldCtAssign>();
+        String jsonResult = "";
+        try{
+            ll  = rcdDtService.updatehuixianrcddtfldctassign(fld_id);
+        }catch(Exception e){
+            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改回显对应数据字典失败", null, "error");
+        }
+        return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改回显对应数据字典成功", null, ll);
     }
 
 

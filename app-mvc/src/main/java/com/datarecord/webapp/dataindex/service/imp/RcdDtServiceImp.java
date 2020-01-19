@@ -2,10 +2,7 @@ package com.datarecord.webapp.dataindex.service.imp;
 
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.datadictionary.service.imp.DataDictionaryServiceImp;
-import com.datarecord.webapp.dataindex.bean.RcdDt;
-import com.datarecord.webapp.dataindex.bean.RcdDtFld;
-import com.datarecord.webapp.dataindex.bean.RcddtCatg;
-import com.datarecord.webapp.dataindex.bean.Rcddtproj;
+import com.datarecord.webapp.dataindex.bean.*;
 import com.datarecord.webapp.dataindex.dao.RcdDtDao;
 import com.datarecord.webapp.dataindex.service.RcdDtService;
 import com.github.pagehelper.Page;
@@ -119,6 +116,11 @@ public class RcdDtServiceImp  implements RcdDtService {
     @Override
     public void updatetixircddtprojer(String catg_id, String catg_name, String proj_id) {
          rcdDtDao.updatetixircddtprojer(catg_id,catg_name,proj_id);
+    }
+
+    @Override
+    public List<RcdDtFldCtAssign> updatehuixianrcddtfldctassign(String fld_id) {
+        return  rcdDtDao.updatehuixianrcddtfldctassign(fld_id);
     }
 
 

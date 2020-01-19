@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * 生成树数据的接收类
- * Modify By weiyy on 2019/08/11  （antdesign树的格式）
+ * Modify By ppj on 2020/01/19
  *
  */
 public class EntityTree  {

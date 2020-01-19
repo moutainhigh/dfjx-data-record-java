@@ -1,6 +1,7 @@
 package com.datarecord.webapp.dataindex.service;
 
 import com.datarecord.webapp.dataindex.bean.RcdDtFld;
+import com.datarecord.webapp.dataindex.bean.RcdDtFldCtAssign;
 import com.datarecord.webapp.dataindex.bean.RcddtCatg;
 import com.datarecord.webapp.dataindex.bean.Rcddtproj;
 import com.webapp.support.page.PageResult;
@@ -42,4 +43,6 @@ public interface RcdDtService {
     void inserttixircddtprojer(String catg_name, String proj_id);
 
     void updatetixircddtprojer(String catg_id, String catg_name, String proj_id);
+
+    List<RcdDtFldCtAssign> updatehuixianrcddtfldctassign(String fld_id);
 }
