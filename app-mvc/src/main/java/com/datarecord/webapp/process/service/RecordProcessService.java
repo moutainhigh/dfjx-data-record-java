@@ -1,9 +1,7 @@
 package com.datarecord.webapp.process.service;
 
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
-import com.datarecord.webapp.process.entity.JobConfig;
-import com.datarecord.webapp.process.entity.ReportFldConfig;
-import com.datarecord.webapp.process.entity.ReportJobData;
+import com.datarecord.webapp.process.entity.*;
 import com.webapp.support.page.PageResult;
 
 import java.util.List;
@@ -22,4 +20,8 @@ public interface RecordProcessService {
     List<ReportJobData> getFldReportDatas(String jobId,String reportId, String groupId);
 
     Map<Integer, List<DataDictionary>> getUnitDictFldContent(String groupId);
+
+    void saveGridDatas(ReportJobInfo reportJobInfo);
+
+    Map<Integer, Map<Integer, String>> validateGridDatas(List<ReportJobData> reportJobDataList, String unitId);
 }
