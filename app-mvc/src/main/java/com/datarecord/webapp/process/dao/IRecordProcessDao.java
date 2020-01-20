@@ -129,4 +129,7 @@ public interface IRecordProcessDao {
             "rdfca.dict_content_id = rddc.dict_content_id where  " +
             "rdfca.fld_id = #{fld_id}")
     List<DataDictionary> getDictcontent4Fld(Integer fld_id);
+
+    @Delete("delete from rcd_report_data_job${job_id} where report_id=#{report_id} and unit_id =#{unit_id}")
+    void deleteRecordDataByUnit(@Param("job_id") Integer job_id,@Param("report_id") Integer report_id,@Param("unit_id") Integer unitId);
 }

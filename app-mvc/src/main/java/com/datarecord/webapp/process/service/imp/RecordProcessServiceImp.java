@@ -8,12 +8,14 @@ import com.datarecord.webapp.dataindex.bean.FldDataTypes;
 import com.github.pagehelper.Page;
 import com.google.common.base.Strings;
 import com.webapp.support.page.PageResult;
+import com.workbench.exception.runtime.WorkbenchRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -147,5 +149,112 @@ public class RecordProcessServiceImp implements RecordProcessService {
             }
         }
         return result;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void saveGridDatas(ReportJobInfo reportJobInfo) {
+        List<ReportJobData> reportJobDataList = reportJobInfo.getReportJobDataList();
+        if(reportJobDataList!=null&&reportJobDataList.size()>0){
+            Integer unitId = reportJobDataList.get(0).getUnit_id();
+            recordProcessDao.deleteRecordDataByUnit(reportJobInfo.getJob_id(),reportJobInfo.getReport_id(),unitId);
+        }
+        for (ReportJobData reportJobData : reportJobDataList) {
+            recordProcessDao.createRcdReortJobData(reportJobData,String.valueOf(reportJobInfo.getJob_id()));
+        }
+    }
+
+    @Override
+    public Map<Integer, Map<Integer, String>> validateGridDatas(List<ReportJobData> reportJobDataList, String unitId) {
+
+//        Map<Integer,List<FldValidateFailBean>> validateResult = new HashMap<>();
+        Map<Integer,Map<Integer,String>> validateResultMap = new HashMap<>();
+
+        if(Strings.isNullOrEmpty(unitId)){
+            throw new WorkbenchRuntimeException("填报组id为空",new Exception("填报组id为空"));
+        }
+
+        Map<Integer,ReportFldConfig> fldConfigMapCache = new HashMap();
+        List<ReportFldConfig> flds4Unit = recordProcessDao.getFldByUnitId(unitId);
+        if(flds4Unit!=null&&flds4Unit.size()>0){
+            for (ReportFldConfig reportFldConfig : flds4Unit) {
+                fldConfigMapCache.put(reportFldConfig.getFld_id(),reportFldConfig);
+            }
+        }
+
+        if(reportJobDataList!=null&&reportJobDataList.size()>0){
+            for (ReportJobData reportJobData : reportJobDataList) {
+                Integer fldId = reportJobData.getFld_id();
+                Integer columId = reportJobData.getColum_id();
+                String reportData = reportJobData.getRecord_data();
+                if(fldConfigMapCache.containsKey(fldId)){
+                    ReportFldConfig fldConfig = fldConfigMapCache.get(fldId);
+                    Integer allowedNullOrNot = fldConfig.getFld_is_null();
+                    String fldDataType = fldConfig.getFld_data_type();
+                    if(allowedNullOrNot!=0){
+                        //校验是否可为空
+                        if(Strings.isNullOrEmpty(reportData)){
+
+                            if(!validateResultMap.containsKey(columId)){
+                                validateResultMap.put(columId,new HashMap<>());
+                            }
+                            validateResultMap.get(columId).put(fldId,"不允许为空");
+
+                        }
+                        //校验数据格式是否符合
+                        if(FldDataTypes.STRING.compareTo(fldDataType)){//字符串类型
+
+                        }else if(FldDataTypes.DATE.compareTo(fldDataType)){//日期类型
+
+                        }else if(FldDataTypes.DICT.compareTo(fldDataType)){//字典类型
+
+                        }else if(FldDataTypes.NUMBER.compareTo(fldDataType)){//数字类型
+                            try{
+                                Integer dataInt = new Integer(reportData);
+                                BigDecimal dataBig = new BigDecimal(reportData);
+
+                            }catch (NumberFormatException e){
+                                try{
+                                    Long dataFormatter = new Long(reportData);
+                                }catch (NumberFormatException e1){
+                                    try{
+                                        Float dataFormatter = new Float(reportData);
+                                    }catch(NumberFormatException e2){
+                                        try{
+                                            Double dataFormatter = new Double(reportData);
+                                        }catch(NumberFormatException e3){
+                                            try{
+                                                BigDecimal dataFormatter = new BigDecimal(reportData);
+                                            }catch(NumberFormatException e4){
+                                                if(!validateResultMap.containsKey(columId)){
+                                                    validateResultMap.put(columId,new HashMap<>());
+                                                }
+                                                validateResultMap.get(columId).put(fldId,"数字格式错误");
+
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+                        }else{
+                            throw new WorkbenchRuntimeException("未找到对应的数据类型",new Exception("未找到对应的数据类型"));
+
+                        }
+
+                    }
+                }else{
+                    throw new WorkbenchRuntimeException("填报项"+fldId+"找不到定义",new Exception("填报项"+fldId+"找不到定义"));
+                }
+            }
+            
+
+
+        }else{
+            throw new WorkbenchRuntimeException("填报数据为空",new Exception("填报数据为空"));
+        }
+
+        return validateResultMap;
+
     }
 }
