@@ -56,7 +56,7 @@ public class ReportingGroupController {
         try{
             pageResult = reportingGroupService.rcdjobunitconfiglist(currPage,pageSize,job_id);
         }catch(Exception e){
-            jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报组列表失败", null, "error");
+            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报组列表失败", null, "error");
         }
         jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取填报组列表成功", null, pageResult);
         return jsonResult;

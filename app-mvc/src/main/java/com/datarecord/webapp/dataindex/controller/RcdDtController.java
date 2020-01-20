@@ -65,10 +65,9 @@ public class RcdDtController {
         try{
             pageResult = rcdDtService.selectrcddtproj(currPage,pageSize);
         }catch(Exception e){
-            jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标体系基本类别列表失败", null, "error");
+            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标体系基本类别列表失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标体系基本类别列表成功", null, pageResult);
-        return jsonResult;
+        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标体系基本类别列表成功", null, pageResult);
     }
 
 
@@ -115,10 +114,9 @@ public class RcdDtController {
       try{
           pageResult = rcdDtService.selecttixircddtproj(currPage,pageSize,catg_id);
       }catch(Exception e){
-          jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标体系类别列表失败", null, "error");
+          return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标体系类别列表失败", null, "error");
       }
-      jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标体系类别列表成功", null, pageResult);
-      return jsonResult;
+      return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标体系类别列表成功", null, pageResult);
   }
 
     //根据指标类别查询指标体系类别列表  二级

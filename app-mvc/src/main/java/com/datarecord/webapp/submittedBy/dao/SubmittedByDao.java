@@ -50,7 +50,7 @@ public interface SubmittedByDao {
     List<Useroriginassign> useroriginassignlist(@Param("origin_id") String origin_id);
 
 
-    @Insert("insert into rcd_person_config (user_id,origin_id) values(#{s},#{origin_id})")
+    @Insert("insert into rcd_person_config (user_id,origin_id) values(#{user_id},#{origin_id})")
     void insertrcdpersonconfig(@Param("origin_id") String origin_id, @Param("user_id") String user_id);
 
 

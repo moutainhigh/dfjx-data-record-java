@@ -162,7 +162,7 @@ public class DataDictionaryController {
         try{
             ll = dataDictionaryService.selectleftDataDictionary();
         }catch(Exception e){
-            jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取菜单列表失败", null, "error");
+            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取菜单列表失败", null, "error");
         }
         jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取菜单列表成功", null, ll);
         return jsonResult;
