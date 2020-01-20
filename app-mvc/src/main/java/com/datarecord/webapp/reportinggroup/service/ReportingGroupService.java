@@ -13,9 +13,11 @@ public interface ReportingGroupService {
 
     void deletercdjobunitconfig(String job_unit_id);
 
-    void rcdjobunitfld(String fld_id, String[] jobunitid);
+    void rcdjobunitfld(String fld_id, String jobunitid);
 
-    void rcdjobunitflddelete(String fld_id);
+    void rcdjobunitflddelete(String jobunitid);
 
     List<RcdJobUnitFld> selectrcdjobunitfld(String job_unit_id);
+
+    void insertrcdjobunitconfig(String job_id, String job_unit_name, String job_unit_active);
 }

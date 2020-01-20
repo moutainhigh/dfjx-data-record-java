@@ -11,7 +11,7 @@ public interface FillinataskService {
 
     void insertrcdjobconfig(String job_name, String job_start_dt, String job_end_dt);
 
-    void insertrcdjobpersonassign(String job_id, String[] userid);
+    void insertrcdjobpersonassign(String job_id, String userid);
 
     void deletercdjobpersonassign(String job_id);
 
@@ -21,7 +21,7 @@ public interface FillinataskService {
 
     List<RcdJobUnitConfig> selectRcdJobUnitConfigyi(String job_id);
 
-    void updateRcdJobUnitConfigyi(String[] jobunitid, String job_id);
+    void updateRcdJobUnitConfigyi(String jobunitid, String job_id);
 
     void updateRcdJobUnitConfigsuo(String job_id);
 }

@@ -30,8 +30,8 @@ public class SubmittedByServiceImp  implements SubmittedByService {
     }
 
     @Override
-    public List<EntityTree> listOrgData(String orgId) {
-        List<EntityTree> entityTrees = submittedByDao.listOrgData(orgId);
+    public List<EntityTree> listOrgData() {
+        List<EntityTree> entityTrees = submittedByDao.listOrgData();
         return  entityTrees;
     }
 
@@ -50,9 +50,12 @@ public class SubmittedByServiceImp  implements SubmittedByService {
     }
 
     @Override
-    public void insertrcdpersonconfig(String origin_id, String[] userid) {
-        for (int i= 0;i<userid.length;i++){
-            submittedByDao.insertrcdpersonconfig(origin_id,userid[i]);
+    public void insertrcdpersonconfig(String origin_id, String userid) {
+      /*  userid.substring(1);
+        userid.substring(0,userid.length()-1);*/
+        String[] split = userid.split(",");
+        for (String user_id : split){
+            submittedByDao.insertrcdpersonconfig(origin_id,user_id);
         }
     }
 

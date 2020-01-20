@@ -62,6 +62,24 @@ public class ReportingGroupController {
         return jsonResult;
     }
 
+    //填报组新增
+    @RequestMapping("/insertrcdjobunitconfig")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String insertrcdjobunitconfig(
+            @RequestParam("job_id")String job_id,
+            @RequestParam("job_unit_name")String job_unit_name,
+            @RequestParam("job_unit_active")String job_unit_active
+    ){
+        String jsonResult = "";
+        try{
+            reportingGroupService.insertrcdjobunitconfig(job_id,job_unit_name,job_unit_active);
+        }catch(Exception e){
+            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除失败", null, "error");
+        }
+        return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除成功", null, "success");
+    }
+
     //填报组删除
     @RequestMapping("/deletercdjobunitconfig")
     @ResponseBody
@@ -100,12 +118,12 @@ public class ReportingGroupController {
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public String rcdjobunitfld(
-            @RequestParam("fld_id")String fld_id,       //任务组编码
-            @RequestParam("jobunitid")String[] jobunitid  //指标编码数组
+            @RequestParam("jobunitid")String jobunitid,       //编码
+            @RequestParam("fld_id")String fld_id  //指标编码数组
             ){
         String jsonResult = "";
         try{
-            reportingGroupService.rcdjobunitflddelete(fld_id);  //删除之前关系
+            reportingGroupService.rcdjobunitflddelete(jobunitid);  //删除之前关系
             reportingGroupService.rcdjobunitfld(fld_id,jobunitid);  //新增关系
         }catch(Exception e){
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增填报组与指标关联关系维护失败", null, "error");

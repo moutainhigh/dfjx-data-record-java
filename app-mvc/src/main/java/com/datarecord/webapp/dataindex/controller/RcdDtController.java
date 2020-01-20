@@ -1,6 +1,7 @@
 package com.datarecord.webapp.dataindex.controller;
 
 import com.datarecord.webapp.dataindex.bean.RcdDtFld;
+import com.datarecord.webapp.dataindex.bean.RcdDtFldCtAssign;
 import com.datarecord.webapp.dataindex.bean.RcddtCatg;
 import com.datarecord.webapp.dataindex.bean.Rcddtproj;
 import com.datarecord.webapp.dataindex.service.RcdDtService;
@@ -146,45 +147,68 @@ public class RcdDtController {
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public String inserttixircddtprojer(
-            @RequestParam("currPage") int currPage,
-            @RequestParam("pageSize")int pageSize,
+            @RequestParam("catg_name") String catg_name,
             @RequestParam("proj_id")String proj_id     // 指标类别编码
     ){
-        PageResult pageResult = null;
         String jsonResult = "";
         try{
-            pageResult = rcdDtService.selecttixircddtprojer(currPage,pageSize,proj_id);
+            rcdDtService.inserttixircddtprojer(catg_name,proj_id);
         }catch(Exception e){
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标二级体系类别列表失败", null, "error");
+            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增二级指标体系列表失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标二级体系类别列表成功", null, pageResult);
+        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增二级指标体系列表成功", null, "success");
         return jsonResult;
     }
 
 
-    //新增指标类型
+    //修改指标体系类别列表  二级
+    @RequestMapping("/updatetixircddtprojer")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String updatetixircddtprojer(
+            @RequestParam("catg_id") String catg_id,
+            @RequestParam("catg_name") String catg_name,
+            @RequestParam("proj_id")String proj_id     // 指标类别编码
+    ){
+
+        String jsonResult = "";
+        try{
+            rcdDtService.updatetixircddtprojer(catg_id,catg_name,proj_id);
+        }catch(Exception e){
+            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改二级指标体系列表失败", null, "error");
+        }
+        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改二级指标体系列表成功", null, "success");
+        return jsonResult;
+    }
+
+
+    //新增指标类型 三级
     @RequestMapping("/insertrcddtfld")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public String insertrcddtfld(
             @RequestParam("catg_id") String catg_id,
             @RequestParam("fld_name") String fld_name,    // 名称
-            @RequestParam("fld_point") String fld_point,  //单位
-            @RequestParam("fld_type") String fld_type,  //类型
+            @RequestParam("fld_type") String fld_type,    // 类型0:通用指标 1 突发指标
             @RequestParam("fld_data_type") String fld_data_type,
             @RequestParam("fld_is_null") String fld_is_null,
-            @RequestParam("fld_id") String fld_id,    //指标id
-            @RequestParam("dict_id") String[] dict_content_id  //数据字典内容编码
+            @RequestParam("dict_content_id") String dict_content_id  //数据字典内容编码
     ){
         String jsonResult = "";
-        if(!catg_id.isEmpty()  && !fld_name.isEmpty()  && !fld_data_type.isEmpty()  && !fld_is_null.isEmpty()  && !fld_point.isEmpty() && !fld_type.isEmpty()){
+        if(!catg_id.isEmpty()  && !fld_name.isEmpty()  && !fld_data_type.isEmpty()  && !fld_is_null.isEmpty()  && !fld_type.isEmpty()){
             try{
-                rcdDtService.insertrcddtfld(catg_id,fld_name,fld_point,fld_type,fld_data_type,fld_is_null);
-                if(!fld_id.isEmpty() && dict_content_id.length>0 ){
-                    for (int  i= 0; i<dict_content_id.length; i++){
-                        rcdDtService.insertrcddtfldctassign(fld_id,dict_content_id[i]);  //指标&数据字典关系表添加
-                        //rcdDtService.updatercddtdict(dict_content_id[i]);  //数据字典修改使用状态
+                rcdDtService.insertrcddtfld(catg_id,fld_name,fld_data_type,fld_is_null,fld_type);
+              int  fid = rcdDtService.selectmax();
+              String  fld_id = String.valueOf(fid);
+                if(!fld_id.isEmpty() && !dict_content_id.isEmpty()){
+                  /*  dict_content_id.substring(1);
+                    dict_content_id.substring(0,dict_content_id.length()-1);*/
+                    String[] split = dict_content_id.split(",");
+                    for (String dict_contentid : split){
+                        rcdDtService.insertrcddtfldctassign(fld_id,dict_contentid);
                     }
+                    //指字标&数据典关系表添加
+                        //rcdDtService.updatercddtdict(dict_content_id[i]);  //数据字典修改使用状态
                 }
             }catch(Exception e){
                 return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增指标类型失败", null, "error");
@@ -204,31 +228,51 @@ public class RcdDtController {
     public String updatercddtfld(
             @RequestParam("catg_id") String catg_id,
             @RequestParam("fld_name") String fld_name,    // 名称
-            @RequestParam("fld_point") String fld_point,  //单位
-            @RequestParam("fld_type") String fld_type,  //类型
+            @RequestParam("fld_type") String fld_type,    // 类型0:通用指标 1 突发指标
             @RequestParam("fld_data_type") String fld_data_type,
             @RequestParam("fld_is_null") String fld_is_null,
             @RequestParam("fld_id") String fld_id,    //指标id
-            @RequestParam("dict_id") String[] dict_content_id  //数据字典内容编码数组
+            @RequestParam("dict_content_id") String dict_content_id  //数据字典内容编码数组
     ){
         String jsonResult = "";
-        if(!catg_id.isEmpty()  && !fld_name.isEmpty()  && !fld_data_type.isEmpty()  && !fld_is_null.isEmpty()  && !fld_point.isEmpty() && !fld_type.isEmpty()){
+        if(!catg_id.isEmpty()  && !fld_name.isEmpty()  && !fld_data_type.isEmpty()  && !fld_is_null.isEmpty()  && !fld_type.isEmpty()){
             try{
-                rcdDtService.updatercddtfld(fld_id,catg_id,fld_name,fld_point,fld_type,fld_data_type,fld_is_null);
-                if(!fld_id.isEmpty() && dict_content_id.length>0 ){
+                rcdDtService.updatercddtfld(fld_id,catg_id,fld_name,fld_data_type,fld_is_null,fld_type);
+                if(!fld_id.isEmpty() && !dict_content_id.isEmpty() ){
                     rcdDtService.deletercddtfldctassign(fld_id);
-                    for (int  i= 0; i<dict_content_id.length; i++){
-                        rcdDtService.insertrcddtfldctassign(fld_id,dict_content_id[i]);  //指标&数据字典关系表添加
-                        //rcdDtService.updatercddtdict(dict_content_id[i]);  //数据字典修改使用状态
+                   /* dict_content_id.substring(1);
+                    dict_content_id.substring(0,dict_content_id.length()-1);*/
+                    String[] split = dict_content_id.split(",");
+                    for (String dict_contentid : split){
+                        rcdDtService.insertrcddtfldctassign(fld_id,dict_contentid);  //指标&数据字典关系表添加
                     }
+                    //rcdDtService.updatercddtdict(dict_content_id[i]);  //数据字典修改使用状态
                 }
             }catch(Exception e){
-                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增指标类型失败", null, "error");
+                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改指标类型失败", null, "error");
             }
         }else{
             return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
         }
-        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增指标类型成功", null, "success");
+        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改指标类型成功", null, "success");
+    }
+
+
+    //三级修改回显对应数据字典
+    @RequestMapping("/updatehuixianrcddtfldctassign")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String updatehuixianrcddtfldctassign(
+            @RequestParam("fld_id") String fld_id
+            ){
+        List<RcdDtFldCtAssign> ll = new ArrayList<RcdDtFldCtAssign>();
+        String jsonResult = "";
+        try{
+            ll  = rcdDtService.updatehuixianrcddtfldctassign(fld_id);
+        }catch(Exception e){
+            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改回显对应数据字典失败", null, "error");
+        }
+        return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改回显对应数据字典成功", null, ll);
     }
 
 

@@ -44,19 +44,27 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
     }
 
     @Override
-    public void rcdjobunitfld(String fld_id, String[] jobunitid) {
-        for(int i=0;i<jobunitid.length;i++){
-            reportingGroupDao.rcdjobunitfld(fld_id,jobunitid[i]);
+    public void rcdjobunitfld(String fld_id, String jobunitid) {
+       /* jobunitid.substring(1);
+        jobunitid.substring(0,jobunitid.length()-1);*/
+        String[] split = fld_id.split(",");
+        for (String fldid : split){
+            reportingGroupDao.rcdjobunitfld(fldid,jobunitid);
         }
     }
 
     @Override
-    public void rcdjobunitflddelete(String fld_id) {
-        reportingGroupDao.rcdjobunitflddelete(fld_id);
+    public void rcdjobunitflddelete(String jobunitid) {
+        reportingGroupDao.rcdjobunitflddelete(jobunitid);
     }
 
     @Override
     public List<RcdJobUnitFld> selectrcdjobunitfld(String job_unit_id) {
         return reportingGroupDao.selectrcdjobunitfld(job_unit_id);
+    }
+
+    @Override
+    public void insertrcdjobunitconfig(String job_id, String job_unit_name, String job_unit_active) {
+        reportingGroupDao.insertrcdjobunitconfig(job_id,job_unit_name,job_unit_active);
     }
 }
