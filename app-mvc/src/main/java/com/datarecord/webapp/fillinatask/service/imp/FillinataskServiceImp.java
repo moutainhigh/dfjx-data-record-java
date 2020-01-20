@@ -2,6 +2,7 @@ package com.datarecord.webapp.fillinatask.service.imp;
 
 import com.datarecord.webapp.datadictionary.service.imp.DataDictionaryServiceImp;
 import com.datarecord.webapp.fillinatask.bean.Fillinatask;
+import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
 import com.datarecord.webapp.fillinatask.dao.FillinataskDao;
 import com.datarecord.webapp.fillinatask.service.FillinataskService;
@@ -79,5 +80,10 @@ public class FillinataskServiceImp implements FillinataskService {
     @Override
     public void updateRcdJobUnitConfigsuo(String job_id) {
         fillinataskDao.updateRcdJobUnitConfigsuo(job_id);
+    }
+
+    @Override
+    public List<RcdJobPersonAssign> huixianrcdjobpersonassign(String job_id) {
+        return fillinataskDao.huixianrcdjobpersonassign(job_id);
     }
 }

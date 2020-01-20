@@ -1,6 +1,7 @@
 package com.datarecord.webapp.fillinatask.dao;
 
 import com.datarecord.webapp.fillinatask.bean.Fillinatask;
+import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
@@ -38,4 +39,10 @@ public interface FillinataskDao {
 
     @Update("update  rcd_job_unit_config set  job_unit_active = 0 where  job_id = #{job_id} ")
     void updateRcdJobUnitConfigsuo(@Param("job_id") String job_id);
+
+    @Select("select u.user_id,so.origin_id from rcd_job_person_assign rjpa left join user u\n" +
+            "on rjpa.user_id = u.user_id left join user_origin_assign uoa \n" +
+            "on u.user_id = uoa.user_id left join sys_origin so\n" +
+            "on uoa.origin_id = so.origin_id  where rjpa.job_id = #{job_id}")
+    List<RcdJobPersonAssign> huixianrcdjobpersonassign(@Param("job_id")String job_id);
 }

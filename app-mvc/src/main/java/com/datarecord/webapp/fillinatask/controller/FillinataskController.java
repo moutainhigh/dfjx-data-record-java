@@ -1,6 +1,7 @@
 package com.datarecord.webapp.fillinatask.controller;
 
 
+import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
 import com.datarecord.webapp.fillinatask.service.FillinataskService;
 import com.webapp.support.json.JsonSupport;
@@ -108,6 +109,24 @@ public class FillinataskController {
         jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增填报维护人成功", null, "success");
         return jsonResult;
     }
+
+    @RequestMapping("/huixianrcdjobpersonassign")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String huixianrcdjobpersonassign(
+            @RequestParam("job_id")String job_id
+    ){
+        List<RcdJobPersonAssign> ll = new ArrayList<RcdJobPersonAssign>();
+        String jsonResult = "";
+        try{
+            ll =   fillinataskService.huixianrcdjobpersonassign(job_id);
+        }catch(Exception e){
+            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "查询机构对应填报人失败", null, "error");
+        }
+        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "查询机构对应填报人成功", null, ll);
+        return jsonResult;
+    }
+
 
 
     //填报组维护弹框RcdJobUnitConfig  待选择列表

@@ -1,5 +1,6 @@
 package com.datarecord.webapp.fillinatask.service;
 
+import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
 import com.webapp.support.page.PageResult;
 
@@ -24,4 +25,6 @@ public interface FillinataskService {
     void updateRcdJobUnitConfigyi(String jobunitid, String job_id);
 
     void updateRcdJobUnitConfigsuo(String job_id);
+
+    List<RcdJobPersonAssign> huixianrcdjobpersonassign(String job_id);
 }
