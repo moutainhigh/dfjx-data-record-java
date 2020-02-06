@@ -73,7 +73,7 @@ public class RecordProcessServiceImp implements RecordProcessService {
                             reportJobData.setFld_id(fldId);
                             reportJobData.setReport_id(reportId);
                             reportJobData.setUnit_id(jobUnit.getJob_unit_id());
-                            reportJobData.setRecord_data("预设值");
+                            reportJobData.setRecord_data("");
                             recordProcessDao.createRcdReortJobData(reportJobData,jobId);
                         }
                     }
