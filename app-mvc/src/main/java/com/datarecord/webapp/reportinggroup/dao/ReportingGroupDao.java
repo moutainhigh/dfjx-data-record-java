@@ -33,4 +33,7 @@ public interface ReportingGroupDao {
 
     @Insert("INSERT  INTO rcd_job_unit_config(job_unit_name,job_id,job_unit_active) VALUES(#{job_unit_name},#{job_id},#{job_unit_active})")
     void insertrcdjobunitconfig(@Param("job_id") String job_id, @Param("job_unit_name") String job_unit_name, @Param("job_unit_active") String job_unit_active);
+
+    @Delete("DELETE FROM rcd_job_unit_fld WHERE  job_unit_id =#{job_unit_id}")
+    void deletercdjobunitfld(@Param("job_unit_id")String job_unit_id);
 }

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 填报组Controller
+ * Controller
  */
 @Controller
 @RequestMapping("/reporting")

@@ -41,6 +41,7 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
     @Override
     public void deletercdjobunitconfig(String job_unit_id) {
         reportingGroupDao.deletercdjobunitconfig(job_unit_id);
+        reportingGroupDao.deletercdjobunitfld(job_unit_id);
     }
 
     @Override
