@@ -107,7 +107,16 @@ public interface IRecordProcessDao {
     @Options(useGeneratedKeys = true, keyProperty = "report_id", keyColumn = "report_id")
     void createReportJobInfo(ReportJobInfo reportJobInfo);
 
-    @Select("select report_id,job_id,record_user_id,record_origin_id,record_status from rcd_report_job where record_user_id=#{user_id}")
+    @Select("select rrj.report_id," +
+            "rrj.job_id," +
+            "rrj.record_user_id," +
+            "rrj.record_origin_id," +
+            "rrj.record_status, " +
+            "rjc.job_name " +
+            "from rcd_report_job rrj " +
+            "left join rcd_job_config rjc on " +
+            "rrj.job_id = rjc.job_id  " +
+            "where rrj.record_user_id=#{user_id}")
     Page<ReportJobInfo> pageJob(@Param("currPage") Integer currPage,
                                 @Param("pageSize") Integer pageSize,
                                 @Param("user_id") Integer user_id);
