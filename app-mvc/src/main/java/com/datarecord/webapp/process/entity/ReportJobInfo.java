@@ -5,6 +5,7 @@ import java.util.List;
 public class ReportJobInfo {
     private Integer report_id;
     private Integer job_id;
+    private String job_name;
     private Integer record_origin_id;
     private Integer record_user_id;
     private Integer record_status;
@@ -68,5 +69,13 @@ public class ReportJobInfo {
 
     public void setRecord_status_cn(String record_status_cn) {
         this.record_status_cn = record_status_cn;
+    }
+
+    public String getJob_name() {
+        return job_name;
+    }
+
+    public void setJob_name(String job_name) {
+        this.job_name = job_name;
     }
 }

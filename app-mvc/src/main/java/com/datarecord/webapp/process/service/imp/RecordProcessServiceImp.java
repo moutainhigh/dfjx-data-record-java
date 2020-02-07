@@ -49,23 +49,23 @@ public class RecordProcessServiceImp implements RecordProcessService {
                 logger.info("开始发布填报任务:{}",jobConfigEntity.getJob_name());
                 recordProcessDao.changeRecordJobStatus(jobId, JobConfigStatus.SUBMITING.value() );
 
-                List<JobUnitConfig> jobUnits = jobConfigEntity.getJobUnits();
-                for (JobUnitConfig jobUnit : jobUnits) {
-                    List<ReportFldConfig> unitFlds = jobUnit.getUnitFlds();
-                    List<JobPerson> allJobPerson = jobConfigEntity.getJobPersons();
+                //循环为每个填报人生成任务
+                List<JobPerson> allJobPerson = jobConfigEntity.getJobPersons();
+                for (JobPerson jobPerson : allJobPerson) {
+                    Integer originId = jobPerson.getOrigin_id();
+                    Integer userId = jobPerson.getUser_id();
+                    ReportJobInfo reportJobInfo = new ReportJobInfo();
+                    reportJobInfo.setJob_id(new Integer(jobId));
+                    reportJobInfo.setRecord_origin_id(originId);
+                    reportJobInfo.setRecord_status(JobConfigStatus.NORMAL.value());
+                    reportJobInfo.setRecord_user_id(userId);
 
-                    for (JobPerson jobPerson : allJobPerson) {
-                        Integer originId = jobPerson.getOrigin_id();
-                        Integer userId = jobPerson.getUser_id();
-                        ReportJobInfo reportJobInfo = new ReportJobInfo();
-                        reportJobInfo.setJob_id(new Integer(jobId));
-                        reportJobInfo.setRecord_origin_id(originId);
-                        reportJobInfo.setRecord_status(JobConfigStatus.NORMAL.value());
-                        reportJobInfo.setRecord_user_id(userId);
+                    recordProcessDao.createReportJobInfo(reportJobInfo);
+                    Integer reportId = reportJobInfo.getReport_id();
 
-                        recordProcessDao.createReportJobInfo(reportJobInfo);
-                        Integer reportId = reportJobInfo.getReport_id();
-
+                    List<JobUnitConfig> jobUnits = jobConfigEntity.getJobUnits();
+                    for (JobUnitConfig jobUnit : jobUnits) {
+                        List<ReportFldConfig> unitFlds = jobUnit.getUnitFlds();
                         for (ReportFldConfig unitFld : unitFlds) {
                             int fldId = unitFld.getFld_id();
                             ReportJobData reportJobData = new ReportJobData();
@@ -73,11 +73,10 @@ public class RecordProcessServiceImp implements RecordProcessService {
                             reportJobData.setFld_id(fldId);
                             reportJobData.setReport_id(reportId);
                             reportJobData.setUnit_id(jobUnit.getJob_unit_id());
-                            reportJobData.setRecord_data("预设值");
+                            reportJobData.setRecord_data("");
                             recordProcessDao.createRcdReortJobData(reportJobData,jobId);
                         }
                     }
-
                 }
 
                 logger.info("填报任务发布完成:{}",jobConfigEntity.getJob_name());
