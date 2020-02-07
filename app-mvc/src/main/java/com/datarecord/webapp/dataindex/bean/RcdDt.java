@@ -13,7 +13,7 @@ public class RcdDt {
     private String fld_name;  //指标名称
     private int  fld_type;   //指标类型 0:通用指标 1:突发指标
     private String fld_point;    //指标单位
-    private String fld_data_type;  //0:字符串 1:数字 2:日期 3:数据字典
+    private String fld_data_type;  //0:字符串 1:数字 2:日期 3:
     private int  fld_is_null;
 
     public int getFld_is_null() {

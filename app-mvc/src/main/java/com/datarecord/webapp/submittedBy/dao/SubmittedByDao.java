@@ -28,14 +28,14 @@ public interface SubmittedByDao {
 
 
     @Select("<script>SELECT \n" +
-            "           a.*, b.user_name,\n" +
+            "           a.*, b.user_name_cn,\n" +
             "            c.origin_name\n" +
             "            FROM \n" +
             "            rcd_person_config a\n" +
             "            LEFT JOIN data_record.user b ON a.user_id = b.user_id\n" +
             "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id \n" +
             "             WHERE  1=1 \n" +
-            "<if test = \"user_name != null and user_name != ''\"> AND b.user_name like concat('%',#{user_name},'%') </if> </script>")
+            "<if test = \"user_name != null and user_name != ''\"> AND b.user_name_cn like concat('%',#{user_name},'%') </if> </script>")
     Page<SubmittedBy> rcdpersonconfiglist(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("user_name") String user_name);
 
     @Select("<script> SELECT\n" +
