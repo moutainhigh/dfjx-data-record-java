@@ -43,7 +43,7 @@ public interface SubmittedByDao {
             "\tb.user_name\n" +
             "FROM\n" +
             "\tuser_origin_assign a\n" +
-            "LEFT JOIN data_record.user b ON a.user_id = b.user_id\n" +
+            "inner JOIN data_record.user b ON a.user_id = b.user_id\n" +
             "WHERE\n" +
             "\t1 = 1\n" +
             "<if test = \"origin_id != null and origin_id != ''\"> AND a.origin_id =#{origin_id} </if> </script>")
@@ -63,4 +63,17 @@ public interface SubmittedByDao {
 
     @Delete("DELETE FROM rcd_person_config WHERE user_id = #{user_id}")
     void deletercdpersonconfigbyuserid(@Param("user_id") String user_id);
+
+    @Select("SELECT\n" +
+            "\ta.origin_id AS id,\n" +
+            "\ta.origin_name AS NAME,\n" +
+            "\ta.parent_origin_id AS pId,\n" +
+            "\tc.user_id,\n" +
+            "\tc.user_name\n" +
+            "FROM\n" +
+            "\tsys_origin a\n" +
+            "LEFT JOIN user_origin_assign b ON a.origin_id = b.origin_id\n" +
+            "LEFT JOIN data_record.user c ON b.user_id = c.user_id")
+    @Options(useCache = false)
+    List<EntityTree> listOrgDatauser();
 }

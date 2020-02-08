@@ -7,14 +7,14 @@ import com.webapp.support.page.PageResult;
 import java.util.List;
 
 public interface SubmittedByService {
-    
+
     String selectOrgId(int user_id);
 
     List<EntityTree> listOrgData();
 
     PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name);
 
-    List<Useroriginassign> useroriginassignlist(String origin_id);
+    List<Object> useroriginassignlist(String origin_id);
 
     void insertrcdpersonconfig(String origin_id, String userid);
 

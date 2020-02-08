@@ -28,7 +28,7 @@ public interface ReportingGroupDao {
     @Delete("DELETE FROM rcd_job_unit_fld WHERE  job_unit_id =#{jobunitid}")
     void rcdjobunitflddelete(@Param("jobunitid") String jobunitid);
 
-    @Select("SELECT fld_id FROM rcd_job_unit_fld where job_unit_id = #{job_unit_id}")
+    @Select("SELECT a.fld_id,b.fld_name FROM rcd_job_unit_fld  a left join  rcd_dt_fld  b   on  a.fld_id = b.fld_id    where a.job_unit_id = #{job_unit_id}")
     List<RcdJobUnitFld> selectrcdjobunitfld(@Param("job_unit_id") String job_unit_id);
 
     @Insert("INSERT  INTO rcd_job_unit_config(job_unit_name,job_id,job_unit_active) VALUES(#{job_unit_name},#{job_id},#{job_unit_active})")

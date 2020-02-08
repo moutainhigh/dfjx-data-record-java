@@ -4,6 +4,15 @@ public class RcdJobUnitFld {
 
   private int    job_unit_id;
   private int    fld_id;
+  private String fld_name;
+
+    public String getFld_name() {
+        return fld_name;
+    }
+
+    public void setFld_name(String fld_name) {
+        this.fld_name = fld_name;
+    }
 
     public int getJob_unit_id() {
         return job_unit_id;

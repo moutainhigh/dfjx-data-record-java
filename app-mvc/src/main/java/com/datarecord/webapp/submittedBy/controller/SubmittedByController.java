@@ -82,7 +82,8 @@ public class SubmittedByController {
     public String useroriginassignlist(
             @RequestParam("origin_id")String origin_id
     ){
-      List<Useroriginassign>  ll = new ArrayList<Useroriginassign>();
+     //List<Useroriginassign>  ll = new ArrayList<Useroriginassign>();
+      List<Object>  ll = new ArrayList<Object>();
         String jsonResult = "";
         try{
             ll = submittedByService.useroriginassignlist(origin_id);
