@@ -29,7 +29,7 @@ public class RecordProcessController {
     public JsonResult makeJob(String jobId){
         recordProcessService.makeJob(jobId);
         JsonResult successResult = JsonSupport.makeJsonpResult(
-                JsonResult.RESULT.SUCCESS, "发布流程已驱动", null, JsonResult.RESULT.SUCCESS.toString());
+                JsonResult.RESULT.SUCCESS, "发布流程已启动", null, JsonResult.RESULT.SUCCESS.toString());
         return successResult;
     }
 
