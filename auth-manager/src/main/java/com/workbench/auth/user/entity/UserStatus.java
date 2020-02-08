@@ -6,7 +6,9 @@ public enum UserStatus {
     LOCK(1,"锁定"),
     DELETE(2,"软删除"),
     PWD_EXPIRED(3,"密码过期"),
-    STOP(4,"停用");
+    STOP(4,"停用"),
+    NEVER_LOGIN(5,"从未登陆"),
+    NOT_NOMAL_TAG(6,"非正常标记");//仅将该用户打为不正常,不影响任何动作
 
     private int status ;
 
@@ -20,6 +22,10 @@ public enum UserStatus {
 
     public int getStatus(){
         return status;
+    }
+
+    public String getStatus_cn(){
+        return status_cn;
     }
 
     public boolean equal(int status){

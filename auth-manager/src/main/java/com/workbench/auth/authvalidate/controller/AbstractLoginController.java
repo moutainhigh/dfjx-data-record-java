@@ -1,7 +1,7 @@
 package com.workbench.auth.authvalidate.controller;
 
 import com.webapp.support.session.SessionSupport;
-import org.apache.shiro.SecurityUtils;
+import com.workbench.shiro.WorkbenchShiroUtils;
 
 /**
  * Created by SongCQ on 2018/10/23.
@@ -9,8 +9,7 @@ import org.apache.shiro.SecurityUtils;
 public abstract class AbstractLoginController {
 
     public final Object getLoginUserInfo(){
-        Object user = SecurityUtils.getSubject().getPrincipal();
-
+        Object user = WorkbenchShiroUtils.checkUserFromShiroContext();
         return user;
     }
 

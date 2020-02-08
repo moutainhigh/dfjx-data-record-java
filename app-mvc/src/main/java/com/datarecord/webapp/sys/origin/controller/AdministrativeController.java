@@ -7,6 +7,7 @@ import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
 import com.webapp.support.session.SessionSupport;
 import com.workbench.auth.user.entity.User;
+import com.workbench.shiro.WorkbenchShiroUtils;
 import com.workbench.spring.aop.annotation.JsonpCallback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,7 +54,7 @@ public class AdministrativeController {
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public JsonResult addAdministrative(@RequestBody Administrative administrative){
-        User user = SessionSupport.checkoutUserFromSession();
+        User user = WorkbenchShiroUtils.checkUserFromShiroContext();
         administrative.setCreate_user(user.getUser_id());
         administrativeService.addAdministrative(administrative);
         JsonResult jsonResult = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "保存成功", null,null);

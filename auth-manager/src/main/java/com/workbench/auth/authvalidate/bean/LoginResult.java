@@ -33,6 +33,8 @@ public class LoginResult {
         USERNM_NOT_NULL,
         LOCK,
         STATUS_FAIL,
+        NEVER_LOGIN,
+        USER_STATS_NOT_NORMAL,
         PWD_EXPIRED;
     }
 }

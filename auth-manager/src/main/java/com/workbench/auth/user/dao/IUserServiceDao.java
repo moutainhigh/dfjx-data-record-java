@@ -16,7 +16,18 @@ import java.util.Map;
 @Repository
 public interface IUserServiceDao {
 
-    String query_user_columns = "SELECT u.user_id,u.user_name,u.user_name_cn,u.user_type,u.reg_date,u.user_status,u.last_login_time";
+    String query_user_columns = "SELECT " +
+            "u.user_id," +
+            "u.user_name," +
+            "u.user_name_cn," +
+            "u.user_type," +
+            "u.reg_date," +
+            "u.user_status," +
+            "u.office_phone," +
+            "u.mobile_phone," +
+            "u.email," +
+            "u.social_code," +
+            "u.last_login_time";
 
     String TABLE_NAME= "user u";
 
@@ -43,11 +54,15 @@ public interface IUserServiceDao {
     @Options(useCache = false)
     List<User> listAllUser();
 
-    @Select("<script>"+query_user_columns + " FROM "+TABLE_NAME +
-            "  where u.user_name like concat('%',#{user_name},'%')"+
+    @Select("<script>"+query_user_columns + ",so.origin_id,so.origin_name FROM "+TABLE_NAME +
+            "  , user_origin_assign uoa,sys_origin so where u.user_name like concat('%',#{user_name},'%')"+
             "  <if test=\"user_id != 0\"> and u.user_id = #{user_id} </if> " +
             "  <if test=\"user_type != null\">   and u.user_type=#{user_type}  </if> " +
             "  <if test=\"user_type == null\">   and (u.user_type=1 or u.user_type=0)  </if> " +
+            " and u.user_id = uoa.user_id " +
+            " and so.origin_id = uoa.origin_id"+
+            " and so.origin_id = uoa.origin_id"+
+            "  <if test=\"originId != null\"> and uoa.origin_id = #{originId} </if> " +
             "</script>" )
     @Options(useCache = false)
     Page<User> listUsersForPage(@Param("currPage") int currPage, @Param("pageSize") int pageSize
@@ -62,8 +77,10 @@ public interface IUserServiceDao {
     Page<User> pageUsers(@Param("currPage") int currPage, @Param("pageSize") int pageSize
             ,@Param("user_id") int user_id,@Param("user_name") String user_name,@Param("user_type")String user_type);
 
-    @Insert("INSERT INTO user (user_id,user_name,user_name_cn,user_type,reg_date,user_status,last_login_time,user_pwd) " +
-            " VALUE (#{user_id},#{user_name},#{user_name_cn},#{user_type},now(),#{user_status},#{last_login_time},#{user_pwd})")
+    @Insert("INSERT INTO user (user_id,user_name,user_name_cn,user_type,reg_date,user_status,last_login_time,user_pwd" +
+            ",user_name_cn,office_phone,mobile_phone,email,social_code) " +
+            " VALUE (#{user_id},#{user_name},#{user_name_cn},#{user_type},now(),#{user_status},#{last_login_time},#{user_pwd}" +
+            ",#{user_name_cn},#{office_phone},#{mobile_phone},#{email},#{social_code})")
     @Options(useCache = false)
     void saveNewUser(User user);
 
@@ -78,7 +95,18 @@ public interface IUserServiceDao {
     @Options(useCache = false)
     List<Menu> getMenuList4User(String user_nm);
 
-    @Update("update user set user_name=#{user_name} ,user_type=#{user_type},user_status=#{user_status} where user_id=#{user_id}")
+    @Update("<script>" +
+            "update user set " +
+            "user_name=#{user_name} " +
+            ",user_type=#{user_type}," +
+            "user_status=#{user_status} " +
+            "<if test='user_name_cn!=null'> ,user_name_cn=#{user_name_cn}</if>" +
+            "<if test='office_phone!=null'> ,office_phone=#{office_phone}</if>" +
+            "<if test='mobile_phone!=null'> ,mobile_phone=#{mobile_phone}</if>" +
+            "<if test='email!=null'> ,email=#{email}</if>" +
+            "<if test='social_code!=null'> ,social_code=#{social_code}</if>" +
+            "where user_id=#{user_id}" +
+            "</script>")
     @Options(useCache = false)
     void updateSave(User user);
 
