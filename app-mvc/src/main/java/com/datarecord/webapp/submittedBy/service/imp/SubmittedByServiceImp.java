@@ -60,6 +60,7 @@ public class SubmittedByServiceImp  implements SubmittedByService {
                 mapArr.put("user_id", x.getUser_id());
                 mapArr.put("user_name", x.getUser_name());
                // this.menuChild(x.getId());
+
                 list.add(mapArr);
             }else{
                 if(x.getId().equals(origin_id)){
@@ -86,6 +87,7 @@ public class SubmittedByServiceImp  implements SubmittedByService {
             }
             break;
         }
+
         return list;
     }*/
 
