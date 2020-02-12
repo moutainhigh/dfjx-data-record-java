@@ -57,9 +57,9 @@ public interface IRecordProcessDao {
     })
     List<JobUnitConfig> getJobUnitsByJobId(@Param("jobId") String jobId);
 
-
-
-    @Select("SELECT "+
+    @Select("SELECT " +
+            "rdc.catg_name," +
+            "rdc.catg_id,"+
             "rjuf.job_unit_id,"+
             "rdf.fld_id ,"+
             "rdf.fld_name ,"+
@@ -70,7 +70,9 @@ public interface IRecordProcessDao {
             "rdf.is_actived "+
             "FROM rcd_job_unit_fld rjuf "+
             "left join rcd_dt_fld rdf on "+
-            "rjuf.fld_id = rdf.fld_id "+
+            "rjuf.fld_id = rdf.fld_id " +
+            "left join rcd_dt_catg rdc on " +
+            "rdf.catg_id = rdc.catg_id "+
             "where rjuf.job_unit_id=#{unitId}")
     List<ReportFldConfig> getFldByUnitId(@Param("unitId") String unitId);
 

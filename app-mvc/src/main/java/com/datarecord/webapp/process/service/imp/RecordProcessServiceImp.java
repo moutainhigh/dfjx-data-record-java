@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,13 +119,29 @@ public class RecordProcessServiceImp implements RecordProcessService {
         ReportJobInfo reportJobInfo = recordProcessDao.getReportJobInfoByReportId(reportId);
         JobConfig jobConfigEntity = recordProcessDao.getJobConfigByJobId(reportJobInfo.getJob_id().toString());
 
+
         return jobConfigEntity;
     }
 
     @Override
-    public List<ReportFldConfig> getFldByUnitId(String unitId) {
+    public List<ReportFldTypeConfig> getFldByUnitId(String unitId) {
         List<ReportFldConfig> unitFlds = recordProcessDao.getFldByUnitId(unitId);
-        return unitFlds;
+
+        Map<Integer,ReportFldTypeConfig> catgFldMapTmp = new HashMap<>();
+        for (ReportFldConfig unitFld : unitFlds) {
+            Integer catgId = unitFld.getCatg_id();
+            if(!catgFldMapTmp.containsKey(catgId)){
+                ReportFldTypeConfig reportFldTypeConfig = new ReportFldTypeConfig();
+                reportFldTypeConfig.setCatg_id(catgId);
+                reportFldTypeConfig.setCatg_name(unitFld.getCatg_name());
+                reportFldTypeConfig.setUnitFlds(new ArrayList<>());
+                catgFldMapTmp.put(catgId,reportFldTypeConfig);
+            }
+            catgFldMapTmp.get(catgId).getUnitFlds().add(unitFld);
+        }
+
+
+        return new ArrayList<>(catgFldMapTmp.values());
     }
 
     @Override

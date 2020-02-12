@@ -4,6 +4,7 @@ import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.process.entity.*;
 import com.webapp.support.page.PageResult;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ public interface RecordProcessService {
 
     JobConfig getJobConfigByReportId(String reportId);
 
-    List<ReportFldConfig> getFldByUnitId(String unitId);
+    List<ReportFldTypeConfig> getFldByUnitId(String unitId);
 
     List<ReportJobData> getFldReportDatas(String jobId,String reportId, String groupId);
 
