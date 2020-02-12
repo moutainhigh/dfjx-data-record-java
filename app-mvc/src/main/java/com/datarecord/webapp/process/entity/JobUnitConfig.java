@@ -1,9 +1,5 @@
 package com.datarecord.webapp.process.entity;
 
-
-
-
-
 import java.util.List;
 
 public class JobUnitConfig {
@@ -13,6 +9,7 @@ public class JobUnitConfig {
     private Integer job_unit_active;
     private Integer job_unit_type;
     private List<ReportFldConfig> unitFlds;
+    private List<ReportFldTypeConfig> unitFldTypes;
 
     public Integer getJob_unit_id() {
         return job_unit_id;
@@ -71,5 +68,13 @@ public class JobUnitConfig {
                 append("job_unit_type:").append(job_unit_type).append(",").
                 append("unitFlds:[").append(unitFlds).append("]}").
                 toString();
+    }
+
+    public List<ReportFldTypeConfig> getUnitFldTypes() {
+        return unitFldTypes;
+    }
+
+    public void setUnitFldTypes(List<ReportFldTypeConfig> unitFldTypes) {
+        this.unitFldTypes = unitFldTypes;
     }
 }

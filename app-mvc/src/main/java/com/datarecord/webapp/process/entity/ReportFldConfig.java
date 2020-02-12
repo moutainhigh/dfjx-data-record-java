@@ -2,14 +2,10 @@ package com.datarecord.webapp.process.entity;
 
 public class ReportFldConfig {
 
-
-
-
-
-
-
     private Integer job_unit_id;
     private String job_unit_name;
+    private Integer catg_id;
+    private String catg_name;
     private Integer fld_id;
     private String fld_name;
     private String fld_point;
@@ -101,5 +97,21 @@ public class ReportFldConfig {
 
     public void setIs_actived(Integer is_actived) {
         this.is_actived = is_actived;
+    }
+
+    public Integer getCatg_id() {
+        return catg_id;
+    }
+
+    public void setCatg_id(Integer catg_id) {
+        this.catg_id = catg_id;
+    }
+
+    public String getCatg_name() {
+        return catg_name;
+    }
+
+    public void setCatg_name(String catg_name) {
+        this.catg_name = catg_name;
     }
 }

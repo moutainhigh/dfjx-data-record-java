@@ -60,9 +60,9 @@ public class RecordProcessController {
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
     public JsonResult getFldByUnitId(@RequestParam("groupId") String groupId){
-        List<ReportFldConfig> jobConfig = recordProcessService.getFldByUnitId(groupId);
+        List<ReportFldTypeConfig> fldConfigs = recordProcessService.getFldByUnitId(groupId);
         JsonResult successResult = JsonSupport.makeJsonpResult(
-                JsonResult.RESULT.SUCCESS, "获取成功", null, jobConfig);
+                JsonResult.RESULT.SUCCESS, "获取成功", null, fldConfigs);
         return successResult;
     }
     @RequestMapping("getUnitDictFldContent")
