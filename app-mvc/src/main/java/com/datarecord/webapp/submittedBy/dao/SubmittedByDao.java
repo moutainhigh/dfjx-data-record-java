@@ -72,8 +72,8 @@ public interface SubmittedByDao {
             "\tc.user_name\n" +
             "FROM\n" +
             "\tsys_origin a\n" +
-            "LEFT JOIN user_origin_assign b ON a.origin_id = b.origin_id\n" +
-            "LEFT JOIN data_record.user c ON b.user_id = c.user_id")
+            "INNER JOIN user_origin_assign b ON a.origin_id = b.origin_id\n" +
+            "INNER JOIN data_record.user c ON b.user_id = c.user_id  where c.user_name != ''  ")
     @Options(useCache = false)
     List<EntityTree> listOrgDatauser();
 }
