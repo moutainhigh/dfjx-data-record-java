@@ -94,6 +94,25 @@ public class SubmittedByController {
         return jsonResult;
     }
 
+    //填报任务填报人维护（获取机构下用户）
+    @RequestMapping("/useroriginassignlistsysorigin")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String useroriginassignlistsysorigin(
+            @RequestParam("origin_id")String origin_id
+    ){
+        //List<Useroriginassign>  ll = new ArrayList<Useroriginassign>();
+        List<Object>  ll = new ArrayList<Object>();
+        String jsonResult = "";
+        try{
+            ll = submittedByService.useroriginassignlistsysorigin(origin_id);
+        }catch(Exception e){
+            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报任务中填报人维护获取弹框列表失败", null, "error");
+        }
+        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报任务中填报人维护获取弹框列表成功", null, ll);
+        return jsonResult;
+    }
+
 
 
     //新增修改确定

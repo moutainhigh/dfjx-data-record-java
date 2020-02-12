@@ -76,4 +76,17 @@ public interface SubmittedByDao {
             "INNER JOIN data_record.user c ON b.user_id = c.user_id  where c.user_name_cn != ''  ")
     @Options(useCache = false)
     List<EntityTree> listOrgDatauser();
+
+    @Select("select \n" +
+            " d.origin_id AS id,\n" +
+            "\td.origin_name AS NAME,\n" +
+            "\td.parent_origin_id AS pId,\n" +
+            "  b.user_id,\t\n" +
+            "\tb.user_name_cn\n" +
+            " from rcd_person_config  a  \n" +
+            " INNER join data_record.user  b ON a.user_id  = b.user_id\n" +
+            " INNER join user_origin_assign c on c.user_id = b.user_id\n" +
+            " INNER JOIN sys_origin d ON c.origin_id = d.origin_id")
+    @Options(useCache = false)
+    List<EntityTree> useroriginassignlistsysorigin();
 }
