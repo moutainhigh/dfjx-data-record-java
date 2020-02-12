@@ -10,14 +10,14 @@ import java.util.List;
 public class EntityTree  {
 
 	private String id;
-	
+
 	private String pId;
-	
+
 	private String name;
 
 	private String user_id;
 
-	private String user_name;
+	private String user_name_cn;
 
 
 	public String getUser_id() {
@@ -28,12 +28,12 @@ public class EntityTree  {
 		this.user_id = user_id;
 	}
 
-	public String getUser_name() {
-		return user_name;
+	public String getUser_name_cn() {
+		return user_name_cn;
 	}
 
-	public void setUser_name(String user_name) {
-		this.user_name = user_name;
+	public void setUser_name_cn(String user_name_cn) {
+		this.user_name_cn = user_name_cn;
 	}
 
 	public String getId() {

@@ -69,11 +69,11 @@ public interface SubmittedByDao {
             "\ta.origin_name AS NAME,\n" +
             "\ta.parent_origin_id AS pId,\n" +
             "\tc.user_id,\n" +
-            "\tc.user_name\n" +
+            "\tc.user_name_cn\n" +
             "FROM\n" +
             "\tsys_origin a\n" +
             "INNER JOIN user_origin_assign b ON a.origin_id = b.origin_id\n" +
-            "INNER JOIN data_record.user c ON b.user_id = c.user_id  where c.user_name != ''  ")
+            "INNER JOIN data_record.user c ON b.user_id = c.user_id  where c.user_name_cn != ''  ")
     @Options(useCache = false)
     List<EntityTree> listOrgDatauser();
 }

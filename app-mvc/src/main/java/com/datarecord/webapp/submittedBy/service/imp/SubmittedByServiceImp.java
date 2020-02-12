@@ -58,14 +58,14 @@ public class SubmittedByServiceImp  implements SubmittedByService {
             Map<String,String> mapArr = new LinkedHashMap<String, String>();
             if(x.getpId().equals(origin_id)){
                 mapArr.put("user_id", x.getUser_id());
-                mapArr.put("user_name", x.getUser_name());
+                mapArr.put("user_name_cn", x.getUser_name_cn());
                // this.menuChild(x.getId());
 
                 list.add(mapArr);
             }else{
                 if(x.getId().equals(origin_id)){
                     mapArr.put("user_id", x.getUser_id());
-                    mapArr.put("user_name", x.getUser_name());
+                    mapArr.put("user_name_cn", x.getUser_name_cn());
                     list.add(mapArr);
                 }
             }
