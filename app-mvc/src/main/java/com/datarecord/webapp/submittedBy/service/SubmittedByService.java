@@ -23,4 +23,6 @@ public interface SubmittedByService {
     void deletercdpersonconfig(String origin_id);
 
     void deletercdpersonconfigbyuserid(String user_id);
+
+    List<Object> useroriginassignlistsysorigin(String origin_id);
 }

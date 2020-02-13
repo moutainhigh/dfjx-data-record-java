@@ -58,38 +58,51 @@ public class SubmittedByServiceImp  implements SubmittedByService {
             Map<String,String> mapArr = new LinkedHashMap<String, String>();
             if(x.getpId().equals(origin_id)){
                 mapArr.put("user_id", x.getUser_id());
-                mapArr.put("user_name", x.getUser_name());
+                mapArr.put("user_name_cn", x.getUser_name_cn());
                // this.menuChild(x.getId());
 
                 list.add(mapArr);
             }else{
                 if(x.getId().equals(origin_id)){
                     mapArr.put("user_id", x.getUser_id());
-                    mapArr.put("user_name", x.getUser_name());
+                    mapArr.put("user_name_cn", x.getUser_name_cn());
                     list.add(mapArr);
                 }
             }
 
         }
         return list;
-      //  return submittedByDao.useroriginassignlist(origin_id);
     }
 
-  /*  public List<?> menuChild(String id){
-        List<Object> lists = new ArrayList<Object>();
-        for(EntityTree a:menuCommon){
-            Map<String,String> childArray = new LinkedHashMap<String, String>();
-            if(a.getpId().equals(id)){
-                childArray.put("user_id", a.getUser_id());
-                childArray.put("user_name", a.getUser_name());
-             //   this.menuChild(a.getId());
-                list.add(childArray);
-            }
-            break;
-        }
 
+    @Override
+    public List<Object> useroriginassignlistsysorigin(String origin_id) {
+        List<EntityTree> menuCommon;
+        Map<String,String> mapArray = new LinkedHashMap<String,String>();
+        List<Object> list = new ArrayList<Object>();
+        List<EntityTree> lists =  submittedByDao.useroriginassignlistsysorigin();
+        menuCommon  = lists;
+        for (EntityTree x : menuCommon) {
+            Map<String,String> mapArr = new LinkedHashMap<String, String>();
+            if(x.getpId().equals(origin_id)){
+                mapArr.put("user_id", x.getUser_id());
+                mapArr.put("user_name_cn", x.getUser_name_cn());
+                // this.menuChild(x.getId());
+
+                list.add(mapArr);
+            }else{
+                if(x.getId().equals(origin_id)){
+                    mapArr.put("user_id", x.getUser_id());
+                    mapArr.put("user_name_cn", x.getUser_name_cn());
+                    list.add(mapArr);
+                }
+            }
+
+        }
         return list;
-    }*/
+    }
+
+
 
 
     @Override
@@ -116,4 +129,6 @@ public class SubmittedByServiceImp  implements SubmittedByService {
     public void deletercdpersonconfigbyuserid(String user_id) {
         submittedByDao.deletercdpersonconfigbyuserid(user_id);
     }
+
+
 }
