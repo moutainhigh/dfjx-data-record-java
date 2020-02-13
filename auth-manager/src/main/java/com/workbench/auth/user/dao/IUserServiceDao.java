@@ -77,9 +77,9 @@ public interface IUserServiceDao {
     Page<User> pageUsers(@Param("currPage") int currPage, @Param("pageSize") int pageSize
             ,@Param("user_id") int user_id,@Param("user_name") String user_name,@Param("user_type")String user_type);
 
-    @Insert("INSERT INTO user (user_id,user_name,user_name_cn,user_type,reg_date,user_status,last_login_time,user_pwd" +
+    @Insert("INSERT INTO user (user_id,user_name,user_type,reg_date,user_status,last_login_time,user_pwd" +
             ",user_name_cn,office_phone,mobile_phone,email,social_code) " +
-            " VALUE (#{user_id},#{user_name},#{user_name_cn},#{user_type},now(),#{user_status},#{last_login_time},#{user_pwd}" +
+            " VALUE (#{user_id},#{user_name},#{user_type},now(),#{user_status},#{last_login_time},#{user_pwd}" +
             ",#{user_name_cn},#{office_phone},#{mobile_phone},#{email},#{social_code})")
     @Options(useCache = false)
     void saveNewUser(User user);
