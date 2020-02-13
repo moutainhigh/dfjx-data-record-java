@@ -30,6 +30,8 @@ public interface RcdDtDao {
             "  c.proj_id,\n" +
             "  c.proj_name,\n" +
             "  a.fld_data_type,\n" +
+            "  a.fld_range,\n" +
+            "  a.fld_visible,\n" +
             "  a.fld_is_null\n" +
             "FROM\n" +
             "\trcd_dt_fld a\n" +
@@ -41,8 +43,8 @@ public interface RcdDtDao {
     Page<RcdDt> selecttixircddtproj(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("catg_id") String catg_id);
 
 
-    @Insert("INSERT INTO rcd_dt_fld (catg_id,fld_name,fld_data_type,fld_is_null,fld_type) VALUES(#{catg_id},#{fld_name},#{fld_data_type},#{fld_is_null},#{fld_type})")
-    void insertrcddtfld(@Param("catg_id") String catg_id, @Param("fld_name") String fld_name, @Param("fld_data_type") String fld_data_type, @Param("fld_is_null") String fld_is_null,@Param("fld_type") String fld_type);
+    @Insert("INSERT INTO rcd_dt_fld (catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible) VALUES(#{catg_id},#{fld_name},#{fld_data_type},#{fld_is_null},#{fld_type},#{fld_range},#{fld_visible})")
+    void insertrcddtfld(@Param("catg_id") String catg_id, @Param("fld_name") String fld_name, @Param("fld_data_type") String fld_data_type, @Param("fld_is_null") String fld_is_null,@Param("fld_type") String fld_type,@Param("fld_range")String fld_range,@Param("fld_visible")String fld_visible);
 
 
     @Insert("INSERT INTO rcd_dt_fld_ct_assign (fld_id,dict_content_id) VALUES(#{fld_id},#{dict_contentid})")
@@ -55,8 +57,8 @@ public interface RcdDtDao {
     void deletercddtfldctassign(@Param("fld_id") String fld_id);
 
 
-    @Update("UPDATE rcd_dt_fld set catg_id =#{catg_id},fld_name =#{fld_name},fld_data_type =#{fld_data_type},fld_is_null =#{fld_is_null},fld_type = #{fld_type} where fld_id =#{fld_id}")
-    void updatercddtfld(@Param("fld_id") String fld_id, @Param("catg_id") String catg_id, @Param("fld_name") String fld_name, @Param("fld_data_type") String fld_data_type, @Param("fld_is_null") String fld_is_null,@Param("fld_type") String fld_type);
+    @Update("UPDATE rcd_dt_fld set catg_id =#{catg_id},fld_name =#{fld_name},fld_data_type =#{fld_data_type},fld_is_null =#{fld_is_null},fld_type = #{fld_type},fld_range= #{fld_range},fld_visible = #{fld_visible} where fld_id =#{fld_id}")
+    void updatercddtfld(@Param("fld_id") String fld_id, @Param("catg_id") String catg_id, @Param("fld_name") String fld_name, @Param("fld_data_type") String fld_data_type, @Param("fld_is_null") String fld_is_null,@Param("fld_type") String fld_type,@Param("fld_range")String fld_range,@Param("fld_visible")String fld_visible);
 
     @Select("SELECT proj_id,proj_name FROM rcd_dt_proj ")
     List<Rcddtproj> leftrcddtprojjblx();

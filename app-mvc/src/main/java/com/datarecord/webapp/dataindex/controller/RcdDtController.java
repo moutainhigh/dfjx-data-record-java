@@ -189,13 +189,15 @@ public class RcdDtController {
             @RequestParam("fld_name") String fld_name,    // 名称
             @RequestParam("fld_type") String fld_type,    // 类型0:通用指标 1 突发指标
             @RequestParam("fld_data_type") String fld_data_type,
+            @RequestParam("fld_visible") String fld_visible,  //可见范围：0-全部、1-移动端可见、2-PC端可见
+            @RequestParam("fld_range") String fld_range,      //取值范围：0-所有、1-移动端、2-PC端
             @RequestParam("fld_is_null") String fld_is_null,
             @RequestParam("dict_content_id") String dict_content_id  //数据字典内容编码
     ){
         String jsonResult = "";
         if(!catg_id.isEmpty()  && !fld_name.isEmpty()  && !fld_data_type.isEmpty()  && !fld_is_null.isEmpty()  && !fld_type.isEmpty()){
             try{
-                rcdDtService.insertrcddtfld(catg_id,fld_name,fld_data_type,fld_is_null,fld_type);
+                rcdDtService.insertrcddtfld(catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible);
               int  fid = rcdDtService.selectmax();
               String  fld_id = String.valueOf(fid);
                 if(!fld_id.isEmpty() && !dict_content_id.isEmpty()){
@@ -229,13 +231,15 @@ public class RcdDtController {
             @RequestParam("fld_type") String fld_type,    // 类型0:通用指标 1 突发指标
             @RequestParam("fld_data_type") String fld_data_type,
             @RequestParam("fld_is_null") String fld_is_null,
+            @RequestParam("fld_visible") String fld_visible,  //可见范围：0-全部、1-移动端可见、2-PC端可见
+            @RequestParam("fld_range") String fld_range,      //取值范围：0-所有、1-移动端、2-PC端
             @RequestParam("fld_id") String fld_id,    //指标id
             @RequestParam("dict_content_id") String dict_content_id  //数据字典内容编码数组
     ){
         String jsonResult = "";
         if(!catg_id.isEmpty()  && !fld_name.isEmpty()  && !fld_data_type.isEmpty()  && !fld_is_null.isEmpty()  && !fld_type.isEmpty()){
             try{
-                rcdDtService.updatercddtfld(fld_id,catg_id,fld_name,fld_data_type,fld_is_null,fld_type);
+                rcdDtService.updatercddtfld(fld_id,catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible);
                 if(!fld_id.isEmpty() && !dict_content_id.isEmpty() ){
                     rcdDtService.deletercddtfldctassign(fld_id);
                    /* dict_content_id.substring(1);

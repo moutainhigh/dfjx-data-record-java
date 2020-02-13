@@ -16,6 +16,25 @@ public class RcdDt {
     private String fld_data_type;  //0:字符串 1:数字 2:日期 3:
     private int  fld_is_null;
 
+    private int fld_range;   //取值范围：0-所有、1-移动端、2-PC端
+    private int fld_visible;  //可见范围：0-全部、1-移动端可见、2-PC端可见
+
+    public int getFld_range() {
+        return fld_range;
+    }
+
+    public void setFld_range(int fld_range) {
+        this.fld_range = fld_range;
+    }
+
+    public int getFld_visible() {
+        return fld_visible;
+    }
+
+    public void setFld_visible(int fld_visible) {
+        this.fld_visible = fld_visible;
+    }
+
     public int getFld_is_null() {
         return fld_is_null;
     }
@@ -109,6 +128,8 @@ public class RcdDt {
                 ", fld_point='" + fld_point + '\'' +
                 ", fld_data_type='" + fld_data_type + '\'' +
                 ", fld_is_null=" + fld_is_null +
+                ", fld_range=" + fld_range +
+                ", fld_visible=" + fld_visible +
                 '}';
     }
 }
