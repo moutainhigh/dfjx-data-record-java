@@ -2,8 +2,10 @@ package com.datarecord.webapp.process.controller;
 
 
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
+import com.datarecord.webapp.dataindex.bean.RcdClientType;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessService;
+import com.google.common.base.Strings;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
@@ -65,6 +67,37 @@ public class RecordProcessController {
                 JsonResult.RESULT.SUCCESS, "获取成功", null, fldConfigs);
         return successResult;
     }
+
+    /**
+     * @param groupId
+     * @param clientType 取值:PC MOBILE
+     * @return
+     */
+    @RequestMapping("getClientFldByUnitId")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult getClientFldByUnitId(
+            @RequestParam("groupId") String groupId,
+            @RequestParam("clientType") String clientType){
+        Integer clientTypeInt = 820;
+        if(!Strings.isNullOrEmpty(clientType)&&clientType.equals(RcdClientType.PC.toString())){
+            clientTypeInt = RcdClientType.PC.getValue();
+        }
+        if(!Strings.isNullOrEmpty(clientType)&&clientType.equals(RcdClientType.MOBILE.toString())){
+            clientTypeInt = RcdClientType.PC.getValue();
+        }
+
+        if(clientTypeInt==820){
+            JsonResult faildResult = JsonSupport.makeJsonpResult(
+                    JsonResult.RESULT.FAILD, "未找到对应的填报端", "未找到对应的填报端", null);
+            return faildResult;
+        }
+        List<ReportFldTypeConfig> fldConfigs = recordProcessService.getClientFldByUnitId(groupId,clientType);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, fldConfigs);
+        return successResult;
+    }
+
     @RequestMapping("getUnitDictFldContent")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")

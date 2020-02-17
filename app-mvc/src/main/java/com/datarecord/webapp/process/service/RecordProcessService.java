@@ -25,4 +25,6 @@ public interface RecordProcessService {
     void saveGridDatas(ReportJobInfo reportJobInfo);
 
     Map<Integer, Map<Integer, String>> validateGridDatas(List<ReportJobData> reportJobDataList, String unitId);
+
+    List<ReportFldTypeConfig> getClientFldByUnitId(String groupId, String clientType);
 }

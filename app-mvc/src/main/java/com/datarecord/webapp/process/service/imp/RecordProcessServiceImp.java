@@ -1,5 +1,6 @@
 package com.datarecord.webapp.process.service.imp;
 
+import com.datarecord.webapp.dataindex.bean.RcdClientType;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessService;
@@ -127,6 +128,12 @@ public class RecordProcessServiceImp implements RecordProcessService {
     public List<ReportFldTypeConfig> getFldByUnitId(String unitId) {
         List<ReportFldConfig> unitFlds = recordProcessDao.getFldByUnitId(unitId);
 
+        ArrayList<ReportFldTypeConfig> catgFlds = this.groupFLdCatge(unitFlds);
+
+        return catgFlds;
+    }
+
+    private ArrayList<ReportFldTypeConfig> groupFLdCatge(List<ReportFldConfig> unitFlds ){
         Map<Integer,ReportFldTypeConfig> catgFldMapTmp = new HashMap<>();
         for (ReportFldConfig unitFld : unitFlds) {
             Integer catgId = unitFld.getCatg_id();
@@ -139,7 +146,6 @@ public class RecordProcessServiceImp implements RecordProcessService {
             }
             catgFldMapTmp.get(catgId).getUnitFlds().add(unitFld);
         }
-
 
         return new ArrayList<>(catgFldMapTmp.values());
     }
@@ -272,5 +278,44 @@ public class RecordProcessServiceImp implements RecordProcessService {
 
         return validateResultMap;
 
+    }
+
+    @Override
+    public List<ReportFldTypeConfig> getClientFldByUnitId(String groupId, String clientType) {
+        if(Strings.isNullOrEmpty(clientType)){
+            return null;
+        }else{
+            List<ReportFldConfig> allGroupFlds = recordProcessDao.getFldByUnitId(groupId);
+            List<ReportFldConfig> pcGroupFlds = new ArrayList<>();
+            List<ReportFldConfig> mobileGroupFlds = new ArrayList<>();
+            for (ReportFldConfig groupFld : allGroupFlds) {
+                Integer fldRange = groupFld.getFld_range();//哪个客户端填写：0-所有、1-移动端、2-PC端.
+                Integer fldVisible = groupFld.getFld_visible();//哪个客户端需要显示：0-所有、1-移动端、2-PC端.
+
+                if(RcdClientType.ALL.getValue()==fldRange){
+                    //do nothing
+                    pcGroupFlds.add(groupFld);
+                    mobileGroupFlds.add(groupFld);
+                }else if(RcdClientType.PC.getValue()==fldRange&&
+                        RcdClientType.MOBILE.getValue()!=fldVisible){
+                    pcGroupFlds.add(groupFld);
+                }else if(RcdClientType.MOBILE.getValue()==fldRange&&
+                        RcdClientType.PC.getValue()!=fldVisible){
+                    mobileGroupFlds.add(groupFld);
+                }else{
+
+                }
+            }
+
+            if(RcdClientType.PC.toString().equals(clientType)){
+                List<ReportFldTypeConfig> pcGroupFldList = this.groupFLdCatge(pcGroupFlds);
+                return pcGroupFldList;
+            }else if (RcdClientType.MOBILE.toString().equals(clientType)){
+                List<ReportFldTypeConfig> pcGroupFldList = this.groupFLdCatge(pcGroupFlds);
+                return pcGroupFldList;
+            }else{
+                return null;
+            }
+        }
     }
 }

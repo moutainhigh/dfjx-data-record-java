@@ -13,6 +13,8 @@ public class ReportFldConfig {
     private Integer fld_type;
     private Integer fld_is_null;
     private Integer is_actived;
+    private Integer fld_range;
+    private Integer fld_visible;
 
     public Integer getJob_unit_id() {
         return job_unit_id;
@@ -113,5 +115,21 @@ public class ReportFldConfig {
 
     public void setCatg_name(String catg_name) {
         this.catg_name = catg_name;
+    }
+
+    public Integer getFld_range() {
+        return fld_range;
+    }
+
+    public void setFld_range(Integer fld_range) {
+        this.fld_range = fld_range;
+    }
+
+    public Integer getFld_visible() {
+        return fld_visible;
+    }
+
+    public void setFld_visible(Integer fld_visible) {
+        this.fld_visible = fld_visible;
     }
 }

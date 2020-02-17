@@ -67,6 +67,8 @@ public interface IRecordProcessDao {
             "rdf.fld_data_type ,"+
             "rdf.fld_type ,"+
             "rdf.fld_is_null ,"+
+            "rdf.fld_range ,"+
+            "rdf.fld_visible ,"+
             "rdf.is_actived "+
             "FROM rcd_job_unit_fld rjuf "+
             "left join rcd_dt_fld rdf on "+
