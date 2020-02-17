@@ -7,13 +7,11 @@ import com.datarecord.webapp.dataindex.dao.RcdDtDao;
 import com.datarecord.webapp.dataindex.service.RcdDtService;
 import com.github.pagehelper.Page;
 import com.webapp.support.page.PageResult;
-import jdk.management.resource.internal.inst.FileOutputStreamRMHooks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
