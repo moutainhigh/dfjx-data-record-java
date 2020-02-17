@@ -109,7 +109,7 @@ public class RcdDtController {
         try{
            int tt =  rcdDtService.selectcount(fld_id);    //查询是否有关连
             if (tt > 0){
-                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "此指标下已关连任务无法删除", null, "error");
+                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "此指标下已有关连任务无法删除", null, "error");
             }
             rcdDtService.deletercddtfld(fld_id);
         }catch(Exception e){
