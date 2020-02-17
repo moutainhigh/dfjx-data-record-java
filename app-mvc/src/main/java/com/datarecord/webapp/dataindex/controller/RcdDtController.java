@@ -43,12 +43,79 @@ public class RcdDtController {
             try{
                 rcdDtService.insertrcddtproj(proj_name,is_actived);
             }catch(Exception e){
-                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增数据字典类型失败", null, "error");
+                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增基本类型失败", null, "error");
             }
         }else{
             return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
         }
-        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增数据字典类型成功", null, "success");
+        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增基本类型成功", null, "success");
+    }
+
+
+    //基本类型删除  一级
+    @RequestMapping("/deletercddtproj")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String deletercddtproj(
+            @RequestParam("proj_id") String proj_id
+    ){
+        String jsonResult = "";
+            try{
+                List<Object>  ll = new ArrayList<Object>();
+                ll =   rcdDtService.selectrcddtcatgproj(proj_id);
+                if (ll.size() != 0){
+                    return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标基本类别下已有关连任务无法删除", null, "error");
+                }
+                for(int i=0;i<ll.size();i++){
+                    rcdDtService.deleteererrcddtfldI(i);   // rcd_dt_fld   三级  catg_id
+                }
+                rcdDtService.deletercddtproj(proj_id);   //一级二级  proj_id
+            }catch(Exception e){
+                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除基本类型失败", null, "error");
+            }
+        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除基本类型成功", null, "success");
+    }
+
+    //指标类别删除  二级
+    @RequestMapping("/deletrcddtcatg")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String deletrcddtcatg(
+            @RequestParam("catg_id") String catg_id
+    ){
+        String jsonResult = "";
+        try{
+            List<Object>  ll = new ArrayList<Object>();
+            ll =   rcdDtService.selectrcddtcatg(catg_id);
+            if (ll.size() != 0){
+                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标类别下已有关连任务无法删除", null, "error");
+            }
+            rcdDtService.deletrcddtcatg(catg_id);  //rcd_dt_catg   二级   catg_id
+            rcdDtService.deleteererrcddtfld(catg_id);   // rcd_dt_fld   三级  catg_id
+        }catch(Exception e){
+            return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除二级基本类型失败", null, "error");
+        }
+        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除二级基本类型成功", null, "success");
+    }
+
+    //指标类别删除  三级
+    @RequestMapping("/deletercddtfld")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String deletercddtfld(
+            @RequestParam("fld_id") String fld_id
+    ){
+        String jsonResult = "";
+        try{
+           int tt =  rcdDtService.selectcount(fld_id);    //查询是否有关连
+            if (tt > 0){
+                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "此指标下已关连任务无法删除", null, "error");
+            }
+            rcdDtService.deletercddtfld(fld_id);
+        }catch(Exception e){
+            return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除三级基本类型失败", null, "error");
+        }
+        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除三级基本类型成功", null, "success");
     }
 
 

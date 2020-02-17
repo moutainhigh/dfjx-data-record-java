@@ -35,7 +35,7 @@ public class RecordProcessServiceImp implements RecordProcessService {
     public void makeJob(String jobId) {
         JobConfig jobConfigEntity = recordProcessDao.getJobConfigByJobId(jobId);
         logger.info("job config entity : {}",jobConfigEntity);
-        //根据任务建表,每个填报任务对应一张表
+        //根据任务建表,每个对应一张表
         recordProcessDao.dropJobDataTable(jobId);
         recordProcessDao.makeJobDataTable(jobId);
 
@@ -263,7 +263,7 @@ public class RecordProcessServiceImp implements RecordProcessService {
                     throw new WorkbenchRuntimeException("填报项"+fldId+"找不到定义",new Exception("填报项"+fldId+"找不到定义"));
                 }
             }
-            
+
 
 
         }else{

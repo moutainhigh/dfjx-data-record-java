@@ -7,11 +7,13 @@ import com.datarecord.webapp.dataindex.dao.RcdDtDao;
 import com.datarecord.webapp.dataindex.service.RcdDtService;
 import com.github.pagehelper.Page;
 import com.webapp.support.page.PageResult;
+import jdk.management.resource.internal.inst.FileOutputStreamRMHooks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -121,6 +123,51 @@ public class RcdDtServiceImp  implements RcdDtService {
     @Override
     public List<RcdDtFldCtAssign> updatehuixianrcddtfldctassign(String fld_id) {
         return  rcdDtDao.updatehuixianrcddtfldctassign(fld_id);
+    }
+
+    //删除基本类型 一级以及关连二级三级
+    @Override
+    public void deletercddtproj(String proj_id) {
+        rcdDtDao.deletercddtproj(proj_id);  // rcd_dt_proj  一级  proj_id
+        rcdDtDao.deletercddtcatg(proj_id); //rcd_dt_catg   二级   proj_id
+    }
+
+    //删除指标类别 二级
+    @Override
+    public void deletrcddtcatg(String catg_id) {
+            rcdDtDao.deletercddtcatgi(catg_id); //rcd_dt_catg   二级   catg_id
+
+    }
+
+    //三级
+    @Override
+    public void deletercddtfld(String fld_id) {
+            rcdDtDao.deletercddtflds(fld_id);  //三级
+    }
+
+    @Override
+    public int selectcount(String fld_id) {
+        return rcdDtDao.selectcount(fld_id);
+    }
+
+    @Override
+    public List<Object> selectrcddtcatg(String catg_id) {
+        return rcdDtDao.selectrcddtcatgcatgid(catg_id);
+    }
+
+    @Override
+    public List<Object> selectrcddtcatgproj(String proj_id) {
+        return rcdDtDao.selectrcddtcatg(proj_id);
+    }
+
+    @Override
+    public void deleteererrcddtfld(String catg_id) {
+        rcdDtDao.deletercddtfld(catg_id);
+    }
+
+    @Override
+    public void deleteererrcddtfldI(int i) {
+        rcdDtDao.deletercddtfldI(i);
     }
 
 

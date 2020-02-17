@@ -84,4 +84,49 @@ public interface RcdDtDao {
 
     @Select("SELECT dict_content_id  FROM rcd_dt_fld_ct_assign WHERE fld_id = #{fld_id} ")
     List<RcdDtFldCtAssign> updatehuixianrcddtfldctassign(@Param("fld_id")String fld_id);
+
+    //一级
+    @Delete("delete from rcd_dt_proj where  proj_id = #{proj_id}")
+    void deletercddtproj(@Param("proj_id")String proj_id);
+
+    @Select("select a.catg_id \n" +
+            " from  rcd_dt_catg a  \n" +
+            "INNER JOIN rcd_dt_fld b on  a.catg_id = b.catg_id  \n" +
+            "INNER JOIN  rcd_job_unit_fld  c   on  b.fld_id = c.fld_id \n" +
+            "INNER JOIN rcd_job_unit_config  d on c.job_unit_id = d.job_unit_id\n" +
+            "where a.proj_id =#{proj_id}  GROUP BY a.catg_id")
+    List<Object> selectrcddtcatg(@Param("proj_id")String proj_id);
+
+    //三级
+    @Delete("delete from rcd_dt_fld where  catg_id = #{catg_id}")
+    void deletercddtfld(@Param("catg_id")String catg_id);
+
+    //二级
+    @Delete("delete from rcd_dt_catg where  proj_id = #{proj_id}")
+    void deletercddtcatg(@Param("proj_id")String proj_id);
+
+    @Delete("delete from rcd_dt_catg where  catg_id = #{catg_id}")
+    void deletercddtcatgi(@Param("catg_id")String catg_id);
+
+    @Delete("delete from rcd_dt_fld where  fld_id = #{fld_id}")
+    void deletercddtflds(@Param("fld_id")String fld_id);
+
+    @Select("SELECT count(1) FROM  rcd_dt_fld b\n" +
+            "INNER JOIN  rcd_job_unit_fld  c   on  b.fld_id = c.fld_id \n" +
+            "INNER JOIN rcd_job_unit_config  d on c.job_unit_id = d.job_unit_id\n" +
+            "where b.fld_id = #{fld_id}")
+    int selectcount(@Param("fld_id")String fld_id);
+
+
+
+    @Select("select a.catg_id \n" +
+            " from  rcd_dt_catg a  \n" +
+            "INNER JOIN rcd_dt_fld b on  a.catg_id = b.catg_id  \n" +
+            "INNER JOIN  rcd_job_unit_fld  c   on  b.fld_id = c.fld_id \n" +
+            "INNER JOIN rcd_job_unit_config  d on c.job_unit_id = d.job_unit_id\n" +
+            "where a.catg_id =#{catg_id}  GROUP BY a.catg_id")
+    List<Object> selectrcddtcatgcatgid(@Param("catg_id")String catg_id);
+
+    @Delete("delete from rcd_dt_fld where  catg_id = #{i}")
+    void deletercddtfldI(@Param("i")int i);
 }

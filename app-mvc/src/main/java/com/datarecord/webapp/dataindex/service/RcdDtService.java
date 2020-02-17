@@ -45,4 +45,20 @@ public interface RcdDtService {
     void updatetixircddtprojer(String catg_id, String catg_name, String proj_id);
 
     List<RcdDtFldCtAssign> updatehuixianrcddtfldctassign(String fld_id);
+
+    void deletercddtproj(String proj_id);
+
+    void deletrcddtcatg(String catg_id);
+
+    void deletercddtfld(String fld_id);
+
+    int selectcount(String fld_id);
+
+    List<Object> selectrcddtcatgproj(String proj_id);
+
+    List<Object> selectrcddtcatg(String catg_id);
+
+    void deleteererrcddtfld(String  catg_id);
+
+    void deleteererrcddtfldI(int i);
 }
