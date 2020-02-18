@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -126,7 +127,7 @@ public class RecordProcessController {
     @RequestMapping("saveGridDatas")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
-    public JsonResult saveGridDatas(@RequestBody ReportJobInfo reportJobInfo){
+    public JsonResult saveGridDatas(@RequestBody SaveReportJobInfos reportJobInfo){
         recordProcessService.saveGridDatas(reportJobInfo);
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "保存成功", null, JsonResult.RESULT.SUCCESS);
@@ -136,17 +137,35 @@ public class RecordProcessController {
     @RequestMapping("validateGridDatas")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
-    public JsonResult validateGridDatas(@RequestBody ReportJobInfo reportJobInfo){
-        List<ReportJobData> reportJobDataList = reportJobInfo.getReportJobDataList();
+    public JsonResult validateGridDatas(@RequestBody SaveReportJobInfos reportJobInfos){
+        List<ReportJobData> newReportJobDataList = reportJobInfos.getNewReportJobInfos();
+        List<ReportJobData> reportJobDataList = reportJobInfos.getReportJobInfos();
+        if(!(reportJobDataList!=null&&reportJobDataList.size()>0)&&!(newReportJobDataList!=null&&newReportJobDataList.size()>0)){
+            JsonResult successResult = JsonSupport.makeJsonpResult(
+                    JsonResult.RESULT.FAILD, "无可校验数据", null, "无可校验数据");
+            return successResult;
+        }
+
         String unitId = null;
         if(reportJobDataList!=null&&reportJobDataList.size()>0){
             unitId = String.valueOf(reportJobDataList.get(0).getUnit_id());
+        }else{
+            unitId = String.valueOf(newReportJobDataList.get(0).getUnit_id());
         }
-        Map<Integer, Map<Integer, String>> validateResult = recordProcessService.validateGridDatas(reportJobDataList, unitId);
+        Map<Integer, Map<Integer, String>> upValidateResult = recordProcessService.validateGridDatas(reportJobDataList, unitId);
+
+        Map<Integer, Map<Integer, String>> newDataValidateResult = recordProcessService.validateGridDatas(newReportJobDataList, unitId);
+
+        Map<String,Map<Integer,Map<Integer, String>>> validateResult = new HashMap<>();
+        validateResult.put("reportJobDataValidate",upValidateResult);
+        validateResult.put("newReportJobDataValidate",newDataValidateResult);
+
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "校验完成", null, validateResult);
+
         return successResult;
     }
+
 
 
 }

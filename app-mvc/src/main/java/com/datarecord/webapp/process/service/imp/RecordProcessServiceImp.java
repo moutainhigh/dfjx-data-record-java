@@ -175,14 +175,30 @@ public class RecordProcessServiceImp implements RecordProcessService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveGridDatas(ReportJobInfo reportJobInfo) {
-        List<ReportJobData> reportJobDataList = reportJobInfo.getReportJobDataList();
-        if(reportJobDataList!=null&&reportJobDataList.size()>0){
-            Integer unitId = reportJobDataList.get(0).getUnit_id();
-            recordProcessDao.deleteRecordDataByUnit(reportJobInfo.getJob_id(),reportJobInfo.getReport_id(),unitId);
+    public void saveGridDatas(SaveReportJobInfos reportJobInfo) {
+        List<ReportJobData> updateDatas = reportJobInfo.getReportJobInfos();
+        List<ReportJobData> newDatas = reportJobInfo.getNewReportJobInfos();
+        List<ReportJobData> delDatas = reportJobInfo.getDelReportJobInfos();
+
+        //删除
+        if(delDatas!=null&&delDatas.size()>0){
+            for (ReportJobData delData : delDatas) {
+                recordProcessDao.deleteReportJobData(delData,reportJobInfo.getJob_id());
+            }
         }
-        for (ReportJobData reportJobData : reportJobDataList) {
-            recordProcessDao.createRcdReortJobData(reportJobData,String.valueOf(reportJobInfo.getJob_id()));
+        //更新 重排colum_id
+        if(updateDatas!=null&&updateDatas.size()>0){
+            for(int updateIndex = 0;updateIndex<updateDatas.size();updateIndex++){
+                ReportJobData updateData = updateDatas.get(updateIndex);
+                recordProcessDao.updateReportJobData(updateData,updateIndex,reportJobInfo.getJob_id());
+            }
+        }
+
+        //插入 新数据colum_id接更新后
+        if(updateDatas!=null&&updateDatas.size()>0){
+            for (ReportJobData newData : newDatas) {
+                recordProcessDao.createRcdReortJobData(newData,String.valueOf(reportJobInfo.getJob_id()));
+            }
         }
     }
 
@@ -272,8 +288,6 @@ public class RecordProcessServiceImp implements RecordProcessService {
             
 
 
-        }else{
-            throw new WorkbenchRuntimeException("填报数据为空",new Exception("填报数据为空"));
         }
 
         return validateResultMap;
