@@ -27,4 +27,8 @@ public interface FillinataskService {
     void updateRcdJobUnitConfigsuo(String job_id);
 
     List<RcdJobPersonAssign> huixianrcdjobpersonassign(String job_id);
+
+    void deletercdjobconfig(String job_id);
+
+    void deleteRcdJobUnitConfigsuo(String job_id);
 }

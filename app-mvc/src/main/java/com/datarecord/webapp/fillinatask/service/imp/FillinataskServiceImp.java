@@ -85,5 +85,15 @@ public class FillinataskServiceImp implements FillinataskService {
     @Override
     public List<RcdJobPersonAssign> huixianrcdjobpersonassign(String job_id) {
         return fillinataskDao.huixianrcdjobpersonassign(job_id);
+}
+
+    @Override
+    public void deletercdjobconfig(String job_id) {
+        fillinataskDao.deletercdjobconfig(job_id);
+    }
+
+    @Override
+    public void deleteRcdJobUnitConfigsuo(String job_id) {
+        fillinataskDao.deleteRcdJobUnitConfigsuo(job_id);
     }
 }

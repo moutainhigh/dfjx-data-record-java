@@ -49,6 +49,30 @@ public class FillinataskController {
         return jsonResult;
     }
 
+    //填报任务删除   包含任务下的任务组、任务与填报人关联关系等关联关系
+    @RequestMapping("/deletercdjobconfig")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String deletercdjobconfig(
+            @RequestParam("job_id")String job_id
+    ){
+        String jsonResult = "";
+        try{
+            fillinataskService.deletercdjobconfig(job_id);    //填报任务删除
+            fillinataskService.deletercdjobpersonassign(job_id);    //填报人维护删除
+            fillinataskService.deleteRcdJobUnitConfigsuo(job_id);    //任务关连填报组删除
+        }catch(Exception e){
+            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报任务删除失败", null, "error");
+        }
+        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报任务删除成功", null, "success");
+        return jsonResult;
+    }
+
+
+
+
+
+
 
     //新增任务
     @RequestMapping("/insertrcdjobconfig")
@@ -110,6 +134,8 @@ public class FillinataskController {
         return jsonResult;
     }
 
+
+  //查询机构对应填报人
     @RequestMapping("/huixianrcdjobpersonassign")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
