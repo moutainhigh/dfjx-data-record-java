@@ -65,7 +65,7 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
     }
 
     @Override
-    public void insertrcdjobunitconfig(String job_id, String job_unit_name, String job_unit_active) {
-        reportingGroupDao.insertrcdjobunitconfig(job_id,job_unit_name,job_unit_active);
+    public void insertrcdjobunitconfig(String job_id, String job_unit_name, String job_unit_active,String job_unit_type) {
+        reportingGroupDao.insertrcdjobunitconfig(job_id,job_unit_name,job_unit_active,job_unit_type);
     }
 }
