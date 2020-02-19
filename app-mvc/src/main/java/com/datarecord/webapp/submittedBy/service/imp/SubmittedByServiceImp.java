@@ -1,6 +1,7 @@
 package com.datarecord.webapp.submittedBy.service.imp;
 
 import com.datarecord.webapp.datadictionary.service.imp.DataDictionaryServiceImp;
+import com.datarecord.webapp.submittedBy.bean.Origin;
 import com.datarecord.webapp.submittedBy.bean.SubmittedBy;
 import com.datarecord.webapp.submittedBy.bean.Useroriginassign;
 import com.datarecord.webapp.submittedBy.dao.SubmittedByDao;
@@ -31,12 +32,12 @@ public class SubmittedByServiceImp  implements SubmittedByService {
         String orgId = submittedByDao.getOrgId(user_id);
         return orgId;
     }
-
+*/
     @Override
-    public List<EntityTree> listOrgData() {
-        List<EntityTree> entityTrees = submittedByDao.listOrgData();
+    public List<Origin> listOrgData(String orgId) {
+        List<Origin> entityTrees = submittedByDao.listOrgData(orgId);
         return  entityTrees;
-    }*/
+    }
 
     @Override
     public PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name) {

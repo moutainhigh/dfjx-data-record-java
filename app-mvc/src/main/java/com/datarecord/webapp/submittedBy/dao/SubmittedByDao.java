@@ -1,5 +1,6 @@
 package com.datarecord.webapp.submittedBy.dao;
 
+import com.datarecord.webapp.submittedBy.bean.Origin;
 import com.datarecord.webapp.submittedBy.bean.SubmittedBy;
 import com.datarecord.webapp.submittedBy.bean.Useroriginassign;
 import com.datarecord.webapp.utils.EntityTree;
@@ -16,10 +17,10 @@ public interface SubmittedByDao {
 
 
 
-  /*  @Select("SELECT origin_id AS  id,origin_name AS  name,parent_origin_id AS pId\n" +
-            "FROM sys_origin  where origin_status!=3 ")
+    @Select("SELECT origin_id AS  id,origin_name AS  label,parent_origin_id AS parentId\n" +
+            "FROM sys_origin  where origin_status!=3  AND  parent_origin_id = #{orgId} ")
     @Options(useCache = false)
-    List<EntityTree> listOrgData();*/
+    List<Origin> listOrgData(@Param("orgId") String orgId);
 
 
     @Select("<script>SELECT \n" +

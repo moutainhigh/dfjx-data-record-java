@@ -1,5 +1,6 @@
 package com.datarecord.webapp.submittedBy.controller;
 
+import com.datarecord.webapp.submittedBy.bean.Origin;
 import com.datarecord.webapp.submittedBy.bean.Useroriginassign;
 import com.datarecord.webapp.submittedBy.service.SubmittedByService;
 import com.datarecord.webapp.sys.origin.service.RecordOriginService;
@@ -16,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 填报人Controller
@@ -49,25 +48,27 @@ public class SubmittedByController {
     }
 
 
-  /*  //组织机构
-    @RequestMapping("/getOriginDatas")
+    //组织机构
+    @RequestMapping("/getOriginDatasorgId")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public String getOriginDatas(){
+    public String getOriginDatasorgId(
+            @RequestParam("orgId") String orgId
+    ){
         //判断用户是否登录然后查出用户所在组织机构id
-        *//*HashMap<Object, Object> reslltMap = new HashMap<>();
+        /*HashMap<Object, Object> reslltMap = new HashMap<>();
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         String orgId = submittedByService.selectOrgId(user.getUser_id());
-     *//*
-        String orgId = "0";
-        Map<String, Object> returnmap = new HashMap<>();
-        MenuTreeUtil menuTree = new MenuTreeUtil();
-        List<EntityTree> list =  submittedByService.listOrgData();
-        List<Object> menuList = menuTree.menuList(list,orgId);
-        returnmap.put("list", menuList);
-        String jsonpResponse = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取成功", null, returnmap);
+     */
+      //  String orgId = "0";
+      //  Map<String, Object> returnmap = new HashMap<>();
+      //  MenuTreeUtil menuTree = new MenuTreeUtil();
+        List<Origin> list =  submittedByService.listOrgData(orgId);
+      //  List<Object> menuList = menuTree.menuList(list,orgId);
+     //   returnmap.put("list", menuList);
+        String jsonpResponse = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取成功", null, list);
         return jsonpResponse;
-    }*/
+    }
 
 
     //填报人列表rcd_person_config
