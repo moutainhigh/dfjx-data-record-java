@@ -3,6 +3,15 @@ package com.datarecord.webapp.fillinatask.bean;
 public class RcdJobPersonAssign {
     private int user_id;
     private int  origin_id;
+    private String user_name_cn;
+
+    public String getUser_name_cn() {
+        return user_name_cn;
+    }
+
+    public void setUser_name_cn(String user_name_cn) {
+        this.user_name_cn = user_name_cn;
+    }
 
     public int getUser_id() {
         return user_id;
@@ -20,12 +29,12 @@ public class RcdJobPersonAssign {
         this.origin_id = origin_id;
     }
 
-
     @Override
     public String toString() {
         return "RcdJobPersonAssign{" +
                 "user_id=" + user_id +
                 ", origin_id=" + origin_id +
+                ", user_name_cn='" + user_name_cn + '\'' +
                 '}';
     }
 }
