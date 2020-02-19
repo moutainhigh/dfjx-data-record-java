@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Controller
+ * 填报组Controller
  */
 @Controller
 @RequestMapping("/reporting")
@@ -69,11 +69,12 @@ public class ReportingGroupController {
     public String insertrcdjobunitconfig(
             @RequestParam("job_id")String job_id,
             @RequestParam("job_unit_name")String job_unit_name,
+            @RequestParam("job_unit_type")String job_unit_type,
             @RequestParam("job_unit_active")String job_unit_active
     ){
         String jsonResult = "";
         try{
-            reportingGroupService.insertrcdjobunitconfig(job_id,job_unit_name,job_unit_active);
+            reportingGroupService.insertrcdjobunitconfig(job_id,job_unit_name,job_unit_active,job_unit_type);
         }catch(Exception e){
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除失败", null, "error");
         }

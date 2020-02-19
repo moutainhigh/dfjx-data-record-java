@@ -19,5 +19,5 @@ public interface ReportingGroupService {
 
     List<RcdJobUnitFld> selectrcdjobunitfld(String job_unit_id);
 
-    void insertrcdjobunitconfig(String job_id, String job_unit_name, String job_unit_active);
+    void insertrcdjobunitconfig(String job_id, String job_unit_name, String job_unit_active,String job_unit_type);
 }
