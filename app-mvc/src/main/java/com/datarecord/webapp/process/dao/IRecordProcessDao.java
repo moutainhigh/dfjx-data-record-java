@@ -67,6 +67,8 @@ public interface IRecordProcessDao {
             "rdf.fld_data_type ,"+
             "rdf.fld_type ,"+
             "rdf.fld_is_null ,"+
+            "rdf.fld_range ,"+
+            "rdf.fld_visible ,"+
             "rdf.is_actived "+
             "FROM rcd_job_unit_fld rjuf "+
             "left join rcd_dt_fld rdf on "+
@@ -143,4 +145,22 @@ public interface IRecordProcessDao {
 
     @Delete("delete from rcd_report_data_job${job_id} where report_id=#{report_id} and unit_id =#{unit_id}")
     void deleteRecordDataByUnit(@Param("job_id") Integer job_id,@Param("report_id") Integer report_id,@Param("unit_id") Integer unitId);
+
+    @Delete("delete from rcd_report_data_job${job_id} where " +
+            "report_id=#{rcdReportJobEntity.report_id} and " +
+            "unit_id =#{rcdReportJobEntity.unit_id} and " +
+            "colum_id=#{rcdReportJobEntity.colum_id} and " +
+            "fld_id=#{rcdReportJobEntity.fld_id}")
+    void deleteReportJobData(@Param("rcdReportJobEntity") ReportJobData delData,@Param("job_id") Integer job_id);
+
+    @Update("update rcd_report_data_job${job_id} set " +
+            "colum_id=#{newColumId},record_data=#{rcdReportJobEntity.record_data}" +
+            " where " +
+            "report_id=#{rcdReportJobEntity.report_id} and " +
+            "unit_id =#{rcdReportJobEntity.unit_id} and " +
+            "colum_id=#{rcdReportJobEntity.colum_id} and " +
+            "fld_id=#{rcdReportJobEntity.fld_id}")
+    void updateReportJobData(@Param("rcdReportJobEntity") ReportJobData updateData,
+                             @Param("newColumId") Integer newColumId,
+                             @Param("job_id") Integer jobId);
 }

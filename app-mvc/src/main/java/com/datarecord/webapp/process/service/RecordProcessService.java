@@ -4,7 +4,6 @@ import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.process.entity.*;
 import com.webapp.support.page.PageResult;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +21,9 @@ public interface RecordProcessService {
 
     Map<Integer, List<DataDictionary>> getUnitDictFldContent(String groupId);
 
-    void saveGridDatas(ReportJobInfo reportJobInfo);
+    void saveDatas(SaveReportJobInfos reportJobInfo);
 
-    Map<Integer, Map<Integer, String>> validateGridDatas(List<ReportJobData> reportJobDataList, String unitId);
+    Map<Integer, Map<Integer, String>> validateDatas(List<ReportJobData> reportJobDataList, String unitId);
+
+    List<ReportFldTypeConfig> getClientFldByUnitId(String groupId, String clientType);
 }

@@ -4,3 +4,7 @@ UPDATE `app_module` SET `module_url`='/sys/record/recordOriginManager' WHERE `mo
 DELETE FROM `user_role_privilege` WHERE `user_role_id`='1' and`module_id`='65';
 DELETE FROM `user_role_privilege` WHERE `user_role_id`='1' and`module_id`='66';
 DELETE FROM `user_role_privilege` WHERE `user_role_id`='1' and`module_id`='67';
+ALTER TABLE `rcd_dt_fld`
+ADD COLUMN `fld_range` INT(11) NOT NULL DEFAULT 0 COMMENT '取值范围：0-所有、1-移动端、2-PC端' AFTER `is_actived`,
+ADD COLUMN `fld_visible` INT(11) NOT NULL DEFAULT 0 COMMENT '可见范围：0-全部、1-移动端可见、2-PC端可见' AFTER `fld_range`;
+

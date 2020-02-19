@@ -1,5 +1,6 @@
 package com.datarecord.webapp.process.service.imp;
 
+import com.datarecord.webapp.dataindex.bean.RcdClientType;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessService;
@@ -22,14 +23,14 @@ import java.util.List;
 import java.util.Map;
 
 @Service("recordProcessService")
-public class RecordProcessServiceImp implements RecordProcessService {
+public class AbstractRecordProcessServiceImp implements RecordProcessService {
 
-    private Logger logger = LoggerFactory.getLogger(RecordProcessServiceImp.class);
+    private Logger logger = LoggerFactory.getLogger(AbstractRecordProcessServiceImp.class);
 
     private boolean debugger = true;
 
     @Autowired
-    private IRecordProcessDao recordProcessDao;
+    protected IRecordProcessDao recordProcessDao;
 
     @Override
     public void makeJob(String jobId) {
@@ -127,6 +128,12 @@ public class RecordProcessServiceImp implements RecordProcessService {
     public List<ReportFldTypeConfig> getFldByUnitId(String unitId) {
         List<ReportFldConfig> unitFlds = recordProcessDao.getFldByUnitId(unitId);
 
+        ArrayList<ReportFldTypeConfig> catgFlds = this.groupFLdCatge(unitFlds);
+
+        return catgFlds;
+    }
+
+    private ArrayList<ReportFldTypeConfig> groupFLdCatge(List<ReportFldConfig> unitFlds ){
         Map<Integer,ReportFldTypeConfig> catgFldMapTmp = new HashMap<>();
         for (ReportFldConfig unitFld : unitFlds) {
             Integer catgId = unitFld.getCatg_id();
@@ -139,7 +146,6 @@ public class RecordProcessServiceImp implements RecordProcessService {
             }
             catgFldMapTmp.get(catgId).getUnitFlds().add(unitFld);
         }
-
 
         return new ArrayList<>(catgFldMapTmp.values());
     }
@@ -168,46 +174,89 @@ public class RecordProcessServiceImp implements RecordProcessService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void saveGridDatas(ReportJobInfo reportJobInfo) {
-        List<ReportJobData> reportJobDataList = reportJobInfo.getReportJobDataList();
-        if(reportJobDataList!=null&&reportJobDataList.size()>0){
-            Integer unitId = reportJobDataList.get(0).getUnit_id();
-            recordProcessDao.deleteRecordDataByUnit(reportJobInfo.getJob_id(),reportJobInfo.getReport_id(),unitId);
-        }
-        for (ReportJobData reportJobData : reportJobDataList) {
-            recordProcessDao.createRcdReortJobData(reportJobData,String.valueOf(reportJobInfo.getJob_id()));
-        }
+    //子类实现
+    public void saveDatas(SaveReportJobInfos reportJobInfo) {
     }
 
     @Override
-    public Map<Integer, Map<Integer, String>> validateGridDatas(List<ReportJobData> reportJobDataList, String unitId) {
+    //子类实现
+    public Map<Integer, Map<Integer, String>> validateDatas(List<ReportJobData> reportJobDataList, String unitId) {
+        if(reportJobDataList!=null&&reportJobDataList.size()>0){
+            if(Strings.isNullOrEmpty(unitId)){
+                throw new WorkbenchRuntimeException("填报组id为空",new Exception("填报组id为空"));
+            }
 
-//        Map<Integer,List<FldValidateFailBean>> validateResult = new HashMap<>();
-        Map<Integer,Map<Integer,String>> validateResultMap = new HashMap<>();
+            Map<Integer, ReportFldConfig> fldConfigMapCache = this.getReportFldConfigMap(unitId);
 
-        if(Strings.isNullOrEmpty(unitId)){
-            throw new WorkbenchRuntimeException("填报组id为空",new Exception("填报组id为空"));
+            Map<Integer,Map<Integer,String>> validateResultMap = this.checkReportData(reportJobDataList,fldConfigMapCache);
+
+            return validateResultMap;
         }
+        return null;
+    }
 
-        Map<Integer,ReportFldConfig> fldConfigMapCache = new HashMap();
+    @Override
+    public List<ReportFldTypeConfig> getClientFldByUnitId(String groupId, String clientType) {
+        if(Strings.isNullOrEmpty(clientType)){
+            return null;
+        }else{
+            List<ReportFldConfig> allGroupFlds = recordProcessDao.getFldByUnitId(groupId);
+            List<ReportFldConfig> pcGroupFlds = new ArrayList<>();
+            List<ReportFldConfig> mobileGroupFlds = new ArrayList<>();
+            for (ReportFldConfig groupFld : allGroupFlds) {
+                Integer fldRange = groupFld.getFld_range();//哪个客户端填写：0-所有、1-移动端、2-PC端.
+                Integer fldVisible = groupFld.getFld_visible();//哪个客户端需要显示：0-所有、1-移动端、2-PC端.
+
+                if(RcdClientType.ALL.getValue()==fldRange){
+                    //do nothing
+                    pcGroupFlds.add(groupFld);
+                    mobileGroupFlds.add(groupFld);
+                }else if(RcdClientType.PC.getValue()==fldRange&&
+                        RcdClientType.MOBILE.getValue()!=fldVisible){
+                    pcGroupFlds.add(groupFld);
+                }else if(RcdClientType.MOBILE.getValue()==fldRange&&
+                        RcdClientType.PC.getValue()!=fldVisible){
+                    mobileGroupFlds.add(groupFld);
+                }else{
+
+                }
+            }
+
+            if(RcdClientType.PC.toString().equals(clientType)){
+                List<ReportFldTypeConfig> pcGroupFldList = this.groupFLdCatge(pcGroupFlds);
+                return pcGroupFldList;
+            }else if (RcdClientType.MOBILE.toString().equals(clientType)){
+                List<ReportFldTypeConfig> pcGroupFldList = this.groupFLdCatge(pcGroupFlds);
+                return pcGroupFldList;
+            }else{
+                return null;
+            }
+        }
+    }
+
+    protected Map<Integer,ReportFldConfig> getReportFldConfigMap(String unitId){
+        Map<Integer, ReportFldConfig> fldConfigMapCache = new HashMap();
         List<ReportFldConfig> flds4Unit = recordProcessDao.getFldByUnitId(unitId);
         if(flds4Unit!=null&&flds4Unit.size()>0){
             for (ReportFldConfig reportFldConfig : flds4Unit) {
                 fldConfigMapCache.put(reportFldConfig.getFld_id(),reportFldConfig);
             }
         }
+        return fldConfigMapCache;
+    }
 
+    protected Map<Integer, Map<Integer, String>> checkReportData(List<ReportJobData> reportJobDataList, Map<Integer, ReportFldConfig> fldConfigMap){
+        Map<Integer,Map<Integer,String>> validateResultMap = new HashMap<>();
         if(reportJobDataList!=null&&reportJobDataList.size()>0){
             for (ReportJobData reportJobData : reportJobDataList) {
                 Integer fldId = reportJobData.getFld_id();
                 Integer columId = reportJobData.getColum_id();
                 String reportData = reportJobData.getRecord_data();
-                if(fldConfigMapCache.containsKey(fldId)){
-                    ReportFldConfig fldConfig = fldConfigMapCache.get(fldId);
+                if(fldConfigMap.containsKey(fldId)){
+                    ReportFldConfig fldConfig = fldConfigMap.get(fldId);
                     Integer allowedNullOrNot = fldConfig.getFld_is_null();
                     String fldDataType = fldConfig.getFld_data_type();
-                    if(allowedNullOrNot!=0){
+                    if(allowedNullOrNot!=0){//不允许为空
                         //校验是否可为空
                         if(Strings.isNullOrEmpty(reportData)){
 
@@ -215,48 +264,53 @@ public class RecordProcessServiceImp implements RecordProcessService {
                                 validateResultMap.put(columId,new HashMap<>());
                             }
                             validateResultMap.get(columId).put(fldId,"不允许为空");
+                            continue;
 
                         }
-                        //校验数据格式是否符合
-                        if(FldDataTypes.STRING.compareTo(fldDataType)){//字符串类型
+                    }else{//允许为空
+                        if(Strings.isNullOrEmpty(reportData)){
+                            continue;
+                        }
+                    }
 
-                        }else if(FldDataTypes.DATE.compareTo(fldDataType)){//日期类型
+                    //校验数据格式是否符合
+                    if(FldDataTypes.STRING.compareTo(fldDataType)){//字符串类型
 
-                        }else if(FldDataTypes.DICT.compareTo(fldDataType)){//字典类型
+                    }else if(FldDataTypes.DATE.compareTo(fldDataType)){//日期类型
 
-                        }else if(FldDataTypes.NUMBER.compareTo(fldDataType)){//数字类型
+                    }else if(FldDataTypes.DICT.compareTo(fldDataType)){//字典类型
+
+                    }else if(FldDataTypes.NUMBER.compareTo(fldDataType)){//数字类型
+                        try{
+                            Integer dataInt = new Integer(reportData);
+                            BigDecimal dataBig = new BigDecimal(reportData);
+
+                        }catch (NumberFormatException e){
                             try{
-                                Integer dataInt = new Integer(reportData);
-                                BigDecimal dataBig = new BigDecimal(reportData);
-
-                            }catch (NumberFormatException e){
+                                Long dataFormatter = new Long(reportData);
+                            }catch (NumberFormatException e1){
                                 try{
-                                    Long dataFormatter = new Long(reportData);
-                                }catch (NumberFormatException e1){
+                                    Float dataFormatter = new Float(reportData);
+                                }catch(NumberFormatException e2){
                                     try{
-                                        Float dataFormatter = new Float(reportData);
-                                    }catch(NumberFormatException e2){
+                                        Double dataFormatter = new Double(reportData);
+                                    }catch(NumberFormatException e3){
                                         try{
-                                            Double dataFormatter = new Double(reportData);
-                                        }catch(NumberFormatException e3){
-                                            try{
-                                                BigDecimal dataFormatter = new BigDecimal(reportData);
-                                            }catch(NumberFormatException e4){
-                                                if(!validateResultMap.containsKey(columId)){
-                                                    validateResultMap.put(columId,new HashMap<>());
-                                                }
-                                                validateResultMap.get(columId).put(fldId,"数字格式错误");
-
+                                            BigDecimal dataFormatter = new BigDecimal(reportData);
+                                        }catch(NumberFormatException e4){
+                                            if(!validateResultMap.containsKey(columId)){
+                                                validateResultMap.put(columId,new HashMap<>());
                                             }
+                                            validateResultMap.get(columId).put(fldId,"数字格式错误");
 
                                         }
+
                                     }
                                 }
                             }
-                        }else{
-                            throw new WorkbenchRuntimeException("未找到对应的数据类型",new Exception("未找到对应的数据类型"));
-
                         }
+                    }else{
+                        throw new WorkbenchRuntimeException("未找到对应的数据类型",new Exception("未找到对应的数据类型"));
 
                     }
                 }else{
@@ -266,8 +320,6 @@ public class RecordProcessServiceImp implements RecordProcessService {
 
 
 
-        }else{
-            throw new WorkbenchRuntimeException("填报数据为空",new Exception("填报数据为空"));
         }
 
         return validateResultMap;
