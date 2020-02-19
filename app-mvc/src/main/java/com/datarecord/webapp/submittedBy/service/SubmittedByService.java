@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface SubmittedByService {
 
-    String selectOrgId(int user_id);
+ /*   String selectOrgId(int user_id);
 
-    List<EntityTree> listOrgData();
+    List<EntityTree> listOrgData();*/
 
     PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name);
 

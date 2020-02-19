@@ -2,8 +2,9 @@ package com.datarecord.webapp.submittedBy.controller;
 
 import com.datarecord.webapp.submittedBy.bean.Useroriginassign;
 import com.datarecord.webapp.submittedBy.service.SubmittedByService;
-import com.datarecord.webapp.utils.EntityTree;
-import com.datarecord.webapp.utils.MenuTreeUtil;
+import com.datarecord.webapp.sys.origin.service.RecordOriginService;
+import com.datarecord.webapp.sys.origin.tree.EntityTree;
+import com.datarecord.webapp.sys.origin.tree.TreeUtil;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
@@ -30,29 +31,43 @@ public class SubmittedByController {
     @Autowired
     private SubmittedByService submittedByService;
 
+    @Autowired
+    private RecordOriginService recordOriginService;
+
     //组织机构
     @RequestMapping("/getOriginDatas")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public String getOriginDatas(){
+    public String getOriginDatas(
+            @RequestParam("orgId") String orgId
+    ){
+        String topId = orgId;
+        List<EntityTree> list =  recordOriginService.listAllRecordOrigin();
+        List<EntityTree> tree = TreeUtil.getTreeList(topId, list);
+        String jsonpResponse = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取机构成功", null, tree);
+        return jsonpResponse;
+    }
 
+
+  /*  //组织机构
+    @RequestMapping("/getOriginDatas")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String getOriginDatas(){
         //判断用户是否登录然后查出用户所在组织机构id
-        /*HashMap<Object, Object> reslltMap = new HashMap<>();
+        *//*HashMap<Object, Object> reslltMap = new HashMap<>();
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         String orgId = submittedByService.selectOrgId(user.getUser_id());
-     */
-
+     *//*
         String orgId = "0";
         Map<String, Object> returnmap = new HashMap<>();
         MenuTreeUtil menuTree = new MenuTreeUtil();
         List<EntityTree> list =  submittedByService.listOrgData();
         List<Object> menuList = menuTree.menuList(list,orgId);
         returnmap.put("list", menuList);
-
-
         String jsonpResponse = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取成功", null, returnmap);
         return jsonpResponse;
-    }
+    }*/
 
 
     //填报人列表rcd_person_config

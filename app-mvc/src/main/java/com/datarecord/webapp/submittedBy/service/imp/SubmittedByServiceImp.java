@@ -26,7 +26,7 @@ public class SubmittedByServiceImp  implements SubmittedByService {
     @Autowired
     private SubmittedByDao submittedByDao;
 
-    @Override
+   /* @Override
     public String selectOrgId(int user_id) {
         String orgId = submittedByDao.getOrgId(user_id);
         return orgId;
@@ -36,7 +36,7 @@ public class SubmittedByServiceImp  implements SubmittedByService {
     public List<EntityTree> listOrgData() {
         List<EntityTree> entityTrees = submittedByDao.listOrgData();
         return  entityTrees;
-    }
+    }*/
 
     @Override
     public PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name) {

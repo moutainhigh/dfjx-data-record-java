@@ -10,21 +10,16 @@ import java.util.List;
 
 public interface SubmittedByDao {
 
-    @Select("SELECT origin_id FROM user_origin_assign WHERE user_id = #{user_id}")
+ /*   @Select("SELECT origin_id FROM user_origin_assign WHERE user_id = #{user_id}")
     @Options(useCache = false)
-    String getOrgId(@Param("user_id") int user_id);//通过用户查询机构id
+    String getOrgId(@Param("user_id") int user_id);//通过用户查询机构id*/
 
 
-   /* FIND_IN_SET(parent_origin_id, GET_CHILD_NODE(#{orgId}))*/
-   /* @Select("SELECT origin_id AS  VALUE,origin_name AS  title,parent_origin_id AS parentId\n" +
-            "FROM sys_origin \n" +
-            "WHERE  origin = #{orgId}\n")
-    @Options(useCache = false)*/
 
-    @Select("SELECT origin_id AS  id,origin_name AS  name,parent_origin_id AS pId\n" +
-            "FROM sys_origin ")
+  /*  @Select("SELECT origin_id AS  id,origin_name AS  name,parent_origin_id AS pId\n" +
+            "FROM sys_origin  where origin_status!=3 ")
     @Options(useCache = false)
-    List<EntityTree> listOrgData();
+    List<EntityTree> listOrgData();*/
 
 
     @Select("<script>SELECT \n" +
