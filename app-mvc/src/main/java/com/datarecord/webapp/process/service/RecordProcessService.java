@@ -21,9 +21,9 @@ public interface RecordProcessService {
 
     Map<Integer, List<DataDictionary>> getUnitDictFldContent(String groupId);
 
-    void saveGridDatas(SaveReportJobInfos reportJobInfo);
+    void saveDatas(SaveReportJobInfos reportJobInfo);
 
-    Map<Integer, Map<Integer, String>> validateGridDatas(List<ReportJobData> reportJobDataList, String unitId);
+    Map<Integer, Map<Integer, String>> validateDatas(List<ReportJobData> reportJobDataList, String unitId);
 
     List<ReportFldTypeConfig> getClientFldByUnitId(String groupId, String clientType);
 }

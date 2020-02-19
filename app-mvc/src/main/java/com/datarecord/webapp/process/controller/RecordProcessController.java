@@ -4,6 +4,7 @@ package com.datarecord.webapp.process.controller;
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.dataindex.bean.RcdClientType;
 import com.datarecord.webapp.process.entity.*;
+import com.datarecord.webapp.process.service.RecordProcessFactory;
 import com.datarecord.webapp.process.service.RecordProcessService;
 import com.google.common.base.Strings;
 import com.webapp.support.json.JsonSupport;
@@ -23,14 +24,11 @@ import java.util.Map;
 @RequestMapping("record/process")
 public class RecordProcessController {
 
-    @Autowired
-    private RecordProcessService recordProcessService;
-
     @RequestMapping("makeJob")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
     public JsonResult makeJob(String jobId){
-        recordProcessService.makeJob(jobId);
+        RecordProcessFactory.RecordProcessSerice().makeJob(jobId);
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "发布流程已启动", null, JsonResult.RESULT.SUCCESS.toString());
         return successResult;
@@ -42,7 +40,7 @@ public class RecordProcessController {
     public JsonResult pageJob(@RequestParam("currPage") String currPage,@RequestParam("pageSize") String pageSize){
         User user = (User) SecurityUtils.getSubject().getPrincipal();
 
-        PageResult pageResult = recordProcessService.pageJob(user.getUser_id(),currPage,pageSize);
+        PageResult pageResult = RecordProcessFactory.RecordProcessSerice().pageJob(user.getUser_id(),currPage,pageSize);
 
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, pageResult);
@@ -53,7 +51,7 @@ public class RecordProcessController {
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
     public JsonResult checkUnitStep(@RequestParam("reportId") String reportId){
-        JobConfig jobConfig = recordProcessService.getJobConfigByReportId(reportId);
+        JobConfig jobConfig = RecordProcessFactory.RecordProcessSerice().getJobConfigByReportId(reportId);
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, jobConfig.getJobUnits());
         return successResult;
@@ -63,7 +61,7 @@ public class RecordProcessController {
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
     public JsonResult getFldByUnitId(@RequestParam("groupId") String groupId){
-        List<ReportFldTypeConfig> fldConfigs = recordProcessService.getFldByUnitId(groupId);
+        List<ReportFldTypeConfig> fldConfigs = RecordProcessFactory.RecordProcessSerice().getFldByUnitId(groupId);
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, fldConfigs);
         return successResult;
@@ -93,7 +91,7 @@ public class RecordProcessController {
                     JsonResult.RESULT.FAILD, "未找到对应的填报端", "未找到对应的填报端", null);
             return faildResult;
         }
-        List<ReportFldTypeConfig> fldConfigs = recordProcessService.getClientFldByUnitId(groupId,clientType);
+        List<ReportFldTypeConfig> fldConfigs = RecordProcessFactory.RecordProcessSerice().getClientFldByUnitId(groupId,clientType);
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, fldConfigs);
         return successResult;
@@ -103,7 +101,7 @@ public class RecordProcessController {
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
     public JsonResult getUnitDictFldContent(@RequestParam("groupId") String groupId){
-        Map<Integer,List<DataDictionary>> fldDicts = recordProcessService.getUnitDictFldContent(groupId);
+        Map<Integer,List<DataDictionary>> fldDicts = RecordProcessFactory.RecordProcessSerice().getUnitDictFldContent(groupId);
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, fldDicts);
         return successResult;
@@ -117,7 +115,7 @@ public class RecordProcessController {
             @RequestParam("jobId") String jobId,
             @RequestParam("reportId") String reportId,
             @RequestParam("groupId") String groupId){
-        List<ReportJobData> reportJobDatas = recordProcessService.getFldReportDatas(jobId,reportId,groupId);
+        List<ReportJobData> reportJobDatas = RecordProcessFactory.RecordProcessSerice().getFldReportDatas(jobId,reportId,groupId);
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, reportJobDatas);
         return successResult;
@@ -128,7 +126,8 @@ public class RecordProcessController {
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
     public JsonResult saveGridDatas(@RequestBody SaveReportJobInfos reportJobInfo){
-        recordProcessService.saveGridDatas(reportJobInfo);
+        RecordProcessFactory.RecordProcessSerice(JobUnitType.GRID).saveDatas(reportJobInfo);
+
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "保存成功", null, JsonResult.RESULT.SUCCESS);
         return successResult;
@@ -152,9 +151,9 @@ public class RecordProcessController {
         }else{
             unitId = String.valueOf(newReportJobDataList.get(0).getUnit_id());
         }
-        Map<Integer, Map<Integer, String>> upValidateResult = recordProcessService.validateGridDatas(reportJobDataList, unitId);
+        Map<Integer, Map<Integer, String>> upValidateResult = RecordProcessFactory.RecordProcessSerice(JobUnitType.GRID).validateDatas(reportJobDataList, unitId);
 
-        Map<Integer, Map<Integer, String>> newDataValidateResult = recordProcessService.validateGridDatas(newReportJobDataList, unitId);
+        Map<Integer, Map<Integer, String>> newDataValidateResult = RecordProcessFactory.RecordProcessSerice(JobUnitType.GRID).validateDatas(newReportJobDataList, unitId);
 
         Map<String,Map<Integer,Map<Integer, String>>> validateResult = new HashMap<>();
         validateResult.put("reportJobDataValidate",upValidateResult);
@@ -166,6 +165,44 @@ public class RecordProcessController {
         return successResult;
     }
 
+    @RequestMapping("saveSimpleDatas")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult saveSimpleDatas(@RequestBody SaveReportJobInfos reportJobInfo){
+        RecordProcessFactory.RecordProcessSerice(JobUnitType.SIMPLE).saveDatas(reportJobInfo);
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "保存成功", null, JsonResult.RESULT.SUCCESS);
+        return successResult;
+    }
 
 
+    @RequestMapping("validateSimpleDatas")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult validateSimpleDatas(@RequestBody SaveReportJobInfos reportJobInfos){
+
+        List<ReportJobData> reportJobInfoList = reportJobInfos.getReportJobInfos();
+        
+        if(!(reportJobInfoList!=null&&reportJobInfoList.size()>0)){
+            JsonResult successResult = JsonSupport.makeJsonpResult(
+                    JsonResult.RESULT.FAILD, "无可校验数据", null, "无可校验数据");
+            return successResult;
+        }
+
+        Map<Integer, Map<Integer, String>> validateResult = RecordProcessFactory.RecordProcessSerice(JobUnitType.SIMPLE).
+                validateDatas(reportJobInfoList, String.valueOf(reportJobInfoList.get(0).getUnit_id()));
+
+        Map<Integer, String> responseValidate = new HashMap<>();
+        if(validateResult!=null&&validateResult.size()>0){
+            for (Integer key : validateResult.keySet()) {
+                responseValidate = validateResult.get(key);
+                break;
+            }
+        }
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "校验完成", null, responseValidate);
+        return successResult;
+    }
 }

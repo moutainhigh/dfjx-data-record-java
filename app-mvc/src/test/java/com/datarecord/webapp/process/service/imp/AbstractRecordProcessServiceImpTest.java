@@ -8,7 +8,7 @@ import javax.annotation.Resource;
 
 import static org.junit.Assert.*;
 
-public class RecordProcessServiceImpTest extends AbstractTestService {
+public class AbstractRecordProcessServiceImpTest extends AbstractTestService {
 
     @Resource
     private RecordProcessService recordProcessService;

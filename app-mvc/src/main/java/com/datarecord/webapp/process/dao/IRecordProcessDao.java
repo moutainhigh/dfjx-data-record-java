@@ -161,6 +161,6 @@ public interface IRecordProcessDao {
             "colum_id=#{rcdReportJobEntity.colum_id} and " +
             "fld_id=#{rcdReportJobEntity.fld_id}")
     void updateReportJobData(@Param("rcdReportJobEntity") ReportJobData updateData,
-                             @Param("newColumId") Integer job_id,
+                             @Param("newColumId") Integer newColumId,
                              @Param("job_id") Integer jobId);
 }
