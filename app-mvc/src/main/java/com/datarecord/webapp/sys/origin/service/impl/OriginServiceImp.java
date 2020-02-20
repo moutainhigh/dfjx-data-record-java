@@ -44,8 +44,14 @@ public class OriginServiceImp implements OriginService {
 
     @Override
     public void userOriginSave(Integer originId, Integer userId) {
-        originDao.removeUserOrigin(userId);
-        originDao.userOriginSave(originId,userId);
+        Origin originObj = originDao.getOriginByUserId(userId);
+        if(originObj!=null){
+            originObj.setOrigin_id(originId);
+            originDao.userOriginUpdate(originId,userId);
+        }else{
+            originDao.removeUserOrigin(userId);
+            originDao.userOriginSave(originId,userId);
+        }
     }
 
     @Override
