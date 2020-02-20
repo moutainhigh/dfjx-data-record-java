@@ -1,6 +1,5 @@
 package com.datarecord.webapp.sys.user.controller;
 
-import com.datarecord.webapp.sys.origin.controller.OriginController;
 import com.datarecord.webapp.sys.origin.entity.ChinaAreaCode;
 import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.entity.OriginNature;
@@ -17,8 +16,10 @@ import com.workbench.auth.user.entity.User;
 import com.workbench.auth.user.entity.UserStatus;
 import com.workbench.auth.user.service.UserService;
 import com.workbench.shiro.WorkbenchShiroUtils;
+import com.workbench.spring.aop.annotation.JsonpCallback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -474,6 +475,22 @@ public class CustomerUserController {
         JsonResult response = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "获取成功",
                 null, originNatureList);
         return response;
+    }
+
+
+    @RequestMapping("delUserByUserId")
+    @ResponseBody
+    @JsonpCallback
+    @CrossOrigin(allowCredentials="true")
+    @Transactional(rollbackFor = Exception.class)
+    public String delUserByUserId(Integer user_id){
+        userService.delUserById(user_id);
+        originService.removeUserOrigin(user_id);
+        JsonResult jsonResult = new JsonResult();
+        jsonResult.setResult(JsonResult.RESULT.SUCCESS);
+        jsonResult.setResult_msg("删除成功");
+
+        return jsonResult.toString();
     }
 
     private void changeUserInfo(Map<String,Object> selectOriginMap,String userId){
