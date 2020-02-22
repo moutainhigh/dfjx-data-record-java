@@ -28,7 +28,7 @@ public interface SubmittedByDao {
             "            c.origin_name\n" +
             "            FROM \n" +
             "            rcd_person_config a\n" +
-            "            LEFT JOIN data_record.user b ON a.user_id = b.user_id\n" +
+            "            LEFT JOIN user b ON a.user_id = b.user_id\n" +
             "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id \n" +
             "             WHERE  1=1 \n" +
             "<if test = \"user_name != null and user_name != ''\"> AND b.user_name_cn like concat('%',#{user_name},'%') </if> </script>")
@@ -39,7 +39,7 @@ public interface SubmittedByDao {
             "\tb.user_name\n" +
             "FROM\n" +
             "\tuser_origin_assign a\n" +
-            "inner JOIN data_record.user b ON a.user_id = b.user_id\n" +
+            "inner JOIN user b ON a.user_id = b.user_id\n" +
             "WHERE\n" +
             "\t1 = 1\n" +
             "<if test = \"origin_id != null and origin_id != ''\"> AND a.origin_id =#{origin_id} </if> </script>")
@@ -69,7 +69,7 @@ public interface SubmittedByDao {
             "FROM\n" +
             "\tsys_origin a\n" +
             "INNER JOIN user_origin_assign b ON a.origin_id = b.origin_id\n" +
-            "INNER JOIN data_record.user c ON b.user_id = c.user_id  where c.user_name_cn != ''  ")
+            "INNER JOIN user c ON b.user_id = c.user_id  where c.user_name_cn != ''  ")
     @Options(useCache = false)
     List<EntityTree> listOrgDatauser();
 
@@ -80,7 +80,7 @@ public interface SubmittedByDao {
             "  b.user_id,\t\n" +
             "\tb.user_name_cn\n" +
             " from rcd_person_config  a  \n" +
-            " INNER join data_record.user  b ON a.user_id  = b.user_id\n" +
+            " INNER join user  b ON a.user_id  = b.user_id\n" +
             " INNER join user_origin_assign c on c.user_id = b.user_id\n" +
             " INNER JOIN sys_origin d ON c.origin_id = d.origin_id")
     @Options(useCache = false)
