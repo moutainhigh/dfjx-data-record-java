@@ -4,10 +4,7 @@ import com.datarecord.webapp.reportinggroup.bean.RcdJobUnitFld;
 import com.datarecord.webapp.reportinggroup.bean.ReportingGroup;
 import com.datarecord.webapp.reportinggroup.bean.rcdJobConfig;
 import com.github.pagehelper.Page;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -36,4 +33,11 @@ public interface ReportingGroupDao {
 
     @Delete("DELETE FROM rcd_job_unit_fld WHERE  job_unit_id =#{job_unit_id}")
     void deletercdjobunitfld(@Param("job_unit_id")String job_unit_id);
+
+    @Update("UPDATE rcd_job_unit_config SET job_unit_name=#{job_unit_name},job_unit_active =#{job_unit_active},job_unit_type=#{job_unit_type}  WHERE  job_unit_id = #{job_unit_id} ")
+    void updatercdjobunitconfig(@Param("job_unit_id") String job_unit_id, @Param("job_unit_name") String job_unit_name, @Param("job_unit_active") String job_unit_active,@Param("job_unit_type") String job_unit_type);
+
+
+    @Select("SELECT * FROM rcd_job_unit_config where job_unit_id =#{job_unit_id}")
+    List<ReportingGroup> selectrcdjobunitconfigByjobunitid(@Param("job_unit_id")String job_unit_id);
 }

@@ -5,6 +5,7 @@ import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -51,4 +52,7 @@ public interface FillinataskDao {
 
     @Delete("delete from rcd_job_unit_config where job_id = #{job_id} ")
     void deleteRcdJobUnitConfigsuo(@Param("job_id")String job_id);
+
+    @Select("select * from  rcd_job_config  where  job_id = #{job_id}")
+    List<Fillinatask> selectrcdjobconfigjobid(@Param("job_id")String job_id);
 }

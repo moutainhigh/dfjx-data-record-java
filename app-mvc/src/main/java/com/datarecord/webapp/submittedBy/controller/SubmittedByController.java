@@ -131,7 +131,7 @@ public class SubmittedByController {
 
 
 
-    //新增修改确定
+    //新增确定
     @RequestMapping("/insertrcdpersonconfig")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
@@ -141,7 +141,25 @@ public class SubmittedByController {
     ){
         String jsonResult = "";
         try{
-            submittedByService.deletercdpersonconfig(origin_id);   //新增修改前如有则删除后新增
+            submittedByService.insertrcdpersonconfig(origin_id,userid);   //新增
+        }catch(Exception e){
+            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "失败", null, "error");
+        }
+        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "成功", null, "success");
+        return jsonResult;
+    }
+
+    //修改确定
+    @RequestMapping("/updatercdpersonconfig")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String updatercdpersonconfig(
+            @RequestParam("origin_id")String origin_id,
+            @RequestParam("userid")String userid
+    ){
+        String jsonResult = "";
+        try{
+            submittedByService.deletercdpersonconfig(origin_id);   //修改前如有则删除后新增
             submittedByService.insertrcdpersonconfig(origin_id,userid);   //新增
         }catch(Exception e){
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "失败", null, "error");

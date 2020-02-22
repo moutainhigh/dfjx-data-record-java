@@ -1,7 +1,9 @@
 package com.datarecord.webapp.fillinatask.service;
 
+import com.datarecord.webapp.fillinatask.bean.Fillinatask;
 import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
+import com.github.pagehelper.Page;
 import com.webapp.support.page.PageResult;
 
 import java.util.List;
@@ -31,4 +33,6 @@ public interface FillinataskService {
     void deletercdjobconfig(String job_id);
 
     void deleteRcdJobUnitConfigsuo(String job_id);
+
+    List<Fillinatask> selectrcdjobconfigjobid(String job_id);
 }

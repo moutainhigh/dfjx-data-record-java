@@ -105,14 +105,23 @@ public class SubmittedByServiceImp  implements SubmittedByService {
 
 
 
-
-    @Override
+    /*@Override
     public void insertrcdpersonconfig(String origin_id, String userid) {
-      /*  userid.substring(1);
-        userid.substring(0,userid.length()-1);*/
+      *//*  userid.substring(1);
+        userid.substring(0,userid.length()-1);*//*
         String[] split = userid.split(",");
         for (String user_id : split){
             submittedByDao.insertrcdpersonconfig(origin_id,user_id);
+        }
+    }*/
+    @Override
+    public void insertrcdpersonconfig(String origin_id, String userid) {
+        String[] split = userid.split(",");
+        for (String user_id : split){
+            List<String> orgid = submittedByDao.selectuserid(user_id);
+            for (int i=0; i<orgid.size(); i++){
+                submittedByDao.insertrcdpersonconfig(i,user_id);
+            }
         }
     }
 

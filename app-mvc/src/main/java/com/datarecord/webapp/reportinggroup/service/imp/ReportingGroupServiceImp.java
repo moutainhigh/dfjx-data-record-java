@@ -68,4 +68,14 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
     public void insertrcdjobunitconfig(String job_id, String job_unit_name, String job_unit_active,String job_unit_type) {
         reportingGroupDao.insertrcdjobunitconfig(job_id,job_unit_name,job_unit_active,job_unit_type);
     }
+
+    @Override
+    public void updatercdjobunitconfig(String job_unit_id, String job_unit_name, String job_unit_active, String job_unit_type) {
+        reportingGroupDao.updatercdjobunitconfig(job_unit_id,job_unit_name,job_unit_active,job_unit_type);
+    }
+
+    @Override
+    public List<ReportingGroup> selectrcdjobunitconfigByjobunitid(String job_unit_id) {
+        return reportingGroupDao.selectrcdjobunitconfigByjobunitid(job_unit_id);
+    }
 }

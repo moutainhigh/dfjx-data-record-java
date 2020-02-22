@@ -96,4 +96,9 @@ public class FillinataskServiceImp implements FillinataskService {
     public void deleteRcdJobUnitConfigsuo(String job_id) {
         fillinataskDao.deleteRcdJobUnitConfigsuo(job_id);
     }
+
+    @Override
+    public List<Fillinatask> selectrcdjobconfigjobid(String job_id) {
+        return   fillinataskDao.selectrcdjobconfigjobid(job_id);
+    }
 }

@@ -46,8 +46,8 @@ public interface SubmittedByDao {
     List<Useroriginassign> useroriginassignlist(@Param("origin_id") String origin_id);
 
 
-    @Insert("insert into rcd_person_config (user_id,origin_id) values(#{user_id},#{origin_id})")
-    void insertrcdpersonconfig(@Param("origin_id") String origin_id, @Param("user_id") String user_id);
+    @Insert("insert into rcd_person_config (user_id,origin_id) values(#{user_id},#{i})")
+    void insertrcdpersonconfig(@Param("i") int i, @Param("user_id") String user_id);
 
 
     @Select("SELECT user_id from rcd_person_config where origin_id = #{origin_id} ")
@@ -85,4 +85,8 @@ public interface SubmittedByDao {
             " INNER JOIN sys_origin d ON c.origin_id = d.origin_id")
     @Options(useCache = false)
     List<EntityTree> useroriginassignlistsysorigin();
+
+
+    @Select("select origin_id from rcd_person_config where user_id =#{user_id}")
+    List<String> selectuserid(@Param("user_id") String user_id);
 }

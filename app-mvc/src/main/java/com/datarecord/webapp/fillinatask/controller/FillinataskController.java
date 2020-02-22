@@ -1,9 +1,11 @@
 package com.datarecord.webapp.fillinatask.controller;
 
 
+import com.datarecord.webapp.fillinatask.bean.Fillinatask;
 import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
 import com.datarecord.webapp.fillinatask.service.FillinataskService;
+import com.github.pagehelper.Page;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
@@ -49,7 +51,7 @@ public class FillinataskController {
         return jsonResult;
     }
 
-    //填报任务删除   包含任务下的任务组、任务与填报人关联关系等关联关系
+    //填报任务删除   包含任务下的任务组、任务与关联关系等关联关系
     @RequestMapping("/deletercdjobconfig")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
@@ -68,7 +70,23 @@ public class FillinataskController {
         return jsonResult;
     }
 
-
+    //任务id查看详情
+    @RequestMapping("/selectrcdjobconfigjobid")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String selectrcdjobconfigjobid(
+            @RequestParam("job_id")String job_id
+    ){
+        String jsonResult = "";
+        List<Fillinatask> list = new ArrayList<Fillinatask>();
+        try{
+            list = fillinataskService.selectrcdjobconfigjobid(job_id);
+        }catch(Exception e){
+            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "任务id查看详情失败", null, "error");
+        }
+        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "任务id查看详情成功", null, list);
+        return jsonResult;
+    }
 
 
 

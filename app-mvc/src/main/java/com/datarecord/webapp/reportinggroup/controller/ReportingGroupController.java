@@ -1,8 +1,10 @@
 package com.datarecord.webapp.reportinggroup.controller;
 
 import com.datarecord.webapp.reportinggroup.bean.RcdJobUnitFld;
+import com.datarecord.webapp.reportinggroup.bean.ReportingGroup;
 import com.datarecord.webapp.reportinggroup.bean.rcdJobConfig;
 import com.datarecord.webapp.reportinggroup.service.ReportingGroupService;
+import com.github.pagehelper.Page;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
@@ -80,6 +82,53 @@ public class ReportingGroupController {
         }
         return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除成功", null, "success");
     }
+
+
+    //填报组回显
+    @RequestMapping("/selectrcdjobunitconfigByjobunitid")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String selectrcdjobunitconfigByjobunitid(
+            @RequestParam("job_unit_id")String job_unit_id
+    ){
+        String jsonResult = "";
+        List<ReportingGroup> list = new ArrayList<ReportingGroup>();
+        try{
+           list = reportingGroupService.selectrcdjobunitconfigByjobunitid(job_unit_id);
+        }catch(Exception e){
+            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报组回显失败", null, "error");
+        }
+        return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报组回显成功", null, list);
+    }
+
+
+
+
+    //填报组修改
+    @RequestMapping("/updatercdjobunitconfig")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String updatercdjobunitconfig(
+            @RequestParam("job_unit_id")String job_unit_id,
+            @RequestParam("job_unit_name")String job_unit_name,
+            @RequestParam("job_unit_type")String job_unit_type,
+            @RequestParam("job_unit_active")String job_unit_active
+    ){
+        String jsonResult = "";
+        try{
+            reportingGroupService.updatercdjobunitconfig(job_unit_id,job_unit_name,job_unit_active,job_unit_type);
+        }catch(Exception e){
+            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报组修改失败", null, "error");
+        }
+        return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报组修改成功", null, "success");
+    }
+
+
+
+
+
+
+
 
     //填报组删除
     @RequestMapping("/deletercdjobunitconfig")
