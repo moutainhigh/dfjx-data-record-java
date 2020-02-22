@@ -87,6 +87,6 @@ public interface SubmittedByDao {
     List<EntityTree> useroriginassignlistsysorigin();
 
 
-    @Select("select origin_id from rcd_person_config where user_id =#{user_id}")
+    @Select("select origin_id from user_origin_assign where user_id =#{user_id}")
     List<String> selectuserid(@Param("user_id") String user_id);
 }
