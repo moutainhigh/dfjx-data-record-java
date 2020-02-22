@@ -9,6 +9,7 @@ import com.webapp.support.encryption.MD5;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.menu.entity.Menu;
+import com.workbench.auth.user.dao.IUserRoleDao;
 import com.workbench.auth.user.entity.User;
 import com.workbench.auth.user.entity.UserStatus;
 import com.workbench.auth.user.service.UserService;
@@ -17,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,6 +37,9 @@ public class UserServiceImp implements UserService {
 
     @Autowired
     private IUserServiceDao userServiceDao;
+
+    @Autowired
+    private IUserRoleDao userRoleDao;
 
     public User checkUser(String userNm, String password) {
         String md5Password = MD5.getMD5Value(password);
@@ -100,8 +105,10 @@ public class UserServiceImp implements UserService {
         userServiceDao.updatePwd(userId,MD5.getMD5Value(userPwd),String.valueOf(UserStatus.NORMAL.getStatus()));
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void delUserById(int user_id){
         userServiceDao.delUserById(user_id);
+        userRoleDao.delUserRoleByUserId(user_id);
     }
 
     public User getUserByUserId(Integer userId){

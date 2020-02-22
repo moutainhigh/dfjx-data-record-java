@@ -8,6 +8,7 @@ import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.menu.entity.Menu;
 import com.workbench.auth.user.entity.UserStatus;
+import com.workbench.auth.user.service.UserRoleService;
 import com.workbench.auth.user.service.UserService;
 import com.workbench.auth.user.entity.User;
 import com.workbench.shiro.WorkbenchShiroUtils;
@@ -118,7 +119,6 @@ public class UserController {
         JsonResult jsonResult = new JsonResult();
         jsonResult.setResult(JsonResult.RESULT.SUCCESS);
         jsonResult.setResult_msg("删除成功");
-        logger.debug("jsonResult information after delete :{}",jsonResult.toString());
 
         return jsonResult.toString();
     }

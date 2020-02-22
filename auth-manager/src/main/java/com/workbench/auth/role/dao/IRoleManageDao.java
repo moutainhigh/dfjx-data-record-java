@@ -3,12 +3,14 @@ package com.workbench.auth.role.dao;
 import com.github.pagehelper.Page;
 import com.workbench.auth.role.entity.Role;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * Created by SongCQ on 2017/7/6.
  */
+@Repository
 public interface IRoleManageDao {
 
     @Select("select * from user_role")

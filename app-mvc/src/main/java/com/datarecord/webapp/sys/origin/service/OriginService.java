@@ -35,5 +35,7 @@ public interface OriginService {
 
     void updateOrigin(Origin origin);
 
+    void removeUserOrigin(int userId);
+
 
 }

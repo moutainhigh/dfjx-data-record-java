@@ -42,6 +42,9 @@ public interface IOriginDao {
     @Insert("insert into user_origin_assign (origin_id,user_id) values (#{originId},#{userId})")
     void userOriginSave(@Param("originId") Integer originId, @Param("userId") Integer userId);
 
+    @Insert("update user_origin_assign set origin_id = #{originId} where user_id = #{userId}")
+    void userOriginUpdate(@Param("originId") Integer originId, @Param("userId") Integer userId);
+
     @Select("select distinct so.* from sys_origin so ,user_origin_assign uoa where so.origin_id = uoa.origin_id " +
             "and uoa.user_id = #{userId}")
     Origin getOriginByUserId(Integer userId);
