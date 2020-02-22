@@ -31,6 +31,7 @@ public interface RcdDtDao {
             "  c.proj_name,\n" +
             "  a.fld_data_type,\n" +
             "  a.fld_range,\n" +
+            "  a.fld_type,\n" +
             "  a.fld_visible,\n" +
             "  a.fld_is_null\n" +
             "FROM\n" +
