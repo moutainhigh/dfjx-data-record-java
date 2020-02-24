@@ -5,14 +5,12 @@ import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.dataindex.bean.RcdClientType;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessFactory;
-import com.datarecord.webapp.process.service.RecordProcessService;
 import com.google.common.base.Strings;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
 import org.apache.shiro.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -188,7 +186,7 @@ public class RecordProcessController {
     public JsonResult validateSimpleDatas(@RequestBody SaveReportJobInfos reportJobInfos){
 
         List<ReportJobData> reportJobInfoList = reportJobInfos.getReportJobInfos();
-        
+
         if(!(reportJobInfoList!=null&&reportJobInfoList.size()>0)){
             JsonResult successResult = JsonSupport.makeJsonpResult(
                     JsonResult.RESULT.FAILD, "无可校验数据", null, "无可校验数据");

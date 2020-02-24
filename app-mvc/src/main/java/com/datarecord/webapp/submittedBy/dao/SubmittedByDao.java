@@ -46,8 +46,8 @@ public interface SubmittedByDao {
     List<Useroriginassign> useroriginassignlist(@Param("origin_id") String origin_id);
 
 
-    @Insert("insert into rcd_person_config (user_id,origin_id) values(#{user_id},#{i})")
-    void insertrcdpersonconfig(@Param("i") int i, @Param("user_id") String user_id);
+    @Insert("insert into rcd_person_config (user_id,origin_id) values(#{user_id},#{orgid})")
+    void insertrcdpersonconfig(@Param("orgid") String orgid, @Param("user_id") String user_id);
 
 
     @Select("SELECT user_id from rcd_person_config where origin_id = #{origin_id} ")
