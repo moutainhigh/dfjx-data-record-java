@@ -78,13 +78,12 @@ public class SubmittedByController {
     public String rcdpersonconfiglist(
             @RequestParam("currPage") int currPage,
             @RequestParam("pageSize")int pageSize,
-            @RequestParam("user_name")String user_name,
-            @RequestParam("origin_id")String origin_id
+            @RequestParam("user_name")String user_name
     ){
         PageResult pageResult = null;
         String jsonResult = "";
         try{
-            pageResult = submittedByService.rcdpersonconfiglist(currPage,pageSize,user_name,origin_id);
+            pageResult = submittedByService.rcdpersonconfiglist(currPage,pageSize,user_name);
         }catch(Exception e){
             return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报人列表失败", null, "error");
         }

@@ -13,7 +13,7 @@ public interface SubmittedByService {
 */
     List<Origin> listOrgData(String orgId);
 
-    PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name,String origin_id);
+    PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name);
 
     List<Object> useroriginassignlist(String origin_id);
 

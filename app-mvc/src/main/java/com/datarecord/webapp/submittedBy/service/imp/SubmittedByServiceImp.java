@@ -40,9 +40,9 @@ public class SubmittedByServiceImp  implements SubmittedByService {
     }
 
     @Override
-    public PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name,String origin_id) {
+    public PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
-        Page<SubmittedBy> contactPageDatas = submittedByDao.rcdpersonconfiglist(currPage, pageSize,user_name,origin_id);
+        Page<SubmittedBy> contactPageDatas = submittedByDao.rcdpersonconfiglist(currPage, pageSize,user_name);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
         return pageContactResult;
