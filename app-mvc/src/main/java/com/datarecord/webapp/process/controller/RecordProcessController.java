@@ -28,7 +28,12 @@ public class RecordProcessController {
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
     public JsonResult makeJob(String jobId){
-        RecordProcessFactory.RecordProcessSerice().makeJob(jobId);
+        Map<JsonResult.RESULT, String> makeResult = RecordProcessFactory.RecordProcessSerice().makeJob(jobId);
+        if(makeResult.containsKey(JsonResult.RESULT.FAILD)){
+            JsonResult successResult = JsonSupport.makeJsonpResult(
+                    JsonResult.RESULT.FAILD, makeResult.get(JsonResult.RESULT.FAILD), null, makeResult.get(JsonResult.RESULT.FAILD));
+            return successResult;
+        }
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "发布流程已启动", null, JsonResult.RESULT.SUCCESS.toString());
         return successResult;

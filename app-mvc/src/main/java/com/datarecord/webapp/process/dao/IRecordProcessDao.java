@@ -50,7 +50,7 @@ public interface IRecordProcessDao {
             "job_id,"+
             "job_unit_active,"+
             "job_unit_type "+
-            "from rcd_job_unit_config where job_id = #{jobId}")
+            "from rcd_job_unit_config where job_id = #{jobId} and job_unit_active = '1' ")
     @Results({
             @Result(property = "unitFlds",column = "job_unit_id",many = @Many(select="com.datarecord.webapp.process.dao.IRecordProcessDao.getFldByUnitId")),
             @Result(property = "job_unit_id",column = "job_unit_id")
@@ -102,7 +102,10 @@ public interface IRecordProcessDao {
     void createRcdReortJobData(@Param("rcdReportJobEntity") ReportJobData reportJobData, @Param("jobId") String jobId);
 
     @Update("update rcd_job_config set job_status = #{jobStatus} where job_id = #{jobId}")
-    void changeRecordJobStatus(@Param("jobId") String jobId,@Param("jobStatus") int jobStatus);
+    void changeRecordJobConfigStatus(@Param("jobId") String jobId, @Param("jobStatus") int jobStatus);
+
+    @Update("update rcd_report_job set record_status = #{jobStatus} where report_id = #{report_id}")
+    void changeRecordJobStatus(@Param("report_id") int jobId,@Param("jobStatus") int jobStatus);
 
     @Insert("insert into rcd_report_job " +
             "(job_id,record_user_id,record_origin_id,record_status) " +
@@ -114,12 +117,17 @@ public interface IRecordProcessDao {
     @Select("select rrj.report_id," +
             "rrj.job_id," +
             "rrj.record_user_id," +
+            "u.user_name_cn as record_user_name," +
             "rrj.record_origin_id," +
             "rrj.record_status, " +
+            "rjc.job_start_dt, " +
+            "rjc.job_end_dt, " +
             "rjc.job_name " +
             "from rcd_report_job rrj " +
             "left join rcd_job_config rjc on " +
             "rrj.job_id = rjc.job_id  " +
+            "left join user u on " +
+            "rrj.record_user_id = u.user_id " +
             "where rrj.record_user_id=#{user_id}")
     Page<ReportJobInfo> pageJob(@Param("currPage") Integer currPage,
                                 @Param("pageSize") Integer pageSize,

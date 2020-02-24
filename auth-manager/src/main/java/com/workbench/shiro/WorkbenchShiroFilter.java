@@ -3,6 +3,7 @@ package com.workbench.shiro;
 import com.google.common.base.Strings;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
 import org.slf4j.Logger;
@@ -78,20 +79,16 @@ public class WorkbenchShiroFilter extends AuthenticatingFilter {
         logger.info("{}",builder.toString());
 
         String tokenHeader = httpRequest.getHeader("token");
-        if(Strings.isNullOrEmpty(tokenHeader)){
-            String originHost = httpRequest.getHeader("Origin");
-            this.responseLoginFailed(httpResponse,originHost);
-            return  false;
-        }else{
+//        if(Strings.isNullOrEmpty(tokenHeader)){
+//            String originHost = httpRequest.getHeader("Origin");
+//            this.responseLoginFailed(httpResponse,originHost);
+//            return  false;
+//        }else{
+//        }
 
-        }
-        
-//        httpResponse.setStatus(200);
-
-        //allow cors 允许跨域请求
-
-
-        return false;
+        String originHost = httpRequest.getHeader("Origin");
+        this.responseLoginFailed(httpResponse,originHost);
+        return  false;
     }
 
     private void responseLoginFailed(HttpServletResponse httpResponse,String originHost) throws IOException {
@@ -104,7 +101,7 @@ public class WorkbenchShiroFilter extends AuthenticatingFilter {
         //返回报文 包含重定向地址和状态码
         ServletOutputStream responseOutStream = httpResponse.getOutputStream();
 
-        String responseJson = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD,"权限验证失败,需要重新登陆","ACCESS_DENIED","ACCESS_DENIED");
+        String responseJson = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD,"权限验证失败,需要重新登陆","USER_NOT_LOGIN","USER_NOT_LOGIN");
 
         responseOutStream.write(responseJson.getBytes());
     }

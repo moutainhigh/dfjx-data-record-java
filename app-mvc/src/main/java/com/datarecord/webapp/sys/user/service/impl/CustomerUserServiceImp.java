@@ -9,6 +9,7 @@ import com.datarecord.webapp.sys.user.entity.CustomerUser;
 import com.datarecord.webapp.sys.user.entity.UserForgetPwdRecord;
 import com.datarecord.webapp.sys.user.service.CustomerUserService;
 import com.github.pagehelper.Page;
+import com.google.common.base.Strings;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
 import com.workbench.auth.user.entity.UserStatus;
@@ -38,7 +39,7 @@ public class CustomerUserServiceImp implements CustomerUserService {
 
     @Override
     public PageResult pageCqnyUser(Integer currPage, Integer pageSize, String user_name, String user_type, List<Integer> originList) {
-        Page<CustomerUser> userPage = cqnyUserDao.pageCqnyUser(currPage, pageSize,user_name, user_type, originList);
+        Page<CustomerUser> userPage = cqnyUserDao.pageCqnyUser(currPage, pageSize, Strings.emptyToNull(user_name), user_type, originList);
 
         PageResult pageResult = PageResult.pageHelperList2PageResult(userPage);
         
