@@ -31,8 +31,9 @@ public interface SubmittedByDao {
             "            LEFT JOIN user b ON a.user_id = b.user_id\n" +
             "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id \n" +
             "             WHERE  1=1 \n" +
-            "<if test = \"user_name != null and user_name != ''\"> AND b.user_name_cn like concat('%',#{user_name},'%') </if> </script>")
-    Page<SubmittedBy> rcdpersonconfiglist(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("user_name") String user_name);
+            "<if test = \"user_name != null and user_name != ''\"> AND b.user_name_cn like concat('%',#{user_name},'%') </if> </script>"+
+            "<if test = \"user_name != null and user_name != ''\"> AND c.origin_id like concat('%',#{origin_id},'%') </if> </script>")
+    Page<SubmittedBy> rcdpersonconfiglist(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("user_name") String user_name,@Param("origin_id") String origin_id);
 
     @Select("<script> SELECT\n" +
             "\ta.user_id,\n" +
@@ -46,8 +47,8 @@ public interface SubmittedByDao {
     List<Useroriginassign> useroriginassignlist(@Param("origin_id") String origin_id);
 
 
-    @Insert("insert into rcd_person_config (user_id,origin_id) values(#{user_id},#{i})")
-    void insertrcdpersonconfig(@Param("i") int i, @Param("user_id") String user_id);
+    @Insert("insert into rcd_person_config (user_id,origin_id) values(#{user_id},#{orgid})")
+    void insertrcdpersonconfig(@Param("orgid") String orgid, @Param("user_id") String user_id);
 
 
     @Select("SELECT user_id from rcd_person_config where origin_id = #{origin_id} ")

@@ -40,9 +40,9 @@ public class SubmittedByServiceImp  implements SubmittedByService {
     }
 
     @Override
-    public PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name) {
+    public PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name,String origin_id) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
-        Page<SubmittedBy> contactPageDatas = submittedByDao.rcdpersonconfiglist(currPage, pageSize,user_name);
+        Page<SubmittedBy> contactPageDatas = submittedByDao.rcdpersonconfiglist(currPage, pageSize,user_name,origin_id);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
         return pageContactResult;
@@ -118,10 +118,13 @@ public class SubmittedByServiceImp  implements SubmittedByService {
     public void insertrcdpersonconfig(String origin_id, String userid) {
         String[] split = userid.split(",");
         for (String user_id : split){
-            List<String> orgid = submittedByDao.selectuserid(user_id);
-            for (int i=0; i<orgid.size(); i++){
-                submittedByDao.insertrcdpersonconfig(i,user_id);
-            }
+            List<String> orgId = submittedByDao.selectuserid(user_id);
+            //for (int i=0; i<orgId.size(); i++){
+                for(String orgid : orgId){
+                    submittedByDao.insertrcdpersonconfig(orgid,user_id);
+                }
+
+           // }
         }
     }
 
