@@ -62,4 +62,14 @@ public class DataDictionaryServiceImp  implements DataDictionaryService {
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
         return pageContactResult;
     }
+
+    @Override
+    public void deleteDataDictionarybydictid(String dict_id) {
+        dataDictionaryDao.deleteDataDictionarybydictid(dict_id);
+    }
+
+    @Override
+    public void deleteDataDictionary(String dict_content_id) {
+        dataDictionaryDao.deleteDataDictionary(dict_content_id);
+    }
 }

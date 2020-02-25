@@ -2,10 +2,7 @@ package com.datarecord.webapp.datadictionary.dao;
 
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.github.pagehelper.Page;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -43,4 +40,10 @@ public interface DataDictionaryDao {
 
     @Select("SELECT dict_id,dict_name FROM  rcd_dt_dict")
     Page<DataDictionary> dataDictionarylist(@Param("currPage") int currPage, @Param("pageSize") int pageSize);
+
+    @Delete("delete from rcd_dt_dict where  dict_id = #{dict_id}")
+    void deleteDataDictionarybydictid(@Param("dict_id")String dict_id);
+
+    @Delete("delete from rcd_dt_dict_content where  dict_content_id = #{dict_content_id}")
+    void deleteDataDictionary(@Param("dict_content_id")String dict_content_id);
 }

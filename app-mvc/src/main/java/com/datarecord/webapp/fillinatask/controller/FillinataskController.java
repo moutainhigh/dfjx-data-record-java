@@ -143,7 +143,7 @@ public class FillinataskController {
     ){
         String jsonResult = "";
         try{
-            fillinataskService.deletercdjobpersonassign(job_id);    //把原先的删除再新增
+          //  fillinataskService.deletercdjobpersonassign(job_id);    //把原先的删除再新增
             fillinataskService.insertrcdjobpersonassign(job_id,userid);
         }catch(Exception e){
             return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增填报维护人失败", null, "error");

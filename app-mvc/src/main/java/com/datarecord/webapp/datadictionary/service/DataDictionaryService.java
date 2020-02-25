@@ -20,4 +20,8 @@ public interface DataDictionaryService {
     void updateDataDictionarybydictid(String dict_id, String dict_name);
 
     PageResult dataDictionarylist(int currPage, int pageSize);
+
+    void deleteDataDictionarybydictid(String dict_id);
+
+    void deleteDataDictionary(String dict_content_id);
 }

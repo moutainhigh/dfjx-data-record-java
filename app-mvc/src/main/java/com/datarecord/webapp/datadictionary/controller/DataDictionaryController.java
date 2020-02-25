@@ -62,6 +62,25 @@ public class DataDictionaryController {
         return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "数据字典修改成功", null, "success");
     }
 
+
+
+    //删除数据类型
+    @RequestMapping("/deleteDataDictionarybydictid")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String deleteDataDictionarybydictid(
+            @RequestParam("dict_id") String dict_id
+    ){
+        String jsonResult = "";
+        try{
+            dataDictionaryService.deleteDataDictionarybydictid(dict_id);
+        }catch(Exception e){
+            return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "数据字典修改失败", null, "error");
+        }
+        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "数据字典修改成功", null, "success");
+    }
+
+
     //数据字典List
     @RequestMapping("/dataDictionarylist")
     @ResponseBody
@@ -151,6 +170,33 @@ public class DataDictionaryController {
         }
         return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "数据字段内容修改成功", null, "success");
     }
+
+
+
+
+    //删除数据字典内容
+    @RequestMapping("/deleteDataDictionary")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String deleteDataDictionary(
+            @RequestParam("dict_content_id") String dict_content_id
+    ){
+        String jsonResult = "";
+        boolean ss = false;
+        if(!dict_content_id.isEmpty()){
+            try{
+                dataDictionaryService.deleteDataDictionary(dict_content_id);
+            }catch(Exception e){
+                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "数据字段内容删除失败", null, "error");
+            }
+        }else{
+            return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
+        }
+        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "数据字段内容删除成功", null, "success");
+    }
+
+
+
 
     //左侧菜单数据
     @RequestMapping("/selectleftDataDictionary")
