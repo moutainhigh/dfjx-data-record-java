@@ -75,9 +75,9 @@ public class DataDictionaryController {
         try{
             dataDictionaryService.deleteDataDictionarybydictid(dict_id);
         }catch(Exception e){
-            return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "数据字典修改失败", null, "error");
+            return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除字典类型失败", null, "error");
         }
-        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "数据字典修改成功", null, "success");
+        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除字典类型成功", null, "success");
     }
 
 
