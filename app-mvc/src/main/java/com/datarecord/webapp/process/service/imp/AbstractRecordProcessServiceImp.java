@@ -1,6 +1,7 @@
 package com.datarecord.webapp.process.service.imp;
 
 import com.datarecord.webapp.dataindex.bean.RcdClientType;
+import com.datarecord.webapp.fillinatask.bean.JobUnitAcitve;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessService;
@@ -8,6 +9,7 @@ import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.dataindex.bean.FldDataTypes;
 import com.github.pagehelper.Page;
 import com.google.common.base.Strings;
+import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
 import com.workbench.exception.runtime.WorkbenchRuntimeException;
 import org.slf4j.Logger;
@@ -17,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service("recordProcessService")
 public class AbstractRecordProcessServiceImp implements RecordProcessService {
@@ -33,9 +32,38 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
     protected IRecordProcessDao recordProcessDao;
 
     @Override
-    public void makeJob(String jobId) {
+    public Map<JsonResult.RESULT, String> makeJob(String jobId) {
         JobConfig jobConfigEntity = recordProcessDao.getJobConfigByJobId(jobId);
+        Map<JsonResult.RESULT,String> makeResultMap = new HashMap<>();
         logger.info("job config entity : {}",jobConfigEntity);
+        List<JobPerson> allJobPerson = jobConfigEntity.getJobPersons();
+        List<JobUnitConfig> jobUnits = jobConfigEntity.getJobUnits();
+        if(!(allJobPerson!=null&&allJobPerson.size()>0)){
+            makeResultMap.put(JsonResult.RESULT.FAILD,"任务没有关联的填报人");
+            return makeResultMap;
+        }
+
+        if(!(jobUnits!=null&&jobUnits.size()>0)){
+            makeResultMap.put(JsonResult.RESULT.FAILD,"任务没有关联的任务组");
+            return makeResultMap;
+        }else{
+            int activeUnitCount = 0;
+            for (JobUnitConfig jobUnit : jobUnits) {
+                if(jobUnit.getJob_unit_active() == JobUnitAcitve.ACTIVE.value()){
+                    activeUnitCount++;
+                    List<ReportFldConfig> unitFlds = jobUnit.getUnitFlds();
+                    if(!(unitFlds!=null&&unitFlds.size()>0)){
+                        makeResultMap.put(JsonResult.RESULT.FAILD,"任务组"+jobUnit.getJob_unit_name()+"下没有定义指标");
+                        return makeResultMap;
+                    }
+                }
+            }
+            if(activeUnitCount==0){
+                makeResultMap.put(JsonResult.RESULT.FAILD,"任务没有生效的任务组");
+                return makeResultMap;
+            }
+        }
+
         //根据任务建表,每个对应一张表
         recordProcessDao.dropJobDataTable(jobId);
         recordProcessDao.makeJobDataTable(jobId);
@@ -49,10 +77,9 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
             @Transactional(rollbackFor = Exception.class)
             public void run() {
                 logger.info("开始发布填报任务:{}",jobConfigEntity.getJob_name());
-                recordProcessDao.changeRecordJobStatus(jobId, JobConfigStatus.SUBMITING.value() );
+                recordProcessDao.changeRecordJobConfigStatus(jobId, JobConfigStatus.SUBMITING.value() );
 
                 //循环为每个填报人生成任务
-                List<JobPerson> allJobPerson = jobConfigEntity.getJobPersons();
                 for (JobPerson jobPerson : allJobPerson) {
                     Integer originId = jobPerson.getOrigin_id();
                     Integer userId = jobPerson.getUser_id();
@@ -65,8 +92,11 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
                     recordProcessDao.createReportJobInfo(reportJobInfo);
                     Integer reportId = reportJobInfo.getReport_id();
 
-                    List<JobUnitConfig> jobUnits = jobConfigEntity.getJobUnits();
                     for (JobUnitConfig jobUnit : jobUnits) {
+                        if(jobUnit.getJob_unit_active() == JobUnitAcitve.UNACTIVE.value()){
+                            continue;
+                        }
+
                         List<ReportFldConfig> unitFlds = jobUnit.getUnitFlds();
                         for (ReportFldConfig unitFld : unitFlds) {
                             int fldId = unitFld.getFld_id();
@@ -82,7 +112,7 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
                 }
 
                 logger.info("填报任务发布完成:{}",jobConfigEntity.getJob_name());
-                recordProcessDao.changeRecordJobStatus(jobId, JobConfigStatus.SUBMIT.value());
+                recordProcessDao.changeRecordJobConfigStatus(jobId, JobConfigStatus.SUBMIT.value());
                 if(debugger){
                     synchronized (debuggerMainThreadWait){
                         debuggerMainThreadWait.notify();
@@ -101,6 +131,7 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
             }
         }
 
+        return null;
     }
 
     @Override
@@ -111,6 +142,21 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
             pageSize = "10";
         Page<ReportJobInfo> pageData = recordProcessDao.pageJob(new Integer(currPage),new Integer(pageSize),user_id);
         PageResult pageResult = PageResult.pageHelperList2PageResult(pageData);
+        List<ReportJobInfo> dataList = pageResult.getDataList();
+        Date currDate = new Date();
+
+        for (ReportJobInfo reportCustomer : dataList) {
+            Date startDate = reportCustomer.getJob_start_dt();
+            Date endDate = reportCustomer.getJob_end_dt();
+            if(currDate.compareTo(startDate)<0){//未到填报日期
+                reportCustomer.setRecord_status(ReportStatus.TOO_EARLY.getValueInteger());
+            }
+            if(currDate.compareTo(endDate)>0){//已过期
+                reportCustomer.setRecord_status(ReportStatus.OVER_TIME.getValueInteger());
+                recordProcessDao.changeRecordJobStatus(reportCustomer.getReport_id(),ReportStatus.OVER_TIME.getValueInteger());
+            }
+        }
+
         logger.debug("Page Result :{}",pageResult);
         return pageResult;
     }
@@ -211,12 +257,17 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
                     //do nothing
                     pcGroupFlds.add(groupFld);
                     mobileGroupFlds.add(groupFld);
-                }else if(RcdClientType.PC.getValue()==fldRange&&
-                        RcdClientType.MOBILE.getValue()!=fldVisible){
+                }else if(RcdClientType.PC.getValue()==fldRange){//PC端填写的数据
                     pcGroupFlds.add(groupFld);
-                }else if(RcdClientType.MOBILE.getValue()==fldRange&&
-                        RcdClientType.PC.getValue()!=fldVisible){
+                    if(RcdClientType.PC.getValue()!=fldVisible){
+                        mobileGroupFlds.add(groupFld);
+                    }
+                }
+                else if(RcdClientType.MOBILE.getValue()==fldRange){
                     mobileGroupFlds.add(groupFld);
+                    if(RcdClientType.MOBILE.getValue()!=fldVisible){
+                        pcGroupFlds.add(groupFld);
+                    }
                 }else{
 
                 }
@@ -259,32 +310,25 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
                     if(allowedNullOrNot!=0){//不允许为空
                         //校验是否可为空
                         if(Strings.isNullOrEmpty(reportData)){
-
                             if(!validateResultMap.containsKey(columId)){
                                 validateResultMap.put(columId,new HashMap<>());
                             }
                             validateResultMap.get(columId).put(fldId,"不允许为空");
                             continue;
-
                         }
                     }else{//允许为空
                         if(Strings.isNullOrEmpty(reportData)){
                             continue;
                         }
                     }
-
                     //校验数据格式是否符合
                     if(FldDataTypes.STRING.compareTo(fldDataType)){//字符串类型
-
                     }else if(FldDataTypes.DATE.compareTo(fldDataType)){//日期类型
-
                     }else if(FldDataTypes.DICT.compareTo(fldDataType)){//字典类型
-
                     }else if(FldDataTypes.NUMBER.compareTo(fldDataType)){//数字类型
                         try{
                             Integer dataInt = new Integer(reportData);
                             BigDecimal dataBig = new BigDecimal(reportData);
-
                         }catch (NumberFormatException e){
                             try{
                                 Long dataFormatter = new Long(reportData);
@@ -302,7 +346,6 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
                                                 validateResultMap.put(columId,new HashMap<>());
                                             }
                                             validateResultMap.get(columId).put(fldId,"数字格式错误");
-
                                         }
 
                                     }
@@ -311,17 +354,12 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
                         }
                     }else{
                         throw new WorkbenchRuntimeException("未找到对应的数据类型",new Exception("未找到对应的数据类型"));
-
                     }
                 }else{
                     throw new WorkbenchRuntimeException("填报项"+fldId+"找不到定义",new Exception("填报项"+fldId+"找不到定义"));
                 }
             }
-
-
-
         }
-
         return validateResultMap;
 
     }

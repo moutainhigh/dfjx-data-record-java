@@ -38,6 +38,9 @@ public enum ReportStatus {
     public String getValue(){
         return this.value.toString();
     }
+    public Integer getValueInteger(){
+        return this.value;
+    }
 
     public boolean compareTo(String status){
         if(status.equals(this.value.toString())){

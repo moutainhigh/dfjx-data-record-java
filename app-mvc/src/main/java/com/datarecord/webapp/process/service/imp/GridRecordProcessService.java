@@ -48,11 +48,16 @@ public class GridRecordProcessService extends AbstractRecordProcessServiceImp {
         if(newDatas!=null&&newDatas.size()>0){
             for (ReportJobData newData : newDatas) {
                 if(!addColumIds.containsKey(newData.getColum_id())){
-                    if(newColumIdTmp==0){
-                        if(addColumIds.size()>0)
-                            newColumIdTmp++;
-                    }else
+                    //有更新数据 当前columid 需要加1
+                    if(updateNewColumIds.size()>0){
                         newColumIdTmp++;
+                    }else{
+                        if(newColumIdTmp==0){
+                            if(addColumIds.size()>0)
+                                newColumIdTmp++;
+                        }else
+                            newColumIdTmp++;
+                    }
 
                     addColumIds.put(newData.getColum_id(),0);
                 }
