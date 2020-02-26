@@ -208,4 +208,15 @@ public class RecordProcessController {
                 JsonResult.RESULT.SUCCESS, "校验完成", null, responseValidate);
         return successResult;
     }
+
+    @RequestMapping("doCommitAuth")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult doCommitAuth(String reportId){
+        RecordProcessFactory.RecordProcessSerice().updateReportStatus(reportId, ReportStatus.SUBMIT);
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "提交成功", null, null);
+        return successResult;
+    }
 }

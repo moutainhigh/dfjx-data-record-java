@@ -131,7 +131,7 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
             }
         }
 
-        return null;
+        return makeResultMap;
     }
 
     @Override
@@ -283,6 +283,11 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
                 return null;
             }
         }
+    }
+
+    @Override
+    public void updateReportStatus(String reportId, ReportStatus reportStatus) {
+        recordProcessDao.updateReportStatus(reportId,reportStatus.getValue());
     }
 
     protected Map<Integer,ReportFldConfig> getReportFldConfigMap(String unitId){

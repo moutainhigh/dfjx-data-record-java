@@ -27,4 +27,6 @@ public interface RecordProcessService {
     Map<Integer, Map<Integer, String>> validateDatas(List<ReportJobData> reportJobDataList, String unitId);
 
     List<ReportFldTypeConfig> getClientFldByUnitId(String groupId, String clientType);
+
+    void updateReportStatus(String reportId, ReportStatus reportDone);
 }
