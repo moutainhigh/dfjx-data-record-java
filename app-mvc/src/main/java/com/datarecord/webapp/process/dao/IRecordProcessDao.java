@@ -7,9 +7,11 @@ import com.datarecord.webapp.process.entity.JobUnitConfig;
 import com.datarecord.webapp.process.entity.*;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface IRecordProcessDao {
 
     @Select("select "+

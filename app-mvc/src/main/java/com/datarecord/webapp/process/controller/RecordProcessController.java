@@ -219,4 +219,29 @@ public class RecordProcessController {
                 JsonResult.RESULT.SUCCESS, "提交成功", null, null);
         return successResult;
     }
+
+    @RequestMapping("changeStatus")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult changeStatus(String reportId,String status){
+        if(Strings.isNullOrEmpty(status)){
+            JsonResult faildResult = JsonSupport.makeJsonpResult(
+                    JsonResult.RESULT.FAILD, "未接收到状态信息", null, null);
+            return faildResult;
+        }
+
+        ReportStatus reportStatus = ReportStatus.getReportStatus(new Integer(status));
+
+        if(reportStatus==null){
+            JsonResult faildResult = JsonSupport.makeJsonpResult(
+                    JsonResult.RESULT.FAILD, "未找到状态码："+status+"状态信息", null, null);
+            return faildResult;
+        }
+
+        RecordProcessFactory.RecordProcessSerice().updateReportStatus(reportId, reportStatus);
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "提交成功", null, JsonResult.RESULT.SUCCESS);
+        return successResult;
+    }
 }

@@ -12,7 +12,7 @@ package com.datarecord.webapp.process.entity;
  */
 public enum ReportStatus {
 
-    NORMAL(0,"正常"),
+    NORMAL(0,"填报中"),
     SUBMIT(1,"审批中"),
     REVIEW(2,"复核中"),
     LOCK(3,"锁定"),
