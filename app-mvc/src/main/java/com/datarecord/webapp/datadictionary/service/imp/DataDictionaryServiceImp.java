@@ -72,4 +72,9 @@ public class DataDictionaryServiceImp  implements DataDictionaryService {
     public void deleteDataDictionary(String dict_content_id) {
         dataDictionaryDao.deleteDataDictionary(dict_content_id);
     }
+
+    @Override
+    public int selectcountrcddtfldctassign(String dict_content_id) {
+        return  dataDictionaryDao.selectcountrcddtfldctassign(dict_content_id);
+    }
 }

@@ -183,9 +183,15 @@ public class DataDictionaryController {
     ){
         String jsonResult = "";
         boolean ss = false;
+        int sss = 0;
         if(!dict_content_id.isEmpty()){
             try{
-                dataDictionaryService.deleteDataDictionary(dict_content_id);
+                sss = dataDictionaryService.selectcountrcddtfldctassign(dict_content_id);
+                if (sss != 0){
+                    return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "此数据字典已关连指标无法删除", null, "error");
+                }else{
+                    dataDictionaryService.deleteDataDictionary(dict_content_id);
+                }
             }catch(Exception e){
                 return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "数据字段内容删除失败", null, "error");
             }

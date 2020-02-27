@@ -4,6 +4,15 @@ public class rcdJobConfig {
 
      private  int        job_id;
      private String      job_name;
+     private int  job_status;
+
+    public int getJob_status() {
+        return job_status;
+    }
+
+    public void setJob_status(int job_status) {
+        this.job_status = job_status;
+    }
 
     public int getJob_id() {
         return job_id;

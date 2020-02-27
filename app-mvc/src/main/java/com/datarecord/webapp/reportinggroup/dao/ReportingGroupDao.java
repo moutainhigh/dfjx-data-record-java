@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ReportingGroupDao {
 
-    @Select("SELECT job_id,job_name FROM rcd_job_config")
+    @Select("SELECT job_id,job_name,job_status FROM rcd_job_config")
     List<rcdJobConfig> leftrcdjobconfig();
 
     @Select("SELECT job_unit_id,job_unit_name,job_unit_active FROM rcd_job_unit_config where job_id =#{job_id}")

@@ -46,4 +46,7 @@ public interface DataDictionaryDao {
 
     @Delete("delete from rcd_dt_dict_content where  dict_content_id = #{dict_content_id}")
     void deleteDataDictionary(@Param("dict_content_id")String dict_content_id);
+
+    @Select("select count(1) from rcd_dt_fld_ct_assign  where  dict_content_id =#{dict_content_id} ")
+    int selectcountrcddtfldctassign(@Param("dict_content_id")String dict_content_id);
 }
