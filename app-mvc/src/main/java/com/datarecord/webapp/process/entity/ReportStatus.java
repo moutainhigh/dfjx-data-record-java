@@ -1,7 +1,7 @@
 package com.datarecord.webapp.process.entity;
 
 /**
- * 0：正常
+ * 0：填报中
  * 1：审批中
  * 2：复核中
  * 3：锁定

@@ -1,7 +1,6 @@
 package com.datarecord.webapp.process.service.imp;
 
 import com.datarecord.webapp.process.dao.IRecordProcessFlowDao;
-import com.datarecord.webapp.process.entity.ReportJobData;
 import com.datarecord.webapp.process.entity.ReportJobInfo;
 import com.datarecord.webapp.process.service.RecordProcessFlowService;
 import com.datarecord.webapp.sys.origin.entity.Origin;
@@ -27,7 +26,7 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
     private IRecordProcessFlowDao recordProcessFlowDao;
     
     @Override
-    public PageResult pageJob(String currPage, String pageSize) {
+    public PageResult pageJob(String currPage, String pageSize, String reportStatus) {
         //查询当前用户是否有审批权限
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         String userType = user.getUser_type();
@@ -42,7 +41,7 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
         List<Origin> childrenOrigins = originService.checkoutSons(userOrigin.getParent_origin_id(), allOrigin);
         childrenOrigins.add(userOrigin);
         //获取有权限机构下的所有已提交的报表
-        Page<ReportJobInfo> resultDatas = recordProcessFlowDao.pageReviewDatas(new Integer(currPage),new Integer(pageSize),childrenOrigins);
+        Page<ReportJobInfo> resultDatas = recordProcessFlowDao.pageReviewDatas(new Integer(currPage), new Integer(pageSize), childrenOrigins, Strings.emptyToNull(reportStatus));
 
         PageResult pageResult = PageResult.pageHelperList2PageResult(resultDatas);
         

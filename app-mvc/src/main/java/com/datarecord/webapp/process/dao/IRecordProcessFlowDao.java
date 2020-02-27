@@ -34,11 +34,15 @@ public interface IRecordProcessFlowDao {
             "<foreach item='item' index='index' collection='originIds' open='(' separator=',' close=')'> " +
             " #{item.origin_id} " +
             "</foreach>" +
+            "<if test='reportStatus!=null'>" +
+            " and rrj.record_status = #{reportStatus}"+
+            "</if>"+
             "</script>")
     Page<ReportJobInfo> pageReviewDatas(
             @Param("currPage") Integer currPage,
             @Param("pageSize") Integer pageSize,
-            @Param("originIds") List originIds);
+            @Param("originIds") List originIds,
+            @Param("reportStatus") String reportStatus);
 
 }
 

@@ -24,8 +24,11 @@ public class RecordProcessFlowController {
     @RequestMapping("pageJob")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
-    public JsonResult pageJob(@RequestParam("currPage") String currPage, @RequestParam("pageSize") String pageSize){
-        PageResult pageData = recordProcessFlowService.pageJob(currPage, pageSize);
+    public JsonResult pageJob( String currPage,
+                               String pageSize,
+                               String reportStatus
+    ){
+        PageResult pageData = recordProcessFlowService.pageJob(currPage, pageSize,reportStatus);
 
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, pageData);
