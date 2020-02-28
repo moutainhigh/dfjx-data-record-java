@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface IRecordProcessDao {
@@ -116,7 +117,8 @@ public interface IRecordProcessDao {
     @Options(useGeneratedKeys = true, keyProperty = "report_id", keyColumn = "report_id")
     void createReportJobInfo(ReportJobInfo reportJobInfo);
 
-    @Select("select rrj.report_id," +
+    @Select("<script>" +
+            "select rrj.report_id," +
             "rrj.job_id," +
             "rrj.record_user_id," +
             "u.user_name_cn as record_user_name," +
@@ -130,10 +132,18 @@ public interface IRecordProcessDao {
             "rrj.job_id = rjc.job_id  " +
             "left join user u on " +
             "rrj.record_user_id = u.user_id " +
-            "where rrj.record_user_id=#{user_id}")
+            "where rrj.record_user_id=#{user_id}" +
+            "<if test='queryParams.reportStatus!=null'>" +
+            " and rrj.record_status=#{queryParams.reportStatus}" +
+            "</if>" +
+            "<if test='queryParams.reportName!=null'>" +
+            " and rjc.job_name like concat('%',#{queryParams.reportName},'%') " +
+            "</if>" +
+            "</script>")
     Page<ReportJobInfo> pageJob(@Param("currPage") Integer currPage,
                                 @Param("pageSize") Integer pageSize,
-                                @Param("user_id") Integer user_id);
+                                @Param("user_id") Integer user_id,
+                                @Param("queryParams") Map<String,String> queryParams);
 
     @Select("select rjc.job_id,rjc.job_name,rjc.job_status,rjc.job_start_dt,rjc.job_end_dt  " +
             " from rcd_report_job rrj left join rcd_job_config rjc  " +

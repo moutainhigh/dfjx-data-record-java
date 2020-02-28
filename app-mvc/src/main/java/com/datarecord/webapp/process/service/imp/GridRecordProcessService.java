@@ -69,9 +69,9 @@ public class GridRecordProcessService extends AbstractRecordProcessServiceImp {
     }
 
     @Override
-    public Map<Integer, Map<Integer, String>> validateDatas(List<ReportJobData> reportJobDataList, String unitId) {
+    public Map<Integer, Map<Integer, String>> validateDatas(List<ReportJobData> reportJobDataList, String unitId,String clientType) {
 
-        Map<Integer, Map<Integer, String>> validateResultMap = super.validateDatas(reportJobDataList, unitId);
+        Map<Integer, Map<Integer, String>> validateResultMap = super.validateDatas(reportJobDataList, unitId,clientType);
 
         return validateResultMap;
 

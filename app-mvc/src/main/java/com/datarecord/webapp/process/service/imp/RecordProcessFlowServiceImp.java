@@ -26,7 +26,7 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
     private IRecordProcessFlowDao recordProcessFlowDao;
     
     @Override
-    public PageResult pageJob(String currPage, String pageSize, String reportStatus) {
+    public PageResult pageJob(String currPage, String pageSize, String reportStatus, String reportName, String reportOrigin) {
         //查询当前用户是否有审批权限
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         String userType = user.getUser_type();
@@ -38,10 +38,23 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
         
         //获取当前用户所属机构以及其下属机构
         List<Origin> allOrigin = originService.listAllOrigin();
-        List<Origin> childrenOrigins = originService.checkoutSons(userOrigin.getParent_origin_id(), allOrigin);
-        childrenOrigins.add(userOrigin);
+        List<Origin> childrenOrigins = null;
+        if(Strings.isNullOrEmpty(reportOrigin)){
+            childrenOrigins = originService.checkoutSons(userOrigin.getParent_origin_id(), allOrigin);
+            childrenOrigins.add(0,userOrigin);
+        }else{
+            childrenOrigins = originService.checkoutSons(new Integer(reportOrigin), allOrigin);
+            Origin queryOrigin = new Origin();
+            queryOrigin.setOrigin_id(new Integer(reportOrigin));
+            childrenOrigins.add(0,queryOrigin);
+        }
+
         //获取有权限机构下的所有已提交的报表
-        Page<ReportJobInfo> resultDatas = recordProcessFlowDao.pageReviewDatas(new Integer(currPage), new Integer(pageSize), childrenOrigins, Strings.emptyToNull(reportStatus));
+        Page<ReportJobInfo> resultDatas = recordProcessFlowDao.pageReviewDatas(
+                new Integer(currPage), new Integer(pageSize), childrenOrigins,
+                Strings.emptyToNull(reportStatus),
+                Strings.emptyToNull(reportName)
+                );
 
         PageResult pageResult = PageResult.pageHelperList2PageResult(resultDatas);
         

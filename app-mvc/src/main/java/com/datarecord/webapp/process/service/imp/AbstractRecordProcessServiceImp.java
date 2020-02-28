@@ -135,12 +135,12 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
     }
 
     @Override
-    public PageResult pageJob(int user_id, String currPage, String pageSize) {
+    public PageResult pageJob(int user_id, String currPage, String pageSize,Map<String,String> queryParams) {
         if(Strings.isNullOrEmpty(currPage))
             currPage = "1";
         if(Strings.isNullOrEmpty(pageSize))
             pageSize = "10";
-        Page<ReportJobInfo> pageData = recordProcessDao.pageJob(new Integer(currPage),new Integer(pageSize),user_id);
+        Page<ReportJobInfo> pageData = recordProcessDao.pageJob(new Integer(currPage),new Integer(pageSize),user_id,queryParams);
         PageResult pageResult = PageResult.pageHelperList2PageResult(pageData);
         List<ReportJobInfo> dataList = pageResult.getDataList();
         Date currDate = new Date();
@@ -226,7 +226,7 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
 
     @Override
     //子类实现
-    public Map<Integer, Map<Integer, String>> validateDatas(List<ReportJobData> reportJobDataList, String unitId) {
+    public Map<Integer, Map<Integer, String>> validateDatas(List<ReportJobData> reportJobDataList, String unitId,String clientType) {
         if(reportJobDataList!=null&&reportJobDataList.size()>0){
             if(Strings.isNullOrEmpty(unitId)){
                 throw new WorkbenchRuntimeException("填报组id为空",new Exception("填报组id为空"));
@@ -234,7 +234,8 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
 
             Map<Integer, ReportFldConfig> fldConfigMapCache = this.getReportFldConfigMap(unitId);
 
-            Map<Integer,Map<Integer,String>> validateResultMap = this.checkReportData(reportJobDataList,fldConfigMapCache);
+            Map<Integer,Map<Integer,String>> validateResultMap = this.checkReportData(reportJobDataList,fldConfigMapCache,
+                    RcdClientType.MOBILE.toString().equals(clientType)?RcdClientType.MOBILE:RcdClientType.PC);
 
             return validateResultMap;
         }
@@ -301,7 +302,7 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
         return fldConfigMapCache;
     }
 
-    protected Map<Integer, Map<Integer, String>> checkReportData(List<ReportJobData> reportJobDataList, Map<Integer, ReportFldConfig> fldConfigMap){
+    protected Map<Integer, Map<Integer, String>> checkReportData(List<ReportJobData> reportJobDataList, Map<Integer, ReportFldConfig> fldConfigMap,RcdClientType rcdClientType){
         Map<Integer,Map<Integer,String>> validateResultMap = new HashMap<>();
         if(reportJobDataList!=null&&reportJobDataList.size()>0){
             for (ReportJobData reportJobData : reportJobDataList) {
@@ -310,6 +311,12 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
                 String reportData = reportJobData.getRecord_data();
                 if(fldConfigMap.containsKey(fldId)){
                     ReportFldConfig fldConfig = fldConfigMap.get(fldId);
+
+                    Integer fldRange = fldConfig.getFld_range();//数据填报端
+                    if(rcdClientType.getValue()!=fldRange){
+                        continue;
+                    }
+
                     Integer allowedNullOrNot = fldConfig.getFld_is_null();
                     String fldDataType = fldConfig.getFld_data_type();
                     if(allowedNullOrNot!=0){//不允许为空

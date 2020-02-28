@@ -12,7 +12,7 @@ public interface RecordProcessService {
 
     Map<JsonResult.RESULT,String> makeJob(String jobId);
 
-    PageResult pageJob(int user_id, String currPage, String pageSize);
+    PageResult pageJob(int user_id, String currPage, String pageSize,Map<String,String> queryParams);
 
     JobConfig getJobConfigByReportId(String reportId);
 
@@ -24,7 +24,7 @@ public interface RecordProcessService {
 
     void saveDatas(SaveReportJobInfos reportJobInfo);
 
-    Map<Integer, Map<Integer, String>> validateDatas(List<ReportJobData> reportJobDataList, String unitId);
+    Map<Integer, Map<Integer, String>> validateDatas(List<ReportJobData> reportJobDataList, String unitId,String clientType);
 
     List<ReportFldTypeConfig> getClientFldByUnitId(String groupId, String clientType);
 
