@@ -312,8 +312,8 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
                 if(fldConfigMap.containsKey(fldId)){
                     ReportFldConfig fldConfig = fldConfigMap.get(fldId);
 
-                    Integer fldRange = fldConfig.getFld_range();//数据填报端
-                    if(rcdClientType.getValue()!=fldRange){
+                    Integer fldRange = fldConfig.getFld_range();//数据填报端 0:所有 1：移动 2：PC
+                    if(fldRange!=RcdClientType.ALL.getValue()&&rcdClientType.getValue()!=fldRange){
                         continue;
                     }
 
