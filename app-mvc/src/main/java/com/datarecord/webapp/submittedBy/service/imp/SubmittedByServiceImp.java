@@ -103,6 +103,10 @@ public class SubmittedByServiceImp  implements SubmittedByService {
         return list;
     }
 
+    @Override
+    public List<SubmittedBy> rcdpersonconfiglistwufenye() {
+        return submittedByDao.rcdpersonconfiglistwufenye();
+    }
 
 
     /*@Override

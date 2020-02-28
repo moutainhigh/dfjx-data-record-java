@@ -89,4 +89,14 @@ public interface SubmittedByDao {
 
     @Select("select origin_id from user_origin_assign where user_id =#{user_id}")
     List<String> selectuserid(@Param("user_id") String user_id);
+
+
+    @Select("<script>SELECT \n" +
+            "           a.*, b.user_name_cn,\n" +
+            "            c.origin_name\n" +
+            "            FROM \n" +
+            "            rcd_person_config a\n" +
+            "            LEFT JOIN user b ON a.user_id = b.user_id\n" +
+            "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id \n" )
+    List<SubmittedBy> rcdpersonconfiglistwufenye();
 }

@@ -1,11 +1,13 @@
 package com.datarecord.webapp.submittedBy.controller;
 
 import com.datarecord.webapp.submittedBy.bean.Origin;
+import com.datarecord.webapp.submittedBy.bean.SubmittedBy;
 import com.datarecord.webapp.submittedBy.bean.Useroriginassign;
 import com.datarecord.webapp.submittedBy.service.SubmittedByService;
 import com.datarecord.webapp.sys.origin.service.RecordOriginService;
 import com.datarecord.webapp.sys.origin.tree.EntityTree;
 import com.datarecord.webapp.sys.origin.tree.TreeUtil;
+import com.github.pagehelper.Page;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
@@ -90,6 +92,25 @@ public class SubmittedByController {
         jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取填报人列表成功", null, pageResult);
         return jsonResult;
     }
+
+    //填报人列表rcd_person_config （无分页）
+    @RequestMapping("/rcdpersonconfiglistwu")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String rcdpersonconfiglistwu(
+    ){
+        List<SubmittedBy> pageResult = null;
+        String jsonResult = "";
+        try{
+            pageResult  = submittedByService.rcdpersonconfiglistwufenye();
+        }catch(Exception e){
+            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报人列表失败", null, "error");
+        }
+        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取填报人列表成功", null, pageResult);
+        return jsonResult;
+    }
+
+
 
     //新增弹框列表
     @RequestMapping("/useroriginassignlist")

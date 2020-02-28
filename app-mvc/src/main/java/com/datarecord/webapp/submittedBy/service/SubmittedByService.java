@@ -1,6 +1,7 @@
 package com.datarecord.webapp.submittedBy.service;
 
 import com.datarecord.webapp.submittedBy.bean.Origin;
+import com.datarecord.webapp.submittedBy.bean.SubmittedBy;
 import com.datarecord.webapp.submittedBy.bean.Useroriginassign;
 import com.datarecord.webapp.utils.EntityTree;
 import com.webapp.support.page.PageResult;
@@ -26,4 +27,6 @@ public interface SubmittedByService {
     void deletercdpersonconfigbyuserid(String user_id);
 
     List<Object> useroriginassignlistsysorigin(String origin_id);
+
+   List<SubmittedBy> rcdpersonconfiglistwufenye();
 }
