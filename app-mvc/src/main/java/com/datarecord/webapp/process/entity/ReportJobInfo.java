@@ -9,6 +9,7 @@ public class ReportJobInfo {
     private Integer job_id;
     private String job_name;
     private Integer record_origin_id;
+    private String record_origin_name;
     private Integer record_user_id;
     private String record_user_name;
     private Integer record_status;
@@ -122,5 +123,13 @@ public class ReportJobInfo {
 
     public void setRecord_user_name(String record_user_name) {
         this.record_user_name = record_user_name;
+    }
+
+    public String getRecord_origin_name() {
+        return record_origin_name;
+    }
+
+    public void setRecord_origin_name(String record_origin_name) {
+        this.record_origin_name = record_origin_name;
     }
 }
