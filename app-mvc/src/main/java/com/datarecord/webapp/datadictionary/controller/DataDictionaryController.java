@@ -72,7 +72,12 @@ public class DataDictionaryController {
             @RequestParam("dict_id") String dict_id
     ){
         String jsonResult = "";
+        int ll = 0;
         try{
+            ll = dataDictionaryService.selectbyrcddtdictcontentdictid(dict_id);
+            if (ll != 0){
+                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "此字典类型下已有关连指标无法删除", null, "error");
+            }
             dataDictionaryService.deleteDataDictionarybydictid(dict_id);
         }catch(Exception e){
             return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除字典类型失败", null, "error");

@@ -55,4 +55,7 @@ public interface FillinataskDao {
 
     @Select("select * from  rcd_job_config  where  job_id = #{job_id}")
     List<Fillinatask> selectrcdjobconfigjobid(@Param("job_id")String job_id);
+
+    @Delete("delete from rcd_job_person_assign  WHERE job_id = #{job_id}  AND  user_id =#{user_id}")
+    void deletercdjobpersonassignbyuseridandjobid(@Param("job_id")String job_id, @Param("user_id")String user_id);
 }
