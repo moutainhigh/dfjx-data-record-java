@@ -77,4 +77,9 @@ public class DataDictionaryServiceImp  implements DataDictionaryService {
     public int selectcountrcddtfldctassign(String dict_content_id) {
         return  dataDictionaryDao.selectcountrcddtfldctassign(dict_content_id);
     }
+
+    @Override
+    public int selectbyrcddtdictcontentdictid(String dict_id) {
+        return  dataDictionaryDao.selectbyrcddtdictcontentdictid(dict_id);
+    }
 }

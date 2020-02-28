@@ -49,4 +49,8 @@ public interface DataDictionaryDao {
 
     @Select("select count(1) from rcd_dt_fld_ct_assign  where  dict_content_id =#{dict_content_id} ")
     int selectcountrcddtfldctassign(@Param("dict_content_id")String dict_content_id);
+
+
+    @Select("select count(1) from rcd_dt_fld_ct_assign a  INNER JOIN rcd_dt_dict_content  b ON a.dict_content_id = b.dict_content_id  WHERE  b.dict_id = #{dict_id}")
+    int  selectbyrcddtdictcontentdictid(@Param("dict_id")String dict_id);
 }

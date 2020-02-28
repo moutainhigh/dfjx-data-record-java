@@ -26,4 +26,6 @@ public interface DataDictionaryService {
     void deleteDataDictionary(String dict_content_id);
 
     int selectcountrcddtfldctassign(String dict_content_id);
+
+    int selectbyrcddtdictcontentdictid(String dict_id);
 }

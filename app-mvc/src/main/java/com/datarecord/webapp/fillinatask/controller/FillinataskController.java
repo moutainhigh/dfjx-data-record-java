@@ -70,6 +70,26 @@ public class FillinataskController {
         return jsonResult;
     }
 
+
+
+    //任务绑定的填报人删除
+    @RequestMapping("/deletercdjobpersonassignbyuseridandjobid")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String deletercdjobpersonassignbyuseridandjobid(
+            @RequestParam("job_id")String job_id,
+            @RequestParam("user_id")String user_id
+    ){
+        String jsonResult = "";
+        try{
+            fillinataskService.deletercdjobpersonassignbyuseridandjobid(job_id,user_id);
+        }catch(Exception e){
+            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "任务绑定的填报人删除失败", null, "error");
+        }
+        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "任务绑定的填报人删除成功", null, "success");
+        return jsonResult;
+    }
+
     //任务id查看详情
     @RequestMapping("/selectrcdjobconfigjobid")
     @ResponseBody

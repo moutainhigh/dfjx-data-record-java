@@ -35,4 +35,6 @@ public interface FillinataskService {
     void deleteRcdJobUnitConfigsuo(String job_id);
 
     List<Fillinatask> selectrcdjobconfigjobid(String job_id);
+
+    void deletercdjobpersonassignbyuseridandjobid(String job_id, String user_id);
 }
