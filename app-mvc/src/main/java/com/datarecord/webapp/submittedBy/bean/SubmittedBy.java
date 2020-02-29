@@ -5,9 +5,9 @@ public class SubmittedBy {
 
        private int     user_id;
        private int       origin_id;
-    private String        user_name;
-    private String user_name_cn;
-    private String   origin_name;
+       private String        user_name;
+       private String user_name_cn;
+       private String   origin_name;
 
     public String getUser_name_cn() {
         return user_name_cn;
