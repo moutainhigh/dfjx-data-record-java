@@ -91,7 +91,7 @@ public interface SubmittedByDao {
     List<String> selectuserid(@Param("user_id") String user_id);
 
 
-    @Select("<script>SELECT \n" +
+    @Select("SELECT \n" +
             "           a.*, b.user_name_cn,\n" +
             "            c.origin_name\n" +
             "            FROM \n" +

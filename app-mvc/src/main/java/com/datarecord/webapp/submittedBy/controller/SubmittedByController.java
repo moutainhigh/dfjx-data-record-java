@@ -99,6 +99,7 @@ public class SubmittedByController {
     @CrossOrigin(allowCredentials="true")
     public String rcdpersonconfiglistwu(
     ){
+
         List<SubmittedBy> pageResult = null;
         String jsonResult = "";
         try{
