@@ -133,8 +133,11 @@ public interface IRecordProcessDao {
             "left join user u on " +
             "rrj.record_user_id = u.user_id " +
             "where rrj.record_user_id=#{user_id}" +
-            "<if test='queryParams.reportStatus!=null'>" +
-            " and rrj.record_status=#{queryParams.reportStatus}" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus!= \"7\" '>" +
+            " and rrj.record_status=#{queryParams.reportStatus} and rjc.job_start_dt &lt; now()" +
+            "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"7\" '>" +
+            " and rrj.record_status=0  and rjc.job_start_dt &gt; now() " +
             "</if>" +
             "<if test='queryParams.reportName!=null'>" +
             " and rjc.job_name like concat('%',#{queryParams.reportName},'%') " +
