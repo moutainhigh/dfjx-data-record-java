@@ -46,7 +46,7 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
         List<Origin> allOrigin = originService.listAllOrigin();
         List<Origin> childrenOrigins = null;
         if(Strings.isNullOrEmpty(reportOrigin)){
-            childrenOrigins = originService.checkoutSons(userOrigin.getParent_origin_id(), allOrigin);
+            childrenOrigins = originService.checkoutSons(userOrigin.getOrigin_id(), allOrigin);
             childrenOrigins.add(0,userOrigin);
         }else{
             childrenOrigins = originService.checkoutSons(new Integer(reportOrigin), allOrigin);
