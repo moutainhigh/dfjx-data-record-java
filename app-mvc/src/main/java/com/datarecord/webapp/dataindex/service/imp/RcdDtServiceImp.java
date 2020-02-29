@@ -154,7 +154,7 @@ public class RcdDtServiceImp  implements RcdDtService {
     }
 
     @Override
-    public List<Object> selectrcddtcatgproj(String proj_id) {
+    public List<String> selectrcddtcatgproj(String proj_id) {
         return rcdDtDao.selectrcddtcatg(proj_id);
     }
 
@@ -164,8 +164,8 @@ public class RcdDtServiceImp  implements RcdDtService {
     }
 
     @Override
-    public void deleteererrcddtfldI(int i) {
-        rcdDtDao.deletercddtfldI(i);
+    public void deleteererrcddtfldI(String catg_id) {
+        rcdDtDao.deletercddtfldI(catg_id);
     }
 
 

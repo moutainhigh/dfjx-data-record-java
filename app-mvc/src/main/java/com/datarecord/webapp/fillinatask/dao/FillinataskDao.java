@@ -41,10 +41,10 @@ public interface FillinataskDao {
     @Update("update  rcd_job_unit_config set  job_unit_active = 0 where  job_id = #{job_id} ")
     void updateRcdJobUnitConfigsuo(@Param("job_id") String job_id);
 
-    @Select("select u.user_id,u.user_name_cn,so.origin_id from rcd_job_person_assign rjpa left join user u\n" +
-            "on rjpa.user_id = u.user_id left join user_origin_assign uoa \n" +
-            "on u.user_id = uoa.user_id left join sys_origin so\n" +
-            "on uoa.origin_id = so.origin_id  where rjpa.job_id = #{job_id}")
+    @Select("select u.user_id,u.user_name_cn,so.origin_id from rcd_job_person_assign rjpa left join user u " +
+            " on rjpa.user_id = u.user_id left join user_origin_assign uoa  " +
+            " on u.user_id = uoa.user_id left join sys_origin so " +
+            " on uoa.origin_id = so.origin_id  where rjpa.job_id = #{job_id} ")
     List<RcdJobPersonAssign> huixianrcdjobpersonassign(@Param("job_id")String job_id);
 
     @Delete("delete from rcd_job_config where job_id = #{job_id} ")

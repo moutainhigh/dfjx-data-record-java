@@ -12,15 +12,15 @@ public interface DataDictionaryDao {
     @Insert("INSERT INTO rcd_dt_dict (dict_name) VALUES(#{dict_name}) ")
     void insertDataDictionary(@Param("dict_name") String dict_name);
 
-    @Select("<script>SELECT\n" +
-            "\tr.dict_id,\n" +
-            "\tr.dict_name  dict_name,\n" +
-            "\tc.dict_content_id,\n" +
-            "\tc.dict_content_name,\n" +
-            "\tc.dict_content_value\n" +
-            "FROM\n" +
-            "\trcd_dt_dict r\n" +
-            "INNER JOIN rcd_dt_dict_content c ON r.dict_id = c.dict_id\n" +
+    @Select("<script>SELECT " +
+            " r.dict_id, " +
+            " r.dict_name  dict_name, " +
+            " c.dict_content_id, " +
+            " c.dict_content_name, " +
+            " c.dict_content_value " +
+            " FROM " +
+            " rcd_dt_dict r " +
+            " INNER JOIN rcd_dt_dict_content c ON r.dict_id = c.dict_id " +
             "  where 1=1   " +
             "<if test = \"dict_id != null and dict_id != ''\">  AND  r.dict_id = #{dict_id} </if>" +
             "</script>")

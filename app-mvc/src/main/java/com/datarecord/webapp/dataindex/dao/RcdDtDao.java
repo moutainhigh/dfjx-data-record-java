@@ -22,22 +22,22 @@ public interface RcdDtDao {
     void updatercddtproj(@Param("proj_name") String proj_name, @Param("is_actived") String is_actived, @Param("proj_id") String proj_id);
 
 
-    @Select("<script>SELECT\n" +
-            "\ta.fld_id,\n" +
-            "\ta.fld_name,\n" +
-            "  b.catg_id,\n" +
-            "\tb.catg_name,\n" +
-            "  c.proj_id,\n" +
-            "  c.proj_name,\n" +
-            "  a.fld_data_type,\n" +
-            "  a.fld_range,\n" +
-            "  a.fld_type,\n" +
-            "  a.fld_visible,\n" +
-            "  a.fld_is_null\n" +
-            "FROM\n" +
-            "\trcd_dt_fld a\n" +
-            "INNER JOIN rcd_dt_catg b ON a.catg_id = b.catg_id\n" +
-            "INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id\n" +
+    @Select("<script>SELECT " +
+            " a.fld_id, " +
+            " a.fld_name, " +
+            "  b.catg_id, " +
+            "  b.catg_name, " +
+            "  c.proj_id, " +
+            "  c.proj_name, " +
+            "  a.fld_data_type, " +
+            "  a.fld_range, " +
+            "  a.fld_type, " +
+            "  a.fld_visible, " +
+            "  a.fld_is_null " +
+            " FROM " +
+            " rcd_dt_fld a " +
+            " INNER JOIN rcd_dt_catg b ON a.catg_id = b.catg_id " +
+            " INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id " +
             " where 1=1 " +
             "<if test = \"catg_id != null and catg_id != ''\">  and b.catg_id = #{catg_id} </if>" +
             "</script>")
@@ -71,7 +71,7 @@ public interface RcdDtDao {
     List<RcdDtFld> leftrcddtfld(@Param("catg_id") String catg_id);
 
 
-    @Select("SELECT  a.catg_id,b.proj_name,a.catg_name FROM rcd_dt_catg a    left JOIN rcd_dt_proj  b on a.proj_id  = b.proj_id  where  a.proj_id =#{proj_id}\n")
+    @Select("SELECT  a.catg_id,b.proj_name,a.catg_name FROM rcd_dt_catg a    left JOIN rcd_dt_proj  b on a.proj_id  = b.proj_id  where  a.proj_id =#{proj_id} ")
     Page<DataDictionary> selecttixircddtprojer(@Param("currPage")int currPage, @Param("pageSize")int pageSize,@Param("proj_id") String proj_id);
 
     @Select("select  MAX(fld_id) from  rcd_dt_fld")
@@ -90,13 +90,13 @@ public interface RcdDtDao {
     @Delete("delete from rcd_dt_proj where  proj_id = #{proj_id}")
     void deletercddtproj(@Param("proj_id")String proj_id);
 
-    @Select("select a.catg_id \n" +
-            " from  rcd_dt_catg a  \n" +
-            "INNER JOIN rcd_dt_fld b on  a.catg_id = b.catg_id  \n" +
-            "INNER JOIN  rcd_job_unit_fld  c   on  b.fld_id = c.fld_id \n" +
-            "INNER JOIN rcd_job_unit_config  d on c.job_unit_id = d.job_unit_id\n" +
-            "where a.proj_id =#{proj_id}  GROUP BY a.catg_id")
-    List<Object> selectrcddtcatg(@Param("proj_id")String proj_id);
+    @Select(" select a.catg_id  " +
+            " from  rcd_dt_catg a   " +
+            " INNER JOIN rcd_dt_fld b on  a.catg_id = b.catg_id   " +
+            " INNER JOIN  rcd_job_unit_fld  c   on  b.fld_id = c.fld_id  " +
+            " INNER JOIN rcd_job_unit_config  d on c.job_unit_id = d.job_unit_id " +
+            " where a.proj_id =#{proj_id}  GROUP BY a.catg_id")
+    List<String> selectrcddtcatg(@Param("proj_id")String proj_id);
 
     //三级
     @Delete("delete from rcd_dt_fld where  catg_id = #{catg_id}")
@@ -112,22 +112,22 @@ public interface RcdDtDao {
     @Delete("delete from rcd_dt_fld where  fld_id = #{fld_id}")
     void deletercddtflds(@Param("fld_id")String fld_id);
 
-    @Select("SELECT count(1) FROM  rcd_dt_fld b\n" +
-            "INNER JOIN  rcd_job_unit_fld  c   on  b.fld_id = c.fld_id \n" +
-            "INNER JOIN rcd_job_unit_config  d on c.job_unit_id = d.job_unit_id\n" +
-            "where b.fld_id = #{fld_id}")
+    @Select("SELECT count(1) FROM  rcd_dt_fld b " +
+            " INNER JOIN  rcd_job_unit_fld  c   on  b.fld_id = c.fld_id  " +
+            " INNER JOIN rcd_job_unit_config  d on c.job_unit_id = d.job_unit_id " +
+            " where b.fld_id = #{fld_id}")
     int selectcount(@Param("fld_id")String fld_id);
 
 
 
-    @Select("select a.catg_id \n" +
-            " from  rcd_dt_catg a  \n" +
-            "INNER JOIN rcd_dt_fld b on  a.catg_id = b.catg_id  \n" +
-            "INNER JOIN  rcd_job_unit_fld  c   on  b.fld_id = c.fld_id \n" +
-            "INNER JOIN rcd_job_unit_config  d on c.job_unit_id = d.job_unit_id\n" +
-            "where a.catg_id =#{catg_id}  GROUP BY a.catg_id")
+    @Select("select a.catg_id  " +
+            " from  rcd_dt_catg a   " +
+            " INNER JOIN rcd_dt_fld b on  a.catg_id = b.catg_id   " +
+            " INNER JOIN  rcd_job_unit_fld  c   on  b.fld_id = c.fld_id  " +
+            " INNER JOIN rcd_job_unit_config  d on c.job_unit_id = d.job_unit_id " +
+            " where a.catg_id =#{catg_id}  GROUP BY a.catg_id")
     List<Object> selectrcddtcatgcatgid(@Param("catg_id")String catg_id);
 
-    @Delete("delete from rcd_dt_fld where  catg_id = #{i}")
-    void deletercddtfldI(@Param("i")int i);
+    @Delete("delete from rcd_dt_fld where  catg_id = #{catg_id}")
+    void deletercddtfldI(@Param("catg_id")String catg_id);
 }
