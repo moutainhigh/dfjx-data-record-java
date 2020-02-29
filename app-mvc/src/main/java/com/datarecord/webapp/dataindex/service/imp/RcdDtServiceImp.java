@@ -149,7 +149,7 @@ public class RcdDtServiceImp  implements RcdDtService {
     }
 
     @Override
-    public List<Object> selectrcddtcatg(String catg_id) {
+    public List<String> selectrcddtcatg(String catg_id) {
         return rcdDtDao.selectrcddtcatgcatgid(catg_id);
     }
 

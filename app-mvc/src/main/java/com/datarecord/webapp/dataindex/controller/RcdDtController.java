@@ -85,7 +85,7 @@ public class RcdDtController {
     ){
         String jsonResult = "";
         try{
-            List<Object>  ll = new ArrayList<Object>();
+            List<String>  ll = new ArrayList<String>();
             ll =   rcdDtService.selectrcddtcatg(catg_id);
             if (ll.size() != 0){
                 return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标类别下已有关连任务无法删除", null, "error");

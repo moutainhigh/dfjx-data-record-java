@@ -126,7 +126,7 @@ public interface RcdDtDao {
             " INNER JOIN  rcd_job_unit_fld  c   on  b.fld_id = c.fld_id  " +
             " INNER JOIN rcd_job_unit_config  d on c.job_unit_id = d.job_unit_id " +
             " where a.catg_id =#{catg_id}  GROUP BY a.catg_id")
-    List<Object> selectrcddtcatgcatgid(@Param("catg_id")String catg_id);
+    List<String> selectrcddtcatgcatgid(@Param("catg_id")String catg_id);
 
     @Delete("delete from rcd_dt_fld where  catg_id = #{catg_id}")
     void deletercddtfldI(@Param("catg_id")String catg_id);

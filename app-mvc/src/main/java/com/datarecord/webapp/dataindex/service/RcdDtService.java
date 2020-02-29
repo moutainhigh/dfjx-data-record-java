@@ -56,7 +56,7 @@ public interface RcdDtService {
 
     List<String> selectrcddtcatgproj(String proj_id);
 
-    List<Object> selectrcddtcatg(String catg_id);
+    List<String> selectrcddtcatg(String catg_id);
 
     void deleteererrcddtfld(String  catg_id);
 
