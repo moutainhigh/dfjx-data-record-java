@@ -5,6 +5,7 @@ import java.util.List;
 public class SaveReportJobInfos {
         private Integer report_id;
         private Integer job_id;
+        private String client_type;
         private List<ReportJobData> newReportJobInfos;
         private List<ReportJobData> delReportJobInfos;
         private List<ReportJobData> reportJobInfos;
@@ -48,4 +49,12 @@ public class SaveReportJobInfos {
         public void setReportJobInfos(List<ReportJobData> reportJobInfos) {
             this.reportJobInfos = reportJobInfos;
         }
+
+    public String getClient_type() {
+        return client_type;
     }
+
+    public void setClient_type(String client_type) {
+        this.client_type = client_type;
+    }
+}

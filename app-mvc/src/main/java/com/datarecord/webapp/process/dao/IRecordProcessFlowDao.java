@@ -37,12 +37,16 @@ public interface IRecordProcessFlowDao {
             "<if test='reportStatus!=null'>" +
             " and rrj.record_status = #{reportStatus}"+
             "</if>"+
+            "<if test='reportName!=null'>" +
+            " and rjc.job_name like concat('%',#{reportName},'%')"+
+            "</if>"+
             "</script>")
     Page<ReportJobInfo> pageReviewDatas(
             @Param("currPage") Integer currPage,
             @Param("pageSize") Integer pageSize,
             @Param("originIds") List originIds,
-            @Param("reportStatus") String reportStatus);
+            @Param("reportStatus") String reportStatus,
+            @Param("reportName") String reportName);
 
 }
 

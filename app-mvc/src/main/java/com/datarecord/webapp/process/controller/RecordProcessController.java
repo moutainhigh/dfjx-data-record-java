@@ -40,10 +40,15 @@ public class RecordProcessController {
     @RequestMapping("pageJob")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
-    public JsonResult pageJob(@RequestParam("currPage") String currPage,@RequestParam("pageSize") String pageSize){
+    public JsonResult pageJob(@RequestParam("currPage") String currPage,
+                              @RequestParam("pageSize") String pageSize,
+                              String reportStatus,
+                              String reportName){
         User user = (User) SecurityUtils.getSubject().getPrincipal();
-
-        PageResult pageResult = RecordProcessFactory.RecordProcessSerice().pageJob(user.getUser_id(),currPage,pageSize);
+        Map<String,String> queryParams = new HashMap<>();
+        queryParams.put("reportName",reportName);
+        queryParams.put("reportStatus",reportStatus);
+        PageResult pageResult = RecordProcessFactory.RecordProcessSerice().pageJob(user.getUser_id(),currPage,pageSize,queryParams);
 
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, pageResult);
@@ -154,9 +159,9 @@ public class RecordProcessController {
         }else{
             unitId = String.valueOf(newReportJobDataList.get(0).getUnit_id());
         }
-        Map<Integer, Map<Integer, String>> upValidateResult = RecordProcessFactory.RecordProcessSerice(JobUnitType.GRID).validateDatas(reportJobDataList, unitId);
+        Map<Integer, Map<Integer, String>> upValidateResult = RecordProcessFactory.RecordProcessSerice(JobUnitType.GRID).validateDatas(reportJobDataList, unitId,reportJobInfos.getClient_type());
 
-        Map<Integer, Map<Integer, String>> newDataValidateResult = RecordProcessFactory.RecordProcessSerice(JobUnitType.GRID).validateDatas(newReportJobDataList, unitId);
+        Map<Integer, Map<Integer, String>> newDataValidateResult = RecordProcessFactory.RecordProcessSerice(JobUnitType.GRID).validateDatas(newReportJobDataList, unitId,reportJobInfos.getClient_type());
 
         Map<String,Map<Integer,Map<Integer, String>>> validateResult = new HashMap<>();
         validateResult.put("reportJobDataValidate",upValidateResult);
@@ -194,7 +199,7 @@ public class RecordProcessController {
         }
 
         Map<Integer, Map<Integer, String>> validateResult = RecordProcessFactory.RecordProcessSerice(JobUnitType.SIMPLE).
-                validateDatas(reportJobInfoList, String.valueOf(reportJobInfoList.get(0).getUnit_id()));
+                validateDatas(reportJobInfoList, String.valueOf(reportJobInfoList.get(0).getUnit_id()),reportJobInfos.getClient_type());
 
         Map<Integer, String> responseValidate = new HashMap<>();
         if(validateResult!=null&&validateResult.size()>0){

@@ -13,15 +13,15 @@ package com.datarecord.webapp.process.entity;
 public enum ReportStatus {
 
     NORMAL(0,"填报中"),
-    SUBMIT(1,"审批中"),
+    SUBMIT(1,"审核中"),
     REVIEW(2,"复核中"),
     LOCK(3,"锁定"),
     REMOVE(4,"失效"),
     APPROVE(5,"报表发布"),
     UP_SIGIN(6,"待上传签名"),
-    TOO_EARLY(7,"未到填写日期"),
-    OVER_TIME(8,"过期"),
-    REPORT_DONE(9,"填报完成");
+    TOO_EARLY(7,"未开始"),
+    OVER_TIME(8,"已过期"),
+    REPORT_DONE(9,"已完成");
 
     private Integer value;
     private String comment;
