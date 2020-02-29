@@ -17,8 +17,8 @@ public interface SubmittedByDao {
 
 
 
-    @Select("SELECT origin_id AS  id,origin_name AS  label,parent_origin_id AS parentId\n" +
-            "FROM sys_origin  where origin_status!=3  AND  parent_origin_id = #{orgId} ")
+    @Select("SELECT origin_id AS  id,origin_name AS  label,parent_origin_id AS parentId " +
+            " FROM sys_origin  where origin_status != 3   AND  parent_origin_id = #{orgId} ")
     @Options(useCache = false)
     List<Origin> listOrgData(@Param("orgId") String orgId);
 
