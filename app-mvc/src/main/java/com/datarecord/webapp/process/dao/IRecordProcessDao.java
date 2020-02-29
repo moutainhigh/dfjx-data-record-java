@@ -133,11 +133,20 @@ public interface IRecordProcessDao {
             "left join user u on " +
             "rrj.record_user_id = u.user_id " +
             "where rrj.record_user_id=#{user_id}" +
-            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus!= \"7\" '>" +
-            " and rrj.record_status=#{queryParams.reportStatus} and rjc.job_start_dt &lt; now()" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"0\" '>" +
+            " and rrj.record_status=#{queryParams.reportStatus} and rjc.job_start_dt &lt; now() and rjc.job_end_dt &gt; now()" +
+            "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"1\" '>" +
+            " and rrj.record_status=#{queryParams.reportStatus} " +
+            "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"9\" '>" +
+            " and rrj.record_status=#{queryParams.reportStatus} " +
             "</if>" +
             "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"7\" '>" +
             " and rrj.record_status=0  and rjc.job_start_dt &gt; now() " +
+            "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"8\" '>" +
+            " and (rrj.record_status=0 or rrj.record_status=8  ) and rjc.job_end_dt &lt; now() " +
             "</if>" +
             "<if test='queryParams.reportName!=null'>" +
             " and rjc.job_name like concat('%',#{queryParams.reportName},'%') " +

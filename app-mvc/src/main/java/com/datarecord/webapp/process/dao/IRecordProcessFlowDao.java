@@ -34,9 +34,21 @@ public interface IRecordProcessFlowDao {
             "<foreach item='item' index='index' collection='originIds' open='(' separator=',' close=')'> " +
             " #{item.origin_id} " +
             "</foreach>" +
-            "<if test='reportStatus!=null'>" +
-            " and rrj.record_status = #{reportStatus}"+
-            "</if>"+
+            "<if test='reportStatus!=null and reportStatus== \"0\" '>" +
+            " and rrj.record_status=#{reportStatus} and rjc.job_start_dt &lt; now() and rjc.job_end_dt &gt; now()" +
+            "</if>" +
+            "<if test='reportStatus!=null and reportStatus== \"1\" '>" +
+            " and rrj.record_status=#{reportStatus} " +
+            "</if>" +
+            "<if test='reportStatus!=null and reportStatus== \"9\" '>" +
+            " and rrj.record_status=#{reportStatus} " +
+            "</if>" +
+            "<if test='reportStatus!=null and reportStatus== \"7\" '>" +
+            " and rrj.record_status=#{reportStatus} and rjc.job_start_dt &gt; now()" +
+            "</if>" +
+            "<if test='reportStatus!=null and reportStatus== \"8\" '>" +
+            "  and (rrj.record_status=0 or rrj.record_status=8  ) and rjc.job_end_dt &lt; now()  " +
+            "</if>" +
             "<if test='reportName!=null'>" +
             " and rjc.job_name like concat('%',#{reportName},'%')"+
             "</if>"+

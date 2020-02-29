@@ -1,7 +1,9 @@
 package com.datarecord.webapp.process.service.imp;
 
+import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.dao.IRecordProcessFlowDao;
 import com.datarecord.webapp.process.entity.ReportJobInfo;
+import com.datarecord.webapp.process.entity.ReportStatus;
 import com.datarecord.webapp.process.service.RecordProcessFlowService;
 import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.service.OriginService;
@@ -14,6 +16,7 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service("recordProcessFlowService")
@@ -24,6 +27,9 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
 
     @Autowired
     private IRecordProcessFlowDao recordProcessFlowDao;
+
+    @Autowired
+    protected IRecordProcessDao recordProcessDao;
     
     @Override
     public PageResult pageJob(String currPage, String pageSize, String reportStatus, String reportName, String reportOrigin) {
@@ -57,7 +63,23 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
                 );
 
         PageResult pageResult = PageResult.pageHelperList2PageResult(resultDatas);
-        
+
+        List<ReportJobInfo> dataList = pageResult.getDataList();
+        Date currDate = new Date();
+
+        for (ReportJobInfo reportCustomer : dataList) {
+            Date startDate = reportCustomer.getJob_start_dt();
+            Date endDate = reportCustomer.getJob_end_dt();
+
+            if(currDate.compareTo(startDate)<0){//未到填报日期
+                reportCustomer.setRecord_status(ReportStatus.TOO_EARLY.getValueInteger());
+            }
+            if(currDate.compareTo(endDate)>0){//已过期
+                reportCustomer.setRecord_status(ReportStatus.OVER_TIME.getValueInteger());
+                recordProcessDao.changeRecordJobStatus(reportCustomer.getReport_id(),ReportStatus.OVER_TIME.getValueInteger());
+            }
+        }
+
         return pageResult;
     }
 }

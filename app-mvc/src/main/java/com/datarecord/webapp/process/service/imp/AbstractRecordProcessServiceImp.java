@@ -149,8 +149,6 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
             Date startDate = reportCustomer.getJob_start_dt();
             Date endDate = reportCustomer.getJob_end_dt();
 
-            String queryStatus = queryParams.get("reportStatus") ==null ? null : queryParams.get("reportStatus");
-
             if(currDate.compareTo(startDate)<0){//未到填报日期
                 reportCustomer.setRecord_status(ReportStatus.TOO_EARLY.getValueInteger());
             }
