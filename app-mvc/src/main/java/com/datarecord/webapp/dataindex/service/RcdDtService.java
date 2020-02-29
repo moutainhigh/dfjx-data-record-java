@@ -54,11 +54,11 @@ public interface RcdDtService {
 
     int selectcount(String fld_id);
 
-    List<Object> selectrcddtcatgproj(String proj_id);
+    List<String> selectrcddtcatgproj(String proj_id);
 
-    List<Object> selectrcddtcatg(String catg_id);
+    List<String> selectrcddtcatg(String catg_id);
 
     void deleteererrcddtfld(String  catg_id);
 
-    void deleteererrcddtfldI(int i);
+    void deleteererrcddtfldI(String catg_id);
 }

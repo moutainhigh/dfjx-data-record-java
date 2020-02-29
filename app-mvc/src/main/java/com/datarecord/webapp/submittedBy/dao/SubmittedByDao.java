@@ -22,26 +22,26 @@ public interface SubmittedByDao {
     List<Origin> listOrgData(@Param("orgId") String orgId);
 
 
-    @Select("<script>SELECT \n" +
-            "           a.*, b.user_name_cn,\n" +
-            "            c.origin_name\n" +
-            "            FROM \n" +
-            "            rcd_person_config a\n" +
-            "            LEFT JOIN user b ON a.user_id = b.user_id\n" +
-            "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id \n" +
-            "             WHERE  1=1 \n" +
+    @Select("<script>SELECT " +
+            "           a.*, b.user_name_cn," +
+            "            c.origin_name" +
+            "            FROM " +
+            "            rcd_person_config a" +
+            "            LEFT JOIN user b ON a.user_id = b.user_id" +
+            "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id " +
+            "             WHERE  1=1 " +
             "<if test = \"user_name != null and user_name != ''\"> AND b.user_name_cn like concat('%',#{user_name},'%') </if> </script>")
     Page<SubmittedBy> rcdpersonconfiglist(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("user_name") String user_name);
 
-    @Select("<script> SELECT\n" +
-            "\ta.user_id,\n" +
-            "\tb.user_name\n" +
-            "FROM\n" +
-            "\tuser_origin_assign a\n" +
-            "inner JOIN user b ON a.user_id = b.user_id\n" +
-            "WHERE\n" +
-            "\t1 = 1\n" +
-            "<if test = \"origin_id != null and origin_id != ''\"> AND a.origin_id =#{origin_id} </if> </script>")
+    @Select("<script> SELECT" +
+            " a.user_id," +
+            " b.user_name " +
+            " FROM" +
+            " user_origin_assign a " +
+            " inner JOIN user b ON a.user_id = b.user_id " +
+            " WHERE " +
+            " 1 = 1 " +
+            " <if test = \"origin_id != null and origin_id != ''\"> AND a.origin_id =#{origin_id} </if> </script>")
     List<Useroriginassign> useroriginassignlist(@Param("origin_id") String origin_id);
 
 
@@ -59,28 +59,28 @@ public interface SubmittedByDao {
     @Delete("DELETE FROM rcd_person_config WHERE user_id = #{user_id}")
     void deletercdpersonconfigbyuserid(@Param("user_id") String user_id);
 
-    @Select("SELECT\n" +
-            "\ta.origin_id AS id,\n" +
-            "\ta.origin_name AS NAME,\n" +
-            "\ta.parent_origin_id AS pId,\n" +
-            "\tc.user_id,\n" +
-            "\tc.user_name_cn\n" +
-            "FROM\n" +
-            "\tsys_origin a\n" +
-            "INNER JOIN user_origin_assign b ON a.origin_id = b.origin_id\n" +
-            "INNER JOIN user c ON b.user_id = c.user_id  where c.user_name_cn != ''  ")
+    @Select("SELECT" +
+            " a.origin_id AS id," +
+            " a.origin_name AS NAME," +
+            " a.parent_origin_id AS pId," +
+            " c.user_id," +
+            " c.user_name_cn" +
+            " FROM" +
+            " sys_origin a " +
+            " INNER JOIN user_origin_assign b ON a.origin_id = b.origin_id " +
+            " INNER JOIN user c ON b.user_id = c.user_id  where c.user_name_cn != ''  ")
     @Options(useCache = false)
     List<EntityTree> listOrgDatauser();
 
-    @Select("select \n" +
-            " d.origin_id AS id,\n" +
-            "\td.origin_name AS NAME,\n" +
-            "\td.parent_origin_id AS pId,\n" +
-            "  b.user_id,\t\n" +
-            "\tb.user_name_cn\n" +
-            " from rcd_person_config  a  \n" +
-            " INNER join user  b ON a.user_id  = b.user_id\n" +
-            " INNER join user_origin_assign c on c.user_id = b.user_id\n" +
+    @Select("select  " +
+            " d.origin_id AS id, " +
+            " d.origin_name AS NAME, " +
+            " d.parent_origin_id AS pId, " +
+            "  b.user_id,  " +
+            " b.user_name_cn " +
+            " from rcd_person_config  a   " +
+            " INNER join user  b ON a.user_id  = b.user_id " +
+            " INNER join user_origin_assign c on c.user_id = b.user_id " +
             " INNER JOIN sys_origin d ON c.origin_id = d.origin_id")
     @Options(useCache = false)
     List<EntityTree> useroriginassignlistsysorigin();
@@ -90,12 +90,12 @@ public interface SubmittedByDao {
     List<String> selectuserid(@Param("user_id") String user_id);
 
 
-    @Select("SELECT \n" +
-            "           a.*, b.user_name_cn,\n" +
-            "            c.origin_name\n" +
-            "            FROM \n" +
-            "            rcd_person_config a\n" +
-            "            LEFT JOIN user b ON a.user_id = b.user_id\n" +
-            "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id \n" )
+    @Select("SELECT  " +
+            "           a.*, b.user_name_cn, " +
+            "            c.origin_name " +
+            "            FROM  " +
+            "            rcd_person_config a " +
+            "            LEFT JOIN user b ON a.user_id = b.user_id " +
+            "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id  " )
     List<SubmittedBy> rcdpersonconfiglistwufenye();
 }

@@ -61,13 +61,13 @@ public class RcdDtController {
     ){
         String jsonResult = "";
             try{
-                List<Object>  ll = new ArrayList<Object>();
+                List<String>  ll = new ArrayList<String>();
                 ll =   rcdDtService.selectrcddtcatgproj(proj_id);
                 if (ll.size() != 0){
                     return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标基本类别下已有关连任务无法删除", null, "error");
                 }
-                for(int i=0;i<ll.size();i++){
-                    rcdDtService.deleteererrcddtfldI(i);   // rcd_dt_fld   三级  catg_id
+                for(String catg_id : ll ) {
+                    rcdDtService.deleteererrcddtfldI(catg_id);   // rcd_dt_fld   三级  catg_id
                 }
                 rcdDtService.deletercddtproj(proj_id);   //一级二级  proj_id
             }catch(Exception e){
@@ -85,13 +85,14 @@ public class RcdDtController {
     ){
         String jsonResult = "";
         try{
-            List<Object>  ll = new ArrayList<Object>();
+            List<String>  ll = new ArrayList<String>();
             ll =   rcdDtService.selectrcddtcatg(catg_id);
             if (ll.size() != 0){
                 return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标类别下已有关连任务无法删除", null, "error");
+            }else{
+                rcdDtService.deletrcddtcatg(catg_id);  //rcd_dt_catg   二级   catg_id
+                rcdDtService.deleteererrcddtfld(catg_id);   // rcd_dt_fld   三级  catg_id
             }
-            rcdDtService.deletrcddtcatg(catg_id);  //rcd_dt_catg   二级   catg_id
-            rcdDtService.deleteererrcddtfld(catg_id);   // rcd_dt_fld   三级  catg_id
         }catch(Exception e){
             return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除二级基本类型失败", null, "error");
         }
@@ -110,8 +111,9 @@ public class RcdDtController {
            int tt =  rcdDtService.selectcount(fld_id);    //查询是否有关连
             if (tt > 0){
                 return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "此指标下已有关连任务无法删除", null, "error");
+            }else{
+                rcdDtService.deletercddtfld(fld_id);
             }
-            rcdDtService.deletercddtfld(fld_id);
         }catch(Exception e){
             return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除三级基本类型失败", null, "error");
         }
