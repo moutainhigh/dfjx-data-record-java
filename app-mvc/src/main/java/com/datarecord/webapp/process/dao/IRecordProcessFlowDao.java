@@ -44,7 +44,7 @@ public interface IRecordProcessFlowDao {
             " and rrj.record_status=#{reportStatus} " +
             "</if>" +
             "<if test='reportStatus!=null and reportStatus== \"7\" '>" +
-            " and rrj.record_status=#{reportStatus} and rjc.job_start_dt &gt; now()" +
+            " and rrj.record_status=0 and rjc.job_start_dt &gt; now()" +
             "</if>" +
             "<if test='reportStatus!=null and reportStatus== \"8\" '>" +
             "  and (rrj.record_status=0 or rrj.record_status=8  ) and rjc.job_end_dt &lt; now()  " +
