@@ -33,7 +33,8 @@ public interface IRecordProcessFlowDao {
             "rrj.record_user_id = u.user_id " +
             "left join sys_origin so on " +
             "rrj.record_origin_id = so.origin_id " +
-            "where rrj.record_origin_id in " +
+            "where " +
+            " rrj.record_status!='4' and  rrj.record_origin_id in " +
             "<foreach item='item' index='index' collection='originIds' open='(' separator=',' close=')'> " +
             " #{item.origin_id} " +
             "</foreach>" +
@@ -82,7 +83,7 @@ public interface IRecordProcessFlowDao {
             "rjc.job_creater = su.user_id " +
             "left join sys_origin so on " +
             "rjc.job_creater_origin = so.origin_id " +
-            " where " +
+            " where rjc.job_status!='3' and " +
             "rjc.job_creater_origin in " +
             "<foreach item='item' index='index' collection='originIds' open='(' separator=',' close=')'> " +
             " #{item.origin_id}" +

@@ -62,4 +62,13 @@ public class OriginController {
         JsonResult jsonpResponse = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "保存成功", null, origin);
         return jsonpResponse;
     }
+
+    @RequestMapping("getAllOriginTree")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult getAllOriginTree(){
+        Origin origin = originService.getAllOriginTree();
+        JsonResult jsonpResponse = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "保存成功", null, origin);
+        return jsonpResponse;
+    }
 }

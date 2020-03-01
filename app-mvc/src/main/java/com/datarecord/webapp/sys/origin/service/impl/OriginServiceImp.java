@@ -206,6 +206,19 @@ public class OriginServiceImp implements OriginService {
         originDao.removeUserOrigin(userId);
     }
 
+    @Override
+    public Origin getAllOriginTree() {
+        List<Origin> allOrigin = originDao.listAllOrigin();
+        Map<Integer,Origin> originTmp = new HashMap<>();
+        for (Origin origin : allOrigin) {
+            originTmp.put(origin.getOrigin_id(),origin);
+        }
+
+        Origin origin = this.makeOriginTree(originTmp);
+        return origin;
+    }
+
+
     public Origin makeOriginTree(Map<Integer,Origin> originsMap){
         Set<Integer> originIds = originsMap.keySet();
         Integer rootOrigin = null;
