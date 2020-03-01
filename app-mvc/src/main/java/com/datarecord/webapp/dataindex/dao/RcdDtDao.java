@@ -77,7 +77,7 @@ public interface RcdDtDao {
     List<RcdDtFld> leftrcddtfld(@Param("catg_id") String catg_id);
 
 
-    @Select("SELECT b.catg_id,c.proj_name,b.catg_name  " +
+    @Select("<script>SELECT b.catg_id,c.proj_name,b.catg_name  " +
             "             FROM  rcd_dt_fld a   " +
             "             INNER JOIN rcd_dt_catg b ON a.catg_id = b.catg_id  " +
             "             INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id  " +
@@ -85,8 +85,19 @@ public interface RcdDtDao {
             "  <foreach item=\"item\" index=\"index\" collection=\"originIds\" open=\"(\" separator=\",\" close=\")\">" +
             "  #{item}" +
             "  </foreach>"+
-            "   and  b.proj_id = #{proj_id}   GROUP BY  b.catg_id")
+            "   and  b.proj_id = #{proj_id}   GROUP BY  b.catg_id </script>")
     Page<DataDictionary> selecttixircddtprojer(@Param("currPage")int currPage, @Param("pageSize")int pageSize,@Param("proj_id") String proj_id,@Param("originIds") List<Integer> originIds);
+
+
+
+    @Select("SELECT b.catg_id,c.proj_name,b.catg_name  " +
+            "             FROM  rcd_dt_fld a   " +
+            "             INNER JOIN rcd_dt_catg b ON a.catg_id = b.catg_id  " +
+            "             INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id  " +
+            "             where 1=1  AND  a.fld_creater_origin  = #{originid} " +
+            "   and  b.proj_id = #{proj_id}   GROUP BY  b.catg_id")
+    Page<DataDictionary> selecttixircddtprojerByid(@Param("currPage")int currPage, @Param("pageSize")int pageSize,@Param("proj_id") String proj_id,@Param("originid") String originid);
+
 
     @Select("select  MAX(fld_id) from  rcd_dt_fld")
     int selectmax();
@@ -144,4 +155,6 @@ public interface RcdDtDao {
 
     @Delete("delete from rcd_dt_fld where  catg_id = #{catg_id}")
     void deletercddtfldI(@Param("catg_id")String catg_id);
+
+
 }

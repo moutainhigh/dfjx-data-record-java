@@ -122,7 +122,13 @@ public class RcdDtServiceImp  implements RcdDtService {
         for (Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id());
         }
-        Page<DataDictionary> contactPageDatas = rcdDtDao.selecttixircddtprojer(currPage, pageSize,proj_id,originIds);
+        Page<DataDictionary> contactPageDatas = null;
+        if(originIds.size()!=0){
+          contactPageDatas = rcdDtDao.selecttixircddtprojer(currPage, pageSize,proj_id,originIds);
+        }else{
+            String originid = userOrigin.getOrigin_id().toString();
+            contactPageDatas = rcdDtDao.selecttixircddtprojerByid(currPage, pageSize,proj_id,originid);
+        }
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
         return pageContactResult;
