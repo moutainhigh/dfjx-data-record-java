@@ -1,7 +1,6 @@
 package com.datarecord.webapp.fillinatask.controller;
 
 
-import com.datarecord.webapp.fillinatask.bean.Jobstatus;
 import com.datarecord.webapp.fillinatask.bean.Lieming;
 import com.datarecord.webapp.fillinatask.service.FillinataskService;
 import com.google.gson.internal.LinkedTreeMap;
@@ -21,7 +20,6 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 @Controller
@@ -38,8 +36,6 @@ public class SimpleExcelWrite {
     public String generateexcel(
             @RequestBody Map<String,Object> request
     ) {
-        PageResult pageResult = null;
-        String jsonResult = "";
         try {
         String  jobids = String.valueOf(request.get("jobid").toString());
         Integer jobid = Integer.valueOf(jobids).intValue();
@@ -88,8 +84,8 @@ public class SimpleExcelWrite {
             fout.close();
         } catch (Exception e) {
             e.printStackTrace();
-            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "生成excel文件失败", null, "error");
+            return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "生成excel文件失败", null, "error");
         }
-        return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "生成excel文件成功", null, "success");
+        return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "生成excel文件成功", null, "success");
     }
 }

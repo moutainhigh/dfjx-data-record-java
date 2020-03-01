@@ -13,13 +13,13 @@ public interface FillinataskService {
 
     PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status);
 
-    void insertrcdjobconfig(String job_name, String job_start_dt, String job_end_dt);
+    void insertrcdjobconfig(String job_name, String job_start_dt, String job_end_dt,String job_creater,String job_creater_origin);
 
     void insertrcdjobpersonassign(String job_id, String userid);
 
     void deletercdjobpersonassign(String job_id);
 
-    void updatercdjobconfig(String job_id, String job_name, String job_start_dt, String job_end_dt);
+    void updatercdjobconfig(String job_id, String job_name, String job_start_dt, String job_end_dt,String job_creater,String job_creater_origin);
 
     List<RcdJobUnitConfig> selectRcdJobUnitConfig(String job_id);
 

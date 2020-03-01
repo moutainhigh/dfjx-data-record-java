@@ -5,7 +5,6 @@ import com.datarecord.webapp.fillinatask.bean.Fillinatask;
 import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
 import com.datarecord.webapp.fillinatask.service.FillinataskService;
-import com.github.pagehelper.Page;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
@@ -41,15 +40,13 @@ public class FillinataskController {
             @RequestParam("job_status")String job_status
     ){
         PageResult pageResult = null;
-        String jsonResult = "";
         try{
             pageResult = fillinataskService.rcdjobconfiglist(currPage,pageSize,job_name,job_status);
         }catch(Exception e){
             e.printStackTrace();
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报任务列表失败", null, "error");
+            return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报任务列表失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取填报任务列表成功", null, pageResult);
-        return jsonResult;
+        return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取填报任务列表成功", null, pageResult);
     }
 
     //填报任务删除   包含任务下的任务组、任务与关联关系等关联关系
@@ -59,17 +56,15 @@ public class FillinataskController {
     public String deletercdjobconfig(
             @RequestParam("job_id")String job_id
     ){
-        String jsonResult = "";
         try{
             fillinataskService.deletercdjobconfig(job_id);    //填报任务删除
             fillinataskService.deletercdjobpersonassign(job_id);    //填报人维护删除
             fillinataskService.deleteRcdJobUnitConfigsuo(job_id);    //任务关连填报组删除
         }catch(Exception e){
             e.printStackTrace();
-            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报任务删除失败", null, "error");
+            return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报任务删除失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报任务删除成功", null, "success");
-        return jsonResult;
+        return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报任务删除成功", null, "success");
     }
 
 
@@ -82,15 +77,13 @@ public class FillinataskController {
             @RequestParam("job_id")String job_id,
             @RequestParam("user_id")String user_id
     ){
-        String jsonResult = "";
         try{
             fillinataskService.deletercdjobpersonassignbyuseridandjobid(job_id,user_id);
         }catch(Exception e){
             e.printStackTrace();
-            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "任务绑定的填报人删除失败", null, "error");
+            return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "任务绑定的填报人删除失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "任务绑定的填报人删除成功", null, "success");
-        return jsonResult;
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "任务绑定的填报人删除成功", null, "success");
     }
 
     //任务id查看详情
@@ -101,15 +94,14 @@ public class FillinataskController {
             @RequestParam("job_id")String job_id
     ){
         String jsonResult = "";
-        List<Fillinatask> list = new ArrayList<Fillinatask>();
+        List<Fillinatask> list = null;
         try{
             list = fillinataskService.selectrcdjobconfigjobid(job_id);
         }catch(Exception e){
             e.printStackTrace();
-            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "任务id查看详情失败", null, "error");
+            return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "任务id查看详情失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "任务id查看详情成功", null, list);
-        return jsonResult;
+        return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "任务id查看详情成功", null, list);
     }
 
 
@@ -123,17 +115,17 @@ public class FillinataskController {
     public String insertrcdjobconfig(
             @RequestParam("job_name")String job_name,
             @RequestParam("job_start_dt")String job_start_dt,
+            @RequestParam("job_creater")String job_creater,
+            @RequestParam("job_creater_origin")String job_creater_origin,
             @RequestParam("job_end_dt")String job_end_dt
     ){
-        String jsonResult = "";
         try{
-         fillinataskService.insertrcdjobconfig(job_name,job_start_dt,job_end_dt);
+         fillinataskService.insertrcdjobconfig(job_name,job_start_dt,job_end_dt,job_creater,job_creater_origin);
         }catch(Exception e){
             e.printStackTrace();
-            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增填报任务失败", null, "error");
+            return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增填报任务失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增填报任务成功", null, "success");
-        return jsonResult;
+        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增填报任务成功", null, "success");
     }
 
 
@@ -146,17 +138,17 @@ public class FillinataskController {
             @RequestParam("job_id")String job_id,
             @RequestParam("job_name")String job_name,
             @RequestParam("job_start_dt")String job_start_dt,
+            @RequestParam("job_creater")String job_creater,
+            @RequestParam("job_creater_origin")String job_creater_origin,
             @RequestParam("job_end_dt")String job_end_dt
     ){
-        String jsonResult = "";
         try{
-            fillinataskService.updatercdjobconfig(job_id,job_name,job_start_dt,job_end_dt);
+            fillinataskService.updatercdjobconfig(job_id,job_name,job_start_dt,job_end_dt,job_creater,job_creater_origin);
         }catch(Exception e){
             e.printStackTrace();
-            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改填报任务失败", null, "error");
+            return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改填报任务失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改填报任务成功", null, "success");
-        return jsonResult;
+        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改填报任务成功", null, "success");
     }
 
     //填报任务中 填报人维护rcd_job_person_assign
@@ -167,16 +159,14 @@ public class FillinataskController {
             @RequestParam("userid")String userid,
             @RequestParam("job_id")String job_id
     ){
-        String jsonResult = "";
         try{
           //  fillinataskService.deletercdjobpersonassign(job_id);    //把原先的删除再新增
             fillinataskService.insertrcdjobpersonassign(job_id,userid);
         }catch(Exception e){
             e.printStackTrace();
-            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增填报维护人失败", null, "error");
+            return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增填报维护人失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增填报维护人成功", null, "success");
-        return jsonResult;
+        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增填报维护人成功", null, "success");
     }
 
 
@@ -187,16 +177,15 @@ public class FillinataskController {
     public String huixianrcdjobpersonassign(
             @RequestParam("job_id")String job_id
     ){
-        List<RcdJobPersonAssign> ll = new ArrayList<RcdJobPersonAssign>();
+        List<RcdJobPersonAssign> ll = null;
         String jsonResult = "";
         try{
             ll =   fillinataskService.huixianrcdjobpersonassign(job_id);
         }catch(Exception e){
             e.printStackTrace();
-            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "查询机构对应填报人失败", null, "error");
+            return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "查询机构对应填报人失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "查询机构对应填报人成功", null, ll);
-        return jsonResult;
+        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "查询机构对应填报人成功", null, ll);
     }
 
 
@@ -208,16 +197,14 @@ public class FillinataskController {
     public String selectRcdJobUnitConfig(
             @RequestParam("job_id")String job_id
     ){
-        List<RcdJobUnitConfig> ll = new ArrayList<RcdJobUnitConfig>();
-        String jsonResult = "";
+        List<RcdJobUnitConfig> ll = null;
         try{
             ll =  fillinataskService.selectRcdJobUnitConfig(job_id);
         }catch(Exception e){
             e.printStackTrace();
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报组查询未选择失败", null, "error");
+            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报组查询未选择失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报组查询未选择成功", null, ll);
-        return jsonResult;
+        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报组查询未选择成功", null, ll);
     }
 
     //填报组维护弹框RcdJobUnitConfig  已选择列表
@@ -227,16 +214,14 @@ public class FillinataskController {
     public String selectRcdJobUnitConfigyi(
             @RequestParam("job_id")String job_id
     ){
-        List<RcdJobUnitConfig> ll = new ArrayList<RcdJobUnitConfig>();
-        String jsonResult = "";
+        List<RcdJobUnitConfig> ll = null;
         try{
             ll =  fillinataskService.selectRcdJobUnitConfigyi(job_id);
         }catch(Exception e){
             e.printStackTrace();
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报组查询已选择失败", null, "error");
+            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报组查询已选择失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报组查询已选择成功", null, ll);
-        return jsonResult;
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报组查询已选择成功", null, ll);
     }
 
 
@@ -248,16 +233,14 @@ public class FillinataskController {
             @RequestParam("jobunitid")String jobunitid,
             @RequestParam("job_id")String job_id
     ){
-        String jsonResult = "";
         try{
               fillinataskService.updateRcdJobUnitConfigsuo(job_id);
               fillinataskService.updateRcdJobUnitConfigyi(jobunitid,job_id);
         }catch(Exception e){
             e.printStackTrace();
-            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报组维护弹框确认失败", null, "error");
+            return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报组维护弹框确认失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报组维护弹框确认成功", null, "success");
-        return jsonResult;
+        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报组维护弹框确认成功", null, "success");
     }
 
 

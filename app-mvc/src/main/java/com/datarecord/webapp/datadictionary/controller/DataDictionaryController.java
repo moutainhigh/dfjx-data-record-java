@@ -1,6 +1,7 @@
 package com.datarecord.webapp.datadictionary.controller;
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.datadictionary.service.DataDictionaryService;
+import com.webapp.support.httpClient.HttpClientSupport;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
@@ -31,18 +32,17 @@ public class DataDictionaryController {
     @CrossOrigin(allowCredentials="true")
     public String insertDataDictionary(
             @RequestParam("dict_name") String dict_name){
-        String jsonResult = "";
         if(!dict_name.isEmpty()){
             try{
                 dataDictionaryService.insertDataDictionary(dict_name);
             }catch(Exception e){
                 e.printStackTrace();
-                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增数据字典类型失败", null, "error");
+                return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增数据字典类型失败", null, "error");
             }
         }else{
-            return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
+            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
         }
-        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增数据字典类型成功", null, "success");
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增数据字典类型成功", null, "success");
     }
 
 
@@ -54,14 +54,13 @@ public class DataDictionaryController {
             @RequestParam("dict_id") String dict_id,
             @RequestParam("dict_name")String dict_name
     ){
-        String jsonResult = "";
             try{
                 dataDictionaryService.updateDataDictionarybydictid(dict_id,dict_name);
             }catch(Exception e){
                 e.printStackTrace();
-                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "数据字典修改失败", null, "error");
+                return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "数据字典修改失败", null, "error");
             }
-        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "数据字典修改成功", null, "success");
+        return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "数据字典修改成功", null, "success");
     }
 
 
@@ -73,19 +72,19 @@ public class DataDictionaryController {
     public String deleteDataDictionarybydictid(
             @RequestParam("dict_id") String dict_id
     ){
-        String jsonResult = "";
+
         int ll = 0;
         try{
             ll = dataDictionaryService.selectbyrcddtdictcontentdictid(dict_id);
             if (ll != 0){
-                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "此字典类型下已有关连指标无法删除", null, "error");
+                return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "此字典类型下已有关连指标无法删除", null, "error");
             }
             dataDictionaryService.deleteDataDictionarybydictid(dict_id);
         }catch(Exception e){
             e.printStackTrace();
-            return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除字典类型失败", null, "error");
+            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除字典类型失败", null, "error");
         }
-        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除字典类型成功", null, "success");
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除字典类型成功", null, "success");
     }
 
 
@@ -97,16 +96,16 @@ public class DataDictionaryController {
             @RequestParam("currPage") int currPage,
             @RequestParam("pageSize")int pageSize
     ){
-        PageResult pageResult = null;
-        String jsonResult = "";
-        try{
+       PageResult pageResult = null;
+
+         try{
             pageResult = dataDictionaryService.dataDictionarylist(currPage,pageSize);
         }catch(Exception e){
             e.printStackTrace();
-            jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取数据字典列表失败", null, "error");
+          return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取数据字典列表失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取数据字典列表成功", null, pageResult);
-        return jsonResult;
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取数据字典列表成功", null, pageResult);
+
     }
 
 
@@ -121,15 +120,15 @@ public class DataDictionaryController {
             @RequestParam("dict_id")String dict_id
             ){
         PageResult pageResult = null;
-        String jsonResult = "";
+
         try{
             pageResult = dataDictionaryService.selectDataDictionary(currPage,pageSize,dict_id);
         }catch(Exception e){
             e.printStackTrace();
-            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取数据内容列表失败", null, "error");
+            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取数据内容列表失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取数据内容列表成功", null, pageResult);
-        return jsonResult;
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取数据内容列表成功", null, pageResult);
+
     }
 
 
@@ -168,19 +167,19 @@ public class DataDictionaryController {
             @RequestParam("dict_content_name") String dict_content_name,
             @RequestParam("dict_content_value") String dict_content_value
     ){
-        String jsonResult = "";
+
         boolean ss = false;
         if(!dict_content_id.isEmpty() && !dict_id.isEmpty() && !dict_content_name.isEmpty()  && !dict_content_value.isEmpty()){
             try{
                 dataDictionaryService.updateDataDictionary(dict_content_id,dict_id,dict_content_name,dict_content_value);
             }catch(Exception e){
                 e.printStackTrace();
-                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "数据字段内容修改失败", null, "error");
+                return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "数据字段内容修改失败", null, "error");
             }
         }else{
-            return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
+            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
         }
-        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "数据字段内容修改成功", null, "success");
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "数据字段内容修改成功", null, "success");
     }
 
 
@@ -193,25 +192,25 @@ public class DataDictionaryController {
     public String deleteDataDictionary(
             @RequestParam("dict_content_id") String dict_content_id
     ){
-        String jsonResult = "";
+
         boolean ss = false;
         int sss = 0;
         if(!dict_content_id.isEmpty()){
             try{
                 sss = dataDictionaryService.selectcountrcddtfldctassign(dict_content_id);
                 if (sss != 0){
-                    return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "此数据字典已关连指标无法删除", null, "error");
+                    return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "此数据字典已关连指标无法删除", null, "error");
                 }else{
                     dataDictionaryService.deleteDataDictionary(dict_content_id);
                 }
             }catch(Exception e){
                 e.printStackTrace();
-                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "数据字段内容删除失败", null, "error");
+                return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "数据字段内容删除失败", null, "error");
             }
         }else{
-            return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
+            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
         }
-        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "数据字段内容删除成功", null, "success");
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "数据字段内容删除成功", null, "success");
     }
 
 
@@ -222,16 +221,14 @@ public class DataDictionaryController {
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public String selectleftDataDictionary(){
-      List<DataDictionary> ll= new ArrayList<DataDictionary>();
-        String jsonResult = "";
+      List<DataDictionary> ll= null;
         try{
             ll = dataDictionaryService.selectleftDataDictionary();
         }catch(Exception e){
             e.printStackTrace();
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取菜单列表失败", null, "error");
+            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取菜单列表失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取菜单列表成功", null, ll);
-        return jsonResult;
+        return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取菜单列表成功", null, ll);
     }
 
 
