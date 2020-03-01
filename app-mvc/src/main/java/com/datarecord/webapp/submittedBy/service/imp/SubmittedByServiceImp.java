@@ -79,7 +79,6 @@ public class SubmittedByServiceImp  implements SubmittedByService {
     @Override
     public List<Object> useroriginassignlistsysorigin(String origin_id) {
         List<EntityTree> menuCommon;
-        Map<String,String> mapArray = new LinkedHashMap<String,String>();
         List<Object> list = new ArrayList<Object>();
         List<EntityTree> lists =  submittedByDao.useroriginassignlistsysorigin();
         menuCommon  = lists;

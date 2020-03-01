@@ -4,10 +4,15 @@ import com.datarecord.webapp.reportinggroup.bean.RcdJobUnitFld;
 import com.datarecord.webapp.reportinggroup.bean.ReportingGroup;
 import com.datarecord.webapp.reportinggroup.bean.rcdJobConfig;
 import com.datarecord.webapp.reportinggroup.service.ReportingGroupService;
+import com.datarecord.webapp.sys.origin.entity.Origin;
+import com.datarecord.webapp.sys.origin.service.OriginService;
 import com.github.pagehelper.Page;
+import com.webapp.support.httpClient.HttpClientSupport;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
+import com.workbench.auth.user.entity.User;
+import com.workbench.shiro.WorkbenchShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +29,9 @@ public class ReportingGroupController {
 
     @Autowired
     private ReportingGroupService reportingGroupService;
+
+    @Autowired
+    private OriginService originService;
 
    //left填报任务rcd_job_config
    @RequestMapping("/leftrcdjobconfig")
@@ -134,14 +142,15 @@ public class ReportingGroupController {
     public String selectrcdjobunitfld(
             @RequestParam("job_unit_id")String job_unit_id){
         List<RcdJobUnitFld> ll = null;
-
         try{
-            ll  = reportingGroupService.selectrcdjobunitfld(job_unit_id);   //查出有关联的指标id
+            User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+            Origin userOrigin = originService.getOriginByUser(user.getUser_id());
+            ll  = reportingGroupService.selectrcdjobunitfld(userOrigin.getOrigin_id().toString(),job_unit_id);   //查出有关联的指标id
         }catch(Exception e){
             e.printStackTrace();
-            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "left填报任务获取失败", null, "error");
+            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标获取失败", null, "error");
         }
-        return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "left填报任务获取成功", null, ll);
+        return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "指标获取成功", null, ll);
     }
 
 
@@ -153,7 +162,6 @@ public class ReportingGroupController {
             @RequestParam("jobunitid")String jobunitid,       //编码
             @RequestParam("fld_id")String fld_id  //指标编码数组
             ){
-
         try{
             reportingGroupService.rcdjobunitflddelete(jobunitid);  //删除之前关系
             reportingGroupService.rcdjobunitfld(fld_id,jobunitid);  //新增关系

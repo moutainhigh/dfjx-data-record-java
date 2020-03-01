@@ -244,6 +244,23 @@ public class FillinataskController {
     }
 
 
+    //填报任务审批
+    @RequestMapping("/fillInTaskApprovalByJobid")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String fillInTaskApprovalByJobid(
+            @RequestParam("job_id")String job_id
+    ){
+        try{
+            fillinataskService.fillInTaskApprovalByJobid(job_id);
+        }catch(Exception e){
+            e.printStackTrace();
+            return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报任务审批修改状态成功", null, "error");
+        }
+        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报任务审批修改状态失败", null, "success");
+    }
+
+
 
 
 

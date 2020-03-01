@@ -46,4 +46,6 @@ public interface FillinataskService {
 
 
     List<Lieming> selectrcdreportdatajob(int jobid, int reportid, String unitId, String fldids);
+
+    void fillInTaskApprovalByJobid(String job_id);
 }

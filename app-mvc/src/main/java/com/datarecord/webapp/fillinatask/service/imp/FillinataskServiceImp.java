@@ -123,4 +123,9 @@ public class FillinataskServiceImp implements FillinataskService {
     public List<Lieming> selectrcdreportdatajob(int jobid, int reportid, String unitId, String fldids) {
         return fillinataskDao.selectrcdreportdatajob(jobid,reportid,unitId,fldids);
     }
+
+    @Override
+    public void fillInTaskApprovalByJobid(String job_id) {
+        fillinataskDao.selectrcdreportdatajob(job_id);
+    }
 }
