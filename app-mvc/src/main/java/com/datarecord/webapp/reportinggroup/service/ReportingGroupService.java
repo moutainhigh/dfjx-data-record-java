@@ -9,7 +9,7 @@ import com.webapp.support.page.PageResult;
 import java.util.List;
 
 public interface ReportingGroupService {
-    List<rcdJobConfig> leftrcdjobconfig();
+    List<rcdJobConfig> leftrcdjobconfig(String origin_id);
 
     PageResult rcdjobunitconfiglist(int currPage, int pageSize, String job_id);
 

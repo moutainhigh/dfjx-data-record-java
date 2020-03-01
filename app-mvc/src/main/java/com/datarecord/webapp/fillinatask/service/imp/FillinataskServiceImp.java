@@ -7,6 +7,8 @@ import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
 import com.datarecord.webapp.fillinatask.dao.FillinataskDao;
 import com.datarecord.webapp.fillinatask.service.FillinataskService;
+import com.datarecord.webapp.reportinggroup.dao.ReportingGroupDao;
+import com.datarecord.webapp.utils.EntityTree;
 import com.github.pagehelper.Page;
 import com.google.common.base.Strings;
 import com.webapp.support.page.PageResult;
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service("fillinataskService")
@@ -25,12 +28,37 @@ public class FillinataskServiceImp implements FillinataskService {
     @Autowired
     private FillinataskDao fillinataskDao;
 
+    @Autowired
+    private ReportingGroupDao reportingGroupDao;
+
+
+
     @Override
-    public PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status) {
+    public PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status,String origin_id) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
         job_name = Strings.emptyToNull(job_name);
         job_status = Strings.emptyToNull(job_status);
-        Page<Fillinatask> contactPageDatas = fillinataskDao.rcdjobconfiglist(currPage, pageSize,job_name,job_status);
+        List<EntityTree> lists =  reportingGroupDao.selectoriginid();
+        List<String> lsls = new ArrayList<String>();
+        for (EntityTree x : lists) {
+            if((null != x.getpId() && !"".equals(x.getpId()))  ||  (null != x.getId() && !"".equals(x.getId()) ) ){
+                if(origin_id.equals(x.getpId())){
+                    lsls.add(x.getId());
+                }else if (origin_id.equals(x.getId())){
+                    lsls.add(x.getId());
+                }
+            }
+        }
+        String originid ="";
+        if(lsls.size() > 0){
+
+            for (String id : lsls){
+                originid += ",";
+                originid += id;
+            }
+            originid =  originid.substring(1);
+        }
+        Page<Fillinatask> contactPageDatas = fillinataskDao.rcdjobconfiglist(currPage, pageSize,job_name,job_status,originid);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
         return pageContactResult;

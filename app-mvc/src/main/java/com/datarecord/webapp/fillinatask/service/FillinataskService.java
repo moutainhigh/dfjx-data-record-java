@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface FillinataskService {
 
-    PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status);
+    PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status,String origin_id);
 
     void insertrcdjobconfig(String job_name, String job_start_dt, String job_end_dt,String job_creater,String job_creater_origin);
 

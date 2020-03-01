@@ -49,7 +49,9 @@ public class FillinataskController {
     ){
         PageResult pageResult = null;
         try{
-            pageResult = fillinataskService.rcdjobconfiglist(currPage,pageSize,job_name,job_status);
+            User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+            Origin userOrigin = originService.getOriginByUser(user.getUser_id());
+            pageResult = fillinataskService.rcdjobconfiglist(currPage,pageSize,job_name,job_status,userOrigin.getOrigin_id().toString());
         }catch(Exception e){
             e.printStackTrace();
             return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报任务列表失败", null, "error");
