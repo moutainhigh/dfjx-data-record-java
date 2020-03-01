@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface ReportingGroupDao {
 
-    @Select("SELECT job_id,job_name,job_status FROM rcd_job_config  where   fld_creater_origin IN (#{originid}) ")
+    @Select("SELECT job_id,job_name,job_status FROM rcd_job_config  where   job_creater_origin IN (#{originid}) ")
     List<rcdJobConfig> leftrcdjobconfig(@Param("originid") String originid);
 
     @Select("SELECT job_unit_id,job_unit_name,job_unit_active FROM rcd_job_unit_config where job_id =#{job_id}")
