@@ -28,9 +28,9 @@ public interface SubmittedByDao {
             "            c.origin_name" +
             "            FROM " +
             "            rcd_person_config a" +
-            "            LEFT JOIN user b ON a.user_id = b.user_id" +
-            "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id " +
-            "             WHERE  1=1  " +
+            "            inner JOIN user b ON a.user_id = b.user_id" +
+            "            inner JOIN sys_origin c ON a.origin_id = c.origin_id " +
+            "             WHERE  1=1    " +
             " <if test='originIds!=null'> and c.origin_id  in  " +
             "  <foreach item=\"item\" index=\"index\" collection=\"originIds\" open=\"(\" separator=\",\" close=\")\">" +
             "  #{item}" +
@@ -45,8 +45,8 @@ public interface SubmittedByDao {
             "            c.origin_name" +
             "            FROM " +
             "            rcd_person_config a" +
-            "            LEFT JOIN user b ON a.user_id = b.user_id" +
-            "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id " +
+            "            inner JOIN user b ON a.user_id = b.user_id" +
+            "            inner JOIN sys_origin c ON a.origin_id = c.origin_id " +
             "             WHERE  1=1   and  c.origin_id  = #{originid} " +
             " <if test = \"user_name != null and user_name != ''\"> AND b.user_name_cn like concat('%',#{user_name},'%') </if> </script>")
     Page<SubmittedBy> rcdpersonconfiglistByid(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("user_name") String user_name,@Param("originid") String originid    );
