@@ -11,12 +11,9 @@ import java.util.List;
 @Repository
 public interface ReportingGroupDao {
 
-    @Select("<script>SELECT job_id,job_name,job_status FROM rcd_job_config  where   job_creater_origin IN " +
-            "  <foreach item=\"item\" index=\"index\" collection=\"originIds\" open=\"(\" separator=\",\" close=\")\">" +
-            "  #{item}" +
-            "  </foreach>"+
+    @Select("<script>SELECT job_id,job_name,job_status  FROM rcd_job_config  where   job_creater = #{user_id} " +
             "  </script>")
-    List<rcdJobConfig> leftrcdjobconfig(@Param("originIds") List<Integer> originIds);
+    List<rcdJobConfig> leftrcdjobconfig(@Param("user_id") int user_id);
 
     @Select("SELECT job_unit_id,job_unit_name,job_unit_active FROM rcd_job_unit_config where job_id =#{job_id}")
     Page<ReportingGroup> rcdjobunitconfiglist(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("job_id") String job_id);

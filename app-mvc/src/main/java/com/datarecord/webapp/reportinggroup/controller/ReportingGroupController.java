@@ -42,8 +42,8 @@ public class ReportingGroupController {
 
        try{
            User user = WorkbenchShiroUtils.checkUserFromShiroContext();
-           Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-           ll  = reportingGroupService.leftrcdjobconfig(userOrigin);
+       //    Origin userOrigin = originService.getOriginByUser(user.getUser_id());
+           ll  = reportingGroupService.leftrcdjobconfig(user.getUser_id());
        }catch(Exception e){
            e.printStackTrace();
            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "left填报任务获取失败", null, "error");

@@ -3,13 +3,12 @@ package com.datarecord.webapp.reportinggroup.service;
 import com.datarecord.webapp.reportinggroup.bean.RcdJobUnitFld;
 import com.datarecord.webapp.reportinggroup.bean.ReportingGroup;
 import com.datarecord.webapp.reportinggroup.bean.rcdJobConfig;
-import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.webapp.support.page.PageResult;
 
 import java.util.List;
 
 public interface ReportingGroupService {
-    List<rcdJobConfig> leftrcdjobconfig(Origin userOrigin);
+    List<rcdJobConfig> leftrcdjobconfig(int user_id);
 
     PageResult rcdjobunitconfiglist(int currPage, int pageSize, String job_id);
 

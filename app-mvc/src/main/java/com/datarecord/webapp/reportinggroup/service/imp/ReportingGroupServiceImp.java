@@ -33,14 +33,14 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
 
 
     @Override
-    public List<rcdJobConfig> leftrcdjobconfig(Origin userOrigin) {
-        List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
+    public List<rcdJobConfig> leftrcdjobconfig(int  user_id) {
+     /*   List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
         childrenOrigins.add(0,userOrigin);
         List<Integer> originIds  = new ArrayList<>();
         for (Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id());
-        }
-        return reportingGroupDao.leftrcdjobconfig(originIds);
+        }*/
+        return reportingGroupDao.leftrcdjobconfig(user_id);
     }
 
 

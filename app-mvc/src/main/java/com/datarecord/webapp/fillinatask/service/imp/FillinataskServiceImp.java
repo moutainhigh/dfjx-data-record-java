@@ -38,17 +38,17 @@ public class FillinataskServiceImp implements FillinataskService {
 
 
     @Override
-    public PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status,Origin userOrigin) {
+    public PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status,int user_id) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
         job_name = Strings.emptyToNull(job_name);
         job_status = Strings.emptyToNull(job_status);
-        List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
+       /* List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
         childrenOrigins.add(0,userOrigin);
         List<Integer> originIds  = new ArrayList<>();
         for (Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id());
-        }
-        Page<Fillinatask> contactPageDatas = fillinataskDao.rcdjobconfiglist(currPage, pageSize,job_name,job_status,originIds);
+        }*/
+        Page<Fillinatask> contactPageDatas = fillinataskDao.rcdjobconfiglist(currPage, pageSize,job_name,job_status,user_id);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
         return pageContactResult;
