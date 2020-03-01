@@ -2,6 +2,8 @@ package com.datarecord.webapp.process.service.imp;
 
 import com.datarecord.enums.RcdClientType;
 import com.datarecord.enums.ReportStatus;
+import com.datarecord.webapp.fillinatask.bean.JobInteval;
+import com.datarecord.webapp.fillinatask.service.FillinataskService;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessService;
@@ -33,6 +35,9 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
     @Autowired
     private ReportingGroupDao reportingGroupDao;
 
+    @Autowired
+    private FillinataskService fillinataskService;
+
     @Override
     public PageResult pageJob(int user_id, String currPage, String pageSize,Map<String,String> queryParams) {
         if(Strings.isNullOrEmpty(currPage))
@@ -45,8 +50,31 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
         PageResult pageResult = PageResult.pageHelperList2PageResult(pageData);
         List<ReportJobInfo> dataList = pageResult.getDataList();
         Date currDate = new Date();
-
+        Calendar calenday = Calendar.getInstance();
+        calenday.setTime(currDate);
+        int dayOfMonth = calenday.get(Calendar.DAY_OF_MONTH);
         for (ReportJobInfo reportCustomer : dataList) {
+            Integer jobId = reportCustomer.getJob_id();
+            List<JobInteval> jobIntervals = fillinataskService.getJobIntevals(jobId.toString());
+
+            boolean inner = false;
+            if(jobIntervals!=null&&jobIntervals.size()>0){
+                for (JobInteval jobInterval : jobIntervals) {
+                    String startDay = jobInterval.getJob_interval_start();
+                    String endDay = jobInterval.getJob_interval_end();
+                    Integer startDayInt = new Integer(startDay);
+                    Integer endDayInt = new Integer(endDay);
+                    if(dayOfMonth>=startDayInt&&dayOfMonth<=endDayInt){
+                        inner = true;
+                    }
+                }
+            }else{
+                inner = true;
+            }
+            if(!inner){
+                reportCustomer.setRecord_status(ReportStatus.OVER_INTERVAL.getValueInteger());
+            }
+
             Date startDate = reportCustomer.getJob_start_dt();
             Date endDate = reportCustomer.getJob_end_dt();
 
@@ -57,7 +85,9 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
                 reportCustomer.setRecord_status(ReportStatus.OVER_TIME.getValueInteger());
                 recordProcessDao.changeRecordJobStatus(reportCustomer.getReport_id(),ReportStatus.OVER_TIME.getValueInteger());
             }
+
         }
+
 
         logger.debug("Page Result :{}",pageResult);
         return pageResult;
