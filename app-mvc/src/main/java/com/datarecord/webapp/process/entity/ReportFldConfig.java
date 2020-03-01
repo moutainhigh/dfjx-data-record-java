@@ -9,22 +9,31 @@ public class ReportFldConfig {
     private String job_unit_name;
     private Integer catg_id;
     private String catg_name;
-    private Integer fld_id;
-    private String fld_name;
+    private Integer fld_id;   //指标id
+    private String fld_name; // 名称
     private String fld_point;
     private String fld_data_type;
     private String fld_data_type_str;
-    private Integer fld_type;
+    private Integer fld_type; // 类型0:通用指标 1 突发指标
     private Integer fld_is_null;
     private String fld_is_null_str;
     private Integer is_actived;
-    private Integer fld_range;
-    private Integer fld_visible;
-    private Integer fld_status;
+    private Integer fld_range;    //取值范围：0-所有、1-移动端、2-PC端
+    private Integer fld_visible; //可见范围：0-全部、1-移动端可见、2-PC端可见
+    private Integer fld_status;   //指标状态：  0：待审批  1：审批通过  2：审批驳回  3：作废'
     private Integer fld_creater;
     private String fld_creater_name;
     private Integer fld_creater_origin;
     private String fld_creater_origin_name;
+    private String dict_content_id;
+
+    public String getDict_content_id() {
+        return dict_content_id;
+    }
+
+    public void setDict_content_id(String dict_content_id) {
+        this.dict_content_id = dict_content_id;
+    }
 
     public Integer getJob_unit_id() {
         return job_unit_id;

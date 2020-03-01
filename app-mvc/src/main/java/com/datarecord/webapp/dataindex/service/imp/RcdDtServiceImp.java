@@ -5,6 +5,7 @@ import com.datarecord.webapp.datadictionary.service.imp.DataDictionaryServiceImp
 import com.datarecord.webapp.dataindex.bean.*;
 import com.datarecord.webapp.dataindex.dao.RcdDtDao;
 import com.datarecord.webapp.dataindex.service.RcdDtService;
+import com.datarecord.webapp.process.entity.ReportFldConfig;
 import com.github.pagehelper.Page;
 import com.webapp.support.page.PageResult;
 import org.slf4j.Logger;
@@ -55,12 +56,12 @@ public class RcdDtServiceImp  implements RcdDtService {
     }
 
     @Override
-    public void insertrcddtfld(String catg_id, String fld_name, String fld_data_type, String fld_is_null,String fld_type,String fld_range,String fld_visible,String fld_creater,String fld_creater_origin) {
-        rcdDtDao.insertrcddtfld(catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_creater,fld_creater_origin);
+    public void insertrcddtfld(ReportFldConfig reportFldConfig) {
+        rcdDtDao.insertrcddtfld(reportFldConfig);
     }
 
     @Override
-    public void insertrcddtfldctassign(String fld_id, String dict_contentid) {
+    public void insertrcddtfldctassign(Integer fld_id, String dict_contentid) {
         rcdDtDao.insertrcddtfldctassign(fld_id,dict_contentid);
     }
 
@@ -75,8 +76,8 @@ public class RcdDtServiceImp  implements RcdDtService {
     }
 
     @Override
-    public void updatercddtfld(String fld_id, String catg_id, String fld_name, String fld_data_type, String fld_is_null,String fld_type,String fld_range,String fld_visible,String fld_status ) {
-        rcdDtDao.updatercddtfld(fld_id,catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_status);
+    public void updatercddtfld(ReportFldConfig reportFldConfig) {
+        rcdDtDao.updatercddtfld(reportFldConfig);
     }
 
 

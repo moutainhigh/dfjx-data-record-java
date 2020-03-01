@@ -5,6 +5,8 @@ import com.datarecord.webapp.dataindex.bean.RcdDtFldCtAssign;
 import com.datarecord.webapp.dataindex.bean.RcddtCatg;
 import com.datarecord.webapp.dataindex.bean.Rcddtproj;
 import com.datarecord.webapp.dataindex.service.RcdDtService;
+import com.datarecord.webapp.process.entity.ReportFldConfig;
+import com.datarecord.webapp.reportinggroup.bean.ReportingGroup;
 import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.service.OriginService;
 import com.webapp.support.json.JsonSupport;
@@ -14,10 +16,7 @@ import com.workbench.auth.user.entity.User;
 import com.workbench.shiro.WorkbenchShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -269,30 +268,20 @@ public class RcdDtController {
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public String insertrcddtfld(
-            @RequestParam("catg_id") String catg_id,
-            @RequestParam("fld_name") String fld_name,    // 名称
-            @RequestParam("fld_type") String fld_type,    // 类型0:通用指标 1 突发指标
-            @RequestParam("fld_data_type") String fld_data_type,
-            @RequestParam("fld_visible") String fld_visible,  //可见范围：0-全部、1-移动端可见、2-PC端可见
-            @RequestParam("fld_range") String fld_range,      //取值范围：0-所有、1-移动端、2-PC端
-            @RequestParam("fld_is_null") String fld_is_null,
-            @RequestParam("dict_content_id") String dict_content_id  //数据字典内容编码
+            @RequestBody ReportFldConfig reportFldConfig
     ){
-        if(!catg_id.isEmpty()  && !fld_name.isEmpty()  && !fld_data_type.isEmpty()  && !fld_is_null.isEmpty()  && !fld_type.isEmpty()){
             try{
                 User user = WorkbenchShiroUtils.checkUserFromShiroContext();
                 Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-                String fld_creater = String.valueOf(user.getUser_id());            //创建人
-                String fld_creater_origin = userOrigin.getOrigin_id().toString();  //创建人所属机构
-                rcdDtService.insertrcddtfld(catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_creater,fld_creater_origin);
+                reportFldConfig.setFld_creater(user.getUser_id()); //创建人
+                reportFldConfig.setFld_creater_origin(userOrigin.getOrigin_id()); //创建人
+                rcdDtService.insertrcddtfld(reportFldConfig);//创建人所属机构
               int  fid = rcdDtService.selectmax();
               String  fld_id = String.valueOf(fid);
-                if(!fld_id.isEmpty() && !dict_content_id.isEmpty()){
-                  /*  dict_content_id.substring(1);
-                    dict_content_id.substring(0,dict_content_id.length()-1);*/
-                    String[] split = dict_content_id.split(",");
+                if(!fld_id.isEmpty() && !reportFldConfig.getDict_content_id().isEmpty()){
+                    String[] split = reportFldConfig.getDict_content_id().split(",");
                     for (String dict_contentid : split){
-                        rcdDtService.insertrcddtfldctassign(fld_id,dict_contentid);
+                        rcdDtService.insertrcddtfldctassign(reportFldConfig.getFld_id(),dict_contentid);
                     }
                     //指字标&数据典关系表添加
                         //rcdDtService.updatercddtdict(dict_content_id[i]);  //数据字典修改使用状态
@@ -301,9 +290,6 @@ public class RcdDtController {
                 e.printStackTrace();
                 return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增指标类型失败", null, "error");
             }
-        }else{
-            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
-        }
         return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增指标类型成功", null, "success");
     }
 
@@ -314,27 +300,18 @@ public class RcdDtController {
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public String updatercddtfld(
-            @RequestParam("catg_id") String catg_id,
-            @RequestParam("fld_name") String fld_name,    // 名称
-            @RequestParam("fld_type") String fld_type,    // 类型0:通用指标 1 突发指标
-            @RequestParam("fld_data_type") String fld_data_type,
-            @RequestParam("fld_is_null") String fld_is_null,
-            @RequestParam("fld_visible") String fld_visible,  //可见范围：0-全部、1-移动端可见、2-PC端可见
-            @RequestParam("fld_range") String fld_range,      //取值范围：0-所有、1-移动端、2-PC端
-            @RequestParam("fld_status") String fld_status,      //指标状态：  0：待审批  1：审批通过  2：审批驳回  3：作废'
-            @RequestParam("fld_id") String fld_id,    //指标id
-            @RequestParam("dict_content_id") String dict_content_id  //数据字典内容编码数组
+           @RequestBody ReportFldConfig reportFldConfig
     ){
-        if(!catg_id.isEmpty()  && !fld_name.isEmpty()  && !fld_data_type.isEmpty()  && !fld_is_null.isEmpty()  && !fld_type.isEmpty()){
             try{
-                rcdDtService.updatercddtfld(fld_id,catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_status);
-                if(!fld_id.isEmpty() && !dict_content_id.isEmpty() ){
+                rcdDtService.updatercddtfld(reportFldConfig);
+                String fld_id = reportFldConfig.getFld_id().toString();
+                if(!fld_id.isEmpty() && !reportFldConfig.getDict_content_id().isEmpty() ){
                     rcdDtService.deletercddtfldctassign(fld_id);
                    /* dict_content_id.substring(1);
                     dict_content_id.substring(0,dict_content_id.length()-1);*/
-                    String[] split = dict_content_id.split(",");
+                    String[] split = reportFldConfig.getDict_content_id().split(",");
                     for (String dict_contentid : split){
-                        rcdDtService.insertrcddtfldctassign(fld_id,dict_contentid);  //指标&数据字典关系表添加
+                        rcdDtService.insertrcddtfldctassign(reportFldConfig.getFld_id(),dict_contentid);  //指标&数据字典关系表添加
                     }
                     //rcdDtService.updatercddtdict(dict_content_id[i]);  //数据字典修改使用状态
                 }
@@ -342,9 +319,6 @@ public class RcdDtController {
                 e.printStackTrace();
                 return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改指标类型失败", null, "error");
             }
-        }else{
-            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
-        }
         return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改指标类型成功", null, "success");
     }
 

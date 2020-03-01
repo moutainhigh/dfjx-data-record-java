@@ -4,6 +4,7 @@ import com.datarecord.webapp.dataindex.bean.RcdDtFld;
 import com.datarecord.webapp.dataindex.bean.RcdDtFldCtAssign;
 import com.datarecord.webapp.dataindex.bean.RcddtCatg;
 import com.datarecord.webapp.dataindex.bean.Rcddtproj;
+import com.datarecord.webapp.process.entity.ReportFldConfig;
 import com.webapp.support.page.PageResult;
 
 import java.util.List;
@@ -18,15 +19,15 @@ public interface RcdDtService {
 
     PageResult selecttixircddtproj(int currPage, int pageSize, String catg_id);
 
-    void insertrcddtfld(String catg_id, String fld_name, String fld_data_type, String fld_is_null,String fld_type,String fld_range,String fld_visible,String fld_creater,String fld_creater_origin);
+    void insertrcddtfld(ReportFldConfig reportFldConfig);
 
-    void insertrcddtfldctassign(String fld_id, String dict_contentid);
+    void insertrcddtfldctassign(Integer fld_id, String dict_contentid);
 
     void updatercddtdict(String dict_content_id);
 
     void deletercddtfldctassign(String fld_id);
 
-    void updatercddtfld(String fld_id, String catg_id, String fld_name, String fld_data_type, String fld_is_null,String fld_type,String fld_range,String fld_visible,String fld_status);
+    void updatercddtfld(ReportFldConfig reportFldConfig);
 
 
 

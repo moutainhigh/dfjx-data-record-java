@@ -7,7 +7,7 @@ public class RcdDt {
 
     private int  catg_id;     //类型编码
     private String catg_name;  //类型名称
-
+    private String fld_status;
 
     private int  fld_id;     //指标id
     private String fld_name;  //指标名称
@@ -18,6 +18,14 @@ public class RcdDt {
 
     private int fld_range;   //取值范围：0-所有、1-移动端、2-PC端
     private int fld_visible;  //可见范围：0-全部、1-移动端可见、2-PC端可见
+
+    public String getFld_status() {
+        return fld_status;
+    }
+
+    public void setFld_status(String fld_status) {
+        this.fld_status = fld_status;
+    }
 
     public int getFld_range() {
         return fld_range;
@@ -122,6 +130,7 @@ public class RcdDt {
                 ", proj_name='" + proj_name + '\'' +
                 ", catg_id=" + catg_id +
                 ", catg_name='" + catg_name + '\'' +
+                ", fld_status='" + fld_status + '\'' +
                 ", fld_id=" + fld_id +
                 ", fld_name='" + fld_name + '\'' +
                 ", fld_type=" + fld_type +
