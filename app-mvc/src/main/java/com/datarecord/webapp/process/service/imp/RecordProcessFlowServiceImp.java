@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -95,7 +96,7 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
         List<ReportFldConfig> flds = recordProcessDao.getFldByUnitId(unitId);
         for (ReportFldConfig fld : flds) {
             Integer fldId = fld.getFld_id();
-            if(fld.getIs_actived()==0){
+            if(fld.getFld_status()==0){
                 this.reviewFld(fldId.toString(),reviewStatus);
             }
         }
@@ -113,9 +114,24 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
     }
 
     @Override
-    public PageResult pageReviewJobs(int user_id, String currPage, String pageSize, Map<String, String> queryParams) {
-        List<Origin> childrenOrigins = this.checkAuthOrigins(user_id);
-
+    public PageResult pageReviewJobConfigs(int user_id, String currPage, String pageSize, Map<String, String> queryParams) {
+        List<Origin> childrenOrigins = new ArrayList<>();
+        Object fldOrigin = queryParams.get("jobOrigin");
+        if(fldOrigin!=null){
+            Origin origin = new Origin();
+            if(fldOrigin instanceof Double){
+                Double fldOriginDb = (Double) fldOrigin;
+                fldOriginDb.intValue();
+                origin.setOrigin_id(fldOriginDb.intValue());
+            }else if(fldOrigin instanceof String){
+                origin.setOrigin_id(new Integer(String.valueOf(fldOrigin)));
+            }
+            childrenOrigins.add(origin);
+        }else{
+            childrenOrigins = this.checkAuthOrigins(user_id);
+        }
+        queryParams.put("jobName",Strings.emptyToNull(queryParams.get("jobName")));
+        queryParams.put("jobStatus",Strings.emptyToNull(queryParams.get("jobStatus")));
         Page<JobConfig> reviewJobs =  recordProcessFlowDao.pageReviewJobs(currPage,pageSize,childrenOrigins,queryParams);
         PageResult pageResult = PageResult.pageHelperList2PageResult(reviewJobs);
 
@@ -124,8 +140,23 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
 
     @Override
     public PageResult pageReviewFlds(int user_id, String currPage, String pageSize, Map<String, String> queryParams) {
-        List<Origin> childrenOrigins = this.checkAuthOrigins(user_id);
-
+        List<Origin> childrenOrigins = new ArrayList<>();
+        Object fldOrigin = queryParams.get("fldOrigin");
+        if(fldOrigin!=null){
+            Origin origin = new Origin();
+            if(fldOrigin instanceof Double){
+                Double fldOriginDb = (Double) fldOrigin;
+                fldOriginDb.intValue();
+                origin.setOrigin_id(fldOriginDb.intValue());
+            }else if(fldOrigin instanceof String){
+                origin.setOrigin_id(new Integer(String.valueOf(fldOrigin)));
+            }
+            childrenOrigins.add(origin);
+        }else{
+            childrenOrigins = this.checkAuthOrigins(user_id);
+        }
+        queryParams.put("fldName",Strings.emptyToNull(queryParams.get("fldName")));
+        queryParams.put("fldStatus",Strings.emptyToNull(queryParams.get("fldStatus")));
         Page<ReportFldConfig> reportFldConfigPage =  recordProcessFlowDao.pageReviewFlds(currPage,pageSize,childrenOrigins,queryParams);
         PageResult pageResult = PageResult.pageHelperList2PageResult(reportFldConfigPage);
 

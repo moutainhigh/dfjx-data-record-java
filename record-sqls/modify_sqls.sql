@@ -35,6 +35,14 @@ INSERT INTO `app_module` (`module_id`, `super_module_id`, `module_name`, `module
 INSERT INTO `app_module` (`module_id`, `super_module_id`, `module_name`, `module_url`) VALUES ('41', '4', '指标定义审批', '/rcdflow/fldConfigReview');
 INSERT INTO `app_module` (`module_id`, `super_module_id`, `module_name`, `module_url`) VALUES ('42', '4', '任务定义审批', 'rcdflow/jobConfigReview');
 ALTER TABLE `rcd_dt_fld` CHANGE COLUMN `fld_creater_origin` `fld_creater_origin` INT(11) NOT NULL DEFAULT 1 ;
+ALTER TABLE `rcd_dt_fld`
+CHANGE COLUMN `fld_status` `fld_status` VARCHAR(45) NULL DEFAULT 0 COMMENT '指标状态：\n0：待审批\n1：审批通过\n2：审批驳回\n3：作废' ;
+update rcd_dt_fld set fld_status = 0;
+ALTER TABLE `rcd_dt_fld`
+CHANGE COLUMN `fld_status` `fld_status` VARCHAR(45) NOT NULL DEFAULT '0' COMMENT '指标状态：\n0：待审批\n1：审批通过\n2：审批驳回\n3：作废' ;
+ALTER TABLE `rcd_job_config`
+CHANGE COLUMN `job_status` `job_status` INT(11) NOT NULL DEFAULT '0' COMMENT ' * 0:正常\n * 1:失效\n * 2:锁定\n * 3:软删除\n * 4:已发布\n * 5:发布中\n * 6:待审批\n * 7:审批通过\n * 8:审批驳回' ;
+
 
 
 

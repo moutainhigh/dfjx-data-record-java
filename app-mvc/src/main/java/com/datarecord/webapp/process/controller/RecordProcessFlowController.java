@@ -5,6 +5,7 @@ import com.datarecord.webapp.process.service.RecordProcessFlowService;
 import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.service.OriginService;
 import com.datarecord.webapp.sys.origin.tree.TreeUtil;
+import com.google.common.base.Strings;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
@@ -13,13 +14,11 @@ import com.workbench.shiro.WorkbenchShiroUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
     @RequestMapping("record/flow")
@@ -51,11 +50,27 @@ public class RecordProcessFlowController {
     @RequestMapping("pageReviewFlds")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
-    public JsonResult pageReviewFlds( String currPage,
-                               String pageSize
-    ){
+    public JsonResult pageReviewFlds(@RequestBody Map<String,Object> postParams){
+        String currPage= postParams.get("currPage")!=null ? String.valueOf(((Double)postParams.get("currPage")).intValue()): "1";
+        String pageSize= postParams.get("pageSize")!=null ? String.valueOf(((Double)postParams.get("pageSize")).intValue()): "10" ;
+        Map<String,String> queryParams = (Map<String, String>) postParams.get("queryParams");
         User user = WorkbenchShiroUtils.checkUserFromShiroContext();
-        PageResult fldPageResult = recordProcessFlowService.pageReviewFlds(user.getUser_id(), currPage, pageSize, null);
+        PageResult fldPageResult = recordProcessFlowService.pageReviewFlds(user.getUser_id(), currPage, pageSize, queryParams);
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, fldPageResult);
+        return successResult;
+    }
+
+    @RequestMapping("pageReviewJobConfigs")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult pageReviewJobConfigs(@RequestBody Map<String,Object> postParams){
+        String currPage= postParams.get("currPage")!=null ? String.valueOf(((Double)postParams.get("currPage")).intValue()): "1";
+        String pageSize= postParams.get("pageSize")!=null ? String.valueOf(((Double)postParams.get("pageSize")).intValue()): "10" ;
+        Map<String,String> queryParams = (Map<String, String>) postParams.get("queryParams");
+        User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+        PageResult fldPageResult = recordProcessFlowService.pageReviewJobConfigs(user.getUser_id(), currPage, pageSize, queryParams);
 
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, fldPageResult);
@@ -78,6 +93,27 @@ public class RecordProcessFlowController {
 
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, originTree);
+        return successResult;
+    }
+
+    @RequestMapping("reviewFld")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult reviewFld(String fldId,String status){
+        recordProcessFlowService.reviewFld(fldId,status);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "更新成功", null, JsonResult.RESULT.SUCCESS);
+        return successResult;
+    }
+
+
+    @RequestMapping("reviewJob")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult reviewJob(String jobId,String status){
+        recordProcessFlowService.reviewJobItems(jobId,status);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "更新成功", null, JsonResult.RESULT.SUCCESS);
         return successResult;
     }
 }

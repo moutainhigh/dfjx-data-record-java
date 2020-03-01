@@ -16,7 +16,7 @@ public interface RecordProcessFlowService {
     void reviewJobItems(String jobId, String reviewStatus);
 
 
-    PageResult pageReviewJobs(int user_id, String currPage, String pageSize, Map<String,String> queryParams);
+    PageResult pageReviewJobConfigs(int user_id, String currPage, String pageSize, Map<String,String> queryParams);
 
     PageResult pageReviewFlds(int user_id, String currPage, String pageSize,Map<String,String> queryParams);
 
