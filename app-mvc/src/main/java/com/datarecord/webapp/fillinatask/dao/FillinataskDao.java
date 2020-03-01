@@ -4,6 +4,8 @@ import com.datarecord.webapp.fillinatask.bean.Fillinatask;
 import com.datarecord.webapp.fillinatask.bean.Lieming;
 import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
+import com.datarecord.webapp.process.entity.JobUnitConfig;
+import com.datarecord.webapp.process.entity.ReportFldConfig;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Service;
@@ -78,4 +80,16 @@ public interface FillinataskDao {
 
     @Update("update  rcd_job_config set  job_status = 6  where  job_id =#{job_id}")
     List<Lieming> selectrcdreportdatajob(@Param("job_id")String job_id);
+
+
+
+    @Select("SELECT job_unit_id,job_unit_name from  rcd_job_unit_config  where  job_id = #{job_id}")
+    List<JobUnitConfig> taskDetailsjobUnitConfig(@Param("job_id")String job_id);
+
+
+    @Select("select d.fld_id,d.fld_name from rcd_job_config a " +
+            "INNER JOIN rcd_job_unit_config b  on a.job_id = b.job_id  " +
+            "INNER JOIN rcd_job_unit_fld   c  on  b.job_unit_id = c.job_unit_id  " +
+            "INNER JOIN rcd_dt_fld  d on  c.fld_id = d.fld_id    where a.job_id  = #{job_id} ")
+    List<ReportFldConfig> taskDetailsreportFldConfig(@Param("job_id")String job_id);
 }

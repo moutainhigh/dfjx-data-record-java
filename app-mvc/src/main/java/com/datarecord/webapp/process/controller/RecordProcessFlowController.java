@@ -1,5 +1,8 @@
 package com.datarecord.webapp.process.controller;
 
+import com.datarecord.webapp.fillinatask.service.FillinataskService;
+import com.datarecord.webapp.process.entity.JobUnitConfig;
+import com.datarecord.webapp.process.entity.ReportFldConfig;
 import com.datarecord.webapp.process.service.RecordProcessFactory;
 import com.datarecord.webapp.process.service.RecordProcessFlowService;
 import com.datarecord.webapp.sys.origin.entity.Origin;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +33,9 @@ public class RecordProcessFlowController {
 
     @Autowired
     private OriginService originService;
+
+    @Autowired
+    private FillinataskService fillinataskService;
 
     @RequestMapping("pageJob")
     @ResponseBody
@@ -126,4 +133,27 @@ public class RecordProcessFlowController {
                 JsonResult.RESULT.SUCCESS, "更新成功", null, JsonResult.RESULT.SUCCESS);
         return successResult;
     }
+
+
+    //任务定义审批查看详情的功能，查看填报组及指标
+    @RequestMapping("/taskDetails")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String taskDetails(
+            @RequestParam("job_id")String job_id
+    ){
+        Map<String,Object>  map = new HashMap<>();
+        try{
+            List<JobUnitConfig>    jobUnitConfig =  fillinataskService.taskDetailsjobUnitConfig(job_id);  //组
+            List<ReportFldConfig>    reportFldConfig =  fillinataskService.taskDetailsreportFldConfig(job_id); //指标
+            map.put("job",jobUnitConfig);
+            map.put("fld",reportFldConfig);
+        }catch(Exception e){
+            e.printStackTrace();
+            return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "查看详情失败", null, "error");
+        }
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "查看详情成功", null, map);
+    }
+
+
 }

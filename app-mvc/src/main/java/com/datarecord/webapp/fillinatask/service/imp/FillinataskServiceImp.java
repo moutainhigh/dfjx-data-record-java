@@ -7,6 +7,8 @@ import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
 import com.datarecord.webapp.fillinatask.dao.FillinataskDao;
 import com.datarecord.webapp.fillinatask.service.FillinataskService;
+import com.datarecord.webapp.process.entity.JobUnitConfig;
+import com.datarecord.webapp.process.entity.ReportFldConfig;
 import com.datarecord.webapp.reportinggroup.dao.ReportingGroupDao;
 import com.datarecord.webapp.utils.EntityTree;
 import com.github.pagehelper.Page;
@@ -158,5 +160,15 @@ public class FillinataskServiceImp implements FillinataskService {
     @Override
     public void fillInTaskApprovalByJobid(String job_id) {
         fillinataskDao.selectrcdreportdatajob(job_id);
+    }
+
+    @Override
+    public List<JobUnitConfig> taskDetailsjobUnitConfig(String job_id) {
+        return  fillinataskDao.taskDetailsjobUnitConfig(job_id);
+    }
+
+    @Override
+    public List<ReportFldConfig> taskDetailsreportFldConfig(String job_id) {
+        return fillinataskDao.taskDetailsreportFldConfig(job_id);
     }
 }

@@ -4,6 +4,8 @@ import com.datarecord.webapp.fillinatask.bean.Fillinatask;
 import com.datarecord.webapp.fillinatask.bean.Lieming;
 import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
+import com.datarecord.webapp.process.entity.JobUnitConfig;
+import com.datarecord.webapp.process.entity.ReportFldConfig;
 import com.github.pagehelper.Page;
 import com.webapp.support.page.PageResult;
 
@@ -48,4 +50,8 @@ public interface FillinataskService {
     List<Lieming> selectrcdreportdatajob(int jobid, int reportid, String unitId, String fldids);
 
     void fillInTaskApprovalByJobid(String job_id);
+
+    List<JobUnitConfig> taskDetailsjobUnitConfig(String job_id);
+
+    List<ReportFldConfig> taskDetailsreportFldConfig(String job_id);
 }
