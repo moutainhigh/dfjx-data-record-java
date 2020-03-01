@@ -45,16 +45,7 @@ public class FillinataskServiceImp implements FillinataskService {
         for (Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id());
         }
-        String originid ="";
-        if(originIds.size() > 0){
-            for (Integer id : originIds){
-                originid += "','";
-                originid += id;
-            }
-            originid =  originid.substring(2);
-            originid += "'";
-        }
-        Page<Fillinatask> contactPageDatas = fillinataskDao.rcdjobconfiglist(currPage, pageSize,job_name,job_status,originid);
+        Page<Fillinatask> contactPageDatas = fillinataskDao.rcdjobconfiglist(currPage, pageSize,job_name,job_status,originIds);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
         return pageContactResult;

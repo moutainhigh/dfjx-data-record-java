@@ -11,8 +11,12 @@ import java.util.List;
 @Repository
 public interface ReportingGroupDao {
 
-    @Select("SELECT job_id,job_name,job_status FROM rcd_job_config  where   job_creater_origin IN (#{originid}) ")
-    List<rcdJobConfig> leftrcdjobconfig(@Param("originid") String originid);
+    @Select("<script>SELECT job_id,job_name,job_status FROM rcd_job_config  where   job_creater_origin IN " +
+            "  <foreach item=\"item\" index=\"index\" collection=\"originIds\" open=\"(\" separator=\",\" close=\")\">" +
+            "  #{item}" +
+            "  </foreach>"+
+            " (#{originid}) </script>")
+    List<rcdJobConfig> leftrcdjobconfig(@Param("originIds") List<Integer> originIds);
 
     @Select("SELECT job_unit_id,job_unit_name,job_unit_active FROM rcd_job_unit_config where job_id =#{job_id}")
     Page<ReportingGroup> rcdjobunitconfiglist(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("job_id") String job_id);
@@ -25,13 +29,8 @@ public interface ReportingGroupDao {
 
     @Delete("DELETE FROM rcd_job_unit_fld WHERE  job_unit_id =#{jobunitid}")
     void rcdjobunitflddelete(@Param("jobunitid") String jobunitid);
-/*
 
-    @Select("SELECT a.fld_id,b.fld_name FROM rcd_job_unit_fld  a left join  rcd_dt_fld  b   on  a.fld_id = b.fld_id    where a.job_unit_id = #{job_unit_id}")
-*/
-
-
-    @Select("SELECT " +
+    @Select("<script>SELECT " +
             " a.fld_id, " +
             " b.fld_name " +
             " FROM " +
@@ -39,8 +38,12 @@ public interface ReportingGroupDao {
             " LEFT JOIN rcd_dt_fld b ON a.fld_id = b.fld_id " +
             " WHERE " +
             " a.job_unit_id = #{job_unit_id} " +
-            " AND b.fld_creater_origin IN (#{originid}) ")
-    List<RcdJobUnitFld> selectrcdjobunitfld(@Param("originid")String originid,@Param("job_unit_id") String job_unit_id);
+            " AND b.fld_creater_origin IN " +
+            "  <foreach item=\"item\" index=\"index\" collection=\"originIds\" open=\"(\" separator=\",\" close=\")\">" +
+            "  #{item}" +
+            "  </foreach>"+
+            " </script>")
+    List<RcdJobUnitFld> selectrcdjobunitfld(@Param("originIds")List<Integer> originIds,@Param("job_unit_id") String job_unit_id);
 
     @Insert("INSERT  INTO rcd_job_unit_config(job_unit_name,job_id,job_unit_active,job_unit_type,job_unit_cycle) VALUES " +
             "(#{job_unit_name},#{job_id},#{job_unit_active},#{job_unit_type},#{job_unit_cycle})")

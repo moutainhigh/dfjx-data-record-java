@@ -59,7 +59,7 @@ public interface SubmittedByDao {
     @Delete("DELETE FROM rcd_person_config WHERE user_id = #{user_id}")
     void deletercdpersonconfigbyuserid(@Param("user_id") String user_id);
 
-    @Select("SELECT" +
+    @Select("<script>SELECT" +
             " a.origin_id AS id," +
             " a.origin_name AS name," +
             " a.parent_origin_id AS pId," +
@@ -68,10 +68,14 @@ public interface SubmittedByDao {
             " FROM" +
             " sys_origin a " +
             " INNER JOIN user_origin_assign b ON a.origin_id = b.origin_id " +
-            " INNER JOIN user c ON b.user_id = c.user_id    where  c.user_name_cn   != ''     ")
-    List<EntityTree> listOrgDatauser();
+            " INNER JOIN user c ON b.user_id = c.user_id    where  c.user_name_cn   != ''   and   a.origin_id  IN  " +
+            "  <foreach item=\"item\" index=\"index\" collection=\"originIds\" open=\"(\" separator=\",\" close=\")\">" +
+            "  #{item}" +
+            "  </foreach>"+
+            "  </script>")
+    List<EntityTree> listOrgDatauser(@Param("originIds")List<Integer> originIds);
 
-    @Select("select  " +
+    @Select("<script>select  " +
             " d.origin_id AS id, " +
             " d.origin_name AS name, " +
             " d.parent_origin_id AS pId, " +
@@ -80,8 +84,12 @@ public interface SubmittedByDao {
             " from rcd_person_config  a   " +
             " INNER join user  b ON a.user_id  = b.user_id " +
             " INNER join user_origin_assign c on c.user_id = b.user_id " +
-            " INNER JOIN sys_origin d ON c.origin_id = d.origin_id   ")
-    List<EntityTree> useroriginassignlistsysorigin();
+            " INNER JOIN sys_origin d ON c.origin_id = d.origin_id   where 1= 1    and    d.origin_id  IN " +
+            "  <foreach item=\"item\" index=\"index\" collection=\"originIds\" open=\"(\" separator=\",\" close=\")\">" +
+            "  #{item}" +
+            "  </foreach>"+
+            "</script>  ")
+    List<EntityTree> useroriginassignlistsysorigin(@Param("originIds")List<Integer> originIds);
 
 
     @Select("select origin_id from user_origin_assign where user_id =#{user_id}")

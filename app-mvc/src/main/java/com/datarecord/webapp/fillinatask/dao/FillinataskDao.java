@@ -14,7 +14,10 @@ import java.util.List;
 @Repository
 public interface FillinataskDao {
 
-   @Select("<script> select * from  rcd_job_config  where  1=1   AND job_creater_origin IN (#{originid})   " +
+   @Select("<script> select * from  rcd_job_config  where  1=1   AND   job_creater_origin  IN" +
+           "  <foreach item=\"item\" index=\"index\" collection=\"originIds\" open=\"(\" separator=\",\" close=\")\">" +
+           "  #{item}" +
+           "  </foreach>"+
             "<if test = 'job_name != null' > AND job_name like concat('%',#{job_name},'%') </if> "+
             "<if test = 'job_status != null' > AND job_status =#{job_status} </if> "+
             " order by job_start_dt desc </script> ")
@@ -22,7 +25,7 @@ public interface FillinataskDao {
                                        @Param("pageSize") int pageSize,
                                        @Param("job_name") String job_name,
                                        @Param("job_status") String job_status,
-                                       @Param("originid") String originid);
+                                       @Param("originIds") List<Integer> originIds);
 
 
     @Insert("insert into rcd_job_config " +

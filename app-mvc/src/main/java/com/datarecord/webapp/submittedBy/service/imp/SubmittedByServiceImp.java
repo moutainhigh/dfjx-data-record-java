@@ -54,25 +54,17 @@ public class SubmittedByServiceImp  implements SubmittedByService {
 
     @Override
     public List<Object> useroriginassignlist(String origin_id) {
-      List<EntityTree> menuCommon;
-      Map<String,String> mapArray = new LinkedHashMap<String,String>();
-      List<Object> list = new ArrayList<Object>();
+      List<Object> list = new ArrayList<>();
         List<com.datarecord.webapp.sys.origin.entity.Origin> childrenOrigins = originService.checkAllChildren(Integer.valueOf(origin_id));
-        List<String> originIds  = new ArrayList<>();
+        List<Integer> originIds  = new ArrayList<>();
         for (com.datarecord.webapp.sys.origin.entity.Origin childrenOrigin : childrenOrigins) {
-            originIds.add(childrenOrigin.getOrigin_id().toString()); }
-        List<EntityTree> lists  =  submittedByDao.listOrgDatauser();
-       menuCommon  = lists;
-        for (EntityTree x : menuCommon) {
-            for (String id : originIds){
-                if (x.getId().equals(id)){
+            originIds.add(childrenOrigin.getOrigin_id()); }
+        List<EntityTree> lists  =  submittedByDao.listOrgDatauser(originIds);
+        for (EntityTree x : lists) {
                     Map<String,String> mapArr = new LinkedHashMap<>();
                     mapArr.put("user_id", x.getUser_id());
                     mapArr.put("user_name_cn", x.getUser_name_cn());
-                    // this.menuChild(x.getId());
                     list.add(mapArr);
-                }
-            }
         }
         return list;
     }
@@ -80,23 +72,17 @@ public class SubmittedByServiceImp  implements SubmittedByService {
 
     @Override
     public List<Object> useroriginassignlistsysorigin(String origin_id) {
-        List<EntityTree> menuCommon;
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         List<com.datarecord.webapp.sys.origin.entity.Origin> childrenOrigins = originService.checkAllChildren(Integer.valueOf(origin_id));
-        List<String> originIds  = new ArrayList<>();
+        List<Integer> originIds  = new ArrayList<>();
         for (com.datarecord.webapp.sys.origin.entity.Origin childrenOrigin : childrenOrigins) {
-            originIds.add(childrenOrigin.getOrigin_id().toString()); }
-        List<EntityTree> lists =  submittedByDao.useroriginassignlistsysorigin();
-        menuCommon  = lists;
-        for (EntityTree x : menuCommon) {
-            for (String id : originIds){
-                if (x.getId().equals(id)){
+            originIds.add(childrenOrigin.getOrigin_id()); }
+        List<EntityTree> lists =  submittedByDao.useroriginassignlistsysorigin(originIds);
+        for (EntityTree x : lists) {
                     Map<String,String> mapArr = new LinkedHashMap<>();
                     mapArr.put("user_id", x.getUser_id());
                     mapArr.put("user_name_cn", x.getUser_name_cn());
                     list.add(mapArr);
-                }
-            }
         }
         return list;
     }

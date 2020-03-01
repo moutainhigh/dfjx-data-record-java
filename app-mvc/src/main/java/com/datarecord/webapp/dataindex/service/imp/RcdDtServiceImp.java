@@ -52,16 +52,7 @@ public class RcdDtServiceImp  implements RcdDtService {
         for (Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id());
         }
-        String originid ="";
-        if(originIds.size() > 0){
-            for (Integer id : originIds){
-                originid += "','";
-                originid += id;
-            }
-            originid =  originid.substring(2);
-            originid += "'";
-        }
-        Page<DataDictionary> contactPageDatas = rcdDtDao.selectrcddtproj(currPage, pageSize,originid);
+        Page<DataDictionary> contactPageDatas = rcdDtDao.selectrcddtproj(currPage, pageSize,originIds);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
         return pageContactResult;
@@ -131,16 +122,7 @@ public class RcdDtServiceImp  implements RcdDtService {
         for (Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id());
         }
-        String originid ="";
-        if(originIds.size() > 0){
-            for (Integer id : originIds){
-                originid += "','";
-                originid += id;
-            }
-            originid =  originid.substring(2);
-            originid += "'";
-        }
-        Page<DataDictionary> contactPageDatas = rcdDtDao.selecttixircddtprojer(currPage, pageSize,proj_id,originid);
+        Page<DataDictionary> contactPageDatas = rcdDtDao.selecttixircddtprojer(currPage, pageSize,proj_id,originIds);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
         return pageContactResult;

@@ -14,9 +14,13 @@ public interface RcdDtDao {
     @Insert("INSERT INTO rcd_dt_proj (proj_name,is_actived) VALUES(#{proj_name},#{is_actived}) ")
     void insertrcddtproj(@Param("proj_name") String proj_name, @Param("is_actived") String is_actived);
 
-    @Select("select c.proj_id,c.proj_name,c.is_actived   from   rcd_dt_fld a  INNER JOIN rcd_dt_catg b ON a.catg_id = b.catg_id\n" +
-            " INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id   where 1 = 1  and   a.fld_creater_origin IN (#{originid})   GROUP BY  c.proj_id")
-    Page<DataDictionary> selectrcddtproj(@Param("currPage") int currPage, @Param("pageSize") int pageSize,@Param("originid")String originid);
+    @Select("<script>select c.proj_id,c.proj_name,c.is_actived   from   rcd_dt_fld a  INNER JOIN rcd_dt_catg b ON a.catg_id = b.catg_id\n" +
+            " INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id   where 1 = 1  and   a.fld_creater_origin IN " +
+            "  <foreach item=\"item\" index=\"index\" collection=\"originIds\" open=\"(\" separator=\",\" close=\")\">" +
+            "  #{item}" +
+            "  </foreach>"+
+            "  GROUP BY  c.proj_id </script>")
+    Page<DataDictionary> selectrcddtproj(@Param("currPage") int currPage, @Param("pageSize") int pageSize,@Param("originIds")List<Integer> originIds);
 
 
     @Update("UPDATE rcd_dt_proj SET proj_name=#{proj_name}, is_actived =#{is_actived}  WHERE  proj_id = #{proj_id}")
@@ -77,8 +81,12 @@ public interface RcdDtDao {
             "             FROM  rcd_dt_fld a   " +
             "             INNER JOIN rcd_dt_catg b ON a.catg_id = b.catg_id  " +
             "             INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id  " +
-            "             where 1=1  AND  a.fld_creater_origin  IN (#{originid})  and  b.proj_id = #{proj_id}   GROUP BY  b.catg_id")
-    Page<DataDictionary> selecttixircddtprojer(@Param("currPage")int currPage, @Param("pageSize")int pageSize,@Param("proj_id") String proj_id,@Param("originid") String originid);
+            "             where 1=1  AND  a.fld_creater_origin  IN " +
+            "  <foreach item=\"item\" index=\"index\" collection=\"originIds\" open=\"(\" separator=\",\" close=\")\">" +
+            "  #{item}" +
+            "  </foreach>"+
+            "   and  b.proj_id = #{proj_id}   GROUP BY  b.catg_id")
+    Page<DataDictionary> selecttixircddtprojer(@Param("currPage")int currPage, @Param("pageSize")int pageSize,@Param("proj_id") String proj_id,@Param("originIds") List<Integer> originIds);
 
     @Select("select  MAX(fld_id) from  rcd_dt_fld")
     int selectmax();

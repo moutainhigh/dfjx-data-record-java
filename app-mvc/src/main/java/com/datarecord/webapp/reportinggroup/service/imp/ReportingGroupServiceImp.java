@@ -40,16 +40,7 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
         for (Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id());
         }
-        String originid ="";
-        if(originIds.size() > 0){
-            for (Integer id : originIds){
-                originid += "','";
-                originid += id;
-            }
-            originid =  originid.substring(2);
-            originid += "'";
-        }
-        return reportingGroupDao.leftrcdjobconfig(originid);
+        return reportingGroupDao.leftrcdjobconfig(originIds);
     }
 
 
@@ -150,16 +141,7 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
         for (Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id());
         }
-        String originid ="";
-        if(originIds.size() > 0){
-            for (Integer id : originIds){
-                originid += "','";
-                originid += id;
-            }
-            originid =  originid.substring(2);
-            originid += "'";
-        }
-        return reportingGroupDao.selectrcdjobunitfld(originid,job_unit_id);
+        return reportingGroupDao.selectrcdjobunitfld(originIds,job_unit_id);
     }
 
 
