@@ -23,6 +23,12 @@ public interface RcdDtDao {
     Page<DataDictionary> selectrcddtproj(@Param("currPage") int currPage, @Param("pageSize") int pageSize,@Param("originIds")List<Integer> originIds);
 
 
+
+    @Select("<script>select c.proj_id,c.proj_name,c.is_actived   from   rcd_dt_fld a  INNER JOIN rcd_dt_catg b ON a.catg_id = b.catg_id\n" +
+            " INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id   where 1 = 1  and   a.fld_creater = #{user_id}" +
+            "  GROUP BY  c.proj_id  </script>")
+    Page<DataDictionary> selectrcddtprojBycreater(@Param("currPage")int currPage, @Param("pageSize")int pageSize, @Param("user_id")int  user_id);
+
     @Update("UPDATE rcd_dt_proj SET proj_name=#{proj_name}, is_actived =#{is_actived}  WHERE  proj_id = #{proj_id}")
     void updatercddtproj(@Param("proj_name") String proj_name, @Param("is_actived") String is_actived, @Param("proj_id") String proj_id);
 
@@ -174,6 +180,7 @@ public interface RcdDtDao {
 
     @Delete("delete from rcd_dt_fld where  catg_id = #{catg_id}")
     void deletercddtfldI(@Param("catg_id")String catg_id);
+
 
 
 }

@@ -137,10 +137,10 @@ public class RcdDtController {
             @RequestParam("pageSize")int pageSize
     ){
         PageResult pageResult = null;
-        try{
+            try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
             Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            pageResult = rcdDtService.selectrcddtproj(currPage,pageSize,userOrigin);
+            pageResult = rcdDtService.selectrcddtproj(currPage,pageSize,userOrigin,user.getUser_id());
         }catch(Exception e){
             e.printStackTrace();
             return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标体系基本类别列表失败", null, "error");

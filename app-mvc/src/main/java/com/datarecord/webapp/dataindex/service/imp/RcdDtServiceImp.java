@@ -44,8 +44,8 @@ public class RcdDtServiceImp  implements RcdDtService {
     }
 
     @Override
-    public PageResult selectrcddtproj(int currPage, int pageSize,Origin userOrigin) {
-        logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
+    public PageResult selectrcddtproj(int currPage, int pageSize,Origin userOrigin,int  user_id) {
+       /* logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
         List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
         childrenOrigins.add(0,userOrigin);
         List<Integer> originIds  = new ArrayList<>();
@@ -54,9 +54,18 @@ public class RcdDtServiceImp  implements RcdDtService {
         }
         Page<DataDictionary> contactPageDatas = rcdDtDao.selectrcddtproj(currPage, pageSize,originIds);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
+        logger.debug("获取到的分页结果数据 --> {}",pageContactResult);*/
+        return this.selectrcddtprojBycreater(currPage,pageSize,user_id);
+    }
+
+    public PageResult selectrcddtprojBycreater(int currPage, int pageSize,int  user_id) {
+        logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
+        Page<DataDictionary> contactPageDatas = rcdDtDao.selectrcddtprojBycreater(currPage, pageSize,user_id);
+        PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
         return pageContactResult;
     }
+
 
     @Override
     public void updatercddtproj(String proj_name, String is_actived,String proj_id) {

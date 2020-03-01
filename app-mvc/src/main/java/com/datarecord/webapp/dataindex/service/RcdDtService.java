@@ -14,7 +14,7 @@ public interface RcdDtService {
 
     void insertrcddtproj(String proj_name, String is_actived);
 
-    PageResult selectrcddtproj(int currPage, int pageSize,Origin userOrigin);
+    PageResult selectrcddtproj(int currPage, int pageSize,Origin userOrigin,int user_id);
 
     void updatercddtproj(String proj_name, String is_actived, String proj_id);
 
