@@ -350,7 +350,9 @@ public class RcdDtController {
     public String leftrcddtproj(){
        List<Rcddtproj> ll = null;
         try{
-            ll  = rcdDtService.leftrcddtprojjblx();
+            User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+            Origin userOrigin = originService.getOriginByUser(user.getUser_id());
+            ll  = rcdDtService.leftrcddtprojjblx(userOrigin);
         }catch(Exception e){
             e.printStackTrace();
            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "基本类型获取失败", null, "error");
@@ -365,7 +367,9 @@ public class RcdDtController {
     public String leftrcddtcatg( @RequestParam("proj_id") String proj_id){
         List<RcddtCatg> ll =null;
         try{
-            ll  = rcdDtService.leftrcddtcatglx(proj_id);
+            User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+            Origin userOrigin = originService.getOriginByUser(user.getUser_id());
+            ll  = rcdDtService.leftrcddtcatglx(proj_id,userOrigin);
         }catch(Exception e){
             e.printStackTrace();
             return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "类型获取失败", null, "error");

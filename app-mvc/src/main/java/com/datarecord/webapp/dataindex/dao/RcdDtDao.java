@@ -66,12 +66,31 @@ public interface RcdDtDao {
 
     @Update("UPDATE rcd_dt_fld set catg_id =#{catg_id},fld_name =#{fld_name},fld_data_type =#{fld_data_type},fld_is_null =#{fld_is_null},fld_type = #{fld_type},fld_range= #{fld_range},fld_visible = #{fld_visible},fld_status =#{fld_status}  where fld_id =#{fld_id}")
     void updatercddtfld(ReportFldConfig reportFldConfig);
+/*
+    @Select("SELECT proj_id,proj_name FROM rcd_dt_proj ")*/
+    @Select("SELECT " +
+            " c.proj_id, " +
+            " c.proj_name " +
+            "FROM " +
+            " rcd_dt_catg a " +
+            "INNER JOIN rcd_dt_fld b ON a.catg_id = b.catg_id " +
+            "INNER JOIN rcd_dt_proj c on c.proj_id = a.proj_id " +
+            "WHERE " +
+            " 1=1   and  b.fld_creater_origin = #{originid}   GROUP BY c.proj_id  ")
+    List<Rcddtproj> leftrcddtprojjblx(@Param("originid") String originid);
 
-    @Select("SELECT proj_id,proj_name FROM rcd_dt_proj ")
-    List<Rcddtproj> leftrcddtprojjblx();
-
-    @Select("SELECT catg_id,catg_name FROM rcd_dt_catg  where  proj_id = #{proj_id}")
-    List<RcddtCatg> leftrcddtcatglx(@Param("proj_id") String proj_id);
+   /* @Select("SELECT catg_id,catg_name FROM rcd_dt_catg  where  proj_id = #{proj_id}")*/
+    @Select("SELECT " +
+            " a.catg_id, " +
+            " a.catg_name " +
+            "FROM " +
+            " rcd_dt_catg a " +
+            "INNER JOIN rcd_dt_fld b ON a.catg_id = b.catg_id " +
+            "WHERE " +
+            " a.proj_id = #{proj_id}  and  b.fld_creater_origin = #{originid}" +
+            "GROUP BY " +
+            " a.catg_id ")
+    List<RcddtCatg> leftrcddtcatglx(@Param("proj_id") String proj_id,@Param("originid") String originid);
 
     @Select("SELECT fld_id,fld_name FROM rcd_dt_fld  where  catg_id = #{catg_id}")
     List<RcdDtFld> leftrcddtfld(@Param("catg_id") String catg_id);

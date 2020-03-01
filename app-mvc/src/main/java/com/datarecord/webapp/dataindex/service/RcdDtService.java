@@ -32,9 +32,9 @@ public interface RcdDtService {
 
 
 
-    List<Rcddtproj> leftrcddtprojjblx();
+    List<Rcddtproj> leftrcddtprojjblx(Origin userOrigin);
 
-    List<RcddtCatg> leftrcddtcatglx(String proj_id);
+    List<RcddtCatg> leftrcddtcatglx(String proj_id,Origin userOrigin);
 
     List<RcdDtFld> leftrcddtfld(String catg_id);
 

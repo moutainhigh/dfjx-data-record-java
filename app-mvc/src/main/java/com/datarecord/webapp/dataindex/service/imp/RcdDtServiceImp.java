@@ -99,13 +99,15 @@ public class RcdDtServiceImp  implements RcdDtService {
 
 
     @Override
-    public List<Rcddtproj> leftrcddtprojjblx() {
-        return rcdDtDao.leftrcddtprojjblx();
+    public List<Rcddtproj> leftrcddtprojjblx(Origin userOrigin) {
+        String originid = userOrigin.getOrigin_id().toString();
+        return rcdDtDao.leftrcddtprojjblx(originid);
     }
 
     @Override
-    public List<RcddtCatg> leftrcddtcatglx(String proj_id) {
-        return rcdDtDao.leftrcddtcatglx(proj_id);
+    public List<RcddtCatg> leftrcddtcatglx(String proj_id,Origin userOrigin) {
+        String originid = userOrigin.getOrigin_id().toString();
+        return rcdDtDao.leftrcddtcatglx(proj_id,originid);
     }
 
     @Override
