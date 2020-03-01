@@ -57,4 +57,6 @@ public interface FillinataskService {
     List<JobInteval> getJobIntevals(String job_id);
 
     void removeJobIntervals(String jobId);
+
+    void updateByIdConfig(String job_id);
 }

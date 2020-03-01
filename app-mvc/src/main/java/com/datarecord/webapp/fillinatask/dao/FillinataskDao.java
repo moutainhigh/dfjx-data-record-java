@@ -48,6 +48,8 @@ public interface FillinataskDao {
     @Delete("delete from rcd_job_person_assign where  job_id = #{job_id}")
     void deletercdjobpersonassign(@Param("job_id") String job_id);
 
+
+
     @Update("update rcd_job_config set job_name = #{job_name}, job_start_dt= #{job_start_dt}, job_end_dt =#{job_end_dt}  where  job_id = #{job_id}")
     void updatercdjobconfig(JobConfig jobConfig);
 
@@ -72,8 +74,22 @@ public interface FillinataskDao {
     @Delete("delete from rcd_job_config where job_id = #{job_id} ")
     void deletercdjobconfig(@Param("job_id")String job_id);
 
-    @Delete("update rcd_job_config set job_status=3 where job_id = #{job_id} ")
+    @Delete("delete from  rcd_job_config set job_status=3 where job_id = #{job_id} ")
     void softDelJobConfig(@Param("job_id")String job_id);
+
+
+    /*任务软删除*/
+    @Update("update rcd_job_config set job_status= 3   where job_id = #{job_id} ")
+    void updsoftDelJobConfig(@Param("job_id")String job_id);
+    /*填报人维护软删除*/
+    @Update("update  rcd_job_person_assign  set   assign_status = 1   where  job_id = #{job_id}")
+    void updateRcdjobpersonassign(@Param("job_id") String job_id);
+     /*任务关连填报组软删除*/
+    @Update("update  rcd_job_unit_config  set  job_unit_active = 0     where  job_id = #{job_id}")
+    void updateByidRcdJobUnitConfigsuo(@Param("job_id") String job_id);
+    /*已下发的填报状态修改*/
+    @Update("update  rcd_report_job  set   report_status =  4     where job_id = #{job_id} ")
+    void updateRcdReportJob(@Param("job_id")String job_id);
 
     @Delete("delete from rcd_job_unit_config where job_id = #{job_id} ")
     void deleteRcdJobUnitConfigsuo(@Param("job_id")String job_id);

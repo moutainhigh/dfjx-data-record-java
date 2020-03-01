@@ -108,6 +108,8 @@ public class FillinataskServiceImp implements FillinataskService {
         fillinataskDao.removeIntervals(new Integer(jobId));
     }
 
+
+
     @Override
     public List<RcdJobUnitConfig> selectRcdJobUnitConfig(String job_id) {
         return fillinataskDao.selectRcdJobUnitConfig(job_id);
@@ -142,6 +144,17 @@ public class FillinataskServiceImp implements FillinataskService {
         fillinataskDao.softDelJobConfig(job_id);    //填报任务删除
         fillinataskDao.deletercdjobpersonassign(job_id);    //填报人维护删除
         fillinataskDao.deleteRcdJobUnitConfigsuo(job_id);    //任务关连填报组删除
+        fillinataskDao.removeIntervals(new Integer(job_id));
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateByIdConfig(String job_id) {
+        fillinataskDao.updsoftDelJobConfig(job_id);    //填报任务软删除
+        fillinataskDao.updateRcdjobpersonassign(job_id);    //填报人维护软删除
+        fillinataskDao.updateByidRcdJobUnitConfigsuo(job_id);    //任务关连填报组软删除
+        fillinataskDao.updateRcdReportJob(job_id);    //已下发的填报状态修改
         fillinataskDao.removeIntervals(new Integer(job_id));
     }
 

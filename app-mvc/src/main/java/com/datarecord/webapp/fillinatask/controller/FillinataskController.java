@@ -55,7 +55,7 @@ public class FillinataskController {
         return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取填报任务列表成功", null, pageResult);
     }
 
-    //填报任务删除   包含任务下的任务组、任务与关联关系等关联关系
+    //填报任务删除   包含任务下的任务组、任务与关联关系等关联关系       （ 物理删除）
     @RequestMapping("/deletercdjobconfig")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
@@ -69,6 +69,23 @@ public class FillinataskController {
             return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报任务删除失败", null, "error");
         }
         return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报任务删除成功", null, "success");
+    }
+
+
+    //填报任务删除   包含任务下的任务组、任务与关联关系等关联关系        （ 软删除）
+    @RequestMapping("/updateByIdConfig")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String updateByIdConfig(
+            @RequestParam("job_id")String job_id
+    ){
+        try{
+            fillinataskService.updateByIdConfig(job_id);    //填报任务软删除
+        }catch(Exception e){
+            e.printStackTrace();
+            return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报任务软删除失败", null, "error");
+        }
+        return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报任务软删除成功", null, "success");
     }
 
 
