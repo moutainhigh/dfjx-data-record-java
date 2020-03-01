@@ -60,9 +60,8 @@ public class RcdDtController {
     public String deletercddtproj(
             @RequestParam("proj_id") String proj_id
     ){
-
             try{
-                List<String>  ll = new ArrayList<String>();
+                List<String>  ll = null;
                 ll =   rcdDtService.selectrcddtcatgproj(proj_id);
                 if (ll.size() != 0){
                     return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标基本类别下已有关连任务无法删除", null, "error");
@@ -269,11 +268,13 @@ public class RcdDtController {
             @RequestParam("fld_visible") String fld_visible,  //可见范围：0-全部、1-移动端可见、2-PC端可见
             @RequestParam("fld_range") String fld_range,      //取值范围：0-所有、1-移动端、2-PC端
             @RequestParam("fld_is_null") String fld_is_null,
+            @RequestParam("fld_creater") String fld_creater,     //创建人
+            @RequestParam("fld_creater_origin") String fld_creater_origin,   //创建人所属机构
             @RequestParam("dict_content_id") String dict_content_id  //数据字典内容编码
     ){
         if(!catg_id.isEmpty()  && !fld_name.isEmpty()  && !fld_data_type.isEmpty()  && !fld_is_null.isEmpty()  && !fld_type.isEmpty()){
             try{
-                rcdDtService.insertrcddtfld(catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible);
+                rcdDtService.insertrcddtfld(catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_creater,fld_creater_origin);
               int  fid = rcdDtService.selectmax();
               String  fld_id = String.valueOf(fid);
                 if(!fld_id.isEmpty() && !dict_content_id.isEmpty()){
@@ -311,12 +312,14 @@ public class RcdDtController {
             @RequestParam("fld_visible") String fld_visible,  //可见范围：0-全部、1-移动端可见、2-PC端可见
             @RequestParam("fld_range") String fld_range,      //取值范围：0-所有、1-移动端、2-PC端
             @RequestParam("fld_status") String fld_status,      //指标状态：  0：待审批  1：审批通过  2：审批驳回  3：作废'
+            @RequestParam("fld_creater") String fld_creater,     //创建人
+            @RequestParam("fld_creater_origin") String fld_creater_origin,   //创建人所属机构
             @RequestParam("fld_id") String fld_id,    //指标id
             @RequestParam("dict_content_id") String dict_content_id  //数据字典内容编码数组
     ){
         if(!catg_id.isEmpty()  && !fld_name.isEmpty()  && !fld_data_type.isEmpty()  && !fld_is_null.isEmpty()  && !fld_type.isEmpty()){
             try{
-                rcdDtService.updatercddtfld(fld_id,catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_status);
+                rcdDtService.updatercddtfld(fld_id,catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_status,fld_creater,fld_creater_origin);
                 if(!fld_id.isEmpty() && !dict_content_id.isEmpty() ){
                     rcdDtService.deletercddtfldctassign(fld_id);
                    /* dict_content_id.substring(1);

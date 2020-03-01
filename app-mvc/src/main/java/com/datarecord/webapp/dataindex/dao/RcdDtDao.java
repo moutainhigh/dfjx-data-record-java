@@ -44,8 +44,8 @@ public interface RcdDtDao {
     Page<RcdDt> selecttixircddtproj(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("catg_id") String catg_id);
 
 
-    @Insert("INSERT INTO rcd_dt_fld (catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_status) VALUES(#{catg_id},#{fld_name},#{fld_data_type},#{fld_is_null},#{fld_type},#{fld_range},#{fld_visible},0)")
-    void insertrcddtfld(@Param("catg_id") String catg_id, @Param("fld_name") String fld_name, @Param("fld_data_type") String fld_data_type, @Param("fld_is_null") String fld_is_null,@Param("fld_type") String fld_type,@Param("fld_range")String fld_range,@Param("fld_visible")String fld_visible);
+    @Insert("INSERT INTO rcd_dt_fld (catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_status,fld_creater,fld_creater_origin) VALUES(#{catg_id},#{fld_name},#{fld_data_type},#{fld_is_null},#{fld_type},#{fld_range},#{fld_visible},0,#{fld_creater},#{fld_creater_origin})")
+    void insertrcddtfld(@Param("catg_id") String catg_id, @Param("fld_name") String fld_name, @Param("fld_data_type") String fld_data_type, @Param("fld_is_null") String fld_is_null,@Param("fld_type") String fld_type,@Param("fld_range")String fld_range,@Param("fld_visible")String fld_visible,@Param("fld_creater") String fld_creater,@Param("fld_creater_origin") String fld_creater_origin);
 
 
     @Insert("INSERT INTO rcd_dt_fld_ct_assign (fld_id,dict_content_id) VALUES(#{fld_id},#{dict_contentid})")
@@ -58,8 +58,8 @@ public interface RcdDtDao {
     void deletercddtfldctassign(@Param("fld_id") String fld_id);
 
 
-    @Update("UPDATE rcd_dt_fld set catg_id =#{catg_id},fld_name =#{fld_name},fld_data_type =#{fld_data_type},fld_is_null =#{fld_is_null},fld_type = #{fld_type},fld_range= #{fld_range},fld_visible = #{fld_visible},fld_status =#{fld_status} where fld_id =#{fld_id}")
-    void updatercddtfld(@Param("fld_id") String fld_id, @Param("catg_id") String catg_id, @Param("fld_name") String fld_name, @Param("fld_data_type") String fld_data_type, @Param("fld_is_null") String fld_is_null,@Param("fld_type") String fld_type,@Param("fld_range")String fld_range,@Param("fld_visible")String fld_visible,@Param("fld_status") String fld_status);
+    @Update("UPDATE rcd_dt_fld set catg_id =#{catg_id},fld_name =#{fld_name},fld_data_type =#{fld_data_type},fld_is_null =#{fld_is_null},fld_type = #{fld_type},fld_range= #{fld_range},fld_visible = #{fld_visible},fld_status =#{fld_status},fld_creater =#{fld_creater},fld_creater_origin =#{fld_creater_origin}  where fld_id =#{fld_id}")
+    void updatercddtfld(@Param("fld_id") String fld_id, @Param("catg_id") String catg_id, @Param("fld_name") String fld_name, @Param("fld_data_type") String fld_data_type, @Param("fld_is_null") String fld_is_null,@Param("fld_type") String fld_type,@Param("fld_range")String fld_range,@Param("fld_visible")String fld_visible,@Param("fld_status") String fld_status,@Param("fld_creater") String fld_creater,@Param("fld_creater_origin") String fld_creater_origin);
 
     @Select("SELECT proj_id,proj_name FROM rcd_dt_proj ")
     List<Rcddtproj> leftrcddtprojjblx();
