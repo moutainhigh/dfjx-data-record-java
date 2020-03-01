@@ -70,7 +70,12 @@ public class SubmittedByServiceImp  implements SubmittedByService {
         List<Integer> originIds  = new ArrayList<>();
         for (com.datarecord.webapp.sys.origin.entity.Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id()); }
-        List<EntityTree> lists  =  submittedByDao.listOrgDatauser(originIds);
+        List<EntityTree> lists = null;
+        if (originIds.size()!= 0){
+           lists  =  submittedByDao.listOrgDatauser(originIds);
+        }else{
+            lists  =  submittedByDao.listOrgDatauserByid(origin_id);
+        }
         for (EntityTree x : lists) {
                     Map<String,String> mapArr = new LinkedHashMap<>();
                     mapArr.put("user_id", x.getUser_id());

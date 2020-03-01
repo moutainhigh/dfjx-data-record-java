@@ -38,9 +38,9 @@ public interface ReportingGroupDao {
             " LEFT JOIN rcd_dt_fld b ON a.fld_id = b.fld_id " +
             " WHERE " +
             " a.job_unit_id = #{job_unit_id} " +
-            " AND b.fld_creater_origin  = #{originId} " +
+            " AND b.fld_creater  = #{user_id} " +
             " </script>")
-    List<RcdJobUnitFld> selectrcdjobunitfld(@Param("originId")String originId,@Param("job_unit_id") String job_unit_id);
+    List<RcdJobUnitFld> selectrcdjobunitfld(@Param("user_id")int  user_id,@Param("job_unit_id") String job_unit_id);
 
     @Insert("INSERT  INTO rcd_job_unit_config(job_unit_name,job_id,job_unit_active,job_unit_type,job_unit_cycle) VALUES " +
             "(#{job_unit_name},#{job_id},#{job_unit_active},#{job_unit_type},#{job_unit_cycle})")

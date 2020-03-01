@@ -134,15 +134,14 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
     }
 
     @Override
-    public List<RcdJobUnitFld> selectrcdjobunitfld(Origin userOrigin, String job_unit_id) {
+    public List<RcdJobUnitFld> selectrcdjobunitfld(int  user_id, String job_unit_id) {
        /* List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
         childrenOrigins.add(0,userOrigin);
         List<Integer> originIds  = new ArrayList<>();
         for (Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id());
         }*/
-       String originId  = userOrigin.getOrigin_id().toString();
-        return reportingGroupDao.selectrcdjobunitfld(originId,job_unit_id);
+        return reportingGroupDao.selectrcdjobunitfld(user_id,job_unit_id);
     }
 
 

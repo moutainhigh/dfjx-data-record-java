@@ -97,6 +97,19 @@ public interface SubmittedByDao {
             "  </script>")
     List<EntityTree> listOrgDatauser(@Param("originIds")List<Integer> originIds);
 
+    @Select("<script>SELECT" +
+            " a.origin_id AS id," +
+            " a.origin_name AS name," +
+            " a.parent_origin_id AS pId," +
+            " c.user_id," +
+            " c.user_name_cn" +
+            " FROM" +
+            " sys_origin a " +
+            " INNER JOIN user_origin_assign b ON a.origin_id = b.origin_id " +
+            " INNER JOIN user c ON b.user_id = c.user_id    where  c.user_name_cn   != ''   and   a.origin_id  = #{origin_id}  " +
+            "  </script>")
+    List<EntityTree> listOrgDatauserByid(@Param("origin_id")String origin_id);
+
     @Select("<script>select  " +
             " d.origin_id AS id, " +
             " d.origin_name AS name, " +

@@ -24,5 +24,5 @@ public interface ReportingGroupService {
 
     ReportingGroup selectrcdjobunitconfigByjobunitid(String job_unit_id);
 
-    List<RcdJobUnitFld> selectrcdjobunitfld(Origin userOrigin, String job_unit_id);
+    List<RcdJobUnitFld> selectrcdjobunitfld(int user_id, String job_unit_id);
 }

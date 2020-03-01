@@ -126,7 +126,6 @@ public class ReportingGroupController {
     @CrossOrigin(allowCredentials="true")
     public String deletercdjobunitconfig(
             @RequestParam("job_unit_id")String job_unit_id){
-
        try{
           reportingGroupService.deletercdjobunitconfig(job_unit_id);
         }catch(Exception e){
@@ -146,8 +145,8 @@ public class ReportingGroupController {
         List<RcdJobUnitFld> ll = null;
         try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
-            Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            ll  = reportingGroupService.selectrcdjobunitfld(userOrigin,job_unit_id);   //查出有关联的指标id
+          //  Origin userOrigin = originService.getOriginByUser(user.getUser_id());
+            ll  = reportingGroupService.selectrcdjobunitfld(user.getUser_id(),job_unit_id);   //查出有关联的指标id
         }catch(Exception e){
             e.printStackTrace();
             return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标获取失败", null, "error");
