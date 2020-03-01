@@ -52,7 +52,7 @@
     <dependency>
       <groupId>dfjinxin-data-record</groupId>
       <artifactId>auth-manager</artifactId>
-      <version>1.1</version>
+      <version>1.2</version>
     </dependency>
 
     <dependency>

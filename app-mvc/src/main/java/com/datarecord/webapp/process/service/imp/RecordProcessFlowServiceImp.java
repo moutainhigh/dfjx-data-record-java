@@ -85,7 +85,12 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
             if(currDate.compareTo(endDate)>0){//已过期
                 reportCustomer.setRecord_status(ReportStatus.OVER_TIME.getValueInteger());
                 recordProcessDao.changeRecordJobStatus(reportCustomer.getReport_id(),ReportStatus.OVER_TIME.getValueInteger());
+            }else{
+//                if(ReportStatus.OVER_TIME.compareTo(reportCustomer.getRecord_status())){
+//                    recordProcessDao.changeRecordJobStatus(reportCustomer.getReport_id(),ReportStatus.NORMAL.getValueInteger());
+//                }
             }
+
         }
 
         return pageResult;

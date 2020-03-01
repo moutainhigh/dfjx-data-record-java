@@ -51,6 +51,7 @@
         <property name="filterChainDefinitions">
             <value>
                 /sys/login/doLogin.do = anon
+                /sys/casLogin/doLogin.do = anon
                 /** = workShiroFilter
             </value>
         </property>
