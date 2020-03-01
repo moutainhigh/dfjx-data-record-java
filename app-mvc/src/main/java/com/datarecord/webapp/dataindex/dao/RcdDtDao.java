@@ -14,8 +14,9 @@ public interface RcdDtDao {
     @Insert("INSERT INTO rcd_dt_proj (proj_name,is_actived) VALUES(#{proj_name},#{is_actived}) ")
     void insertrcddtproj(@Param("proj_name") String proj_name, @Param("is_actived") String is_actived);
 
-    @Select("select proj_id,proj_name,is_actived from rcd_dt_proj")
-    Page<DataDictionary> selectrcddtproj(@Param("currPage") int currPage, @Param("pageSize") int pageSize);
+    @Select("select c.proj_id,c.proj_name,c.is_actived   from   rcd_dt_fld a  INNER JOIN rcd_dt_catg b ON a.catg_id = b.catg_id\n" +
+            " INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id   where 1 = 1  and   a.fld_creater_origin IN (#{originid})   GROUP BY  c.proj_id")
+    Page<DataDictionary> selectrcddtproj(@Param("currPage") int currPage, @Param("pageSize") int pageSize,@Param("originid")String originid);
 
 
     @Update("UPDATE rcd_dt_proj SET proj_name=#{proj_name}, is_actived =#{is_actived}  WHERE  proj_id = #{proj_id}")
@@ -39,10 +40,10 @@ public interface RcdDtDao {
             " rcd_dt_fld a " +
             " INNER JOIN rcd_dt_catg b ON a.catg_id = b.catg_id " +
             " INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id " +
-            " where 1=1 " +
+            " where 1=1  AND  a.fld_creater_origin  IN (#{originid}) " +
             "<if test = \"catg_id != null and catg_id != ''\">  and b.catg_id = #{catg_id} </if>" +
             "</script>")
-    Page<RcdDt> selecttixircddtproj(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("catg_id") String catg_id);
+    Page<RcdDt> selecttixircddtproj(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("catg_id") String catg_id,@Param("originid")String  originid);
 
 
     @Insert("INSERT INTO rcd_dt_fld (catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_status,fld_creater,fld_creater_origin) VALUES(#{catg_id},#{fld_name},#{fld_data_type},#{fld_is_null},#{fld_type},#{fld_range},#{fld_visible},0,#{fld_creater},#{fld_creater_origin})")
@@ -72,8 +73,12 @@ public interface RcdDtDao {
     List<RcdDtFld> leftrcddtfld(@Param("catg_id") String catg_id);
 
 
-    @Select("SELECT  a.catg_id,b.proj_name,a.catg_name FROM rcd_dt_catg a    left JOIN rcd_dt_proj  b on a.proj_id  = b.proj_id  where  a.proj_id =#{proj_id} ")
-    Page<DataDictionary> selecttixircddtprojer(@Param("currPage")int currPage, @Param("pageSize")int pageSize,@Param("proj_id") String proj_id);
+    @Select("SELECT b.catg_id,c.proj_name,b.catg_name  " +
+            "             FROM  rcd_dt_fld a   " +
+            "             INNER JOIN rcd_dt_catg b ON a.catg_id = b.catg_id  " +
+            "             INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id  " +
+            "             where 1=1  AND  a.fld_creater_origin  IN (#{originid})  and  b.proj_id = #{proj_id}   GROUP BY  b.catg_id")
+    Page<DataDictionary> selecttixircddtprojer(@Param("currPage")int currPage, @Param("pageSize")int pageSize,@Param("proj_id") String proj_id,@Param("originid") String originid);
 
     @Select("select  MAX(fld_id) from  rcd_dt_fld")
     int selectmax();

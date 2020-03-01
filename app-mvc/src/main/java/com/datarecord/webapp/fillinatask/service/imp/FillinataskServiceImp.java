@@ -53,7 +53,6 @@ public class FillinataskServiceImp implements FillinataskService {
         }
         String originid ="";
         if(lsls.size() > 0){
-
             for (String id : lsls){
                 originid += ",";
                 originid += id;
