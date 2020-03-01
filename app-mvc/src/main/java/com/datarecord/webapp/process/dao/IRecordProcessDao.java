@@ -158,9 +158,23 @@ public interface IRecordProcessDao {
                                 @Param("user_id") Integer user_id,
                                 @Param("queryParams") Map<String,String> queryParams);
 
-    @Select("select rjc.job_id,rjc.job_name,rjc.job_status,rjc.job_start_dt,rjc.job_end_dt  " +
-            " from rcd_report_job rrj left join rcd_job_config rjc  " +
-            "on rrj.job_id = rjc.job_id where report_id = #{reportId}")
+    @Select("<script>" +
+            "select rrj.report_id," +
+            "rrj.job_id," +
+            "rrj.record_user_id," +
+            "u.user_name_cn as record_user_name," +
+            "rrj.record_origin_id," +
+            "rrj.record_status, " +
+            "rjc.job_start_dt, " +
+            "rjc.job_end_dt, " +
+            "rjc.job_name " +
+            "from rcd_report_job rrj " +
+            "left join rcd_job_config rjc on " +
+            "rrj.job_id = rjc.job_id  " +
+            "left join user u on " +
+            "rrj.record_user_id = u.user_id " +
+            "where rrj.report_id=#{reportId}" +
+            "</script>")
     ReportJobInfo getReportJobInfoByReportId(String reportId);
 
     @Select("select id,report_id,unit_id,colum_id,fld_id,record_data from rcd_report_data_job${jobId} where report_id = #{reportId} and unit_id = #{unitId}")

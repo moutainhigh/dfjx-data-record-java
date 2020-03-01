@@ -133,7 +133,7 @@ public class RecordProcessFlowController {
         if(jobFlowLog.getJob_flow_status()==JobConfigStatus.APPROVE.value()){
             Map<JsonResult.RESULT, Object> checkResult = recordMaker.preMake(jobCOnfig);
 
-            if(checkResult.containsKey(JsonResult.RESULT.FAILD)){
+            if(checkResult!=null&&checkResult.containsKey(JsonResult.RESULT.FAILD)){
                 Object faildResult = checkResult.get(JsonResult.RESULT.FAILD);
                 JsonResult successResult = JsonSupport.makeJsonpResult(
                         JsonResult.RESULT.FAILD, String.valueOf(faildResult), null, faildResult);

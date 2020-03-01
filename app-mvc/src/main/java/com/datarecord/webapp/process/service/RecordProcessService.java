@@ -29,4 +29,6 @@ public interface RecordProcessService {
     List<ReportFldTypeConfig> getClientFldByUnitId(String groupId, String clientType);
 
     void updateReportStatus(String reportId, ReportStatus reportDone);
+
+    ReportJobInfo getReportJobInfo(String reportId);
 }
