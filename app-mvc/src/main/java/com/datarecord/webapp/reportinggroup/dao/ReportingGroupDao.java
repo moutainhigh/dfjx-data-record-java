@@ -1,9 +1,6 @@
 package com.datarecord.webapp.reportinggroup.dao;
 
-import com.datarecord.webapp.reportinggroup.bean.RcdJobUnitFld;
-import com.datarecord.webapp.reportinggroup.bean.ReportGroupInterval;
-import com.datarecord.webapp.reportinggroup.bean.ReportingGroup;
-import com.datarecord.webapp.reportinggroup.bean.rcdJobConfig;
+import com.datarecord.webapp.reportinggroup.bean.*;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -62,4 +59,15 @@ public interface ReportingGroupDao {
 
     @Select("select job_id,job_unit_id,job_unit_start,job_unit_end from rcd_job_unit_interval where job_id = #{job_id} and job_unit_id=#{job_unit_id}")
     List<ReportGroupInterval> getReportGroupInterval(@Param("job_id") Integer job_id,@Param("job_unit_id") Integer job_unit_id);
+
+    @Insert("insert into rcd_job_unit_flow (job_id,unit_id,edit_after_sub,edit_reviewer) values " +
+            "(#{job_id},#{unit_id},#{edit_after_sub},#{edit_reviewer})")
+    void saveUnitFlow(RcdJobUnitFlow rcdJobUnitFlow);
+
+    @Update("update rcd_job_unit_flow set edit_after_sub=#{edit_after_sub} where job_id=#{job_id} and unit_id=#{unit_id}")
+    void editUnitFlow(RcdJobUnitFlow rcdJobUnitFlow);
+
+    @Select("select job_id,unit_id,edit_after_sub,edit_reviewer from rcd_job_unit_flow " +
+            "where job_id = #{job_id} and unit_id = #{job_unit_id} ")
+    RcdJobUnitFlow getUnitFLow(@Param("job_id") Integer job_id,@Param("job_unit_id") String job_unit_id);
 }

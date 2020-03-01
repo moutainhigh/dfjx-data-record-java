@@ -1,10 +1,7 @@
 package com.datarecord.webapp.reportinggroup.service.imp;
 
 import com.datarecord.webapp.datadictionary.service.imp.DataDictionaryServiceImp;
-import com.datarecord.webapp.reportinggroup.bean.RcdJobUnitFld;
-import com.datarecord.webapp.reportinggroup.bean.ReportGroupInterval;
-import com.datarecord.webapp.reportinggroup.bean.ReportingGroup;
-import com.datarecord.webapp.reportinggroup.bean.rcdJobConfig;
+import com.datarecord.webapp.reportinggroup.bean.*;
 import com.datarecord.webapp.reportinggroup.dao.ReportingGroupDao;
 import com.datarecord.webapp.reportinggroup.service.ReportingGroupService;
 import com.github.pagehelper.Page;
@@ -78,6 +75,10 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
             reportingGroupInterval.setJob_unit_id(reportingGroup.getJob_unit_id());
             reportingGroupDao.saveReportingInterval(reportingGroupInterval);
         }
+        RcdJobUnitFlow unitFlow = reportingGroup.getRcdJobUnitFlow();
+        unitFlow.setJob_id(reportingGroup.getJob_id());
+        unitFlow.setUnit_id(reportingGroup.getJob_unit_id());
+        reportingGroupDao.saveUnitFlow(unitFlow);
     }
 
     @Override
@@ -90,6 +91,20 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
             reportingGroupInterval.setJob_unit_id(reportingGroup.getJob_unit_id());
             reportingGroupDao.saveReportingInterval(reportingGroupInterval);
         }
+        RcdJobUnitFlow unitFlow = reportingGroupDao.getUnitFLow(reportingGroup.getJob_id(),String.valueOf(reportingGroup.getJob_unit_id()));
+
+        if(unitFlow!=null){
+            unitFlow = reportingGroup.getRcdJobUnitFlow();
+            unitFlow.setUnit_id(reportingGroup.getJob_unit_id());
+            unitFlow.setJob_id(reportingGroup.getJob_id());
+            reportingGroupDao.editUnitFlow(unitFlow);
+        }else{
+            unitFlow = reportingGroup.getRcdJobUnitFlow();
+            unitFlow.setJob_id(reportingGroup.getJob_id());
+            unitFlow.setUnit_id(reportingGroup.getJob_unit_id());
+            reportingGroupDao.saveUnitFlow(unitFlow);
+        }
+
     }
 
     @Override
@@ -99,6 +114,8 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
             List<ReportGroupInterval> reportGroupIntervals = reportingGroupDao.getReportGroupInterval(reportGroup.getJob_id(),reportGroup.getJob_unit_id());
             reportGroup.setReportGroupIntervals(reportGroupIntervals);
         }
+        RcdJobUnitFlow unitFlow = reportingGroupDao.getUnitFLow(reportGroup.getJob_id(),job_unit_id);
+        reportGroup.setRcdJobUnitFlow(unitFlow);
         return reportGroup;
     }
 }

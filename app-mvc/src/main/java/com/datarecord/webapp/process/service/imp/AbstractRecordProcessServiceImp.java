@@ -7,6 +7,9 @@ import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessService;
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.dataindex.bean.FldDataTypes;
+import com.datarecord.webapp.reportinggroup.bean.RcdJobUnitFlow;
+import com.datarecord.webapp.reportinggroup.bean.ReportGroupInterval;
+import com.datarecord.webapp.reportinggroup.dao.ReportingGroupDao;
 import com.github.pagehelper.Page;
 import com.google.common.base.Strings;
 import com.webapp.support.jsonp.JsonResult;
@@ -30,6 +33,9 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
 
     @Autowired
     protected IRecordProcessDao recordProcessDao;
+
+    @Autowired
+    private ReportingGroupDao reportingGroupDao;
 
     @Override
     public Map<JsonResult.RESULT, String> makeJob(String jobId) {
@@ -167,6 +173,12 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
         ReportJobInfo reportJobInfo = recordProcessDao.getReportJobInfoByReportId(reportId);
         JobConfig jobConfigEntity = recordProcessDao.getJobConfigByJobId(reportJobInfo.getJob_id().toString());
 
+        for (JobUnitConfig jobUnit : jobConfigEntity.getJobUnits()) {
+            RcdJobUnitFlow unitFlow = reportingGroupDao.getUnitFLow(jobUnit.getJob_id(),String.valueOf(jobUnit.getJob_unit_id()));
+            List<ReportGroupInterval> reportGroupIntervals = reportingGroupDao.getReportGroupInterval(jobUnit.getJob_id(),jobUnit.getJob_unit_id());
+            jobUnit.setReportGroupIntervals(reportGroupIntervals);
+            jobUnit.setRcdJobUnitFlow(unitFlow);
+        }
 
         return jobConfigEntity;
     }
