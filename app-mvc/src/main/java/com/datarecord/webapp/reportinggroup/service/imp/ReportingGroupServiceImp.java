@@ -4,6 +4,8 @@ import com.datarecord.webapp.datadictionary.service.imp.DataDictionaryServiceImp
 import com.datarecord.webapp.reportinggroup.bean.*;
 import com.datarecord.webapp.reportinggroup.dao.ReportingGroupDao;
 import com.datarecord.webapp.reportinggroup.service.ReportingGroupService;
+import com.datarecord.webapp.sys.origin.entity.Origin;
+import com.datarecord.webapp.sys.origin.service.OriginService;
 import com.datarecord.webapp.utils.EntityTree;
 import com.github.pagehelper.Page;
 import com.webapp.support.page.PageResult;
@@ -24,29 +26,28 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
     @Autowired
     private ReportingGroupDao reportingGroupDao;
 
+    @Autowired
+    private OriginService originService;
+
+
 
 
     @Override
-    public List<rcdJobConfig> leftrcdjobconfig(String origin_id) {
-        List<EntityTree> lists =  reportingGroupDao.selectoriginid();
-        List<String> lsls = new ArrayList<String>();
-        for (EntityTree x : lists) {
-            if((null != x.getpId() && !"".equals(x.getpId()))  ||  (null != x.getId() && !"".equals(x.getId()) ) ){
-                if(origin_id.equals(x.getpId())){
-                    lsls.add(x.getId());
-                }else if (origin_id.equals(x.getId())){
-                    lsls.add(x.getId());
-                }
-            }
+    public List<rcdJobConfig> leftrcdjobconfig(Origin userOrigin) {
+        List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
+        childrenOrigins.add(0,userOrigin);
+        List<Integer> originIds  = new ArrayList<>();
+        for (Origin childrenOrigin : childrenOrigins) {
+            originIds.add(childrenOrigin.getOrigin_id());
         }
         String originid ="";
-        if(lsls.size() > 0){
-
-            for (String id : lsls){
-                originid += ",";
+        if(originIds.size() > 0){
+            for (Integer id : originIds){
+                originid += "','";
                 originid += id;
             }
-            originid =  originid.substring(1);
+            originid =  originid.substring(2);
+            originid += "'";
         }
         return reportingGroupDao.leftrcdjobconfig(originid);
     }
@@ -142,26 +143,21 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
     }
 
     @Override
-    public List<RcdJobUnitFld> selectrcdjobunitfld(String origin_id, String job_unit_id) {
-        List<EntityTree> lists =  reportingGroupDao.selectoriginid();
-        List<String> lsls = new ArrayList<String>();
-        for (EntityTree x : lists) {
-            if((null != x.getpId() && !"".equals(x.getpId()))  ||  (null != x.getId() && !"".equals(x.getId()) ) ){
-                if(origin_id.equals(x.getpId())){
-                    lsls.add(x.getId());
-                }else if (origin_id.equals(x.getId())){
-                    lsls.add(x.getId());
-                }
-            }
+    public List<RcdJobUnitFld> selectrcdjobunitfld(Origin userOrigin, String job_unit_id) {
+        List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
+        childrenOrigins.add(0,userOrigin);
+        List<Integer> originIds  = new ArrayList<>();
+        for (Origin childrenOrigin : childrenOrigins) {
+            originIds.add(childrenOrigin.getOrigin_id());
         }
         String originid ="";
-        if(lsls.size() > 0){
-
-            for (String id : lsls){
-                originid += ",";
+        if(originIds.size() > 0){
+            for (Integer id : originIds){
+                originid += "','";
                 originid += id;
             }
-            originid =  originid.substring(1);
+            originid =  originid.substring(2);
+            originid += "'";
         }
         return reportingGroupDao.selectrcdjobunitfld(originid,job_unit_id);
     }

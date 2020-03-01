@@ -14,9 +14,9 @@ import java.util.List;
 @Repository
 public interface FillinataskDao {
 
-    @Select("<script> select * from  rcd_job_config where  1=1   AND job_creater_origin IN (#{originid})   " +
-            "<if test = 'job_name != null '> AND job_name like concat('%',#{job_name},'%') </if> "+
-            "<if test = 'job_status != null '> AND job_status =#{job_status} </if> "+
+   @Select("<script> select * from  rcd_job_config  where  1=1   AND job_creater_origin IN (#{originid})   " +
+            "<if test = 'job_name != null' > AND job_name like concat('%',#{job_name},'%') </if> "+
+            "<if test = 'job_status != null' > AND job_status =#{job_status} </if> "+
             " order by job_start_dt desc </script> ")
     Page<Fillinatask> rcdjobconfiglist(@Param("currPage") int currPage,
                                        @Param("pageSize") int pageSize,
@@ -24,11 +24,6 @@ public interface FillinataskDao {
                                        @Param("job_status") String job_status,
                                        @Param("originid") String originid);
 
-//    @Insert("INSERT INTO rcd_job_config " +
-//            "(job_name,job_start_dt,job_end_dt,job_creater,job_creater_origin,job_cycle) " +
-//            " values " +
-//            "(#{jobConfig.job_name},#{jobConfig.job_start_dt_str},#{jobConfig.job_end_dt_str},#{jobConfig.job_creater},#{jobConfig.job_creater_origin},#{jobConfig.job_cycle})")
-//    void saveJobConfig(@Param("jobConfig") JobConfig jobConfig);
 
     @Insert("insert into rcd_job_config " +
             "(job_name,job_start_dt,job_end_dt,job_creater,job_creater_origin,job_cycle) " +

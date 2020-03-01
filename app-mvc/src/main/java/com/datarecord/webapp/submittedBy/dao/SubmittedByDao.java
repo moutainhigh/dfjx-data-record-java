@@ -61,28 +61,26 @@ public interface SubmittedByDao {
 
     @Select("SELECT" +
             " a.origin_id AS id," +
-            " a.origin_name AS NAME," +
+            " a.origin_name AS name," +
             " a.parent_origin_id AS pId," +
             " c.user_id," +
             " c.user_name_cn" +
             " FROM" +
             " sys_origin a " +
             " INNER JOIN user_origin_assign b ON a.origin_id = b.origin_id " +
-            " INNER JOIN user c ON b.user_id = c.user_id  where c.user_name_cn != ''  ")
-    @Options(useCache = false)
+            " INNER JOIN user c ON b.user_id = c.user_id    where  c.user_name_cn   != ''     ")
     List<EntityTree> listOrgDatauser();
 
     @Select("select  " +
             " d.origin_id AS id, " +
-            " d.origin_name AS NAME, " +
+            " d.origin_name AS name, " +
             " d.parent_origin_id AS pId, " +
             "  b.user_id,  " +
             " b.user_name_cn " +
             " from rcd_person_config  a   " +
             " INNER join user  b ON a.user_id  = b.user_id " +
             " INNER join user_origin_assign c on c.user_id = b.user_id " +
-            " INNER JOIN sys_origin d ON c.origin_id = d.origin_id")
-    @Options(useCache = false)
+            " INNER JOIN sys_origin d ON c.origin_id = d.origin_id   ")
     List<EntityTree> useroriginassignlistsysorigin();
 
 
