@@ -29,6 +29,7 @@ public class FillinataskServiceImp implements FillinataskService {
     public PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
         job_name = Strings.emptyToNull(job_name);
+        job_status = Strings.emptyToNull(job_status);
         Page<Fillinatask> contactPageDatas = fillinataskDao.rcdjobconfiglist(currPage, pageSize,job_name,job_status);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);

@@ -12,9 +12,9 @@ import java.util.List;
 
 public interface FillinataskDao {
 
-    @Select("<script> select * from  rcd_job_config where 1=1 " +
+    @Select("<script> select * from  rcd_job_config where  1=1  " +
             "<if test = 'job_name != null '> AND job_name like concat('%',#{job_name},'%') </if> "+
-            "<if test = 'job_status != null and job_status != '' '> AND job_status =#{job_status} </if> "+
+            "<if test = 'job_status != null '> AND job_status =#{job_status} </if> "+
             " order by job_start_dt desc </script> ")
     Page<Fillinatask> rcdjobconfiglist(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("job_name") String job_name, @Param("job_status") String job_status);
 
