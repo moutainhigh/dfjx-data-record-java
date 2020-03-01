@@ -55,7 +55,7 @@ public interface RcdDtDao {
     Page<RcdDt> selecttixircddtproj(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("catg_id") String catg_id ,@Param("user_id") int user_id);
 
 
-    @Insert("INSERT INTO rcd_dt_fld (catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_status,fld_creater,fld_creater_origin) VALUES(#{catg_id},#{fld_name},#{fld_data_type},#{fld_is_null},#{fld_type},#{fld_range},#{fld_visible},#{fld_status},#{fld_creater},#{fld_creater_origin})")
+    @Insert("INSERT INTO rcd_dt_fld (catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_status,fld_creater,fld_creater_origin,fld_point) VALUES(#{catg_id},#{fld_name},#{fld_data_type},#{fld_is_null},#{fld_type},#{fld_range},#{fld_visible},#{fld_status},#{fld_creater},#{fld_creater_origin},#{fld_point})")
     void insertrcddtfld(ReportFldConfig reportFldConfig);
 
 
@@ -69,7 +69,7 @@ public interface RcdDtDao {
     void deletercddtfldctassign(@Param("fld_id") String fld_id);
 
 
-    @Update("UPDATE rcd_dt_fld set catg_id =#{catg_id},fld_name =#{fld_name},fld_data_type =#{fld_data_type},fld_is_null =#{fld_is_null},fld_type = #{fld_type},fld_range= #{fld_range},fld_visible = #{fld_visible},fld_status =#{fld_status}  where fld_id =#{fld_id}")
+    @Update("UPDATE rcd_dt_fld set catg_id =#{catg_id},fld_name =#{fld_name},fld_data_type =#{fld_data_type},fld_is_null =#{fld_is_null},fld_type = #{fld_type},fld_range= #{fld_range},fld_visible = #{fld_visible},fld_status =#{fld_status},fld_point = #{fld_point}  where fld_id =#{fld_id}")
     void updatercddtfld(ReportFldConfig reportFldConfig);
 /*
     @Select("SELECT proj_id,proj_name FROM rcd_dt_proj ")*/
