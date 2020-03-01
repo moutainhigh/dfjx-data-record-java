@@ -198,9 +198,10 @@ public class RcdDtServiceImp  implements RcdDtService {
 
     //删除指标类别 二级
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deletrcddtcatg(String catg_id) {
             rcdDtDao.deletercddtcatgi(catg_id); //rcd_dt_catg   二级   catg_id
-
+            rcdDtDao.deletercddtfld(catg_id);  // rcd_dt_fld   三级  catg_id
     }
 
     //三级
@@ -224,10 +225,6 @@ public class RcdDtServiceImp  implements RcdDtService {
         return rcdDtDao.selectrcddtcatg(proj_id);
     }
 
-    @Override
-    public void deleteererrcddtfld(String catg_id) {
-        rcdDtDao.deletercddtfld(catg_id);
-    }
 
     @Override
     public void deleteererrcddtfldI(String catg_id) {

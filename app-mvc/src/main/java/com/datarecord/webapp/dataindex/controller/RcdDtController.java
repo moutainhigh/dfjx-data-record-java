@@ -46,7 +46,6 @@ public class RcdDtController {
             @RequestParam("proj_name") String proj_name,
             @RequestParam("is_actived") String is_actived
     ){
-
         if(!proj_name.isEmpty()){
             try{
                 rcdDtService.insertrcddtproj(proj_name,is_actived);
@@ -92,7 +91,6 @@ public class RcdDtController {
     public String deletrcddtcatg(
             @RequestParam("catg_id") String catg_id
     ){
-
         try{
             List<String>  ll = null;
             ll =   rcdDtService.selectrcddtcatg(catg_id);
@@ -100,7 +98,6 @@ public class RcdDtController {
                 return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标类别下已有关连任务无法删除", null, "error");
             }else{
                 rcdDtService.deletrcddtcatg(catg_id);  //rcd_dt_catg   二级   catg_id
-                rcdDtService.deleteererrcddtfld(catg_id);   // rcd_dt_fld   三级  catg_id
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -116,7 +113,6 @@ public class RcdDtController {
     public String deletercddtfld(
             @RequestParam("fld_id") String fld_id
     ){
-
         try{
            int tt =  rcdDtService.selectcount(fld_id);    //查询是否有关连
             if (tt > 0){

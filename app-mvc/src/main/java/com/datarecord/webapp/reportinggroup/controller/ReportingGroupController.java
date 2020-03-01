@@ -165,7 +165,6 @@ public class ReportingGroupController {
             @RequestParam("fld_id")String fld_id  //指标编码数组
             ){
         try{
-            reportingGroupService.rcdjobunitflddelete(jobunitid);  //删除之前关系
             reportingGroupService.rcdjobunitfld(fld_id,jobunitid);  //新增关系
         }catch(Exception e){
             e.printStackTrace();
