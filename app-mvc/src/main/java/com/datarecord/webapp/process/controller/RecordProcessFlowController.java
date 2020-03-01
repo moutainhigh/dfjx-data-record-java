@@ -1,6 +1,8 @@
 package com.datarecord.webapp.process.controller;
 
+import com.datarecord.enums.JobConfigStatus;
 import com.datarecord.webapp.process.entity.JobConfig;
+import com.datarecord.webapp.process.entity.JobFlowLog;
 import com.datarecord.webapp.process.service.RecordMaker;
 import com.datarecord.webapp.process.service.RecordProcessFlowService;
 import com.datarecord.webapp.process.service.RecordProcessService;
@@ -125,20 +127,34 @@ public class RecordProcessFlowController {
     @RequestMapping("reviewJob")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
-    public JsonResult reviewJob(String jobId,String status){
-        JobConfig jobCOnfig = recordProcessService.getJobConfigByJobId(jobId);
-        Map<JsonResult.RESULT, Object> checkResult = recordMaker.preMake(jobCOnfig);
+    public JsonResult reviewJob(@RequestBody JobFlowLog jobFlowLog){
+        Integer jobId = jobFlowLog.getJob_id();
+        JobConfig jobCOnfig = recordProcessService.getJobConfigByJobId(jobId.toString());
+        if(jobFlowLog.getJob_flow_status()==JobConfigStatus.APPROVE.value()){
+            Map<JsonResult.RESULT, Object> checkResult = recordMaker.preMake(jobCOnfig);
 
-        if(checkResult.containsKey(JsonResult.RESULT.FAILD)){
-            Object faildResult = checkResult.get(JsonResult.RESULT.FAILD);
-            JsonResult successResult = JsonSupport.makeJsonpResult(
-                    JsonResult.RESULT.FAILD, String.valueOf(faildResult), null, faildResult);
-            return successResult;
+            if(checkResult.containsKey(JsonResult.RESULT.FAILD)){
+                Object faildResult = checkResult.get(JsonResult.RESULT.FAILD);
+                JsonResult successResult = JsonSupport.makeJsonpResult(
+                        JsonResult.RESULT.FAILD, String.valueOf(faildResult), null, faildResult);
+                return successResult;
+            }
         }
 
-        recordProcessFlowService.reviewJobItems(jobId,status);
+
+        recordProcessFlowService.reviewJobItems(jobFlowLog);
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "更新成功", null, JsonResult.RESULT.SUCCESS);
+        return successResult;
+    }
+
+    @RequestMapping("getJobFlowLogs")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult getJobFlowLogs(String jobId){
+        List<JobFlowLog> jobFlowLogs = recordProcessFlowService.getJobFlowLogs(jobId);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "更新成功", null, jobFlowLogs);
         return successResult;
     }
 

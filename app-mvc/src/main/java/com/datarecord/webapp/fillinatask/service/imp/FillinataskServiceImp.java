@@ -68,8 +68,12 @@ public class FillinataskServiceImp implements FillinataskService {
         fillinataskDao.saveJobConfig(jobConfig);
         List<JobInteval> jobIntervals = jobConfig.getJob_intervals();
         for (JobInteval jobInterval : jobIntervals) {
-            jobInterval.setJob_id(jobConfig.getJob_id());
-            fillinataskDao.saveJobInterval(jobInterval);
+            if(Strings.isNullOrEmpty(jobInterval.getJob_interval_start())||Strings.isNullOrEmpty(jobInterval.getJob_interval_end())){
+                continue;
+            }else{
+                jobInterval.setJob_id(jobConfig.getJob_id());
+                fillinataskDao.saveJobInterval(jobInterval);
+            }
         }
     }
 
@@ -93,8 +97,13 @@ public class FillinataskServiceImp implements FillinataskService {
         List<JobInteval> intervals = jobConfig.getJob_intervals();
         if(intervals!=null){
             for (JobInteval interval : intervals) {
-                interval.setJob_id(jobConfig.getJob_id());
-                fillinataskDao.saveJobInterval(interval);
+                if(Strings.isNullOrEmpty(interval.getJob_interval_start())||Strings.isNullOrEmpty(interval.getJob_interval_end())){
+                    continue;
+                }else{
+                    interval.setJob_id(jobConfig.getJob_id());
+                    fillinataskDao.saveJobInterval(interval);
+                }
+
             }
         }
     }

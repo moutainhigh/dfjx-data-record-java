@@ -124,10 +124,10 @@ public class RecordMakerImp implements RecordMaker {
             return checkConfigResult;
         }
 
-        Map<JsonResult.RESULT, Object> checkFlowItemsResult = this.checkFlowItems(jobConfigEntity);
-        if(checkFlowItemsResult.containsKey(JsonResult.RESULT.FAILD)){
-            return checkFlowItemsResult;
-        }
+//        Map<JsonResult.RESULT, Object> checkFlowItemsResult = this.checkFlowItems(jobConfigEntity);
+//        if(checkFlowItemsResult.containsKey(JsonResult.RESULT.FAILD)){
+//            return checkFlowItemsResult;
+//        }
 
         return null;
     }
