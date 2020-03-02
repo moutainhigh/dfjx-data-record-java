@@ -189,7 +189,7 @@ public class RecordMakerImp implements RecordMaker {
 //                    continue;
 //                }
                 if(fldStatus==0){
-                    faildList.add(new StringBuilder().append("【").append(jobUnit.getJob_unit_name()).append("】组:【").append(unitFld.getFld_name()).append("】待审批").toString());
+                    faildList.add(new StringBuilder().append("【").append(jobUnit.getJob_unit_name()).append("】组:【").append(unitFld.getFld_name()).append("】待审核").toString());
                     continue;
                 }
                 if(fldStatus==2){

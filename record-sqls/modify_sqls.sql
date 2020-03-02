@@ -101,3 +101,13 @@ ALTER TABLE `rcd_job_person_assign`
 ADD COLUMN `assign_status` INT NOT NULL DEFAULT 0 AFTER `job_id`;
 ALTER TABLE `rcd_job_person_assign`
 CHANGE COLUMN `assign_status` `assign_status` INT(11) NOT NULL DEFAULT '0' COMMENT '0:有效\n1:无效' ;
+
+ALTER TABLE `rcd_dt_proj`
+ADD COLUMN `proj_creater` INT NULL AFTER `is_actived`,
+ADD COLUMN `proj_creater_origin` INT NULL AFTER `proj_creater`;
+ALTER TABLE `rcd_dt_catg`
+ADD COLUMN `catg_creater` INT NULL AFTER `is_actived`,
+ADD COLUMN `catg_creater_origin` INT NULL AFTER `catg_creater`;
+ALTER TABLE `rcd_dt_dict`
+ADD COLUMN `dict_creater` INT NULL AFTER `dict_name`,
+ADD COLUMN `dict_creater_origin` INT NULL AFTER `dict_creater`;
