@@ -50,7 +50,7 @@ public interface RcdDtDao {
 
 
     @Insert("INSERT INTO rcd_dt_fld_ct_assign (fld_id,dict_content_id) VALUES(#{fld_id},#{dict_contentid})")
-    void insertrcddtfldctassign(@Param("fld_id") Integer fld_id, @Param("dict_contentid") String dict_contentid);
+    void insertrcddtfldctassign(@Param("fld_id")String fld_id, @Param("dict_contentid") String dict_contentid);
 
     @Update("UPDATE rcd_dt_dict_content SET is_actived = 0  where dict_content_id = #{dict_content_id}")
     void updatercddtdict(@Param("dict_content_id") String dict_content_id);

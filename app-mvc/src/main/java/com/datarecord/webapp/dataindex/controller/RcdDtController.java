@@ -274,14 +274,14 @@ public class RcdDtController {
                 User user = WorkbenchShiroUtils.checkUserFromShiroContext();
                 Origin userOrigin = originService.getOriginByUser(user.getUser_id());
                 reportFldConfig.setFld_creater(user.getUser_id()); //创建人
-                reportFldConfig.setFld_creater_origin(userOrigin.getOrigin_id()); //创建人
-                rcdDtService.insertrcddtfld(reportFldConfig);//创建人所属机构
+                reportFldConfig.setFld_creater_origin(userOrigin.getOrigin_id()); //创建人所属机构
+                rcdDtService.insertrcddtfld(reportFldConfig);
               int  fid = rcdDtService.selectmax();
               String  fld_id = String.valueOf(fid);
                 if(!fld_id.isEmpty() && !reportFldConfig.getDict_content_id().isEmpty()){
                     String[] split = reportFldConfig.getDict_content_id().split(",");
                     for (String dict_contentid : split){
-                        rcdDtService.insertrcddtfldctassign(reportFldConfig.getFld_id(),dict_contentid);
+                        rcdDtService.insertrcddtfldctassign(fld_id,dict_contentid);
                     }
                     //指字标&数据典关系表添加
                         //rcdDtService.updatercddtdict(dict_content_id[i]);  //数据字典修改使用状态
@@ -304,14 +304,14 @@ public class RcdDtController {
     ){
             try{
                 rcdDtService.updatercddtfld(reportFldConfig);
-                String fld_id = reportFldConfig.getFld_id().toString();
-                if(!fld_id.isEmpty() && !reportFldConfig.getDict_content_id().isEmpty() ){
+                if(reportFldConfig.getFld_id() != null  && !reportFldConfig.getDict_content_id().isEmpty() ){
+                    String fld_id = reportFldConfig.getFld_id().toString();
                     rcdDtService.deletercddtfldctassign(fld_id);
                    /* dict_content_id.substring(1);
                     dict_content_id.substring(0,dict_content_id.length()-1);*/
                     String[] split = reportFldConfig.getDict_content_id().split(",");
                     for (String dict_contentid : split){
-                        rcdDtService.insertrcddtfldctassign(reportFldConfig.getFld_id(),dict_contentid);  //指标&数据字典关系表添加
+                        rcdDtService.insertrcddtfldctassign(fld_id,dict_contentid);  //指标&数据字典关系表添加
                     }
                     //rcdDtService.updatercddtdict(dict_content_id[i]);  //数据字典修改使用状态
                 }

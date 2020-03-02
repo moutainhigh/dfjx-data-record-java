@@ -61,7 +61,7 @@ public class RcdDtServiceImp  implements RcdDtService {
     }
 
     @Override
-    public void insertrcddtfldctassign(Integer fld_id, String dict_contentid) {
+    public void insertrcddtfldctassign(String fld_id, String dict_contentid) {
         rcdDtDao.insertrcddtfldctassign(fld_id,dict_contentid);
     }
 

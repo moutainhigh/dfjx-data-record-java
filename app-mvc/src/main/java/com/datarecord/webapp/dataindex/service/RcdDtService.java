@@ -21,7 +21,7 @@ public interface RcdDtService {
 
     void insertrcddtfld(ReportFldConfig reportFldConfig);
 
-    void insertrcddtfldctassign(Integer fld_id, String dict_contentid);
+    void insertrcddtfldctassign(String fld_id, String dict_contentid);
 
     void updatercddtdict(String dict_content_id);
 
