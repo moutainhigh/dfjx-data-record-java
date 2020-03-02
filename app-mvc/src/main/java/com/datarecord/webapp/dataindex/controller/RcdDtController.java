@@ -38,18 +38,18 @@ public class RcdDtController {
             @RequestParam("proj_name") String proj_name,
             @RequestParam("is_actived") String is_actived
     ){
-        String jsonResult = "";
+
         if(!proj_name.isEmpty()){
             try{
                 rcdDtService.insertrcddtproj(proj_name,is_actived);
             }catch(Exception e){
                 e.printStackTrace();
-                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增基本类型失败", null, "error");
+                return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增基本类型失败", null, "error");
             }
         }else{
-            return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
+            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
         }
-        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增基本类型成功", null, "success");
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增基本类型成功", null, "success");
     }
 
 
@@ -60,12 +60,11 @@ public class RcdDtController {
     public String deletercddtproj(
             @RequestParam("proj_id") String proj_id
     ){
-        String jsonResult = "";
             try{
-                List<String>  ll = new ArrayList<String>();
+                List<String>  ll = null;
                 ll =   rcdDtService.selectrcddtcatgproj(proj_id);
                 if (ll.size() != 0){
-                    return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标基本类别下已有关连任务无法删除", null, "error");
+                    return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标基本类别下已有关连任务无法删除", null, "error");
                 }
                 for(String catg_id : ll ) {
                     rcdDtService.deleteererrcddtfldI(catg_id);   // rcd_dt_fld   三级  catg_id
@@ -73,9 +72,9 @@ public class RcdDtController {
                 rcdDtService.deletercddtproj(proj_id);   //一级二级  proj_id
             }catch(Exception e){
                 e.printStackTrace();
-                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除基本类型失败", null, "error");
+                return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除基本类型失败", null, "error");
             }
-        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除基本类型成功", null, "success");
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除基本类型成功", null, "success");
     }
 
     //指标类别删除  二级
@@ -85,21 +84,21 @@ public class RcdDtController {
     public String deletrcddtcatg(
             @RequestParam("catg_id") String catg_id
     ){
-        String jsonResult = "";
+
         try{
-            List<String>  ll = new ArrayList<String>();
+            List<String>  ll = null;
             ll =   rcdDtService.selectrcddtcatg(catg_id);
             if (ll.size() != 0){
-                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标类别下已有关连任务无法删除", null, "error");
+                return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标类别下已有关连任务无法删除", null, "error");
             }else{
                 rcdDtService.deletrcddtcatg(catg_id);  //rcd_dt_catg   二级   catg_id
                 rcdDtService.deleteererrcddtfld(catg_id);   // rcd_dt_fld   三级  catg_id
             }
         }catch(Exception e){
             e.printStackTrace();
-            return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除二级基本类型失败", null, "error");
+            return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除二级基本类型失败", null, "error");
         }
-        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除二级基本类型成功", null, "success");
+        return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除二级基本类型成功", null, "success");
     }
 
     //指标类别删除  三级
@@ -109,19 +108,19 @@ public class RcdDtController {
     public String deletercddtfld(
             @RequestParam("fld_id") String fld_id
     ){
-        String jsonResult = "";
+
         try{
            int tt =  rcdDtService.selectcount(fld_id);    //查询是否有关连
             if (tt > 0){
-                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "此指标下已有关连任务无法删除", null, "error");
+                return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "此指标下已有关连任务无法删除", null, "error");
             }else{
                 rcdDtService.deletercddtfld(fld_id);
             }
         }catch(Exception e){
             e.printStackTrace();
-            return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除三级基本类型失败", null, "error");
+            return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除三级基本类型失败", null, "error");
         }
-        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除三级基本类型成功", null, "success");
+        return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除三级基本类型成功", null, "success");
     }
 
 
@@ -134,14 +133,14 @@ public class RcdDtController {
             @RequestParam("pageSize")int pageSize
     ){
         PageResult pageResult = null;
-        String jsonResult = "";
+
         try{
             pageResult = rcdDtService.selectrcddtproj(currPage,pageSize);
         }catch(Exception e){
             e.printStackTrace();
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标体系基本类别列表失败", null, "error");
+            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标体系基本类别列表失败", null, "error");
         }
-        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标体系基本类别列表成功", null, pageResult);
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标体系基本类别列表成功", null, pageResult);
     }
 
 
@@ -153,19 +152,19 @@ public class RcdDtController {
             @RequestParam("proj_id") String proj_id,
             @RequestParam("proj_name") String proj_name,
             @RequestParam("is_actived") String is_actived    ){
-        String jsonResult = "";
+
         boolean ss = false;
         if(!proj_name.isEmpty() && !is_actived.isEmpty()){
             try{
                 rcdDtService.updatercddtproj(proj_name,is_actived,proj_id);
             }catch(Exception e){
                 e.printStackTrace();
-                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改指标体系基本类别修改失败", null, "error");
+                return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改指标体系基本类别修改失败", null, "error");
             }
         }else{
-            return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
+            return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
         }
-        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改指标体系基本类别成功", null, "success");
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改指标体系基本类别成功", null, "success");
     }
 
 
@@ -185,14 +184,14 @@ public class RcdDtController {
           @RequestParam("catg_id")String catg_id     // 指标类别编码
   ){
       PageResult pageResult = null;
-      String jsonResult = "";
+
       try{
           pageResult = rcdDtService.selecttixircddtproj(currPage,pageSize,catg_id);
       }catch(Exception e){
           e.printStackTrace();
-          return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标体系类别列表失败", null, "error");
+          return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标体系类别列表失败", null, "error");
       }
-      return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标体系类别列表成功", null, pageResult);
+      return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标体系类别列表成功", null, pageResult);
   }
 
     //根据指标类别查询指标体系类别列表  二级
@@ -210,10 +209,10 @@ public class RcdDtController {
             pageResult = rcdDtService.selecttixircddtprojer(currPage,pageSize,proj_id);
         }catch(Exception e){
             e.printStackTrace();
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标二级体系类别列表失败", null, "error");
+            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标二级体系类别列表失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标二级体系类别列表成功", null, pageResult);
-        return jsonResult;
+      return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标二级体系类别列表成功", null, pageResult);
+
     }
 
 
@@ -230,10 +229,10 @@ public class RcdDtController {
             rcdDtService.inserttixircddtprojer(catg_name,proj_id);
         }catch(Exception e){
             e.printStackTrace();
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增二级指标体系列表失败", null, "error");
+            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增二级指标体系列表失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增二级指标体系列表成功", null, "success");
-        return jsonResult;
+      return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增二级指标体系列表成功", null, "success");
+
     }
 
 
@@ -246,16 +245,14 @@ public class RcdDtController {
             @RequestParam("catg_name") String catg_name,
             @RequestParam("proj_id")String proj_id     // 指标类别编码
     ){
-
-        String jsonResult = "";
         try{
             rcdDtService.updatetixircddtprojer(catg_id,catg_name,proj_id);
         }catch(Exception e){
             e.printStackTrace();
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改二级指标体系列表失败", null, "error");
+            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改二级指标体系列表失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改二级指标体系列表成功", null, "success");
-        return jsonResult;
+     return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改二级指标体系列表成功", null, "success");
+
     }
 
 
@@ -271,12 +268,13 @@ public class RcdDtController {
             @RequestParam("fld_visible") String fld_visible,  //可见范围：0-全部、1-移动端可见、2-PC端可见
             @RequestParam("fld_range") String fld_range,      //取值范围：0-所有、1-移动端、2-PC端
             @RequestParam("fld_is_null") String fld_is_null,
+            @RequestParam("fld_creater") String fld_creater,     //创建人
+            @RequestParam("fld_creater_origin") String fld_creater_origin,   //创建人所属机构
             @RequestParam("dict_content_id") String dict_content_id  //数据字典内容编码
     ){
-        String jsonResult = "";
         if(!catg_id.isEmpty()  && !fld_name.isEmpty()  && !fld_data_type.isEmpty()  && !fld_is_null.isEmpty()  && !fld_type.isEmpty()){
             try{
-                rcdDtService.insertrcddtfld(catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible);
+                rcdDtService.insertrcddtfld(catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_creater,fld_creater_origin);
               int  fid = rcdDtService.selectmax();
               String  fld_id = String.valueOf(fid);
                 if(!fld_id.isEmpty() && !dict_content_id.isEmpty()){
@@ -291,12 +289,12 @@ public class RcdDtController {
                 }
             }catch(Exception e){
                 e.printStackTrace();
-                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增指标类型失败", null, "error");
+                return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增指标类型失败", null, "error");
             }
         }else{
-            return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
+            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
         }
-        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增指标类型成功", null, "success");
+        return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增指标类型成功", null, "success");
     }
 
 
@@ -313,13 +311,15 @@ public class RcdDtController {
             @RequestParam("fld_is_null") String fld_is_null,
             @RequestParam("fld_visible") String fld_visible,  //可见范围：0-全部、1-移动端可见、2-PC端可见
             @RequestParam("fld_range") String fld_range,      //取值范围：0-所有、1-移动端、2-PC端
+            @RequestParam("fld_status") String fld_status,      //指标状态：  0：待审批  1：审批通过  2：审批驳回  3：作废'
+            @RequestParam("fld_creater") String fld_creater,     //创建人
+            @RequestParam("fld_creater_origin") String fld_creater_origin,   //创建人所属机构
             @RequestParam("fld_id") String fld_id,    //指标id
             @RequestParam("dict_content_id") String dict_content_id  //数据字典内容编码数组
     ){
-        String jsonResult = "";
         if(!catg_id.isEmpty()  && !fld_name.isEmpty()  && !fld_data_type.isEmpty()  && !fld_is_null.isEmpty()  && !fld_type.isEmpty()){
             try{
-                rcdDtService.updatercddtfld(fld_id,catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible);
+                rcdDtService.updatercddtfld(fld_id,catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_status,fld_creater,fld_creater_origin);
                 if(!fld_id.isEmpty() && !dict_content_id.isEmpty() ){
                     rcdDtService.deletercddtfldctassign(fld_id);
                    /* dict_content_id.substring(1);
@@ -332,12 +332,12 @@ public class RcdDtController {
                 }
             }catch(Exception e){
                 e.printStackTrace();
-                return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改指标类型失败", null, "error");
+                return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改指标类型失败", null, "error");
             }
         }else{
-            return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
+            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "请确认必填项是否填写内容", null, "error");
         }
-        return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改指标类型成功", null, "success");
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改指标类型成功", null, "success");
     }
 
 
@@ -348,15 +348,15 @@ public class RcdDtController {
     public String updatehuixianrcddtfldctassign(
             @RequestParam("fld_id") String fld_id
             ){
-        List<RcdDtFldCtAssign> ll = new ArrayList<RcdDtFldCtAssign>();
+        List<RcdDtFldCtAssign> ll = null;
         String jsonResult = "";
         try{
             ll  = rcdDtService.updatehuixianrcddtfldctassign(fld_id);
         }catch(Exception e){
             e.printStackTrace();
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改回显对应数据字典失败", null, "error");
+            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改回显对应数据字典失败", null, "error");
         }
-        return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改回显对应数据字典成功", null, ll);
+        return     JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改回显对应数据字典成功", null, ll);
     }
 
 
@@ -367,15 +367,14 @@ public class RcdDtController {
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public String leftrcddtproj(){
-       List<Rcddtproj> ll = new ArrayList<Rcddtproj>();
-        String jsonResult = "";
+       List<Rcddtproj> ll = null;
         try{
             ll  = rcdDtService.leftrcddtprojjblx();
         }catch(Exception e){
             e.printStackTrace();
-           return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "基本类型获取失败", null, "error");
+           return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "基本类型获取失败", null, "error");
         }
-        return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "基本类型获取成功", null, ll);
+        return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "基本类型获取成功", null, ll);
     }
 
     //left类型
@@ -383,15 +382,14 @@ public class RcdDtController {
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public String leftrcddtcatg( @RequestParam("proj_id") String proj_id){
-        List<RcddtCatg> ll = new ArrayList<RcddtCatg>();
-        String jsonResult = "";
+        List<RcddtCatg> ll =null;
         try{
             ll  = rcdDtService.leftrcddtcatglx(proj_id);
         }catch(Exception e){
             e.printStackTrace();
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "类型获取失败", null, "error");
+            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "类型获取失败", null, "error");
         }
-        return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "类型获取成功", null, ll);
+        return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "类型获取成功", null, ll);
     }
 
     //left指标类型
@@ -399,15 +397,15 @@ public class RcdDtController {
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public String leftrcddtfld( @RequestParam("catg_id") String catg_id){
-        List<RcdDtFld> ll = new ArrayList<RcdDtFld>();
-        String jsonResult = "";
+        List<RcdDtFld> ll = null;
+
         try{
             ll  = rcdDtService.leftrcddtfld(catg_id);
         }catch(Exception e){
             e.printStackTrace();
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标类型获取失败", null, "error");
+            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标类型获取失败", null, "error");
         }
-        return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "指标类型获取成功", null, ll);
+        return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "指标类型获取成功", null, ll);
     }
 
 

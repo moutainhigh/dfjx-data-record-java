@@ -7,7 +7,6 @@ import com.datarecord.webapp.submittedBy.service.SubmittedByService;
 import com.datarecord.webapp.sys.origin.service.RecordOriginService;
 import com.datarecord.webapp.sys.origin.tree.EntityTree;
 import com.datarecord.webapp.sys.origin.tree.TreeUtil;
-import com.github.pagehelper.Page;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
@@ -83,15 +82,13 @@ public class SubmittedByController {
             @RequestParam("user_name")String user_name
     ){
         PageResult pageResult = null;
-        String jsonResult = "";
         try{
             pageResult = submittedByService.rcdpersonconfiglist(currPage,pageSize,user_name);
         }catch(Exception e){
             e.printStackTrace();
-            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报人列表失败", null, "error");
+            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报人列表失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取填报人列表成功", null, pageResult);
-        return jsonResult;
+        return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取填报人列表成功", null, pageResult);
     }
 
     //填报人列表rcd_person_config （无分页）
@@ -102,15 +99,13 @@ public class SubmittedByController {
     ){
 
         List<SubmittedBy> pageResult = null;
-        String jsonResult = "";
         try{
             pageResult  = submittedByService.rcdpersonconfiglistwufenye();
         }catch(Exception e){
             e.printStackTrace();
-            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报人列表失败", null, "error");
+            return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报人列表失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取填报人列表成功", null, pageResult);
-        return jsonResult;
+        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取填报人列表成功", null, pageResult);
     }
 
 
@@ -123,16 +118,14 @@ public class SubmittedByController {
             @RequestParam("origin_id")String origin_id
     ){
      //List<Useroriginassign>  ll = new ArrayList<Useroriginassign>();
-      List<Object>  ll = new ArrayList<Object>();
-        String jsonResult = "";
+      List<Object>  ll = null;
         try{
             ll = submittedByService.useroriginassignlist(origin_id);
         }catch(Exception e){
             e.printStackTrace();
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取弹框列表失败", null, "error");
+            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取弹框列表失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取弹框列表成功", null, ll);
-        return jsonResult;
+        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取弹框列表成功", null, ll);
     }
 
     //填报任务填报人维护（获取机构下用户）
@@ -143,16 +136,14 @@ public class SubmittedByController {
             @RequestParam("origin_id")String origin_id
     ){
         //List<Useroriginassign>  ll = new ArrayList<Useroriginassign>();
-        List<Object>  ll = new ArrayList<Object>();
-        String jsonResult = "";
+        List<Object>  ll = null;
         try{
             ll = submittedByService.useroriginassignlistsysorigin(origin_id);
         }catch(Exception e){
             e.printStackTrace();
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报任务中填报人维护获取弹框列表失败", null, "error");
+            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报任务中填报人维护获取弹框列表失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报任务中填报人维护获取弹框列表成功", null, ll);
-        return jsonResult;
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报任务中填报人维护获取弹框列表成功", null, ll);
     }
 
 
@@ -165,15 +156,13 @@ public class SubmittedByController {
             @RequestParam("origin_id")String origin_id,
             @RequestParam("userid")String userid
     ){
-        String jsonResult = "";
         try{
             submittedByService.insertrcdpersonconfig(origin_id,userid);   //新增
         }catch(Exception e){
             e.printStackTrace();
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "失败", null, "error");
+            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "成功", null, "success");
-        return jsonResult;
+        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "成功", null, "success");
     }
 
     //修改确定
@@ -184,16 +173,14 @@ public class SubmittedByController {
             @RequestParam("origin_id")String origin_id,
             @RequestParam("userid")String userid
     ){
-        String jsonResult = "";
         try{
             submittedByService.deletercdpersonconfig(origin_id);   //修改前如有则删除后新增
             submittedByService.insertrcdpersonconfig(origin_id,userid);   //新增
         }catch(Exception e){
             e.printStackTrace();
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "失败", null, "error");
+            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "成功", null, "success");
-        return jsonResult;
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "成功", null, "success");
     }
 
 
@@ -204,16 +191,14 @@ public class SubmittedByController {
     public String selectrcdpersonconfig(
             @RequestParam("origin_id")String origin_id
     ){
-        List<Useroriginassign>  ll = new ArrayList<Useroriginassign>();
-        String jsonResult = "";
+        List<Useroriginassign>  ll = null;
         try{
             ll = submittedByService.selectrcdpersonconfig(origin_id);
         }catch(Exception e){
             e.printStackTrace();
-            return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取弹框列表失败", null, "error");
+            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取弹框列表失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取弹框列表成功", null, ll);
-        return jsonResult;
+        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取弹框列表成功", null, ll);
     }
 
 
@@ -224,15 +209,13 @@ public class SubmittedByController {
     public String deletercdpersonconfig(
             @RequestParam("user_id")String user_id
     ){
-        String jsonResult = "";
         try{
             submittedByService.deletercdpersonconfigbyuserid(user_id);   //根据用户id删除
         }catch(Exception e){
             e.printStackTrace();
-            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除失败", null, "error");
+            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除失败", null, "error");
         }
-        jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除成功", null, "success");
-        return jsonResult;
+        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除成功", null, "success");
     }
 
 
