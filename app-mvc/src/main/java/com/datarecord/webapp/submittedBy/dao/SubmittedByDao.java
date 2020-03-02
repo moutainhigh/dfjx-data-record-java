@@ -1,6 +1,7 @@
 package com.datarecord.webapp.submittedBy.dao;
 
 import com.datarecord.webapp.submittedBy.bean.Origin;
+import com.datarecord.webapp.submittedBy.bean.Originss;
 import com.datarecord.webapp.submittedBy.bean.SubmittedBy;
 import com.datarecord.webapp.submittedBy.bean.Useroriginassign;
 import com.datarecord.webapp.utils.EntityTree;
@@ -19,7 +20,7 @@ public interface SubmittedByDao {
 
     @Select("SELECT origin_id AS  id,origin_name AS  label,parent_origin_id AS parentId " +
             " FROM sys_origin  where origin_status != 3   AND  parent_origin_id = #{orgId} ")
-    List<Origin> listOrgData(@Param("orgId") String orgId);
+    List<Originss> listOrgData(@Param("orgId") String orgId);
 
 
     @Select("<script>SELECT " +
@@ -29,9 +30,30 @@ public interface SubmittedByDao {
             "            rcd_person_config a" +
             "            LEFT JOIN user b ON a.user_id = b.user_id" +
             "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id " +
-            "             WHERE  1=1 " +
-            "<if test = \"user_name != null and user_name != ''\"> AND b.user_name_cn like concat('%',#{user_name},'%') </if> </script>")
-    Page<SubmittedBy> rcdpersonconfiglist(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("user_name") String user_name);
+            "             WHERE  1=1  " +
+            " <if test='originIds!=null'> and c.origin_id  in  " +
+            "  <foreach item=\"item\" index=\"index\" collection=\"originIds\" open=\"(\" separator=\",\" close=\")\">" +
+            "  #{item}" +
+            "  </foreach>"+
+            " </if>" +
+            " <if test = \"user_name != null and user_name != ''\"> AND b.user_name_cn like concat('%',#{user_name},'%') </if> </script>")
+    Page<SubmittedBy> rcdpersonconfiglist(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("user_name") String user_name,@Param("originIds") List<Integer> originIds    );
+
+
+    @Select("<script>SELECT " +
+            "           a.*, b.user_name_cn," +
+            "            c.origin_name" +
+            "            FROM " +
+            "            rcd_person_config a" +
+            "            LEFT JOIN user b ON a.user_id = b.user_id" +
+            "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id " +
+            "             WHERE  1=1   and  c.origin_id  = #{originid} " +
+            " <if test = \"user_name != null and user_name != ''\"> AND b.user_name_cn like concat('%',#{user_name},'%') </if> </script>")
+    Page<SubmittedBy> rcdpersonconfiglistByid(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("user_name") String user_name,@Param("originid") String originid    );
+
+
+
+
 
     @Select("<script> SELECT" +
             " a.user_id," +
@@ -96,12 +118,30 @@ public interface SubmittedByDao {
     List<String> selectuserid(@Param("user_id") String user_id);
 
 
-    @Select("SELECT  " +
+    @Select("<script>SELECT  " +
             "           a.*, b.user_name_cn, " +
             "            c.origin_name " +
             "            FROM  " +
             "            rcd_person_config a " +
             "            LEFT JOIN user b ON a.user_id = b.user_id " +
-            "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id  " )
-    List<SubmittedBy> rcdpersonconfiglistwufenye();
+            "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id " +
+            " <if test='originIds!=null'> and c.origin_id  in  " +
+            "  <foreach item=\"item\" index=\"index\" collection=\"originIds\" open=\"(\" separator=\",\" close=\")\">" +
+            "  #{item}" +
+            "  </foreach>"+
+            " </if>" +
+            " </script>" )
+    List<SubmittedBy> rcdpersonconfiglistwufenye(@Param("originIds") List<Integer> originIds);
+
+
+    @Select("<script>SELECT  " +
+            "           a.*, b.user_name_cn, " +
+            "            c.origin_name " +
+            "            FROM  " +
+            "            rcd_person_config a " +
+            "            LEFT JOIN user b ON a.user_id = b.user_id " +
+            "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id " +
+            "  where 1=1  and c.origin_id   = #{originid} " +
+            " </script>" )
+    List<SubmittedBy> rcdpersonconfiglistwufeByid(@Param("originid") String originid);
 }

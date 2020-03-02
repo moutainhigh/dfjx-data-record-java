@@ -1,11 +1,12 @@
 package com.datarecord.webapp.submittedBy.service.imp;
 
 import com.datarecord.webapp.datadictionary.service.imp.DataDictionaryServiceImp;
-import com.datarecord.webapp.submittedBy.bean.Origin;
+import com.datarecord.webapp.submittedBy.bean.Originss;
 import com.datarecord.webapp.submittedBy.bean.SubmittedBy;
 import com.datarecord.webapp.submittedBy.bean.Useroriginassign;
 import com.datarecord.webapp.submittedBy.dao.SubmittedByDao;
 import com.datarecord.webapp.submittedBy.service.SubmittedByService;
+import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.service.OriginService;
 import com.datarecord.webapp.utils.EntityTree;
 import com.github.pagehelper.Page;
@@ -38,15 +39,25 @@ public class SubmittedByServiceImp  implements SubmittedByService {
     }
 */
     @Override
-    public List<Origin> listOrgData(String orgId) {
-        List<Origin> entityTrees = submittedByDao.listOrgData(orgId);
+    public List<Originss> listOrgData(String orgId) {
+        List<Originss> entityTrees = submittedByDao.listOrgData(orgId);
         return  entityTrees;
     }
 
     @Override
-    public PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name) {
+    public PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name,Origin userOrigin) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
-        Page<SubmittedBy> contactPageDatas = submittedByDao.rcdpersonconfiglist(currPage, pageSize,user_name);
+        List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
+        List<Integer> originIds  = new ArrayList<>();
+        for (com.datarecord.webapp.sys.origin.entity.Origin childrenOrigin : childrenOrigins) {
+            originIds.add(childrenOrigin.getOrigin_id()); }
+        Page<SubmittedBy> contactPageDatas = null;
+        if(originIds.size() != 0){
+            contactPageDatas = submittedByDao.rcdpersonconfiglist(currPage, pageSize,user_name,originIds);
+        }else {
+            String originid  = userOrigin.getOrigin_id().toString();
+            contactPageDatas = submittedByDao.rcdpersonconfiglistByid(currPage, pageSize,user_name,originid);
+        }
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
         return pageContactResult;
@@ -55,7 +66,7 @@ public class SubmittedByServiceImp  implements SubmittedByService {
     @Override
     public List<Object> useroriginassignlist(String origin_id) {
       List<Object> list = new ArrayList<>();
-        List<com.datarecord.webapp.sys.origin.entity.Origin> childrenOrigins = originService.checkAllChildren(Integer.valueOf(origin_id));
+        List<Origin> childrenOrigins = originService.checkAllChildren(Integer.valueOf(origin_id));
         List<Integer> originIds  = new ArrayList<>();
         for (com.datarecord.webapp.sys.origin.entity.Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id()); }
@@ -73,7 +84,7 @@ public class SubmittedByServiceImp  implements SubmittedByService {
     @Override
     public List<Object> useroriginassignlistsysorigin(String origin_id) {
         List<Object> list = new ArrayList<>();
-        List<com.datarecord.webapp.sys.origin.entity.Origin> childrenOrigins = originService.checkAllChildren(Integer.valueOf(origin_id));
+        List<Origin> childrenOrigins = originService.checkAllChildren(Integer.valueOf(origin_id));
         List<Integer> originIds  = new ArrayList<>();
         for (com.datarecord.webapp.sys.origin.entity.Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id()); }
@@ -88,8 +99,17 @@ public class SubmittedByServiceImp  implements SubmittedByService {
     }
 
     @Override
-    public List<SubmittedBy> rcdpersonconfiglistwufenye() {
-        return submittedByDao.rcdpersonconfiglistwufenye();
+    public List<SubmittedBy> rcdpersonconfiglistwufenye(Origin userOrigin) {
+        List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
+        List<Integer> originIds  = new ArrayList<>();
+        for (com.datarecord.webapp.sys.origin.entity.Origin childrenOrigin : childrenOrigins) {
+            originIds.add(childrenOrigin.getOrigin_id()); }
+        if(originIds.size() != 0){
+            return submittedByDao.rcdpersonconfiglistwufenye(originIds);
+        }else {
+            String originid  = userOrigin.getOrigin_id().toString();
+            return submittedByDao.rcdpersonconfiglistwufeByid(originid);
+        }
     }
 
 

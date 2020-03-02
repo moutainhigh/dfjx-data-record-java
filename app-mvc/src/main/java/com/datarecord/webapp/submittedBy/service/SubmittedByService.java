@@ -1,9 +1,9 @@
 package com.datarecord.webapp.submittedBy.service;
 
-import com.datarecord.webapp.submittedBy.bean.Origin;
+import com.datarecord.webapp.submittedBy.bean.Originss;
+import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.submittedBy.bean.SubmittedBy;
 import com.datarecord.webapp.submittedBy.bean.Useroriginassign;
-import com.datarecord.webapp.utils.EntityTree;
 import com.webapp.support.page.PageResult;
 
 import java.util.List;
@@ -12,9 +12,9 @@ public interface SubmittedByService {
 
  /*   String selectOrgId(int user_id);
 */
-    List<Origin> listOrgData(String orgId);
+    List<Originss> listOrgData(String orgId);
 
-    PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name);
+    PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name,Origin userOrigin);
 
     List<Object> useroriginassignlist(String origin_id);
 
@@ -28,5 +28,5 @@ public interface SubmittedByService {
 
     List<Object> useroriginassignlistsysorigin(String origin_id);
 
-   List<SubmittedBy> rcdpersonconfiglistwufenye();
+   List<SubmittedBy> rcdpersonconfiglistwufenye(Origin userOrigin);
 }

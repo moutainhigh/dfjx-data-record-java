@@ -1,15 +1,19 @@
 package com.datarecord.webapp.submittedBy.controller;
 
-import com.datarecord.webapp.submittedBy.bean.Origin;
+import com.datarecord.webapp.submittedBy.bean.Originss;
 import com.datarecord.webapp.submittedBy.bean.SubmittedBy;
 import com.datarecord.webapp.submittedBy.bean.Useroriginassign;
 import com.datarecord.webapp.submittedBy.service.SubmittedByService;
+import com.datarecord.webapp.sys.origin.entity.Origin;
+import com.datarecord.webapp.sys.origin.service.OriginService;
 import com.datarecord.webapp.sys.origin.service.RecordOriginService;
 import com.datarecord.webapp.sys.origin.tree.EntityTree;
 import com.datarecord.webapp.sys.origin.tree.TreeUtil;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
+import com.workbench.auth.user.entity.User;
+import com.workbench.shiro.WorkbenchShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,6 +37,9 @@ public class SubmittedByController {
 
     @Autowired
     private RecordOriginService recordOriginService;
+
+    @Autowired
+    private OriginService originService;
 
     //组织机构
     @RequestMapping("/getOriginDatas")
@@ -64,7 +71,7 @@ public class SubmittedByController {
       //  String orgId = "0";
       //  Map<String, Object> returnmap = new HashMap<>();
       //  MenuTreeUtil menuTree = new MenuTreeUtil();
-        List<Origin> list =  submittedByService.listOrgData(orgId);
+        List<Originss> list =  submittedByService.listOrgData(orgId);
       //  List<Object> menuList = menuTree.menuList(list,orgId);
      //   returnmap.put("list", menuList);
         String jsonpResponse = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取成功", null, list);
@@ -83,7 +90,9 @@ public class SubmittedByController {
     ){
         PageResult pageResult = null;
         try{
-            pageResult = submittedByService.rcdpersonconfiglist(currPage,pageSize,user_name);
+            User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+            Origin userOrigin = originService.getOriginByUser(user.getUser_id());
+            pageResult = submittedByService.rcdpersonconfiglist(currPage,pageSize,user_name,userOrigin);
         }catch(Exception e){
             e.printStackTrace();
             return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报人列表失败", null, "error");
@@ -97,10 +106,11 @@ public class SubmittedByController {
     @CrossOrigin(allowCredentials="true")
     public String rcdpersonconfiglistwu(
     ){
-
         List<SubmittedBy> pageResult = null;
         try{
-            pageResult  = submittedByService.rcdpersonconfiglistwufenye();
+            User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+            Origin userOrigin = originService.getOriginByUser(user.getUser_id());
+            pageResult  = submittedByService.rcdpersonconfiglistwufenye(userOrigin);
         }catch(Exception e){
             e.printStackTrace();
             return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报人列表失败", null, "error");
@@ -117,7 +127,6 @@ public class SubmittedByController {
     public String useroriginassignlist(
             @RequestParam("origin_id")String origin_id
     ){
-     //List<Useroriginassign>  ll = new ArrayList<Useroriginassign>();
       List<Object>  ll = null;
         try{
             ll = submittedByService.useroriginassignlist(origin_id);
