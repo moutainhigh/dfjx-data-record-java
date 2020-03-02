@@ -47,9 +47,9 @@ public interface IRecordUserDao {
             "            rcd_person_config a" +
             "            inner JOIN user b ON a.user_id = b.user_id" +
             "            inner JOIN sys_origin c ON a.origin_id = c.origin_id " +
-            "             WHERE  1=1   and  c.origin_id  = #{originid} " +
+            "             WHERE  1=1   and b.user_name_cn != ''   " +
             " <if test = \"user_name != null and user_name != ''\"> AND b.user_name_cn like concat('%',#{user_name},'%') </if> </script>")
-    Page<RecordUser> rcdpersonconfiglistByid(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("user_name") String user_name, @Param("originid") String originid    );
+    Page<RecordUser> rcdpersonconfiglistByid(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("user_name") String user_name);
 
 
 
@@ -154,9 +154,9 @@ public interface IRecordUserDao {
             "            rcd_person_config a " +
             "            LEFT JOIN user b ON a.user_id = b.user_id " +
             "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id " +
-            "  where 1=1  and c.origin_id   = #{originid} " +
+            "  where 1=1  and b.user_name_cn != ''  " +
             " </script>" )
-    List<RecordUser> rcdpersonconfiglistwufeByid(@Param("originid") String originid);
+    List<RecordUser> rcdpersonconfiglistwufeByid();
 
     @Select("SELECT  " +
             "u.user_id, " +

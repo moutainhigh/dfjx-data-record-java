@@ -89,9 +89,10 @@ public class RecordUserController {
     ){
         PageResult pageResult = null;
         try{
-            User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+          /*  User user = WorkbenchShiroUtils.checkUserFromShiroContext();
             Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            pageResult = recordUserService.rcdpersonconfiglist(currPage,pageSize,user_name,userOrigin);
+            pageResult = recordUserService.rcdpersonconfiglist(currPage,pageSize,user_name,userOrigin);*/
+            pageResult = recordUserService.rcdpersonconfiglist(currPage,pageSize,user_name);
         }catch(Exception e){
             e.printStackTrace();
             return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报人列表失败", null, "error");
@@ -107,9 +108,10 @@ public class RecordUserController {
     ){
         List<RecordUser> pageResult = null;
         try{
-            User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+          /*  User user = WorkbenchShiroUtils.checkUserFromShiroContext();
             Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            pageResult  = recordUserService.rcdpersonconfiglistwufenye(userOrigin);
+            pageResult  = recordUserService.rcdpersonconfiglistwufenye(userOrigin);*/
+            pageResult  = recordUserService.rcdpersonconfiglistwufenye();
         }catch(Exception e){
             e.printStackTrace();
             return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报人列表失败", null, "error");
@@ -182,8 +184,7 @@ public class RecordUserController {
             @RequestParam("userid")String userid
     ){
         try{
-            recordUserService.deletercdpersonconfig(origin_id);   //修改前如有则删除后新增
-            recordUserService.insertrcdpersonconfig(origin_id,userid);   //新增
+            recordUserService.updaterRdpersonconfig(origin_id,userid);   //xiugai
         }catch(Exception e){
             e.printStackTrace();
             return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "失败", null, "error");
