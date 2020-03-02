@@ -15,7 +15,7 @@ public interface ReportingGroupDao {
             "  <foreach item=\"item\" index=\"index\" collection=\"originIds\" open=\"(\" separator=\",\" close=\")\">" +
             "  #{item}" +
             "  </foreach>"+
-            " (#{originid}) </script>")
+            "  </script>")
     List<rcdJobConfig> leftrcdjobconfig(@Param("originIds") List<Integer> originIds);
 
     @Select("SELECT job_unit_id,job_unit_name,job_unit_active FROM rcd_job_unit_config where job_id =#{job_id}")
