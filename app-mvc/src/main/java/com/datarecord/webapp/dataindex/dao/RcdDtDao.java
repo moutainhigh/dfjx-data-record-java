@@ -89,8 +89,8 @@ public interface RcdDtDao {
             "FROM " +
             " rcd_dt_catg " +
             "WHERE " +
-            " proj_id = #{proj_id}  and   catg_creater  = #{user_id}" +
-            "GROUP BY " +
+            " proj_id = #{proj_id}  and   catg_creater  = #{user_id} " +
+            "  GROUP BY  " +
             " catg_id ")
     List<RcddtCatg> leftrcddtcatglx(@Param("proj_id") String proj_id,@Param("user_id") int user_id);
 
