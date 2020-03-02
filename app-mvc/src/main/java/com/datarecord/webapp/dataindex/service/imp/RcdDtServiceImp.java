@@ -39,8 +39,8 @@ public class RcdDtServiceImp  implements RcdDtService {
     private OriginService originService;
 
     @Override
-    public void insertrcddtproj(String proj_name, String is_actived) {
-        rcdDtDao.insertrcddtproj(proj_name,is_actived);
+    public void insertrcddtproj(String proj_name, String is_actived,int user_id,int originid) {
+        rcdDtDao.insertrcddtproj(proj_name,is_actived,user_id,originid);
     }
 
     @Override
@@ -73,9 +73,9 @@ public class RcdDtServiceImp  implements RcdDtService {
     }
 
     @Override
-    public PageResult selecttixircddtproj(int currPage, int pageSize, String catg_id) {
+    public PageResult selecttixircddtproj(int currPage, int pageSize, String catg_id,int user_id) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
-        Page<RcdDt> contactPageDatas = rcdDtDao.selecttixircddtproj(currPage, pageSize,catg_id);
+        Page<RcdDt> contactPageDatas = rcdDtDao.selecttixircddtproj(currPage, pageSize,catg_id,user_id);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
         return pageContactResult;
@@ -108,26 +108,26 @@ public class RcdDtServiceImp  implements RcdDtService {
 
 
     @Override
-    public List<Rcddtproj> leftrcddtprojjblx(Origin userOrigin) {
-        String originid = userOrigin.getOrigin_id().toString();
-        return rcdDtDao.leftrcddtprojjblx(originid);
+    public List<Rcddtproj> leftrcddtprojjblx(int user_id) {
+      //  String originid = userOrigin.getOrigin_id().toString();
+        return rcdDtDao.leftrcddtprojjblx(user_id);
     }
 
     @Override
-    public List<RcddtCatg> leftrcddtcatglx(String proj_id,Origin userOrigin) {
-        String originid = userOrigin.getOrigin_id().toString();
-        return rcdDtDao.leftrcddtcatglx(proj_id,originid);
+    public List<RcddtCatg> leftrcddtcatglx(String proj_id,int user_id) {
+       // String originid = userOrigin.getOrigin_id().toString();
+        return rcdDtDao.leftrcddtcatglx(proj_id,user_id);
     }
 
     @Override
-    public List<RcdDtFld> leftrcddtfld(String catg_id) {
-        return rcdDtDao.leftrcddtfld(catg_id);
+    public List<RcdDtFld> leftrcddtfld(String catg_id,int user_id) {
+        return rcdDtDao.leftrcddtfld(catg_id,user_id);
     }
 
     @Override
-    public PageResult selecttixircddtprojer(int currPage, int pageSize, String proj_id,Origin userOrigin) {
+    public PageResult selecttixircddtprojer(int currPage, int pageSize, String proj_id,Origin userOrigin,int user_id) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
-        List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
+      /*  List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
         childrenOrigins.add(0,userOrigin);
         List<Integer> originIds  = new ArrayList<>();
         for (Origin childrenOrigin : childrenOrigins) {
@@ -139,11 +139,17 @@ public class RcdDtServiceImp  implements RcdDtService {
         }else{
             String originid = userOrigin.getOrigin_id().toString();
             contactPageDatas = rcdDtDao.selecttixircddtprojerByid(currPage, pageSize,proj_id,originid);
-        }
+
+        }*/
+        Page<DataDictionary>      contactPageDatas = rcdDtDao.selecttixircddtprojerByid(currPage, pageSize,proj_id,user_id);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
         return pageContactResult;
     }
+
+
+
+
 
     @Override
     public int selectmax() {
@@ -151,8 +157,8 @@ public class RcdDtServiceImp  implements RcdDtService {
     }
 
     @Override
-    public void inserttixircddtprojer(String catg_name, String proj_id) {
-         rcdDtDao.inserttixircddtprojer(catg_name,proj_id);
+    public void inserttixircddtprojer(String catg_name, String proj_id,int user_id,int originid) {
+         rcdDtDao.inserttixircddtprojer(catg_name,proj_id,user_id,originid);
     }
 
     @Override

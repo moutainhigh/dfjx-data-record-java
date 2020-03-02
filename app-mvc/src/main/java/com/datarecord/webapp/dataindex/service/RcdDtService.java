@@ -12,13 +12,13 @@ import java.util.List;
 
 public interface RcdDtService {
 
-    void insertrcddtproj(String proj_name, String is_actived);
+    void insertrcddtproj(String proj_name, String is_actived,int user_id,int originid);
 
     PageResult selectrcddtproj(int currPage, int pageSize,Origin userOrigin,int user_id);
 
     void updatercddtproj(String proj_name, String is_actived, String proj_id);
 
-    PageResult selecttixircddtproj(int currPage, int pageSize, String catg_id);
+    PageResult selecttixircddtproj(int currPage, int pageSize, String catg_id,int user_id );
 
     void insertrcddtfld(ReportFldConfig reportFldConfig);
 
@@ -32,17 +32,17 @@ public interface RcdDtService {
 
 
 
-    List<Rcddtproj> leftrcddtprojjblx(Origin userOrigin);
+    List<Rcddtproj> leftrcddtprojjblx(int  user_id);
 
-    List<RcddtCatg> leftrcddtcatglx(String proj_id,Origin userOrigin);
+    List<RcddtCatg> leftrcddtcatglx(String proj_id,int user_id);
 
-    List<RcdDtFld> leftrcddtfld(String catg_id);
+    List<RcdDtFld> leftrcddtfld(String catg_id,int user_id);
 
-    PageResult selecttixircddtprojer(int currPage, int pageSize, String proj_id,Origin userOrigin);
+    PageResult selecttixircddtprojer(int currPage, int pageSize, String proj_id,Origin userOrigin,int user_id);
 
     int selectmax();
 
-    void inserttixircddtprojer(String catg_name, String proj_id);
+    void inserttixircddtprojer(String catg_name, String proj_id,int user_id,int originid);
 
     void updatetixircddtprojer(String catg_id, String catg_name, String proj_id);
 
