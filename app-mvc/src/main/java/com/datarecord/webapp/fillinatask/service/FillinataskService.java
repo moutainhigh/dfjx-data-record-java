@@ -1,6 +1,7 @@
 package com.datarecord.webapp.fillinatask.service;
 
 import com.datarecord.webapp.fillinatask.bean.Fillinatask;
+import com.datarecord.webapp.fillinatask.bean.Lieming;
 import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
 import com.github.pagehelper.Page;
@@ -37,4 +38,12 @@ public interface FillinataskService {
     List<Fillinatask> selectrcdjobconfigjobid(String job_id);
 
     void deletercdjobpersonassignbyuseridandjobid(String job_id, String user_id);
+
+    String selectrcdjobconfig(int jobid);
+
+    String selectrcdjobunitconfig(String unitId);
+
+
+
+    List<Lieming> selectrcdreportdatajob(int jobid, int reportid, String unitId, String fldids);
 }

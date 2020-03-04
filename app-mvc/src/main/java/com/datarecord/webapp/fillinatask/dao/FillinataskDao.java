@@ -1,6 +1,7 @@
 package com.datarecord.webapp.fillinatask.dao;
 
 import com.datarecord.webapp.fillinatask.bean.Fillinatask;
+import com.datarecord.webapp.fillinatask.bean.Lieming;
 import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
 import com.github.pagehelper.Page;
@@ -14,7 +15,7 @@ public interface FillinataskDao {
     @Select("<script> select * from  rcd_job_config where 1=1 " +
             "<if test = \"job_name != null and job_name != ''\"> AND job_name like concat('%',#{job_name},'%') </if> "+
             "<if test = \"job_status != null and job_status != ''\"> AND job_status =#{job_status} </if> "+
-            "</script> ")
+            " order by job_start_dt desc </script> ")
     Page<Fillinatask> rcdjobconfiglist(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("job_name") String job_name, @Param("job_status") String job_status);
 
     @Insert("INSERT INTO rcd_job_config(job_name,job_start_dt,job_end_dt)  VALUES(#{job_name},#{job_start_dt},#{job_end_dt})")
@@ -58,4 +59,17 @@ public interface FillinataskDao {
 
     @Delete("delete from rcd_job_person_assign  WHERE job_id = #{job_id}  AND  user_id =#{user_id}")
     void deletercdjobpersonassignbyuseridandjobid(@Param("job_id")String job_id, @Param("user_id")String user_id);
+
+
+    @Select("select  job_name from rcd_job_config  where job_id = #{jobid} groupby job_name")
+    String selectrcdjobconfig(@Param("jobid")int jobid);
+
+
+    @Select("select job_unit_name  from rcd_job_unit_config  where  job_unit_id = #{unitId} groupby job_unit_name")
+    String selectrcdjobunitconfig(@Param("unitId")String unitId);
+
+
+
+    @Select("SELECT a.record_data,b.fld_name  from  rcd_report_data_job${jobId}  a  LEFT JOIN   rcd_dt_fld  b  on a.fld_id = b.fld_id   where  a.report_id = #{reportId} and  a.unit_id = #{unitId}  and  a.fld_id  in  (#{fldids})     ")
+    List<Lieming> selectrcdreportdatajob(int jobid, int reportid, String unitId, String fldids);
 }

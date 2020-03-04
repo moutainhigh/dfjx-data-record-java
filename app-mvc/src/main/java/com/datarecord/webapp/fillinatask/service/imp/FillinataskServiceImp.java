@@ -2,6 +2,7 @@ package com.datarecord.webapp.fillinatask.service.imp;
 
 import com.datarecord.webapp.datadictionary.service.imp.DataDictionaryServiceImp;
 import com.datarecord.webapp.fillinatask.bean.Fillinatask;
+import com.datarecord.webapp.fillinatask.bean.Lieming;
 import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
 import com.datarecord.webapp.fillinatask.dao.FillinataskDao;
@@ -105,5 +106,21 @@ public class FillinataskServiceImp implements FillinataskService {
     @Override
     public void deletercdjobpersonassignbyuseridandjobid(String job_id, String user_id) {
         fillinataskDao.deletercdjobpersonassignbyuseridandjobid(job_id,user_id);
+    }
+
+    @Override
+    public String selectrcdjobconfig(int jobid) {
+        return fillinataskDao.selectrcdjobconfig(jobid);
+    }
+
+    @Override
+    public String selectrcdjobunitconfig(String unitId) {
+        return fillinataskDao.selectrcdjobunitconfig(unitId);
+    }
+
+
+    @Override
+    public List<Lieming> selectrcdreportdatajob(int jobid, int reportid, String unitId, String fldids) {
+        return fillinataskDao.selectrcdreportdatajob(jobid,reportid,unitId,fldids);
     }
 }
