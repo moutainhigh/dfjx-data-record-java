@@ -38,6 +38,7 @@ public class ReportingGroupController {
        try{
            ll  = reportingGroupService.leftrcdjobconfig();
        }catch(Exception e){
+           e.printStackTrace();
            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "left填报任务获取失败", null, "error");
        }
        return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "left填报任务获取成功", null, ll);
@@ -58,6 +59,7 @@ public class ReportingGroupController {
         try{
             pageResult = reportingGroupService.rcdjobunitconfiglist(currPage,pageSize,job_id);
         }catch(Exception e){
+            e.printStackTrace();
             return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报组列表失败", null, "error");
         }
         jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取填报组列表成功", null, pageResult);
@@ -78,6 +80,7 @@ public class ReportingGroupController {
         try{
             reportingGroupService.insertrcdjobunitconfig(job_id,job_unit_name,job_unit_active,job_unit_type);
         }catch(Exception e){
+            e.printStackTrace();
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除失败", null, "error");
         }
         return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除成功", null, "success");
@@ -96,6 +99,7 @@ public class ReportingGroupController {
         try{
            list = reportingGroupService.selectrcdjobunitconfigByjobunitid(job_unit_id);
         }catch(Exception e){
+            e.printStackTrace();
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报组回显失败", null, "error");
         }
         return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报组回显成功", null, list);
@@ -118,6 +122,7 @@ public class ReportingGroupController {
         try{
             reportingGroupService.updatercdjobunitconfig(job_unit_id,job_unit_name,job_unit_active,job_unit_type);
         }catch(Exception e){
+            e.printStackTrace();
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报组修改失败", null, "error");
         }
         return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报组修改成功", null, "success");
@@ -140,6 +145,7 @@ public class ReportingGroupController {
        try{
           reportingGroupService.deletercdjobunitconfig(job_unit_id);
         }catch(Exception e){
+           e.printStackTrace();
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除失败", null, "error");
         }
         return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除成功", null, "success");
@@ -157,6 +163,7 @@ public class ReportingGroupController {
         try{
             ll  = reportingGroupService.selectrcdjobunitfld(job_unit_id);   //查出有关联的指标id
         }catch(Exception e){
+            e.printStackTrace();
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "left填报任务获取失败", null, "error");
         }
         return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "left填报任务获取成功", null, ll);
@@ -176,6 +183,7 @@ public class ReportingGroupController {
             reportingGroupService.rcdjobunitflddelete(jobunitid);  //删除之前关系
             reportingGroupService.rcdjobunitfld(fld_id,jobunitid);  //新增关系
         }catch(Exception e){
+            e.printStackTrace();
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增填报组与指标关联关系维护失败", null, "error");
         }
         return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增填报组与指标关联关系维护成功", null, "success");

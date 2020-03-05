@@ -36,6 +36,7 @@ public class DataDictionaryController {
             try{
                 dataDictionaryService.insertDataDictionary(dict_name);
             }catch(Exception e){
+                e.printStackTrace();
                 return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增数据字典类型失败", null, "error");
             }
         }else{
@@ -57,6 +58,7 @@ public class DataDictionaryController {
             try{
                 dataDictionaryService.updateDataDictionarybydictid(dict_id,dict_name);
             }catch(Exception e){
+                e.printStackTrace();
                 return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "数据字典修改失败", null, "error");
             }
         return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "数据字典修改成功", null, "success");
@@ -80,6 +82,7 @@ public class DataDictionaryController {
             }
             dataDictionaryService.deleteDataDictionarybydictid(dict_id);
         }catch(Exception e){
+            e.printStackTrace();
             return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除字典类型失败", null, "error");
         }
         return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除字典类型成功", null, "success");
@@ -99,6 +102,7 @@ public class DataDictionaryController {
         try{
             pageResult = dataDictionaryService.dataDictionarylist(currPage,pageSize);
         }catch(Exception e){
+            e.printStackTrace();
             jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取数据字典列表失败", null, "error");
         }
         jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取数据字典列表成功", null, pageResult);
@@ -121,6 +125,7 @@ public class DataDictionaryController {
         try{
             pageResult = dataDictionaryService.selectDataDictionary(currPage,pageSize,dict_id);
         }catch(Exception e){
+            e.printStackTrace();
             return jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取数据内容列表失败", null, "error");
         }
         jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取数据内容列表成功", null, pageResult);
@@ -142,6 +147,7 @@ public class DataDictionaryController {
              try{
                  dataDictionaryService.inserttypeDataDictionary(dict_id,dict_content_name,dict_content_value);
              }catch(Exception e){
+                 e.printStackTrace();
                  return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增数据字典内容失败", null, "error");
              }
          }else{
@@ -168,6 +174,7 @@ public class DataDictionaryController {
             try{
                 dataDictionaryService.updateDataDictionary(dict_content_id,dict_id,dict_content_name,dict_content_value);
             }catch(Exception e){
+                e.printStackTrace();
                 return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "数据字段内容修改失败", null, "error");
             }
         }else{
@@ -198,6 +205,7 @@ public class DataDictionaryController {
                     dataDictionaryService.deleteDataDictionary(dict_content_id);
                 }
             }catch(Exception e){
+                e.printStackTrace();
                 return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "数据字段内容删除失败", null, "error");
             }
         }else{
@@ -219,6 +227,7 @@ public class DataDictionaryController {
         try{
             ll = dataDictionaryService.selectleftDataDictionary();
         }catch(Exception e){
+            e.printStackTrace();
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取菜单列表失败", null, "error");
         }
         jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取菜单列表成功", null, ll);

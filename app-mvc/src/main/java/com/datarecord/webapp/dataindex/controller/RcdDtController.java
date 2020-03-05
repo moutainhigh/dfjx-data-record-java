@@ -43,6 +43,7 @@ public class RcdDtController {
             try{
                 rcdDtService.insertrcddtproj(proj_name,is_actived);
             }catch(Exception e){
+                e.printStackTrace();
                 return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增基本类型失败", null, "error");
             }
         }else{
@@ -71,6 +72,7 @@ public class RcdDtController {
                 }
                 rcdDtService.deletercddtproj(proj_id);   //一级二级  proj_id
             }catch(Exception e){
+                e.printStackTrace();
                 return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除基本类型失败", null, "error");
             }
         return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除基本类型成功", null, "success");
@@ -94,6 +96,7 @@ public class RcdDtController {
                 rcdDtService.deleteererrcddtfld(catg_id);   // rcd_dt_fld   三级  catg_id
             }
         }catch(Exception e){
+            e.printStackTrace();
             return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除二级基本类型失败", null, "error");
         }
         return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除二级基本类型成功", null, "success");
@@ -115,6 +118,7 @@ public class RcdDtController {
                 rcdDtService.deletercddtfld(fld_id);
             }
         }catch(Exception e){
+            e.printStackTrace();
             return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除三级基本类型失败", null, "error");
         }
         return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除三级基本类型成功", null, "success");
@@ -134,6 +138,7 @@ public class RcdDtController {
         try{
             pageResult = rcdDtService.selectrcddtproj(currPage,pageSize);
         }catch(Exception e){
+            e.printStackTrace();
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标体系基本类别列表失败", null, "error");
         }
         return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标体系基本类别列表成功", null, pageResult);
@@ -154,6 +159,7 @@ public class RcdDtController {
             try{
                 rcdDtService.updatercddtproj(proj_name,is_actived,proj_id);
             }catch(Exception e){
+                e.printStackTrace();
                 return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改指标体系基本类别修改失败", null, "error");
             }
         }else{
@@ -183,6 +189,7 @@ public class RcdDtController {
       try{
           pageResult = rcdDtService.selecttixircddtproj(currPage,pageSize,catg_id);
       }catch(Exception e){
+          e.printStackTrace();
           return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标体系类别列表失败", null, "error");
       }
       return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标体系类别列表成功", null, pageResult);
@@ -202,6 +209,7 @@ public class RcdDtController {
         try{
             pageResult = rcdDtService.selecttixircddtprojer(currPage,pageSize,proj_id);
         }catch(Exception e){
+            e.printStackTrace();
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标二级体系类别列表失败", null, "error");
         }
         jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取指标二级体系类别列表成功", null, pageResult);
@@ -221,6 +229,7 @@ public class RcdDtController {
         try{
             rcdDtService.inserttixircddtprojer(catg_name,proj_id);
         }catch(Exception e){
+            e.printStackTrace();
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增二级指标体系列表失败", null, "error");
         }
         jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增二级指标体系列表成功", null, "success");
@@ -242,6 +251,7 @@ public class RcdDtController {
         try{
             rcdDtService.updatetixircddtprojer(catg_id,catg_name,proj_id);
         }catch(Exception e){
+            e.printStackTrace();
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改二级指标体系列表失败", null, "error");
         }
         jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改二级指标体系列表成功", null, "success");
@@ -280,6 +290,7 @@ public class RcdDtController {
                         //rcdDtService.updatercddtdict(dict_content_id[i]);  //数据字典修改使用状态
                 }
             }catch(Exception e){
+                e.printStackTrace();
                 return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增指标类型失败", null, "error");
             }
         }else{
@@ -320,6 +331,7 @@ public class RcdDtController {
                     //rcdDtService.updatercddtdict(dict_content_id[i]);  //数据字典修改使用状态
                 }
             }catch(Exception e){
+                e.printStackTrace();
                 return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改指标类型失败", null, "error");
             }
         }else{
@@ -341,6 +353,7 @@ public class RcdDtController {
         try{
             ll  = rcdDtService.updatehuixianrcddtfldctassign(fld_id);
         }catch(Exception e){
+            e.printStackTrace();
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改回显对应数据字典失败", null, "error");
         }
         return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "修改回显对应数据字典成功", null, ll);
@@ -359,6 +372,7 @@ public class RcdDtController {
         try{
             ll  = rcdDtService.leftrcddtprojjblx();
         }catch(Exception e){
+            e.printStackTrace();
            return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "基本类型获取失败", null, "error");
         }
         return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "基本类型获取成功", null, ll);
@@ -374,6 +388,7 @@ public class RcdDtController {
         try{
             ll  = rcdDtService.leftrcddtcatglx(proj_id);
         }catch(Exception e){
+            e.printStackTrace();
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "类型获取失败", null, "error");
         }
         return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "类型获取成功", null, ll);
@@ -389,6 +404,7 @@ public class RcdDtController {
         try{
             ll  = rcdDtService.leftrcddtfld(catg_id);
         }catch(Exception e){
+            e.printStackTrace();
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标类型获取失败", null, "error");
         }
         return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "指标类型获取成功", null, ll);
