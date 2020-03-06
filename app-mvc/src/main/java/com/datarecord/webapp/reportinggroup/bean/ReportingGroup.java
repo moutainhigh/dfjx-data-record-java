@@ -11,6 +11,7 @@ public class ReportingGroup {
    private int job_id;
    private Integer job_unit_cycle;
    private List<ReportGroupInterval> reportGroupIntervals;
+   private RcdJobUnitFlow rcdJobUnitFlow;
 
     public int getJob_unit_id() {
         return job_unit_id;
@@ -77,5 +78,13 @@ public class ReportingGroup {
 
     public void setReportGroupIntervals(List<ReportGroupInterval> reportGroupIntervals) {
         this.reportGroupIntervals = reportGroupIntervals;
+    }
+
+    public RcdJobUnitFlow getRcdJobUnitFlow() {
+        return rcdJobUnitFlow;
+    }
+
+    public void setRcdJobUnitFlow(RcdJobUnitFlow rcdJobUnitFlow) {
+        this.rcdJobUnitFlow = rcdJobUnitFlow;
     }
 }

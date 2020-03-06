@@ -18,6 +18,13 @@ CREATE TABLE `job_unit_record_interval` (
   PRIMARY KEY (`id`));
 ALTER TABLE `job_unit_record_interval`  RENAME TO `rcd_job_unit_interval` ;
 ALTER TABLE `rcd_job_unit_interval` ADD COLUMN `job_id` INT NOT NULL AFTER `id`;
+CREATE TABLE `rcd_job_unit_flow` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `job_id` INT NOT NULL,
+  `unit_id` INT NOT NULL,
+  `edit_after_sub` INT NOT NULL DEFAULT 1 COMMENT '填报数据提交后该填报组是否可由填报人继续修改\n0：可修改\n1：不可修改',
+  `edit_reviewer` INT NOT NULL DEFAULT 0 COMMENT '报送数据是否可由审批人修改\n0：可修改\n1：不可修改',
+  PRIMARY KEY (`id`));
 
 
 
