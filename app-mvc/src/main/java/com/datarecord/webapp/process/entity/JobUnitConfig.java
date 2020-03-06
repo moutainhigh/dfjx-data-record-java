@@ -1,5 +1,8 @@
 package com.datarecord.webapp.process.entity;
 
+import com.datarecord.webapp.reportinggroup.bean.RcdJobUnitFlow;
+import com.datarecord.webapp.reportinggroup.bean.ReportGroupInterval;
+
 import java.util.List;
 
 public class JobUnitConfig {
@@ -8,8 +11,12 @@ public class JobUnitConfig {
     private Integer job_id;
     private Integer job_unit_active;
     private Integer job_unit_type;
+    private Integer job_unit_cycle;
     private List<ReportFldConfig> unitFlds;
     private List<ReportFldTypeConfig> unitFldTypes;
+    private RcdJobUnitFlow rcdJobUnitFlow;
+    private List<ReportGroupInterval> reportGroupIntervals;
+
 
     public Integer getJob_unit_id() {
         return job_unit_id;
@@ -76,5 +83,29 @@ public class JobUnitConfig {
 
     public void setUnitFldTypes(List<ReportFldTypeConfig> unitFldTypes) {
         this.unitFldTypes = unitFldTypes;
+    }
+
+    public Integer getJob_unit_cycle() {
+        return job_unit_cycle;
+    }
+
+    public void setJob_unit_cycle(Integer job_unit_cycle) {
+        this.job_unit_cycle = job_unit_cycle;
+    }
+
+    public RcdJobUnitFlow getRcdJobUnitFlow() {
+        return rcdJobUnitFlow;
+    }
+
+    public void setRcdJobUnitFlow(RcdJobUnitFlow rcdJobUnitFlow) {
+        this.rcdJobUnitFlow = rcdJobUnitFlow;
+    }
+
+    public List<ReportGroupInterval> getReportGroupIntervals() {
+        return reportGroupIntervals;
+    }
+
+    public void setReportGroupIntervals(List<ReportGroupInterval> reportGroupIntervals) {
+        this.reportGroupIntervals = reportGroupIntervals;
     }
 }
