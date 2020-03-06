@@ -109,7 +109,7 @@ public class FillinataskServiceImp implements FillinataskService {
     }
 
     @Override
-    public String selectrcdjobconfig(int jobid) {
+    public String selectrcdjobconfig(Integer jobid) {
         return fillinataskDao.selectrcdjobconfig(jobid);
     }
 

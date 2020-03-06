@@ -39,7 +39,7 @@ public interface FillinataskService {
 
     void deletercdjobpersonassignbyuseridandjobid(String job_id, String user_id);
 
-    String selectrcdjobconfig(int jobid);
+    String selectrcdjobconfig(Integer jobid);
 
     String selectrcdjobunitconfig(String unitId);
 

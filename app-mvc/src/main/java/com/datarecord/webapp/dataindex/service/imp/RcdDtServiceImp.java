@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -125,6 +126,7 @@ public class RcdDtServiceImp  implements RcdDtService {
 
     //删除基本类型 一级以及关连二级三级
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deletercddtproj(String proj_id) {
         rcdDtDao.deletercddtproj(proj_id);  // rcd_dt_proj  一级  proj_id
         rcdDtDao.deletercddtcatg(proj_id); //rcd_dt_catg   二级   proj_id

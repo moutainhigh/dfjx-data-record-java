@@ -61,15 +61,15 @@ public interface FillinataskDao {
     void deletercdjobpersonassignbyuseridandjobid(@Param("job_id")String job_id, @Param("user_id")String user_id);
 
 
-    @Select("select  job_name from rcd_job_config  where job_id = #{jobid} groupby job_name")
-    String selectrcdjobconfig(@Param("jobid")int jobid);
+    @Select("select  job_name from rcd_job_config  where job_id = #{jobid} group by job_name")
+    String selectrcdjobconfig(@Param("jobid")Integer jobid);
 
 
-    @Select("select job_unit_name  from rcd_job_unit_config  where  job_unit_id = #{unitId} groupby job_unit_name")
+    @Select("select job_unit_name  from rcd_job_unit_config  where  job_unit_id = #{unitId} group by job_unit_name")
     String selectrcdjobunitconfig(@Param("unitId")String unitId);
 
 
 
-    @Select("SELECT a.record_data,b.fld_name  from  rcd_report_data_job${jobId}  a  LEFT JOIN   rcd_dt_fld  b  on a.fld_id = b.fld_id   where  a.report_id = #{reportId} and  a.unit_id = #{unitId}  and  a.fld_id  in  (#{fldids})     ")
-    List<Lieming> selectrcdreportdatajob(int jobid, int reportid, String unitId, String fldids);
+    @Select("SELECT a.record_data,b.fld_name  from  rcd_report_data_job${jobid}  a  LEFT JOIN   rcd_dt_fld  b  on a.fld_id = b.fld_id   where  a.report_id = #{reportid} and  a.unit_id = #{unitId}  and  a.fld_id  in  (#{fldids})     ")
+    List<Lieming> selectrcdreportdatajob(@Param("jobid")int jobid,@Param("reportid") int reportid, @Param("unitId")String unitId, @Param("fldids")String fldids);
 }
