@@ -10,10 +10,7 @@ import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,16 +65,13 @@ public class ReportingGroupController {
     @RequestMapping("/insertrcdjobunitconfig")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public String insertrcdjobunitconfig(
-            @RequestParam("job_id")String job_id,
-            @RequestParam("job_unit_name")String job_unit_name,
-            @RequestParam("job_unit_type")String job_unit_type,
-            @RequestParam("job_unit_active")String job_unit_active
+    public String insertrcdjobunitconfig(@RequestBody ReportingGroup reportingGroup
     ){
         String jsonResult = "";
         try{
-            reportingGroupService.insertrcdjobunitconfig(job_id,job_unit_name,job_unit_active,job_unit_type);
+            reportingGroupService.insertrcdjobunitconfig(reportingGroup);
         }catch(Exception e){
+            e.printStackTrace();
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除失败", null, "error");
         }
         return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除成功", null, "success");
@@ -92,13 +86,13 @@ public class ReportingGroupController {
             @RequestParam("job_unit_id")String job_unit_id
     ){
         String jsonResult = "";
-        List<ReportingGroup> list = new ArrayList<ReportingGroup>();
+        ReportingGroup reportingGroup = null;
         try{
-           list = reportingGroupService.selectrcdjobunitconfigByjobunitid(job_unit_id);
+            reportingGroup = reportingGroupService.selectrcdjobunitconfigByjobunitid(job_unit_id);
         }catch(Exception e){
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报组回显失败", null, "error");
         }
-        return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报组回显成功", null, list);
+        return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报组回显成功", null, reportingGroup);
     }
 
 
@@ -108,27 +102,15 @@ public class ReportingGroupController {
     @RequestMapping("/updatercdjobunitconfig")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public String updatercdjobunitconfig(
-            @RequestParam("job_unit_id")String job_unit_id,
-            @RequestParam("job_unit_name")String job_unit_name,
-            @RequestParam("job_unit_type")String job_unit_type,
-            @RequestParam("job_unit_active")String job_unit_active
-    ){
+       public String updatercdjobunitconfig(@RequestBody ReportingGroup reportingGroup){
         String jsonResult = "";
         try{
-            reportingGroupService.updatercdjobunitconfig(job_unit_id,job_unit_name,job_unit_active,job_unit_type);
+            reportingGroupService.updatercdjobunitconfig(reportingGroup);
         }catch(Exception e){
             return  jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报组修改失败", null, "error");
         }
         return   jsonResult = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报组修改成功", null, "success");
     }
-
-
-
-
-
-
-
 
     //填报组删除
     @RequestMapping("/deletercdjobunitconfig")

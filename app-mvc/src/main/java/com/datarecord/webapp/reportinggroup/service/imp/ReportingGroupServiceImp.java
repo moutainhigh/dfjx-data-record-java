@@ -2,6 +2,7 @@ package com.datarecord.webapp.reportinggroup.service.imp;
 
 import com.datarecord.webapp.datadictionary.service.imp.DataDictionaryServiceImp;
 import com.datarecord.webapp.reportinggroup.bean.RcdJobUnitFld;
+import com.datarecord.webapp.reportinggroup.bean.ReportGroupInterval;
 import com.datarecord.webapp.reportinggroup.bean.ReportingGroup;
 import com.datarecord.webapp.reportinggroup.bean.rcdJobConfig;
 import com.datarecord.webapp.reportinggroup.dao.ReportingGroupDao;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,9 +41,11 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deletercdjobunitconfig(String job_unit_id) {
         reportingGroupDao.deletercdjobunitconfig(job_unit_id);
         reportingGroupDao.deletercdjobunitfld(job_unit_id);
+        reportingGroupDao.deleteReportingInterval(null,new Integer(job_unit_id));
     }
 
     @Override
@@ -65,17 +69,36 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
     }
 
     @Override
-    public void insertrcdjobunitconfig(String job_id, String job_unit_name, String job_unit_active,String job_unit_type) {
-        reportingGroupDao.insertrcdjobunitconfig(job_id,job_unit_name,job_unit_active,job_unit_type);
+    @Transactional(rollbackFor = Exception.class)
+    public void insertrcdjobunitconfig(ReportingGroup reportingGroup) {
+        reportingGroupDao.insertrcdjobunitconfig(reportingGroup);
+        List<ReportGroupInterval> reportingGroupIntervals = reportingGroup.getReportGroupIntervals();
+        for (ReportGroupInterval reportingGroupInterval : reportingGroupIntervals) {
+            reportingGroupInterval.setJob_id(reportingGroup.getJob_id());
+            reportingGroupInterval.setJob_unit_id(reportingGroup.getJob_unit_id());
+            reportingGroupDao.saveReportingInterval(reportingGroupInterval);
+        }
     }
 
     @Override
-    public void updatercdjobunitconfig(String job_unit_id, String job_unit_name, String job_unit_active, String job_unit_type) {
-        reportingGroupDao.updatercdjobunitconfig(job_unit_id,job_unit_name,job_unit_active,job_unit_type);
+    public void updatercdjobunitconfig(ReportingGroup reportingGroup) {
+        reportingGroupDao.updatercdjobunitconfig(reportingGroup);
+        List<ReportGroupInterval> reportingGroupIntervals = reportingGroup.getReportGroupIntervals();
+        reportingGroupDao.deleteReportingInterval(reportingGroup.getJob_id(),reportingGroup.getJob_unit_id());
+        for (ReportGroupInterval reportingGroupInterval : reportingGroupIntervals) {
+            reportingGroupInterval.setJob_id(reportingGroup.getJob_id());
+            reportingGroupInterval.setJob_unit_id(reportingGroup.getJob_unit_id());
+            reportingGroupDao.saveReportingInterval(reportingGroupInterval);
+        }
     }
 
     @Override
-    public List<ReportingGroup> selectrcdjobunitconfigByjobunitid(String job_unit_id) {
-        return reportingGroupDao.selectrcdjobunitconfigByjobunitid(job_unit_id);
+    public ReportingGroup selectrcdjobunitconfigByjobunitid(String job_unit_id) {
+        ReportingGroup reportGroup = reportingGroupDao.selectrcdjobunitconfigByjobunitid(job_unit_id);
+        if(reportGroup!=null){
+            List<ReportGroupInterval> reportGroupIntervals = reportingGroupDao.getReportGroupInterval(reportGroup.getJob_id(),reportGroup.getJob_unit_id());
+            reportGroup.setReportGroupIntervals(reportGroupIntervals);
+        }
+        return reportGroup;
     }
 }

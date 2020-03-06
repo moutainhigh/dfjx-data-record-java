@@ -1,5 +1,7 @@
 package com.datarecord.webapp.reportinggroup.bean;
 
+import java.util.List;
+
 public class ReportingGroup {
 
    private int  job_unit_id;
@@ -7,6 +9,8 @@ public class ReportingGroup {
    private int  job_unit_active;
    private int job_unit_type;
    private int job_id;
+   private Integer job_unit_cycle;
+   private List<ReportGroupInterval> reportGroupIntervals;
 
     public int getJob_unit_id() {
         return job_unit_id;
@@ -57,5 +61,21 @@ public class ReportingGroup {
                 ", job_unit_type=" + job_unit_type +
                 ", job_id=" + job_id +
                 '}';
+    }
+
+    public Integer getJob_unit_cycle() {
+        return job_unit_cycle;
+    }
+
+    public void setJob_unit_cycle(Integer job_unit_cycle) {
+        this.job_unit_cycle = job_unit_cycle;
+    }
+
+    public List<ReportGroupInterval> getReportGroupIntervals() {
+        return reportGroupIntervals;
+    }
+
+    public void setReportGroupIntervals(List<ReportGroupInterval> reportGroupIntervals) {
+        this.reportGroupIntervals = reportGroupIntervals;
     }
 }
