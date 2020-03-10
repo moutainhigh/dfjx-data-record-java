@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -29,116 +28,11 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
 
     private Logger logger = LoggerFactory.getLogger(AbstractRecordProcessServiceImp.class);
 
-    private boolean debugger = true;
-
     @Autowired
     protected IRecordProcessDao recordProcessDao;
 
     @Autowired
     private ReportingGroupDao reportingGroupDao;
-
-    @Override
-    public Map<JsonResult.RESULT, String> makeJob(String jobId) {
-        JobConfig jobConfigEntity = recordProcessDao.getJobConfigByJobId(jobId);
-        Map<JsonResult.RESULT,String> makeResultMap = new HashMap<>();
-        logger.info("job config entity : {}",jobConfigEntity);
-        List<JobPerson> allJobPerson = jobConfigEntity.getJobPersons();
-        List<JobUnitConfig> jobUnits = jobConfigEntity.getJobUnits();
-        if(!(allJobPerson!=null&&allJobPerson.size()>0)){
-            makeResultMap.put(JsonResult.RESULT.FAILD,"任务没有关联的填报人");
-            return makeResultMap;
-        }
-
-        if(!(jobUnits!=null&&jobUnits.size()>0)){
-            makeResultMap.put(JsonResult.RESULT.FAILD,"任务没有关联的任务组");
-            return makeResultMap;
-        }else{
-            int activeUnitCount = 0;
-            for (JobUnitConfig jobUnit : jobUnits) {
-                if(jobUnit.getJob_unit_active() == JobUnitAcitve.ACTIVE.value()){
-                    activeUnitCount++;
-                    List<ReportFldConfig> unitFlds = jobUnit.getUnitFlds();
-                    if(!(unitFlds!=null&&unitFlds.size()>0)){
-                        makeResultMap.put(JsonResult.RESULT.FAILD,"任务组"+jobUnit.getJob_unit_name()+"下没有定义指标");
-                        return makeResultMap;
-                    }
-                }
-            }
-            if(activeUnitCount==0){
-                makeResultMap.put(JsonResult.RESULT.FAILD,"任务没有生效的任务组");
-                return makeResultMap;
-            }
-        }
-
-        //根据任务建表,每个对应一张表
-        recordProcessDao.dropJobDataTable(jobId);
-        recordProcessDao.makeJobDataTable(jobId);
-
-        //根据任务对应的填报人和填报单位,下发任务
-
-        String debuggerMainThreadWait = "";
-
-        new Thread(new Runnable() {
-            @Override
-            @Transactional(rollbackFor = Exception.class)
-            public void run() {
-                logger.info("开始发布填报任务:{}",jobConfigEntity.getJob_name());
-                recordProcessDao.changeRecordJobConfigStatus(jobId, JobConfigStatus.SUBMITING.value() );
-
-                //循环为每个填报人生成任务
-                for (JobPerson jobPerson : allJobPerson) {
-                    Integer originId = jobPerson.getOrigin_id();
-                    Integer userId = jobPerson.getUser_id();
-                    ReportJobInfo reportJobInfo = new ReportJobInfo();
-                    reportJobInfo.setJob_id(new Integer(jobId));
-                    reportJobInfo.setRecord_origin_id(originId);
-                    reportJobInfo.setRecord_status(JobConfigStatus.NORMAL.value());
-                    reportJobInfo.setRecord_user_id(userId);
-
-                    recordProcessDao.createReportJobInfo(reportJobInfo);
-                    Integer reportId = reportJobInfo.getReport_id();
-
-                    for (JobUnitConfig jobUnit : jobUnits) {
-                        if(jobUnit.getJob_unit_active() == JobUnitAcitve.UNACTIVE.value()){
-                            continue;
-                        }
-
-                        List<ReportFldConfig> unitFlds = jobUnit.getUnitFlds();
-                        for (ReportFldConfig unitFld : unitFlds) {
-                            int fldId = unitFld.getFld_id();
-                            ReportJobData reportJobData = new ReportJobData();
-                            reportJobData.setColum_id(0);
-                            reportJobData.setFld_id(fldId);
-                            reportJobData.setReport_id(reportId);
-                            reportJobData.setUnit_id(jobUnit.getJob_unit_id());
-                            reportJobData.setRecord_data("");
-                            recordProcessDao.createRcdReortJobData(reportJobData,jobId);
-                        }
-                    }
-                }
-
-                logger.info("填报任务发布完成:{}",jobConfigEntity.getJob_name());
-                recordProcessDao.changeRecordJobConfigStatus(jobId, JobConfigStatus.SUBMIT.value());
-                if(debugger){
-                    synchronized (debuggerMainThreadWait){
-                        debuggerMainThreadWait.notify();
-                    }
-                }
-            }
-        },new StringBuilder().append("填报任务发布").append("-").append(jobId).append("-").append(jobConfigEntity.getJob_name()).toString()).start();
-
-        if(debugger){
-            synchronized (debuggerMainThreadWait){
-                try {
-                    debuggerMainThreadWait.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return makeResultMap;
-    }
 
     @Override
     public PageResult pageJob(int user_id, String currPage, String pageSize,Map<String,String> queryParams) {

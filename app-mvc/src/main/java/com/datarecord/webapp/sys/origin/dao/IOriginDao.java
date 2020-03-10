@@ -4,10 +4,12 @@ import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.github.pagehelper.Page;
 import com.workbench.auth.user.entity.User;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public interface IOriginDao {
 
     @Select("select origin_id,origin_name,parent_origin_id,origin_status,create_date,create_user,origin_type from sys_origin")

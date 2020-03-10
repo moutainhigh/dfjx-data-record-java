@@ -1,5 +1,6 @@
 package com.datarecord.webapp.process.entity;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -9,7 +10,13 @@ public class JobConfig {
     private String job_name;
     private Integer job_status;
     private Date job_start_dt;
+    private String job_start_dt_str;
     private Date job_end_dt;
+    private String job_end_dt_str;
+    private Integer job_creater;
+    private String job_creater_name;
+    private Integer job_creater_origin;
+    private String job_creater_origin_name;
     private List<JobUnitConfig> jobUnits;
     private List<JobPerson> jobPersons;
 
@@ -43,6 +50,10 @@ public class JobConfig {
 
     public void setJob_start_dt(Date job_start_dt) {
         this.job_start_dt = job_start_dt;
+        if(job_start_dt!=null){
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            this.job_start_dt_str = format.format(job_start_dt);
+        }
     }
 
     public Date getJob_end_dt() {
@@ -51,6 +62,10 @@ public class JobConfig {
 
     public void setJob_end_dt(Date job_end_dt) {
         this.job_end_dt = job_end_dt;
+        if(job_end_dt!=null){
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            this.job_end_dt_str = format.format(job_end_dt);
+        }
     }
 
     public List<JobUnitConfig> getJobUnits() {
@@ -81,4 +96,51 @@ public class JobConfig {
                 toString();
     }
 
+    public Integer getJob_creater() {
+        return job_creater;
+    }
+
+    public void setJob_creater(Integer job_creater) {
+        this.job_creater = job_creater;
+    }
+
+    public String getJob_creater_name() {
+        return job_creater_name;
+    }
+
+    public void setJob_creater_name(String job_creater_name) {
+        this.job_creater_name = job_creater_name;
+    }
+
+    public Integer getJob_creater_origin() {
+        return job_creater_origin;
+    }
+
+    public void setJob_creater_origin(Integer job_creater_origin) {
+        this.job_creater_origin = job_creater_origin;
+    }
+
+    public String getJob_creater_origin_name() {
+        return job_creater_origin_name;
+    }
+
+    public void setJob_creater_origin_name(String job_creater_origin_name) {
+        this.job_creater_origin_name = job_creater_origin_name;
+    }
+
+    public String getJob_start_dt_str() {
+        return job_start_dt_str;
+    }
+
+    public void setJob_start_dt_str(String job_start_dt_str) {
+        this.job_start_dt_str = job_start_dt_str;
+    }
+
+    public String getJob_end_dt_str() {
+        return job_end_dt_str;
+    }
+
+    public void setJob_end_dt_str(String job_end_dt_str) {
+        this.job_end_dt_str = job_end_dt_str;
+    }
 }

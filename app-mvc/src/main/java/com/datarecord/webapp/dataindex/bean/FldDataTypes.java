@@ -5,7 +5,7 @@ public enum  FldDataTypes {
     STRING(0,"字符串"),
     NUMBER(1,"数字"),
     DATE(2,"日期"),
-    DICT(3,"");
+    DICT(3,"数据字典");
 
     private Integer value;
     private String comment;

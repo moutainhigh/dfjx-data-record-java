@@ -1,5 +1,8 @@
 package com.datarecord.webapp.process.entity;
 
+import com.datarecord.webapp.dataindex.bean.FldDataTypes;
+import com.google.common.base.Strings;
+
 public class ReportFldConfig {
 
     private Integer job_unit_id;
@@ -10,11 +13,18 @@ public class ReportFldConfig {
     private String fld_name;
     private String fld_point;
     private String fld_data_type;
+    private String fld_data_type_str;
     private Integer fld_type;
     private Integer fld_is_null;
+    private String fld_is_null_str;
     private Integer is_actived;
     private Integer fld_range;
     private Integer fld_visible;
+    private Integer fld_status;
+    private Integer fld_creater;
+    private String fld_creater_name;
+    private Integer fld_creater_origin;
+    private String fld_creater_origin_name;
 
     public Integer getJob_unit_id() {
         return job_unit_id;
@@ -75,6 +85,9 @@ public class ReportFldConfig {
 
     public void setFld_data_type(String fld_data_type) {
         this.fld_data_type = fld_data_type;
+        if(!Strings.isNullOrEmpty(fld_data_type)){
+            this.fld_data_type_str = FldDataTypes.getFldDataType(fld_data_type).getComment();
+        }
     }
 
     public Integer getFld_type() {
@@ -91,6 +104,9 @@ public class ReportFldConfig {
 
     public void setFld_is_null(Integer fld_is_null) {
         this.fld_is_null = fld_is_null;
+        if(fld_is_null!=null){
+            this.fld_is_null_str = fld_is_null==0?"可为空":"不可为空";
+        }
     }
 
     public Integer getIs_actived() {
@@ -131,5 +147,61 @@ public class ReportFldConfig {
 
     public void setFld_visible(Integer fld_visible) {
         this.fld_visible = fld_visible;
+    }
+
+    public Integer getFld_status() {
+        return fld_status;
+    }
+
+    public void setFld_status(Integer fld_status) {
+        this.fld_status = fld_status;
+    }
+
+    public Integer getFld_creater() {
+        return fld_creater;
+    }
+
+    public void setFld_creater(Integer fld_creater) {
+        this.fld_creater = fld_creater;
+    }
+
+    public String getFld_creater_name() {
+        return fld_creater_name;
+    }
+
+    public void setFld_creater_name(String fld_creater_name) {
+        this.fld_creater_name = fld_creater_name;
+    }
+
+    public Integer getFld_creater_origin() {
+        return fld_creater_origin;
+    }
+
+    public void setFld_creater_origin(Integer fld_creater_origin) {
+        this.fld_creater_origin = fld_creater_origin;
+    }
+
+    public String getFld_creater_origin_name() {
+        return fld_creater_origin_name;
+    }
+
+    public void setFld_creater_origin_name(String fld_creater_origin_name) {
+        this.fld_creater_origin_name = fld_creater_origin_name;
+    }
+
+    public String getFld_data_type_str() {
+        return fld_data_type_str;
+    }
+
+    public void setFld_data_type_str(String fld_data_type_str) {
+        this.fld_data_type_str = fld_data_type_str;
+    }
+
+    public String getFld_is_null_str() {
+        return fld_is_null_str;
+    }
+
+    public void setFld_is_null_str(String fld_is_null_str) {
+        this.fld_is_null_str = fld_is_null_str;
     }
 }

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("record/flow")
+    @RequestMapping("record/flow")
 public class RecordProcessFlowController {
 
     @Autowired
@@ -44,6 +44,21 @@ public class RecordProcessFlowController {
 
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, pageData);
+        return successResult;
+    }
+
+
+    @RequestMapping("pageReviewFlds")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult pageReviewFlds( String currPage,
+                               String pageSize
+    ){
+        User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+        PageResult fldPageResult = recordProcessFlowService.pageReviewFlds(user.getUser_id(), currPage, pageSize, null);
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, fldPageResult);
         return successResult;
     }
 

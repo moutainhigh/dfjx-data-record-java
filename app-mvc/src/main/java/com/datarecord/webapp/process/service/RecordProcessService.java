@@ -10,8 +10,6 @@ import java.util.Map;
 
 public interface RecordProcessService {
 
-    Map<JsonResult.RESULT,String> makeJob(String jobId);
-
     PageResult pageJob(int user_id, String currPage, String pageSize,Map<String,String> queryParams);
 
     JobConfig getJobConfigByReportId(String reportId);

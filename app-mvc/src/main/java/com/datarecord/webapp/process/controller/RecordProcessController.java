@@ -4,13 +4,16 @@ package com.datarecord.webapp.process.controller;
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.dataindex.bean.RcdClientType;
 import com.datarecord.webapp.process.entity.*;
+import com.datarecord.webapp.process.service.RecordMaker;
 import com.datarecord.webapp.process.service.RecordProcessFactory;
+import com.datarecord.webapp.process.service.RecordProcessService;
 import com.google.common.base.Strings;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
 import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,14 +25,17 @@ import java.util.Map;
 @RequestMapping("record/process")
 public class RecordProcessController {
 
+    @Autowired
+    private RecordMaker recordMaker;
+
     @RequestMapping("makeJob")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
     public JsonResult makeJob(String jobId){
-        Map<JsonResult.RESULT, String> makeResult = RecordProcessFactory.RecordProcessSerice().makeJob(jobId);
+        Map<JsonResult.RESULT, Object> makeResult = recordMaker.makeJob(jobId);
         if(makeResult.containsKey(JsonResult.RESULT.FAILD)){
             JsonResult successResult = JsonSupport.makeJsonpResult(
-                    JsonResult.RESULT.FAILD, makeResult.get(JsonResult.RESULT.FAILD), null, makeResult.get(JsonResult.RESULT.FAILD));
+                    JsonResult.RESULT.FAILD, JsonResult.RESULT.FAILD.toString(), null, makeResult.get(JsonResult.RESULT.FAILD));
             return successResult;
         }
         JsonResult successResult = JsonSupport.makeJsonpResult(

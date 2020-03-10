@@ -25,6 +25,20 @@ CREATE TABLE `rcd_job_unit_flow` (
   `edit_after_sub` INT NOT NULL DEFAULT 1 COMMENT '填报数据提交后该填报组是否可由填报人继续修改\n0：可修改\n1：不可修改',
   `edit_reviewer` INT NOT NULL DEFAULT 0 COMMENT '报送数据是否可由审批人修改\n0：可修改\n1：不可修改',
   PRIMARY KEY (`id`));
+ALTER TABLE `rcd_dt_fld` CHANGE COLUMN `is_actived` `is_actived` INT(11) NOT NULL DEFAULT '0' COMMENT '0:不启用\n1:启用' ;
+ALTER TABLE `rcd_dt_fld`
+ADD COLUMN `fld_status` VARCHAR(45) NULL COMMENT '指标状态：\n0：待审批\n1：审批通过\n2：审批驳回\n3：作废' AFTER `fld_visible`;
+ALTER TABLE `rcd_job_config`
+ADD COLUMN `job_creater` INT(11) NOT NULL COMMENT '任务创建人' AFTER `job_end_dt`,
+ADD COLUMN `job_creater_origin` INT NOT NULL  COMMENT '任务创建人所属机构' AFTER `job_creater`;
+INSERT INTO `app_module` (`module_id`, `super_module_id`, `module_name`, `module_url`) VALUES ('4', '0', '审批管理', '/rcdflow');
+INSERT INTO `app_module` (`module_id`, `super_module_id`, `module_name`, `module_url`) VALUES ('41', '4', '指标定义审批', '/rcdflow/fldConfigReview');
+INSERT INTO `app_module` (`module_id`, `super_module_id`, `module_name`, `module_url`) VALUES ('42', '4', '任务定义审批', 'rcdflow/jobConfigReview');
+ALTER TABLE `rcd_dt_fld` CHANGE COLUMN `fld_creater_origin` `fld_creater_origin` INT(11) NOT NULL DEFAULT 1 ;
+
+
+
+
 
 
 

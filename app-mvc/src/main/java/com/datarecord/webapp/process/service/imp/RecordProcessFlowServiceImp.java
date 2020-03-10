@@ -2,8 +2,7 @@ package com.datarecord.webapp.process.service.imp;
 
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.dao.IRecordProcessFlowDao;
-import com.datarecord.webapp.process.entity.ReportJobInfo;
-import com.datarecord.webapp.process.entity.ReportStatus;
+import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessFlowService;
 import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.service.OriginService;
@@ -15,9 +14,11 @@ import com.workbench.exception.runtime.WorkbenchRuntimeException;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service("recordProcessFlowService")
 public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
@@ -82,4 +83,63 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
 
         return pageResult;
     }
+
+    @Override
+    public void reviewFld(String fldId,String reviewStatus) {
+        recordProcessFlowDao.reviewFld(fldId,reviewStatus);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void reviewUnit(String unitId, String reviewStatus) {
+        List<ReportFldConfig> flds = recordProcessDao.getFldByUnitId(unitId);
+        for (ReportFldConfig fld : flds) {
+            Integer fldId = fld.getFld_id();
+            if(fld.getIs_actived()==0){
+                this.reviewFld(fldId.toString(),reviewStatus);
+            }
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void reviewJobItems(String jobId, String reviewStatus) {
+        JobConfig jobConfig = recordProcessDao.getJobConfigByJobId(jobId);
+        List<JobUnitConfig> jobUnits = jobConfig.getJobUnits();
+
+        for (JobUnitConfig jobUnit : jobUnits) {
+            this.reviewUnit(String.valueOf(jobUnit.getJob_unit_id()),reviewStatus);
+        }
+    }
+
+    @Override
+    public PageResult pageReviewJobs(int user_id, String currPage, String pageSize, Map<String, String> queryParams) {
+        List<Origin> childrenOrigins = this.checkAuthOrigins(user_id);
+
+        Page<JobConfig> reviewJobs =  recordProcessFlowDao.pageReviewJobs(currPage,pageSize,childrenOrigins,queryParams);
+        PageResult pageResult = PageResult.pageHelperList2PageResult(reviewJobs);
+
+        return pageResult;
+    }
+
+    @Override
+    public PageResult pageReviewFlds(int user_id, String currPage, String pageSize, Map<String, String> queryParams) {
+        List<Origin> childrenOrigins = this.checkAuthOrigins(user_id);
+
+        Page<ReportFldConfig> reportFldConfigPage =  recordProcessFlowDao.pageReviewFlds(currPage,pageSize,childrenOrigins,queryParams);
+        PageResult pageResult = PageResult.pageHelperList2PageResult(reportFldConfigPage);
+
+        return pageResult;
+    }
+
+    private List<Origin> checkAuthOrigins(Integer user_id){
+        Origin userOrigin = originService.getOriginByUser(user_id);
+        if(userOrigin==null){
+            throw new WorkbenchRuntimeException("找不到当前用户对应的机构",new RuntimeException(""));
+        }
+        List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
+        childrenOrigins.add(0,userOrigin);
+        return childrenOrigins;
+    }
 }
+
