@@ -78,17 +78,23 @@ public interface IRecordProcessFlowDao {
             "rjc.job_creater ,"+
             "rjc.job_creater_origin ,"+
             "su.user_name as job_creater_name,"+
-            "so.origin_name as job_creater_origin_name"+
+            "so.origin_name as job_creater_origin_name "+
             "from rcd_job_config rjc " +
-            "left join sys_user su on " +
+            "left join user su on " +
             "rjc.job_creater = su.user_id " +
-            "left join sys_origin so on" +
-            "rjc.job_creater_origin = so.origin_id" +
-            "where rjc.job_id  = #{jobId}" +
-            " and  rjc.record_origin_id in " +
+            "left join sys_origin so on " +
+            "rjc.job_creater_origin = so.origin_id " +
+            " where " +
+            "rjc.job_creater_origin in " +
             "<foreach item='item' index='index' collection='originIds' open='(' separator=',' close=')'> " +
             " #{item.origin_id}" +
             "</foreach> " +
+            "<if test='queryParams.jobName!=null'>" +
+            " and rjc.job_name like  concat('%',#{queryParams.jobName},'%')" +
+            "</if>" +
+            "<if test='queryParams.jobStatus!=null'>" +
+            " and rjc.job_status = #{queryParams.jobStatus}" +
+            "</if>" +
             "</script>")
     Page<JobConfig> pageReviewJobs(
             @Param("currPage") String currPage,
@@ -121,7 +127,13 @@ public interface IRecordProcessFlowDao {
             "where rdf.fld_creater_origin in " +
             "<foreach item='item' index='index' collection='originIds' open='(' separator=',' close=')'>" +
             "  #{item.origin_id}" +
-            "</foreach>" +
+            "</foreach> " +
+            "<if test='queryParams.fldName!=null'>" +
+            " and rdf.fld_name like  concat('%',#{queryParams.fldName},'%')" +
+            "</if>" +
+            "<if test='queryParams.fldStatus!=null'>" +
+            " and rdf.fld_status = #{queryParams.fldStatus}" +
+            "</if>" +
             "</script>")
     Page<ReportFldConfig> pageReviewFlds(
             @Param("currPage") String currPage,

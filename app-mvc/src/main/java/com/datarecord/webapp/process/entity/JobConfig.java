@@ -9,6 +9,7 @@ public class JobConfig {
     private Integer job_id;
     private String job_name;
     private Integer job_status;
+    private String job_status_str;
     private Date job_start_dt;
     private String job_start_dt_str;
     private Date job_end_dt;
@@ -42,6 +43,9 @@ public class JobConfig {
 
     public void setJob_status(Integer job_status) {
         this.job_status = job_status;
+        if(job_status!=null){
+            this.job_status_str = JobConfigStatus.getJobConfigStatus(job_status).getComment();
+        }
     }
 
     public Date getJob_start_dt() {
@@ -142,5 +146,13 @@ public class JobConfig {
 
     public void setJob_end_dt_str(String job_end_dt_str) {
         this.job_end_dt_str = job_end_dt_str;
+    }
+
+    public String getJob_status_str() {
+        return job_status_str;
+    }
+
+    public void setJob_status_str(String job_status_str) {
+        this.job_status_str = job_status_str;
     }
 }
