@@ -3,6 +3,7 @@ package com.datarecord.webapp.reportinggroup.service;
 import com.datarecord.webapp.reportinggroup.bean.RcdJobUnitFld;
 import com.datarecord.webapp.reportinggroup.bean.ReportingGroup;
 import com.datarecord.webapp.reportinggroup.bean.rcdJobConfig;
+import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.webapp.support.page.PageResult;
 
 import java.util.List;
@@ -18,11 +19,11 @@ public interface ReportingGroupService {
 
     void rcdjobunitflddelete(String jobunitid);
 
-    List<RcdJobUnitFld> selectrcdjobunitfld(String job_unit_id);
-
     void insertrcdjobunitconfig(ReportingGroup reportingGroup);
 
     void updatercdjobunitconfig(ReportingGroup reportingGroup);
 
     ReportingGroup selectrcdjobunitconfigByjobunitid(String job_unit_id);
+
+    List<RcdJobUnitFld> selectrcdjobunitfld(String origin_id, String job_unit_id);
 }

@@ -1,6 +1,7 @@
 package com.datarecord.webapp.reportinggroup.dao;
 
 import com.datarecord.webapp.reportinggroup.bean.*;
+import com.datarecord.webapp.utils.EntityTree;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -24,9 +25,33 @@ public interface ReportingGroupDao {
 
     @Delete("DELETE FROM rcd_job_unit_fld WHERE  job_unit_id =#{jobunitid}")
     void rcdjobunitflddelete(@Param("jobunitid") String jobunitid);
+/*
 
     @Select("SELECT a.fld_id,b.fld_name FROM rcd_job_unit_fld  a left join  rcd_dt_fld  b   on  a.fld_id = b.fld_id    where a.job_unit_id = #{job_unit_id}")
-    List<RcdJobUnitFld> selectrcdjobunitfld(@Param("job_unit_id") String job_unit_id);
+*/
+
+
+    @Select("SELECT " +
+            " a.fld_id, " +
+            " b.fld_name " +
+            " FROM " +
+            " rcd_job_unit_fld a " +
+            " LEFT JOIN rcd_dt_fld b ON a.fld_id = b.fld_id " +
+            " WHERE " +
+            " a.job_unit_id = #{job_unit_id} " +
+            " AND b.fld_creater_origin IN (#{originid}) " +
+            " UNION " +
+            " SELECT " +
+            " a.fld_id, " +
+            " b.fld_name " +
+            " FROM " +
+            " rcd_job_unit_fld a " +
+            " LEFT JOIN rcd_dt_fld b ON a.fld_id = b.fld_id " +
+            " WHERE " +
+            " a.job_unit_id = #{job_unit_id} and  " +
+            " b.fld_creater_origin NOT IN (#{originid})  " +
+            " AND b.fld_status = '1'")
+    List<RcdJobUnitFld> selectrcdjobunitfld(@Param("originid")String originid,@Param("job_unit_id") String job_unit_id);
 
     @Insert("INSERT  INTO rcd_job_unit_config(job_unit_name,job_id,job_unit_active,job_unit_type,job_unit_cycle) VALUES " +
             "(#{job_unit_name},#{job_id},#{job_unit_active},#{job_unit_type},#{job_unit_cycle})")
@@ -70,4 +95,12 @@ public interface ReportingGroupDao {
     @Select("select job_id,unit_id,edit_after_sub,edit_reviewer from rcd_job_unit_flow " +
             "where job_id = #{job_id} and unit_id = #{job_unit_id} ")
     RcdJobUnitFlow getUnitFLow(@Param("job_id") Integer job_id,@Param("job_unit_id") String job_unit_id);
+
+    @Select("SELECT" +
+            " origin_id AS id," +
+            " origin_name AS NAME," +
+            " parent_origin_id AS pId" +
+            " FROM " +
+            " sys_origin  ")
+    List<EntityTree> selectoriginid();
 }

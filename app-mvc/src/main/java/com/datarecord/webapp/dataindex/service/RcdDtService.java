@@ -18,7 +18,7 @@ public interface RcdDtService {
 
     PageResult selecttixircddtproj(int currPage, int pageSize, String catg_id);
 
-    void insertrcddtfld(String catg_id, String fld_name, String fld_data_type, String fld_is_null,String fld_type,String fld_range,String fld_visible);
+    void insertrcddtfld(String catg_id, String fld_name, String fld_data_type, String fld_is_null,String fld_type,String fld_range,String fld_visible,String fld_creater,String fld_creater_origin);
 
     void insertrcddtfldctassign(String fld_id, String dict_contentid);
 
@@ -26,7 +26,7 @@ public interface RcdDtService {
 
     void deletercddtfldctassign(String fld_id);
 
-    void updatercddtfld(String fld_id, String catg_id, String fld_name, String fld_data_type, String fld_is_null,String fld_type,String fld_range,String fld_visible);
+    void updatercddtfld(String fld_id, String catg_id, String fld_name, String fld_data_type, String fld_is_null,String fld_type,String fld_range,String fld_visible,String fld_status,String fld_creater,String fld_creater_origin);
 
 
 

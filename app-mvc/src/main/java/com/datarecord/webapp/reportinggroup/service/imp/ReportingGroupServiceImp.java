@@ -4,6 +4,9 @@ import com.datarecord.webapp.datadictionary.service.imp.DataDictionaryServiceImp
 import com.datarecord.webapp.reportinggroup.bean.*;
 import com.datarecord.webapp.reportinggroup.dao.ReportingGroupDao;
 import com.datarecord.webapp.reportinggroup.service.ReportingGroupService;
+import com.datarecord.webapp.submittedBy.dao.SubmittedByDao;
+import com.datarecord.webapp.sys.origin.entity.Origin;
+import com.datarecord.webapp.utils.EntityTree;
 import com.github.pagehelper.Page;
 import com.webapp.support.page.PageResult;
 import org.slf4j.Logger;
@@ -12,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service("reportingGroupService")
@@ -21,6 +25,10 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
 
     @Autowired
     private ReportingGroupDao reportingGroupDao;
+
+
+    @Autowired
+    private SubmittedByDao submittedByDao;
 
 
     @Override
@@ -60,10 +68,7 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
         reportingGroupDao.rcdjobunitflddelete(jobunitid);
     }
 
-    @Override
-    public List<RcdJobUnitFld> selectrcdjobunitfld(String job_unit_id) {
-        return reportingGroupDao.selectrcdjobunitfld(job_unit_id);
-    }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -118,4 +123,37 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
         reportGroup.setRcdJobUnitFlow(unitFlow);
         return reportGroup;
     }
+
+    @Override
+    public List<RcdJobUnitFld> selectrcdjobunitfld(String origin_id, String job_unit_id) {
+        List<EntityTree> lists =  reportingGroupDao.selectoriginid();
+        List<String> lsls = new ArrayList<String>();
+        for (EntityTree x : lists) {
+            if((null != x.getpId() && !"".equals(x.getpId()))  ||  (null != x.getId() && !"".equals(x.getId()) ) ){
+                if(origin_id.equals(x.getpId())){
+                    lsls.add(x.getId());
+                }else if (origin_id.equals(x.getId())){
+                    lsls.add(x.getId());
+                }
+            }
+        }
+        String originid ="";
+        if(lsls.size() > 0){
+
+            for (String id : lsls){
+                originid += ",";
+                originid += id;
+            }
+            originid =  originid.substring(1);
+        }
+        return reportingGroupDao.selectrcdjobunitfld(originid,job_unit_id);
+    }
+
+
+  /*  @Override
+    public List<RcdJobUnitFld> selectrcdjobunitfld(String job_unit_id) {
+        return reportingGroupDao.selectrcdjobunitfld(job_unit_id);
+    }
+    */
+
 }

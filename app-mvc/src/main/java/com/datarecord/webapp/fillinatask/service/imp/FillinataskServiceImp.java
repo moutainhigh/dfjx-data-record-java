@@ -34,8 +34,8 @@ public class FillinataskServiceImp implements FillinataskService {
     }
 
     @Override
-    public void insertrcdjobconfig(String job_name, String job_start_dt, String job_end_dt) {
-        fillinataskDao.insertrcdjobconfig(job_name,job_start_dt,job_end_dt);
+    public void insertrcdjobconfig(String job_name, String job_start_dt, String job_end_dt,String job_creater,String job_creater_origin) {
+        fillinataskDao.insertrcdjobconfig(job_name,job_start_dt,job_end_dt,job_creater,job_creater_origin);
     }
 
     @Override
@@ -54,8 +54,8 @@ public class FillinataskServiceImp implements FillinataskService {
     }
 
     @Override
-    public void updatercdjobconfig(String job_id,String job_name, String job_start_dt, String job_end_dt) {
-        fillinataskDao.updatercdjobconfig(job_id,job_name,job_start_dt,job_end_dt);
+    public void updatercdjobconfig(String job_id,String job_name, String job_start_dt, String job_end_dt,String job_creater,String job_creater_origin) {
+        fillinataskDao.updatercdjobconfig(job_id,job_name,job_start_dt,job_end_dt,job_creater,job_creater_origin);
     }
 
     @Override
@@ -122,5 +122,10 @@ public class FillinataskServiceImp implements FillinataskService {
     @Override
     public List<Lieming> selectrcdreportdatajob(int jobid, int reportid, String unitId, String fldids) {
         return fillinataskDao.selectrcdreportdatajob(jobid,reportid,unitId,fldids);
+    }
+
+    @Override
+    public void fillInTaskApprovalByJobid(String job_id) {
+        fillinataskDao.selectrcdreportdatajob(job_id);
     }
 }
