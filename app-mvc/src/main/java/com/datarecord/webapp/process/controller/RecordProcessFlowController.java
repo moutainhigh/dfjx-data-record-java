@@ -96,6 +96,16 @@ public class RecordProcessFlowController {
         return successResult;
     }
 
+    @RequestMapping("subJobConfig")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult subJobConfig(String jobId){
+        recordProcessFlowService.subJobConfig(jobId);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "更新成功", null, JsonResult.RESULT.SUCCESS);
+        return successResult;
+    }
+
     @RequestMapping("reviewFld")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")

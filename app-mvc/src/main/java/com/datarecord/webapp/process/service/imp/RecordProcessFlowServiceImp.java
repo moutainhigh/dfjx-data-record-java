@@ -108,6 +108,8 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
         JobConfig jobConfig = recordProcessDao.getJobConfigByJobId(jobId);
         List<JobUnitConfig> jobUnits = jobConfig.getJobUnits();
 
+        recordProcessFlowDao.changeJobConfig(jobId,String.valueOf(JobConfigStatus.getJobConfigStatus(reviewStatus).value()));
+
         for (JobUnitConfig jobUnit : jobUnits) {
             this.reviewUnit(String.valueOf(jobUnit.getJob_unit_id()),reviewStatus);
         }
@@ -161,6 +163,11 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
         PageResult pageResult = PageResult.pageHelperList2PageResult(reportFldConfigPage);
 
         return pageResult;
+    }
+
+    @Override
+    public void subJobConfig(String jobId) {
+        recordProcessFlowDao.changeJobConfig(jobId,String.valueOf(JobConfigStatus.REVIEW.value()));
     }
 
     private List<Origin> checkAuthOrigins(Integer user_id){
