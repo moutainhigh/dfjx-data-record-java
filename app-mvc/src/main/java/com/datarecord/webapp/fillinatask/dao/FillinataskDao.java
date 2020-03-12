@@ -27,8 +27,8 @@ public interface FillinataskDao {
     @Delete("delete from rcd_job_person_assign where  job_id = #{job_id}")
     void deletercdjobpersonassign(@Param("job_id") String job_id);
 
-    @Update("update rcd_job_config set job_name = #{job_name}, job_start_dt= #{job_start_dt}, job_end_dt =#{job_end_dt},job_creater =#{job_creater},job_creater_origin = #{job_creater_origin}  where  job_id = #{job_id}")
-    void updatercdjobconfig(@Param("job_id") String job_id, @Param("job_name") String job_name, @Param("job_start_dt") String job_start_dt, @Param("job_end_dt") String job_end_dt,@Param("job_creater") String job_creater,@Param("job_creater_origin") String job_creater_origin);
+    @Update("update rcd_job_config set job_name = #{job_name}, job_start_dt= #{job_start_dt}, job_end_dt =#{job_end_dt}  where  job_id = #{job_id}")
+    void updatercdjobconfig(@Param("job_id") String job_id, @Param("job_name") String job_name, @Param("job_start_dt") String job_start_dt, @Param("job_end_dt") String job_end_dt);
 
     @Select("select  job_unit_id,job_unit_name from rcd_job_unit_config where job_id = #{job_id} and job_unit_active = 0")
     List<RcdJobUnitConfig> selectRcdJobUnitConfig(@Param("job_id") String job_id);

@@ -26,7 +26,7 @@ public interface RcdDtService {
 
     void deletercddtfldctassign(String fld_id);
 
-    void updatercddtfld(String fld_id, String catg_id, String fld_name, String fld_data_type, String fld_is_null,String fld_type,String fld_range,String fld_visible,String fld_status,String fld_creater,String fld_creater_origin);
+    void updatercddtfld(String fld_id, String catg_id, String fld_name, String fld_data_type, String fld_is_null,String fld_type,String fld_range,String fld_visible,String fld_status);
 
 
 

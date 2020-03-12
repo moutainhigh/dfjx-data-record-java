@@ -19,7 +19,7 @@ public interface FillinataskService {
 
     void deletercdjobpersonassign(String job_id);
 
-    void updatercdjobconfig(String job_id, String job_name, String job_start_dt, String job_end_dt,String job_creater,String job_creater_origin);
+    void updatercdjobconfig(String job_id, String job_name, String job_start_dt, String job_end_dt);
 
     List<RcdJobUnitConfig> selectRcdJobUnitConfig(String job_id);
 

@@ -5,9 +5,13 @@ import com.datarecord.webapp.dataindex.bean.RcdDtFldCtAssign;
 import com.datarecord.webapp.dataindex.bean.RcddtCatg;
 import com.datarecord.webapp.dataindex.bean.Rcddtproj;
 import com.datarecord.webapp.dataindex.service.RcdDtService;
+import com.datarecord.webapp.sys.origin.entity.Origin;
+import com.datarecord.webapp.sys.origin.service.OriginService;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
+import com.workbench.auth.user.entity.User;
+import com.workbench.shiro.WorkbenchShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,6 +32,10 @@ public class RcdDtController {
 
     @Autowired
     private RcdDtService rcdDtService;
+
+    @Autowired
+    private OriginService originService;
+
 
 
     //新增基本类型
@@ -268,12 +276,14 @@ public class RcdDtController {
             @RequestParam("fld_visible") String fld_visible,  //可见范围：0-全部、1-移动端可见、2-PC端可见
             @RequestParam("fld_range") String fld_range,      //取值范围：0-所有、1-移动端、2-PC端
             @RequestParam("fld_is_null") String fld_is_null,
-            @RequestParam("fld_creater") String fld_creater,     //创建人
-            @RequestParam("fld_creater_origin") String fld_creater_origin,   //创建人所属机构
             @RequestParam("dict_content_id") String dict_content_id  //数据字典内容编码
     ){
         if(!catg_id.isEmpty()  && !fld_name.isEmpty()  && !fld_data_type.isEmpty()  && !fld_is_null.isEmpty()  && !fld_type.isEmpty()){
             try{
+                User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+                Origin userOrigin = originService.getOriginByUser(user.getUser_id());
+                String fld_creater = String.valueOf(user.getUser_id());            //创建人
+                String fld_creater_origin = userOrigin.getOrigin_id().toString();  //创建人所属机构
                 rcdDtService.insertrcddtfld(catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_creater,fld_creater_origin);
               int  fid = rcdDtService.selectmax();
               String  fld_id = String.valueOf(fid);
@@ -312,14 +322,12 @@ public class RcdDtController {
             @RequestParam("fld_visible") String fld_visible,  //可见范围：0-全部、1-移动端可见、2-PC端可见
             @RequestParam("fld_range") String fld_range,      //取值范围：0-所有、1-移动端、2-PC端
             @RequestParam("fld_status") String fld_status,      //指标状态：  0：待审批  1：审批通过  2：审批驳回  3：作废'
-            @RequestParam("fld_creater") String fld_creater,     //创建人
-            @RequestParam("fld_creater_origin") String fld_creater_origin,   //创建人所属机构
             @RequestParam("fld_id") String fld_id,    //指标id
             @RequestParam("dict_content_id") String dict_content_id  //数据字典内容编码数组
     ){
         if(!catg_id.isEmpty()  && !fld_name.isEmpty()  && !fld_data_type.isEmpty()  && !fld_is_null.isEmpty()  && !fld_type.isEmpty()){
             try{
-                rcdDtService.updatercddtfld(fld_id,catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_status,fld_creater,fld_creater_origin);
+                rcdDtService.updatercddtfld(fld_id,catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_status);
                 if(!fld_id.isEmpty() && !dict_content_id.isEmpty() ){
                     rcdDtService.deletercddtfldctassign(fld_id);
                    /* dict_content_id.substring(1);
