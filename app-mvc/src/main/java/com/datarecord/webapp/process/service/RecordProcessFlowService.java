@@ -20,4 +20,5 @@ public interface RecordProcessFlowService {
 
     PageResult pageReviewFlds(int user_id, String currPage, String pageSize,Map<String,String> queryParams);
 
+    void subJobConfig(String jobId);
 }

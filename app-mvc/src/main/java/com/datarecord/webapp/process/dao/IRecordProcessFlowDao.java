@@ -140,6 +140,9 @@ public interface IRecordProcessFlowDao {
             @Param("pageSize") String pageSize,
             @Param("originIds") List<Origin> originIds,
             @Param("queryParams") Map<String, String> queryParams);
+
+    @Update("update rcd_job_config set job_status = #{status} where job_id = #{jobId}")
+    void changeJobConfig(@Param("jobId") String jobId,@Param("status") String status);
 }
 
 
