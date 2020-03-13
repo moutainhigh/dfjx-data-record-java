@@ -1,15 +1,10 @@
 package com.datarecord.webapp.process.service.imp;
 
-import com.datarecord.webapp.dataindex.bean.FldDataTypes;
-import com.datarecord.webapp.process.entity.ReportFldConfig;
 import com.datarecord.webapp.process.entity.ReportJobData;
 import com.datarecord.webapp.process.entity.SaveReportJobInfos;
-import com.google.common.base.Strings;
-import com.workbench.exception.runtime.WorkbenchRuntimeException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

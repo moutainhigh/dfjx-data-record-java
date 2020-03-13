@@ -1,4 +1,4 @@
-package com.datarecord.webapp.process.entity;
+package com.datarecord.enums;
 
 public enum JobUnitType {
 

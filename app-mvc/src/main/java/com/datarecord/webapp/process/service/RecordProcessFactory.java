@@ -1,6 +1,6 @@
 package com.datarecord.webapp.process.service;
 
-import com.datarecord.webapp.process.entity.JobUnitType;
+import com.datarecord.enums.JobUnitType;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 

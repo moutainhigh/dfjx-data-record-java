@@ -1,18 +1,17 @@
 package com.datarecord.webapp.process.service.imp;
 
-import com.datarecord.webapp.dataindex.bean.RcdClientType;
-import com.datarecord.webapp.fillinatask.bean.JobUnitAcitve;
+import com.datarecord.enums.RcdClientType;
+import com.datarecord.enums.ReportStatus;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessService;
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
-import com.datarecord.webapp.dataindex.bean.FldDataTypes;
+import com.datarecord.enums.FldDataTypes;
 import com.datarecord.webapp.reportinggroup.bean.RcdJobUnitFlow;
 import com.datarecord.webapp.reportinggroup.bean.ReportGroupInterval;
 import com.datarecord.webapp.reportinggroup.dao.ReportingGroupDao;
 import com.github.pagehelper.Page;
 import com.google.common.base.Strings;
-import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
 import com.workbench.exception.runtime.WorkbenchRuntimeException;
 import org.slf4j.Logger;

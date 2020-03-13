@@ -1,5 +1,8 @@
 package com.datarecord.webapp.dataindex.bean;
 
+import com.datarecord.enums.FldConfigStatus;
+import com.google.common.base.Strings;
+
 public class RcdDt {
 
     private int  proj_id;      //类型编码   基本类别  人 地 物
@@ -8,6 +11,7 @@ public class RcdDt {
     private int  catg_id;     //类型编码
     private String catg_name;  //类型名称
     private String fld_status;
+    private String fld_status_str;
 
     private int  fld_id;     //指标id
     private String fld_name;  //指标名称
@@ -25,6 +29,12 @@ public class RcdDt {
 
     public void setFld_status(String fld_status) {
         this.fld_status = fld_status;
+        if(!Strings.isNullOrEmpty(fld_status)){
+            FldConfigStatus fldCOnfigStatusObj = FldConfigStatus.getFldConfigStatus(fld_status);
+            if(fldCOnfigStatusObj!=null)
+             this.fld_status_str = fldCOnfigStatusObj.getComment();
+            else this.fld_status_str = "未知";
+        }
     }
 
     public int getFld_range() {
@@ -140,5 +150,13 @@ public class RcdDt {
                 ", fld_range=" + fld_range +
                 ", fld_visible=" + fld_visible +
                 '}';
+    }
+
+    public String getFld_status_str() {
+        return fld_status_str;
+    }
+
+    public void setFld_status_str(String fld_status_str) {
+        this.fld_status_str = fld_status_str;
     }
 }

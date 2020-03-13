@@ -2,11 +2,12 @@ package com.datarecord.webapp.process.controller;
 
 
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
-import com.datarecord.webapp.dataindex.bean.RcdClientType;
+import com.datarecord.enums.RcdClientType;
+import com.datarecord.enums.JobUnitType;
+import com.datarecord.enums.ReportStatus;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordMaker;
 import com.datarecord.webapp.process.service.RecordProcessFactory;
-import com.datarecord.webapp.process.service.RecordProcessService;
 import com.google.common.base.Strings;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
