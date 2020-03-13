@@ -1,6 +1,7 @@
 package com.datarecord.webapp.process.service.imp;
 
 import com.datarecord.webapp.fillinatask.bean.JobUnitAcitve;
+import com.datarecord.enums.JobConfigStatus;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordMaker;

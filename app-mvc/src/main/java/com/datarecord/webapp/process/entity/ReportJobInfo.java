@@ -1,5 +1,7 @@
 package com.datarecord.webapp.process.entity;
 
+import com.datarecord.enums.ReportStatus;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;

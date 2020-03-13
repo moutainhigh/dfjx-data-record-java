@@ -1,6 +1,6 @@
 package com.datarecord.webapp.process.entity;
 
-import com.datarecord.webapp.dataindex.bean.FldDataTypes;
+import com.datarecord.enums.FldDataTypes;
 import com.google.common.base.Strings;
 
 public class ReportFldConfig {

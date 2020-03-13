@@ -1,4 +1,4 @@
-package com.datarecord.webapp.dataindex.bean;
+package com.datarecord.enums;
 
 public enum RcdClientType {
 

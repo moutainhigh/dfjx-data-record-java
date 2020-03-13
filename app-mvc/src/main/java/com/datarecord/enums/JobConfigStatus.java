@@ -1,4 +1,4 @@
-package com.datarecord.webapp.process.entity;
+package com.datarecord.enums;
 
 /**
  * 0:编辑中

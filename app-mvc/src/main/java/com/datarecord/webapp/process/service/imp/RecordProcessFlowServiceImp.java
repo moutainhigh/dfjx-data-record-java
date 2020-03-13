@@ -1,5 +1,7 @@
 package com.datarecord.webapp.process.service.imp;
 
+import com.datarecord.enums.JobConfigStatus;
+import com.datarecord.enums.ReportStatus;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.dao.IRecordProcessFlowDao;
 import com.datarecord.webapp.process.entity.*;
