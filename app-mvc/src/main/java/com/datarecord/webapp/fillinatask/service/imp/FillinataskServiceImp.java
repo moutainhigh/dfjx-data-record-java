@@ -8,6 +8,7 @@ import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
 import com.datarecord.webapp.fillinatask.dao.FillinataskDao;
 import com.datarecord.webapp.fillinatask.service.FillinataskService;
 import com.github.pagehelper.Page;
+import com.google.common.base.Strings;
 import com.webapp.support.page.PageResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class FillinataskServiceImp implements FillinataskService {
     @Override
     public PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
+        job_name = Strings.emptyToNull(job_name);
         Page<Fillinatask> contactPageDatas = fillinataskDao.rcdjobconfiglist(currPage, pageSize,job_name,job_status);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);

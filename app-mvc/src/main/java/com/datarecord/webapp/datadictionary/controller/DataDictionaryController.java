@@ -7,13 +7,14 @@ import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 数据字典Controller
@@ -95,9 +96,8 @@ public class DataDictionaryController {
     public String dataDictionarylist(
             @RequestParam("currPage") int currPage,
             @RequestParam("pageSize")int pageSize
-    ){
+    ) throws IOException, URISyntaxException {
        PageResult pageResult = null;
-
          try{
             pageResult = dataDictionaryService.dataDictionarylist(currPage,pageSize);
         }catch(Exception e){
