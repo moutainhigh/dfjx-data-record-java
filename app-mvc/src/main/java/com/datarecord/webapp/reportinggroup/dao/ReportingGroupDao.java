@@ -39,18 +39,7 @@ public interface ReportingGroupDao {
             " LEFT JOIN rcd_dt_fld b ON a.fld_id = b.fld_id " +
             " WHERE " +
             " a.job_unit_id = #{job_unit_id} " +
-            " AND b.fld_creater_origin IN (#{originid}) " +
-            " UNION " +
-            " SELECT " +
-            " a.fld_id, " +
-            " b.fld_name " +
-            " FROM " +
-            " rcd_job_unit_fld a " +
-            " LEFT JOIN rcd_dt_fld b ON a.fld_id = b.fld_id " +
-            " WHERE " +
-            " a.job_unit_id = #{job_unit_id} and  " +
-            " b.fld_creater_origin NOT IN (#{originid})  " +
-            " AND b.fld_status = '1'")
+            " AND b.fld_creater_origin IN (#{originid}) ")
     List<RcdJobUnitFld> selectrcdjobunitfld(@Param("originid")String originid,@Param("job_unit_id") String job_unit_id);
 
     @Insert("INSERT  INTO rcd_job_unit_config(job_unit_name,job_id,job_unit_active,job_unit_type,job_unit_cycle) VALUES " +
