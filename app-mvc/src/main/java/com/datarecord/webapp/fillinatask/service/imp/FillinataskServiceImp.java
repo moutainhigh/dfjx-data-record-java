@@ -91,8 +91,23 @@ public class FillinataskServiceImp implements FillinataskService {
     }
 
     @Override
-    public void updateJobConfig(String job_id, String job_name, String job_start_dt, String job_end_dt ) {
-        fillinataskDao.updatercdjobconfig(job_id,job_name,job_start_dt,job_end_dt);
+    @Transactional(rollbackFor = Exception.class)
+    public void updateJobConfig(JobConfig jobConfig) {
+        fillinataskDao.updatercdjobconfig(jobConfig);
+        fillinataskDao.removeIntervals(jobConfig.getJob_id());
+        List<JobInteval> intervals = jobConfig.getJob_intervals();
+        if(intervals!=null){
+            for (JobInteval interval : intervals) {
+                interval.setJob_id(jobConfig.getJob_id());
+                fillinataskDao.saveJobInterval(interval);
+            }
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void removeJobIntervals(String jobId){
+        fillinataskDao.removeIntervals(new Integer(jobId));
     }
 
     @Override
@@ -136,7 +151,7 @@ public class FillinataskServiceImp implements FillinataskService {
     }
 
     @Override
-    public List<Fillinatask> selectrcdjobconfigjobid(String job_id) {
+    public JobConfig selectrcdjobconfigjobid(String job_id) {
         return   fillinataskDao.selectrcdjobconfigjobid(job_id);
     }
 
@@ -174,5 +189,10 @@ public class FillinataskServiceImp implements FillinataskService {
     @Override
     public List<ReportFldConfig> taskDetailsreportFldConfig(String job_id) {
         return fillinataskDao.taskDetailsreportFldConfig(job_id);
+    }
+
+    @Override
+    public List<JobInteval> getJobIntevals(String job_id){
+        return fillinataskDao.getJobIntevals(job_id);
     }
 }

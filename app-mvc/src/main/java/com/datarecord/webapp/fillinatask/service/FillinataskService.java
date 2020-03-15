@@ -1,6 +1,6 @@
 package com.datarecord.webapp.fillinatask.service;
 
-import com.datarecord.webapp.fillinatask.bean.Fillinatask;
+import com.datarecord.webapp.fillinatask.bean.JobInteval;
 import com.datarecord.webapp.fillinatask.bean.Lieming;
 import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
@@ -21,7 +21,7 @@ public interface FillinataskService {
 
     void deletercdjobpersonassign(String job_id);
 
-    void updateJobConfig(String job_id, String job_name, String job_start_dt, String job_end_dt);
+    void updateJobConfig(JobConfig jobConfig);
 
     List<RcdJobUnitConfig> selectRcdJobUnitConfig(String job_id);
 
@@ -37,7 +37,7 @@ public interface FillinataskService {
 
     void deleteRcdJobUnitConfigsuo(String job_id);
 
-    List<Fillinatask> selectrcdjobconfigjobid(String job_id);
+    JobConfig selectrcdjobconfigjobid(String job_id);
 
     void deletercdjobpersonassignbyuseridandjobid(String job_id, String user_id);
 
@@ -54,4 +54,8 @@ public interface FillinataskService {
     List<JobUnitConfig> taskDetailsjobUnitConfig(String job_id);
 
     List<ReportFldConfig> taskDetailsreportFldConfig(String job_id);
+
+    List<JobInteval> getJobIntevals(String job_id);
+
+    void removeJobIntervals(String jobId);
 }

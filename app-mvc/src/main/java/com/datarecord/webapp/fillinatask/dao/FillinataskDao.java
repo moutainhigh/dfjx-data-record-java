@@ -4,6 +4,7 @@ import com.datarecord.webapp.fillinatask.bean.*;
 import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.process.entity.JobUnitConfig;
 import com.datarecord.webapp.process.entity.ReportFldConfig;
+import com.datarecord.webapp.reportinggroup.bean.ReportGroupInterval;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -17,7 +18,11 @@ public interface FillinataskDao {
             "<if test = 'job_name != null '> AND job_name like concat('%',#{job_name},'%') </if> "+
             "<if test = 'job_status != null '> AND job_status =#{job_status} </if> "+
             " order by job_start_dt desc </script> ")
-    Page<Fillinatask> rcdjobconfiglist(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("job_name") String job_name, @Param("job_status") String job_status,@Param("originid") String originid);
+    Page<Fillinatask> rcdjobconfiglist(@Param("currPage") int currPage,
+                                       @Param("pageSize") int pageSize,
+                                       @Param("job_name") String job_name,
+                                       @Param("job_status") String job_status,
+                                       @Param("originid") String originid);
 
 //    @Insert("INSERT INTO rcd_job_config " +
 //            "(job_name,job_start_dt,job_end_dt,job_creater,job_creater_origin,job_cycle) " +
@@ -46,7 +51,7 @@ public interface FillinataskDao {
     void deletercdjobpersonassign(@Param("job_id") String job_id);
 
     @Update("update rcd_job_config set job_name = #{job_name}, job_start_dt= #{job_start_dt}, job_end_dt =#{job_end_dt}  where  job_id = #{job_id}")
-    void updatercdjobconfig(@Param("job_id") String job_id, @Param("job_name") String job_name, @Param("job_start_dt") String job_start_dt, @Param("job_end_dt") String job_end_dt);
+    void updatercdjobconfig(JobConfig jobConfig);
 
     @Select("select  job_unit_id,job_unit_name from rcd_job_unit_config where job_id = #{job_id} and job_unit_active = 0")
     List<RcdJobUnitConfig> selectRcdJobUnitConfig(@Param("job_id") String job_id);
@@ -73,7 +78,7 @@ public interface FillinataskDao {
     void deleteRcdJobUnitConfigsuo(@Param("job_id")String job_id);
 
     @Select("select * from  rcd_job_config  where  job_id = #{job_id}")
-    List<Fillinatask> selectrcdjobconfigjobid(@Param("job_id")String job_id);
+    JobConfig selectrcdjobconfigjobid(@Param("job_id")String job_id);
 
     @Delete("delete from rcd_job_person_assign  WHERE job_id = #{job_id}  AND  user_id =#{user_id}")
     void deletercdjobpersonassignbyuseridandjobid(@Param("job_id")String job_id, @Param("user_id")String user_id);
@@ -109,4 +114,9 @@ public interface FillinataskDao {
             "INNER JOIN rcd_dt_fld  d on  c.fld_id = d.fld_id    where a.job_id  = #{job_id} ")
     List<ReportFldConfig> taskDetailsreportFldConfig(@Param("job_id")String job_id);
 
+    @Select("select job_id,job_interval_start,job_interval_end from rcd_job_interval where job_id = #{job_id}")
+    List<JobInteval> getJobIntevals(@Param("job_id") String job_id);
+
+    @Delete("delete from rcd_job_interval where job_id = #{job_id} ")
+    void removeIntervals(Integer job_id);
 }

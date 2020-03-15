@@ -2,6 +2,7 @@ package com.datarecord.webapp.fillinatask.controller;
 
 
 import com.datarecord.webapp.fillinatask.bean.Fillinatask;
+import com.datarecord.webapp.fillinatask.bean.JobInteval;
 import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
 import com.datarecord.webapp.fillinatask.service.FillinataskService;
@@ -31,8 +32,6 @@ public class FillinataskController {
 
     @Autowired
     private OriginService originService;
-
-
 
     //填报任务列表
     @RequestMapping("/rcdjobconfiglist")
@@ -101,14 +100,16 @@ public class FillinataskController {
             @RequestParam("job_id")String job_id
     ){
         String jsonResult = "";
-        List<Fillinatask> list = null;
+        JobConfig jobConfig = null;
         try{
-            list = fillinataskService.selectrcdjobconfigjobid(job_id);
+            jobConfig = fillinataskService.selectrcdjobconfigjobid(job_id);
+            List<JobInteval> jobIntevals = fillinataskService.getJobIntevals(job_id);
+            jobConfig.setJob_intervals(jobIntevals);
         }catch(Exception e){
             e.printStackTrace();
             return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "任务id查看详情失败", null, "error");
         }
-        return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "任务id查看详情成功", null, list);
+        return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "任务id查看详情成功", null, jobConfig);
     }
 
 
@@ -141,14 +142,9 @@ public class FillinataskController {
     @RequestMapping("/updatercdjobconfig")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public String updatercdjobconfig(
-            @RequestParam("job_id")String job_id,
-            @RequestParam("job_name")String job_name,
-            @RequestParam("job_start_dt")String job_start_dt,
-            @RequestParam("job_end_dt")String job_end_dt
-    ){
+    public String updatercdjobconfig(@RequestBody JobConfig jobConfig){
         try{
-            fillinataskService.updateJobConfig(job_id,job_name,job_start_dt,job_end_dt);
+            fillinataskService.updateJobConfig(jobConfig);
         }catch(Exception e){
             e.printStackTrace();
             return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改填报任务失败", null, "error");
