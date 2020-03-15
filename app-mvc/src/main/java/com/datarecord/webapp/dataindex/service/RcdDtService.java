@@ -13,11 +13,11 @@ public interface RcdDtService {
 
     void insertrcddtproj(String proj_name, String is_actived);
 
-    PageResult selectrcddtproj(int currPage, int pageSize);
+    PageResult selectrcddtproj(int currPage, int pageSize,String origin_id);
 
     void updatercddtproj(String proj_name, String is_actived, String proj_id);
 
-    PageResult selecttixircddtproj(int currPage, int pageSize, String catg_id);
+    PageResult selecttixircddtproj(int currPage, int pageSize, String catg_id,String origin_id);
 
     void insertrcddtfld(ReportFldConfig reportFldConfig);
 
@@ -37,7 +37,7 @@ public interface RcdDtService {
 
     List<RcdDtFld> leftrcddtfld(String catg_id);
 
-    PageResult selecttixircddtprojer(int currPage, int pageSize, String proj_id);
+    PageResult selecttixircddtprojer(int currPage, int pageSize, String proj_id,String origin_id);
 
     int selectmax();
 
