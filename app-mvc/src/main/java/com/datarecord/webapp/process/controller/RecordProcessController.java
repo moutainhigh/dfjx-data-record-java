@@ -36,7 +36,7 @@ public class RecordProcessController {
         Map<JsonResult.RESULT, Object> makeResult = recordMaker.makeJob(jobId);
         if(makeResult.containsKey(JsonResult.RESULT.FAILD)){
             JsonResult successResult = JsonSupport.makeJsonpResult(
-                    JsonResult.RESULT.FAILD, JsonResult.RESULT.FAILD.toString(), null, makeResult.get(JsonResult.RESULT.FAILD));
+                    JsonResult.RESULT.SUCCESS, "发布失败", null, makeResult.get(JsonResult.RESULT.FAILD));
             return successResult;
         }
         JsonResult successResult = JsonSupport.makeJsonpResult(

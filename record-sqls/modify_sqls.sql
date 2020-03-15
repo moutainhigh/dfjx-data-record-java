@@ -33,20 +33,42 @@ ADD COLUMN `job_creater` INT(11) NOT NULL COMMENT '任务创建人' AFTER `job_e
 ADD COLUMN `job_creater_origin` INT NOT NULL  COMMENT '任务创建人所属机构' AFTER `job_creater`;
 INSERT INTO `app_module` (`module_id`, `super_module_id`, `module_name`, `module_url`) VALUES ('4', '0', '审批管理', '/rcdflow');
 INSERT INTO `app_module` (`module_id`, `super_module_id`, `module_name`, `module_url`) VALUES ('41', '4', '指标定义审批', '/rcdflow/fldConfigReview');
-INSERT INTO `app_module` (`module_id`, `super_module_id`, `module_name`, `module_url`) VALUES ('42', '4', '任务定义审批', 'rcdflow/jobConfigReview');
-ALTER TABLE `rcd_dt_fld` CHANGE COLUMN `fld_creater_origin` `fld_creater_origin` INT(11) NOT NULL DEFAULT 1 ;
+INSERT INTO `app_module` (`module_id`, `super_module_id`, `module_name`, `module_url`) VALUES ('42', '4', '任务定义审批', '/rcdflow/jobConfigReview');
 ALTER TABLE `rcd_dt_fld`
-CHANGE COLUMN `fld_status` `fld_status` VARCHAR(45) NULL DEFAULT 0 COMMENT '指标状态：\n0：待审批\n1：审批通过\n2：审批驳回\n3：作废' ;
+ADD COLUMN `fld_creater` INT(11) NOT NULL COMMENT '指标创建人' ,
+ADD COLUMN `fld_creater_origin` INT NOT NULL  COMMENT '指标创建人所属机构' ;
+ALTER TABLE `rcd_dt_fld` CHANGE COLUMN `fld_creater_origin` `fld_creater_origin` INT(11) NOT NULL DEFAULT 1 ;
+ALTER TABLE `rcd_dt_fld` CHANGE COLUMN `fld_status` `fld_status` VARCHAR(45) NULL DEFAULT 0 COMMENT '指标状态：\n0：待审批\n1：审批通过\n2：审批驳回\n3：作废' ;
 update rcd_dt_fld set fld_status = 0;
 ALTER TABLE `rcd_dt_fld`
 CHANGE COLUMN `fld_status` `fld_status` VARCHAR(45) NOT NULL DEFAULT '0' COMMENT '指标状态：\n0：待审批\n1：审批通过\n2：审批驳回\n3：作废' ;
 ALTER TABLE `rcd_job_config`
 CHANGE COLUMN `job_status` `job_status` INT(11) NOT NULL DEFAULT '0' COMMENT ' * 0:正常\n * 1:失效\n * 2:锁定\n * 3:软删除\n * 4:已发布\n * 5:发布中\n * 6:待审批\n * 7:审批通过\n * 8:审批驳回' ;
 
+UPDATE `app_module` SET `module_id`='43', `super_module_id`='4' WHERE `module_id`='32';
+update user_role_privilege set module_id = '43' where module_id = '32';
 
+CREATE TABLE `rcd_job_interval` (
+  `job_id` INT NOT NULL,
+  `job_start` VARCHAR(45) NOT NULL,
+  `job_end` VARCHAR(45) NOT NULL COMMENT '任务填报周期',
+  PRIMARY KEY (`job_id`));
 
+ALTER TABLE `rcd_job_config`
+ADD COLUMN `job_cycle` INT(11) NOT NULL COMMENT '填报周期:\n0.日报\n1.周报\n2.月报\n3.季报\n4.年报' AFTER `job_creater_origin`;
 
+ALTER TABLE `rcd_job_interval`
+CHANGE COLUMN `job_end` `job_end` VARCHAR(45) NOT NULL COMMENT '任务填报周期' AFTER `job_id`,
+ADD COLUMN `id` INT NOT NULL AUTO_INCREMENT FIRST,
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`id`);
 
+ALTER TABLE `rcd_job_interval`
+CHANGE COLUMN `job_start` `job_start` VARCHAR(45) NOT NULL AFTER `job_id`;
+
+ALTER TABLE `rcd_job_interval`
+CHANGE COLUMN `job_start` `job_interval_start` VARCHAR(45) NOT NULL ,
+CHANGE COLUMN `job_end` `job_interval_end` VARCHAR(45) NOT NULL COMMENT '任务填报周期' ;
 
 
 

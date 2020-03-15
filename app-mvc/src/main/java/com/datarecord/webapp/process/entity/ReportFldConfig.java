@@ -20,7 +20,7 @@ public class ReportFldConfig {
     private Integer is_actived;
     private Integer fld_range;    //取值范围：0-所有、1-移动端、2-PC端
     private Integer fld_visible; //可见范围：0-全部、1-移动端可见、2-PC端可见
-    private Integer fld_status;   //指标状态：  0：待审批  1：审批通过  2：审批驳回  3：作废'
+    private Integer fld_status = 0;   //指标状态：  0：待审批  1：审批通过  2：审批驳回  3：作废'
     private Integer fld_creater;
     private String fld_creater_name;
     private Integer fld_creater_origin;

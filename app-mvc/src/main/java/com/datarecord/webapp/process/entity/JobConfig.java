@@ -1,6 +1,7 @@
 package com.datarecord.webapp.process.entity;
 
 import com.datarecord.enums.JobConfigStatus;
+import com.datarecord.webapp.fillinatask.bean.JobInteval;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,8 +21,10 @@ public class JobConfig {
     private String job_creater_name;
     private Integer job_creater_origin;
     private String job_creater_origin_name;
+    private Integer job_cycle;
     private List<JobUnitConfig> jobUnits;
     private List<JobPerson> jobPersons;
+    private List<JobInteval> job_intervals;
 
     public Integer getJob_id() {
         return job_id;
@@ -156,5 +159,21 @@ public class JobConfig {
 
     public void setJob_status_str(String job_status_str) {
         this.job_status_str = job_status_str;
+    }
+
+    public Integer getJob_cycle() {
+        return job_cycle;
+    }
+
+    public void setJob_cycle(Integer job_cycle) {
+        this.job_cycle = job_cycle;
+    }
+
+    public List<JobInteval> getJob_intervals() {
+        return job_intervals;
+    }
+
+    public void setJob_intervals(List<JobInteval> job_intervals) {
+        this.job_intervals = job_intervals;
     }
 }

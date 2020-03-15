@@ -1,17 +1,16 @@
 package com.datarecord.webapp.fillinatask.dao;
 
-import com.datarecord.webapp.fillinatask.bean.Fillinatask;
-import com.datarecord.webapp.fillinatask.bean.Lieming;
-import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
-import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
+import com.datarecord.webapp.fillinatask.bean.*;
+import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.process.entity.JobUnitConfig;
 import com.datarecord.webapp.process.entity.ReportFldConfig;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface FillinataskDao {
 
     @Select("<script> select * from  rcd_job_config where  1=1   AND job_creater_origin IN (#{originid})   " +
@@ -20,8 +19,25 @@ public interface FillinataskDao {
             " order by job_start_dt desc </script> ")
     Page<Fillinatask> rcdjobconfiglist(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("job_name") String job_name, @Param("job_status") String job_status,@Param("originid") String originid);
 
-    @Insert("INSERT INTO rcd_job_config(job_name,job_start_dt,job_end_dt,job_creater,job_creater_origin)  VALUES(#{job_name},#{job_start_dt},#{job_end_dt},#{job_creater},#{job_creater_origin})")
-    void insertrcdjobconfig(@Param("job_name") String job_name, @Param("job_start_dt") String job_start_dt, @Param("job_end_dt") String job_end_dt,@Param("job_creater") String job_creater,@Param("job_creater_origin") String job_creater_origin);
+//    @Insert("INSERT INTO rcd_job_config " +
+//            "(job_name,job_start_dt,job_end_dt,job_creater,job_creater_origin,job_cycle) " +
+//            " values " +
+//            "(#{jobConfig.job_name},#{jobConfig.job_start_dt_str},#{jobConfig.job_end_dt_str},#{jobConfig.job_creater},#{jobConfig.job_creater_origin},#{jobConfig.job_cycle})")
+//    void saveJobConfig(@Param("jobConfig") JobConfig jobConfig);
+
+    @Insert("insert into rcd_job_config " +
+            "(job_name,job_start_dt,job_end_dt,job_creater,job_creater_origin,job_cycle) " +
+            "values " +
+            "(#{job_name},#{job_start_dt},#{job_end_dt},#{job_creater},#{job_creater_origin},#{job_cycle})")
+    @Options(useGeneratedKeys = true, keyProperty = "job_id", keyColumn = "job_id")
+    void saveJobConfig(JobConfig jobConfig);
+
+    @Insert("insert into rcd_job_interval " +
+            "(job_id,job_interval_start,job_interval_end) " +
+            "values " +
+            "(#{job_id},#{job_interval_start},#{job_interval_end})")
+    void saveJobInterval(JobInteval jobInterval);
+
 
     @Insert("INSERT INTO rcd_job_person_assign(user_id,job_id)  VALUES(#{user_id},#{job_id})")
     void insertrcdjobpersonassign(@Param("job_id") String job_id, @Param("user_id") String user_id);
@@ -79,7 +95,7 @@ public interface FillinataskDao {
 
 
     @Update("update  rcd_job_config set  job_status = 6  where  job_id =#{job_id}")
-    List<Lieming> selectrcdreportdatajob(@Param("job_id")String job_id);
+    void approveJobConfig(@Param("job_id")String job_id);
 
 
 
@@ -92,4 +108,5 @@ public interface FillinataskDao {
             "INNER JOIN rcd_job_unit_fld   c  on  b.job_unit_id = c.job_unit_id  " +
             "INNER JOIN rcd_dt_fld  d on  c.fld_id = d.fld_id    where a.job_id  = #{job_id} ")
     List<ReportFldConfig> taskDetailsreportFldConfig(@Param("job_id")String job_id);
+
 }

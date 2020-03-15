@@ -5,6 +5,7 @@ import com.datarecord.webapp.fillinatask.bean.Fillinatask;
 import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
 import com.datarecord.webapp.fillinatask.service.FillinataskService;
+import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.service.OriginService;
 import com.webapp.support.json.JsonSupport;
@@ -14,12 +15,8 @@ import com.workbench.auth.user.entity.User;
 import com.workbench.shiro.WorkbenchShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -122,17 +119,15 @@ public class FillinataskController {
     @RequestMapping("/insertrcdjobconfig")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public String insertrcdjobconfig(
-            @RequestParam("job_name")String job_name,
-            @RequestParam("job_start_dt")String job_start_dt,
-            @RequestParam("job_end_dt")String job_end_dt
-    ){
+    public String saveJobConfig(@RequestBody JobConfig jobConfig){
         try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
             Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            String job_creater = String.valueOf(user.getUser_id());            //创建人
-            String job_creater_origin = userOrigin.getOrigin_id().toString();  //创建人所属机构
-            fillinataskService.insertrcdjobconfig(job_name,job_start_dt,job_end_dt,job_creater,job_creater_origin);
+            Integer job_creater = user.getUser_id();            //创建人
+            Integer job_creater_origin = userOrigin.getOrigin_id();  //创建人所属机构
+            jobConfig.setJob_creater(job_creater);
+            jobConfig.setJob_creater_origin(job_creater_origin);
+            fillinataskService.saveJobConfig(jobConfig);
         }catch(Exception e){
             e.printStackTrace();
             return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增填报任务失败", null, "error");
@@ -153,7 +148,7 @@ public class FillinataskController {
             @RequestParam("job_end_dt")String job_end_dt
     ){
         try{
-            fillinataskService.updatercdjobconfig(job_id,job_name,job_start_dt,job_end_dt);
+            fillinataskService.updateJobConfig(job_id,job_name,job_start_dt,job_end_dt);
         }catch(Exception e){
             e.printStackTrace();
             return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "修改填报任务失败", null, "error");

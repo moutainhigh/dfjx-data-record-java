@@ -182,22 +182,22 @@ public class RecordMakerImp implements RecordMaker {
         for (JobUnitConfig jobUnit : jobUnits) {
             List<ReportFldConfig> unitFlds = jobUnit.getUnitFlds();
             for (ReportFldConfig unitFld : unitFlds) {
-                Integer isActive = unitFld.getIs_actived();
+//                Integer isActive = unitFld.getIs_actived();
                 Integer fldStatus = unitFld.getFld_status();
-                if(isActive==0){//填报指标未经审批
-                    faildList.add(new StringBuilder().append(jobUnit.getJob_unit_active()).append(":").append(unitFld.getFld_name()).append("未启用").toString());
-                    continue;
-                }
+//                if(isActive==0){//填报指标未经审批
+//                    faildList.add(new StringBuilder().append("【").append(jobUnit.getJob_unit_name()).append("】组:【").append(unitFld.getFld_name()).append("】未启用").toString());
+//                    continue;
+//                }
                 if(fldStatus==0){
-                    faildList.add(new StringBuilder().append(jobUnit.getJob_unit_active()).append(":").append(unitFld.getFld_name()).append("待审批").toString());
+                    faildList.add(new StringBuilder().append("【").append(jobUnit.getJob_unit_name()).append("】组:【").append(unitFld.getFld_name()).append("】待审批").toString());
                     continue;
                 }
                 if(fldStatus==2){
-                    faildList.add(new StringBuilder().append(jobUnit.getJob_unit_active()).append(":").append(unitFld.getFld_name()).append("审批被驳回").toString());
+                    faildList.add(new StringBuilder().append("【").append(jobUnit.getJob_unit_name()).append("】组:【").append(unitFld.getFld_name()).append("】审批被驳回").toString());
                     continue;
                 }
                 if(fldStatus==3){
-                    faildList.add(new StringBuilder().append(jobUnit.getJob_unit_active()).append(":").append(unitFld.getFld_name()).append("已作废").toString());
+                    faildList.add(new StringBuilder().append("【").append(jobUnit.getJob_unit_name()).append("】组:【").append(unitFld.getFld_name()).append("】已作废").toString());
                     continue;
                 }
             }

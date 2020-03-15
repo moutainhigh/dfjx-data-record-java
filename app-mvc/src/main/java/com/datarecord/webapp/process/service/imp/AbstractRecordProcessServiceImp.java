@@ -40,6 +40,8 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
         if(Strings.isNullOrEmpty(pageSize))
             pageSize = "10";
         Page<ReportJobInfo> pageData = recordProcessDao.pageJob(new Integer(currPage),new Integer(pageSize),user_id,queryParams);
+
+
         PageResult pageResult = PageResult.pageHelperList2PageResult(pageData);
         List<ReportJobInfo> dataList = pageResult.getDataList();
         Date currDate = new Date();
@@ -72,6 +74,13 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
             jobUnit.setReportGroupIntervals(reportGroupIntervals);
             jobUnit.setRcdJobUnitFlow(unitFlow);
         }
+
+        return jobConfigEntity;
+    }
+
+    @Override
+    public JobConfig getJobConfigByJobId(String jobId) {
+        JobConfig jobConfigEntity = recordProcessDao.getJobConfigByJobId(jobId);
 
         return jobConfigEntity;
     }

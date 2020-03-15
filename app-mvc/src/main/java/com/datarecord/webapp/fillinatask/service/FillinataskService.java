@@ -4,6 +4,7 @@ import com.datarecord.webapp.fillinatask.bean.Fillinatask;
 import com.datarecord.webapp.fillinatask.bean.Lieming;
 import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
+import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.process.entity.JobUnitConfig;
 import com.datarecord.webapp.process.entity.ReportFldConfig;
 import com.github.pagehelper.Page;
@@ -15,13 +16,13 @@ public interface FillinataskService {
 
     PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status,String origin_id);
 
-    void insertrcdjobconfig(String job_name, String job_start_dt, String job_end_dt,String job_creater,String job_creater_origin);
+    void saveJobConfig(JobConfig jobConfig);
 
     void insertrcdjobpersonassign(String job_id, String userid);
 
     void deletercdjobpersonassign(String job_id);
 
-    void updatercdjobconfig(String job_id, String job_name, String job_start_dt, String job_end_dt);
+    void updateJobConfig(String job_id, String job_name, String job_start_dt, String job_end_dt);
 
     List<RcdJobUnitConfig> selectRcdJobUnitConfig(String job_id);
 

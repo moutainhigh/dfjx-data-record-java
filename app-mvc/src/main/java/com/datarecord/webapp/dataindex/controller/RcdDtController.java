@@ -1,5 +1,6 @@
 package com.datarecord.webapp.dataindex.controller;
 
+import com.datarecord.enums.FldConfigStatus;
 import com.datarecord.webapp.dataindex.bean.RcdDtFld;
 import com.datarecord.webapp.dataindex.bean.RcdDtFldCtAssign;
 import com.datarecord.webapp.dataindex.bean.RcddtCatg;
@@ -275,6 +276,7 @@ public class RcdDtController {
                 Origin userOrigin = originService.getOriginByUser(user.getUser_id());
                 reportFldConfig.setFld_creater(user.getUser_id()); //创建人
                 reportFldConfig.setFld_creater_origin(userOrigin.getOrigin_id()); //创建人所属机构
+                reportFldConfig.setFld_status(new Integer(FldConfigStatus.APPROVE.getValue()));
                 rcdDtService.insertrcddtfld(reportFldConfig);
               int  fid = rcdDtService.selectmax();
               String  fld_id = String.valueOf(fid);

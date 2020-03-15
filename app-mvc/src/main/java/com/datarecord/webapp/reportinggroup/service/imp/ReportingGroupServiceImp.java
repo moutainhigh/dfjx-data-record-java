@@ -92,10 +92,12 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
     public void insertrcdjobunitconfig(ReportingGroup reportingGroup) {
         reportingGroupDao.insertrcdjobunitconfig(reportingGroup);
         List<ReportGroupInterval> reportingGroupIntervals = reportingGroup.getReportGroupIntervals();
-        for (ReportGroupInterval reportingGroupInterval : reportingGroupIntervals) {
-            reportingGroupInterval.setJob_id(reportingGroup.getJob_id());
-            reportingGroupInterval.setJob_unit_id(reportingGroup.getJob_unit_id());
-            reportingGroupDao.saveReportingInterval(reportingGroupInterval);
+        if(reportingGroupIntervals!=null){
+            for (ReportGroupInterval reportingGroupInterval : reportingGroupIntervals) {
+                reportingGroupInterval.setJob_id(reportingGroup.getJob_id());
+                reportingGroupInterval.setJob_unit_id(reportingGroup.getJob_unit_id());
+                reportingGroupDao.saveReportingInterval(reportingGroupInterval);
+            }
         }
         RcdJobUnitFlow unitFlow = reportingGroup.getRcdJobUnitFlow();
         unitFlow.setJob_id(reportingGroup.getJob_id());
@@ -108,11 +110,14 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
         reportingGroupDao.updatercdjobunitconfig(reportingGroup);
         List<ReportGroupInterval> reportingGroupIntervals = reportingGroup.getReportGroupIntervals();
         reportingGroupDao.deleteReportingInterval(reportingGroup.getJob_id(),reportingGroup.getJob_unit_id());
-        for (ReportGroupInterval reportingGroupInterval : reportingGroupIntervals) {
-            reportingGroupInterval.setJob_id(reportingGroup.getJob_id());
-            reportingGroupInterval.setJob_unit_id(reportingGroup.getJob_unit_id());
-            reportingGroupDao.saveReportingInterval(reportingGroupInterval);
+        if(reportingGroupIntervals!=null){
+            for (ReportGroupInterval reportingGroupInterval : reportingGroupIntervals) {
+                reportingGroupInterval.setJob_id(reportingGroup.getJob_id());
+                reportingGroupInterval.setJob_unit_id(reportingGroup.getJob_unit_id());
+                reportingGroupDao.saveReportingInterval(reportingGroupInterval);
+            }
         }
+
         RcdJobUnitFlow unitFlow = reportingGroupDao.getUnitFLow(reportingGroup.getJob_id(),String.valueOf(reportingGroup.getJob_unit_id()));
 
         if(unitFlow!=null){

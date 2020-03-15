@@ -14,6 +14,8 @@ public interface RecordProcessService {
 
     JobConfig getJobConfigByReportId(String reportId);
 
+    JobConfig getJobConfigByJobId(String jobId);
+
     List<ReportFldTypeConfig> getFldByUnitId(String unitId);
 
     List<ReportJobData> getFldReportDatas(String jobId,String reportId, String groupId);

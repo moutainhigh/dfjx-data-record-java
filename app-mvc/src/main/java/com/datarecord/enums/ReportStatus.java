@@ -9,6 +9,9 @@ package com.datarecord.enums;
  * 5：报表发布
  * 6：待上传签名
  * 7：过期
+ * 8：已过期
+ * 9：已完成
+ * 10：不在填报时间内
  */
 public enum ReportStatus {
 
@@ -21,7 +24,8 @@ public enum ReportStatus {
     UP_SIGIN(6,"待上传签名"),
     TOO_EARLY(7,"未开始"),
     OVER_TIME(8,"已过期"),
-    REPORT_DONE(9,"已完成");
+    REPORT_DONE(9,"已完成"),
+    OVER_INTERVAL(10,"不在填报时间内");
 
     private Integer value;
     private String comment;

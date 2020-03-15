@@ -1,5 +1,6 @@
 package com.datarecord.webapp.process.service.imp;
 
+import com.datarecord.enums.FldConfigStatus;
 import com.datarecord.enums.JobConfigStatus;
 import com.datarecord.enums.ReportStatus;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
@@ -108,13 +109,21 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
     @Transactional(rollbackFor = Exception.class)
     public void reviewJobItems(String jobId, String reviewStatus) {
         JobConfig jobConfig = recordProcessDao.getJobConfigByJobId(jobId);
+//        String fldStatus = reviewStatus;
+        Integer reviewStatusInt = new Integer(reviewStatus);
+//        if(JobConfigStatus.APPROVE.compareWith(reviewStatusInt)){
+//            fldStatus = FldConfigStatus.APPROVE.getValue();
+//        }else if(JobConfigStatus.REJECT.compareWith(reviewStatusInt)){
+//            fldStatus = FldConfigStatus.REJECT.getValue();
+//        }
+
         List<JobUnitConfig> jobUnits = jobConfig.getJobUnits();
 
         recordProcessFlowDao.changeJobConfig(jobId,String.valueOf(JobConfigStatus.getJobConfigStatus(reviewStatus).value()));
 
-        for (JobUnitConfig jobUnit : jobUnits) {
-            this.reviewUnit(String.valueOf(jobUnit.getJob_unit_id()),reviewStatus);
-        }
+//        for (JobUnitConfig jobUnit : jobUnits) {
+//            this.reviewUnit(String.valueOf(jobUnit.getJob_unit_id()),fldStatus);
+//        }
     }
 
     @Override

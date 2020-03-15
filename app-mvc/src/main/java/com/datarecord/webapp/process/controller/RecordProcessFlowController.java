@@ -1,31 +1,26 @@
 package com.datarecord.webapp.process.controller;
 
-import com.datarecord.webapp.fillinatask.service.FillinataskService;
-import com.datarecord.webapp.process.entity.JobUnitConfig;
-import com.datarecord.webapp.process.entity.ReportFldConfig;
-import com.datarecord.webapp.process.service.RecordProcessFactory;
+import com.datarecord.webapp.process.entity.JobConfig;
+import com.datarecord.webapp.process.service.RecordMaker;
 import com.datarecord.webapp.process.service.RecordProcessFlowService;
+import com.datarecord.webapp.process.service.RecordProcessService;
 import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.service.OriginService;
-import com.datarecord.webapp.sys.origin.tree.TreeUtil;
-import com.google.common.base.Strings;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
 import com.workbench.shiro.WorkbenchShiroUtils;
-import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
-    @RequestMapping("record/flow")
+@RequestMapping("record/flow")
 public class RecordProcessFlowController {
 
     @Autowired
@@ -35,7 +30,10 @@ public class RecordProcessFlowController {
     private OriginService originService;
 
     @Autowired
-    private FillinataskService fillinataskService;
+    private RecordMaker recordMaker;
+
+    @Autowired
+    private RecordProcessService recordProcessService;
 
     @RequestMapping("pageJob")
     @ResponseBody
@@ -128,32 +126,20 @@ public class RecordProcessFlowController {
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
     public JsonResult reviewJob(String jobId,String status){
+        JobConfig jobCOnfig = recordProcessService.getJobConfigByJobId(jobId);
+        Map<JsonResult.RESULT, Object> checkResult = recordMaker.preMake(jobCOnfig);
+
+        if(checkResult.containsKey(JsonResult.RESULT.FAILD)){
+            Object faildResult = checkResult.get(JsonResult.RESULT.FAILD);
+            JsonResult successResult = JsonSupport.makeJsonpResult(
+                    JsonResult.RESULT.FAILD, String.valueOf(faildResult), null, faildResult);
+            return successResult;
+        }
+
         recordProcessFlowService.reviewJobItems(jobId,status);
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "更新成功", null, JsonResult.RESULT.SUCCESS);
         return successResult;
     }
-
-
-    //任务定义审批查看详情的功能，查看填报组及指标
-    @RequestMapping("/taskDetails")
-    @ResponseBody
-    @CrossOrigin(allowCredentials="true")
-    public String taskDetails(
-            @RequestParam("job_id")String job_id
-    ){
-        Map<String,Object>  map = new HashMap<>();
-        try{
-            List<JobUnitConfig>    jobUnitConfig =  fillinataskService.taskDetailsjobUnitConfig(job_id);  //组
-            List<ReportFldConfig>    reportFldConfig =  fillinataskService.taskDetailsreportFldConfig(job_id); //指标
-            map.put("job",jobUnitConfig);
-            map.put("fld",reportFldConfig);
-        }catch(Exception e){
-            e.printStackTrace();
-            return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "查看详情失败", null, "error");
-        }
-        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "查看详情成功", null, map);
-    }
-
 
 }

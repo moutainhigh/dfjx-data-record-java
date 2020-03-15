@@ -1,12 +1,10 @@
 package com.datarecord.webapp.fillinatask.service.imp;
 
 import com.datarecord.webapp.datadictionary.service.imp.DataDictionaryServiceImp;
-import com.datarecord.webapp.fillinatask.bean.Fillinatask;
-import com.datarecord.webapp.fillinatask.bean.Lieming;
-import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
-import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
+import com.datarecord.webapp.fillinatask.bean.*;
 import com.datarecord.webapp.fillinatask.dao.FillinataskDao;
 import com.datarecord.webapp.fillinatask.service.FillinataskService;
+import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.process.entity.JobUnitConfig;
 import com.datarecord.webapp.process.entity.ReportFldConfig;
 import com.datarecord.webapp.reportinggroup.dao.ReportingGroupDao;
@@ -18,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +31,6 @@ public class FillinataskServiceImp implements FillinataskService {
 
     @Autowired
     private ReportingGroupDao reportingGroupDao;
-
-
 
     @Override
     public PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status,String origin_id) {
@@ -67,8 +64,16 @@ public class FillinataskServiceImp implements FillinataskService {
     }
 
     @Override
-    public void insertrcdjobconfig(String job_name, String job_start_dt, String job_end_dt,String job_creater,String job_creater_origin) {
-        fillinataskDao.insertrcdjobconfig(job_name,job_start_dt,job_end_dt,job_creater,job_creater_origin);
+    @Transactional(rollbackFor = Exception.class)
+    public void saveJobConfig(JobConfig jobConfig) {
+        jobConfig.setJob_start_dt(jobConfig.getJob_start_dt());
+        jobConfig.setJob_end_dt(jobConfig.getJob_end_dt());
+        fillinataskDao.saveJobConfig(jobConfig);
+        List<JobInteval> jobIntervals = jobConfig.getJob_intervals();
+        for (JobInteval jobInterval : jobIntervals) {
+            jobInterval.setJob_id(jobConfig.getJob_id());
+            fillinataskDao.saveJobInterval(jobInterval);
+        }
     }
 
     @Override
@@ -87,7 +92,7 @@ public class FillinataskServiceImp implements FillinataskService {
     }
 
     @Override
-    public void updatercdjobconfig(String job_id,String job_name, String job_start_dt, String job_end_dt ) {
+    public void updateJobConfig(String job_id, String job_name, String job_start_dt, String job_end_dt ) {
         fillinataskDao.updatercdjobconfig(job_id,job_name,job_start_dt,job_end_dt);
     }
 
@@ -159,7 +164,7 @@ public class FillinataskServiceImp implements FillinataskService {
 
     @Override
     public void fillInTaskApprovalByJobid(String job_id) {
-        fillinataskDao.selectrcdreportdatajob(job_id);
+        fillinataskDao.approveJobConfig(job_id);
     }
 
     @Override
