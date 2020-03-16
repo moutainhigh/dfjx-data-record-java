@@ -43,7 +43,7 @@ public class ReportingGroupController {
        try{
            User user = WorkbenchShiroUtils.checkUserFromShiroContext();
            Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-           ll  = reportingGroupService.leftrcdjobconfig(userOrigin.getOrigin_id().toString());
+           ll  = reportingGroupService.leftrcdjobconfig(userOrigin);
        }catch(Exception e){
            e.printStackTrace();
            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "left填报任务获取失败", null, "error");
@@ -147,7 +147,7 @@ public class ReportingGroupController {
         try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
             Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            ll  = reportingGroupService.selectrcdjobunitfld(userOrigin.getOrigin_id().toString(),job_unit_id);   //查出有关联的指标id
+            ll  = reportingGroupService.selectrcdjobunitfld(userOrigin,job_unit_id);   //查出有关联的指标id
         }catch(Exception e){
             e.printStackTrace();
             return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标获取失败", null, "error");

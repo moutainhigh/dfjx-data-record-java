@@ -7,8 +7,8 @@ import com.datarecord.webapp.fillinatask.service.FillinataskService;
 import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.process.entity.JobUnitConfig;
 import com.datarecord.webapp.process.entity.ReportFldConfig;
-import com.datarecord.webapp.reportinggroup.dao.ReportingGroupDao;
-import com.datarecord.webapp.utils.EntityTree;
+import com.datarecord.webapp.sys.origin.entity.Origin;
+import com.datarecord.webapp.sys.origin.service.OriginService;
 import com.github.pagehelper.Page;
 import com.google.common.base.Strings;
 import com.webapp.support.page.PageResult;
@@ -29,32 +29,30 @@ public class FillinataskServiceImp implements FillinataskService {
     @Autowired
     private FillinataskDao fillinataskDao;
 
+
     @Autowired
-    private ReportingGroupDao reportingGroupDao;
+    private OriginService originService;
+
 
     @Override
-    public PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status,String origin_id) {
+    public PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status,Origin userOrigin) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
         job_name = Strings.emptyToNull(job_name);
         job_status = Strings.emptyToNull(job_status);
-        List<EntityTree> lists =  reportingGroupDao.selectoriginid();
-        List<String> lsls = new ArrayList<String>();
-        for (EntityTree x : lists) {
-            if((null != x.getpId() && !"".equals(x.getpId()))  ||  (null != x.getId() && !"".equals(x.getId()) ) ){
-                if(origin_id.equals(x.getpId())){
-                    lsls.add(x.getId());
-                }else if (origin_id.equals(x.getId())){
-                    lsls.add(x.getId());
-                }
-            }
+        List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
+        childrenOrigins.add(0,userOrigin);
+        List<Integer> originIds  = new ArrayList<>();
+        for (Origin childrenOrigin : childrenOrigins) {
+            originIds.add(childrenOrigin.getOrigin_id());
         }
         String originid ="";
-        if(lsls.size() > 0){
-            for (String id : lsls){
-                originid += ",";
+        if(originIds.size() > 0){
+            for (Integer id : originIds){
+                originid += "','";
                 originid += id;
             }
-            originid =  originid.substring(1);
+            originid =  originid.substring(2);
+            originid += "'";
         }
         Page<Fillinatask> contactPageDatas = fillinataskDao.rcdjobconfiglist(currPage, pageSize,job_name,job_status,originid);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);

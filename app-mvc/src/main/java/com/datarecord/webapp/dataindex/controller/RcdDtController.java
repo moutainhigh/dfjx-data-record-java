@@ -140,7 +140,7 @@ public class RcdDtController {
         try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
             Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            pageResult = rcdDtService.selectrcddtproj(currPage,pageSize,userOrigin.getOrigin_id().toString());
+            pageResult = rcdDtService.selectrcddtproj(currPage,pageSize,userOrigin);
         }catch(Exception e){
             e.printStackTrace();
             return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标体系基本类别列表失败", null, "error");
@@ -177,8 +177,6 @@ public class RcdDtController {
 
 
 
-
-
   //根据指标类别查询指标体系类别列表  三级
   @RequestMapping("/selecttixircddtproj")
   @ResponseBody
@@ -191,9 +189,7 @@ public class RcdDtController {
       PageResult pageResult = null;
 
       try{
-          User user = WorkbenchShiroUtils.checkUserFromShiroContext();
-          Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-          pageResult = rcdDtService.selecttixircddtproj(currPage,pageSize,catg_id,userOrigin.getOrigin_id().toString());
+          pageResult = rcdDtService.selecttixircddtproj(currPage,pageSize,catg_id);
       }catch(Exception e){
           e.printStackTrace();
           return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标体系类别列表失败", null, "error");
@@ -215,7 +211,7 @@ public class RcdDtController {
         try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
             Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            pageResult = rcdDtService.selecttixircddtprojer(currPage,pageSize,proj_id,userOrigin.getOrigin_id().toString());
+            pageResult = rcdDtService.selecttixircddtprojer(currPage,pageSize,proj_id,userOrigin);
         }catch(Exception e){
             e.printStackTrace();
             return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标二级体系类别列表失败", null, "error");

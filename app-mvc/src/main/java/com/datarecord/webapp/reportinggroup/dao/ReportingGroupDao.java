@@ -85,11 +85,4 @@ public interface ReportingGroupDao {
             "where job_id = #{job_id} and unit_id = #{job_unit_id} ")
     RcdJobUnitFlow getUnitFLow(@Param("job_id") Integer job_id,@Param("job_unit_id") String job_unit_id);
 
-    @Select("SELECT" +
-            " origin_id AS id," +
-            " origin_name AS NAME," +
-            " parent_origin_id AS pId" +
-            " FROM " +
-            " sys_origin  ")
-    List<EntityTree> selectoriginid();
 }

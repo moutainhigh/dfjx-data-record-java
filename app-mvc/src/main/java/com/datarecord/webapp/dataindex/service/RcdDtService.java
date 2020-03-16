@@ -5,6 +5,7 @@ import com.datarecord.webapp.dataindex.bean.RcdDtFldCtAssign;
 import com.datarecord.webapp.dataindex.bean.RcddtCatg;
 import com.datarecord.webapp.dataindex.bean.Rcddtproj;
 import com.datarecord.webapp.process.entity.ReportFldConfig;
+import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.webapp.support.page.PageResult;
 
 import java.util.List;
@@ -13,11 +14,11 @@ public interface RcdDtService {
 
     void insertrcddtproj(String proj_name, String is_actived);
 
-    PageResult selectrcddtproj(int currPage, int pageSize,String origin_id);
+    PageResult selectrcddtproj(int currPage, int pageSize,Origin userOrigin);
 
     void updatercddtproj(String proj_name, String is_actived, String proj_id);
 
-    PageResult selecttixircddtproj(int currPage, int pageSize, String catg_id,String origin_id);
+    PageResult selecttixircddtproj(int currPage, int pageSize, String catg_id);
 
     void insertrcddtfld(ReportFldConfig reportFldConfig);
 
@@ -37,7 +38,7 @@ public interface RcdDtService {
 
     List<RcdDtFld> leftrcddtfld(String catg_id);
 
-    PageResult selecttixircddtprojer(int currPage, int pageSize, String proj_id,String origin_id);
+    PageResult selecttixircddtprojer(int currPage, int pageSize, String proj_id,Origin userOrigin);
 
     int selectmax();
 

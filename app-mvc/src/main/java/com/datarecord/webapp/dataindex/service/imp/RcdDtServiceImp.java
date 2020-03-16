@@ -7,6 +7,8 @@ import com.datarecord.webapp.dataindex.dao.RcdDtDao;
 import com.datarecord.webapp.dataindex.service.RcdDtService;
 import com.datarecord.webapp.process.entity.ReportFldConfig;
 import com.datarecord.webapp.reportinggroup.dao.ReportingGroupDao;
+import com.datarecord.webapp.sys.origin.entity.Origin;
+import com.datarecord.webapp.sys.origin.service.OriginService;
 import com.datarecord.webapp.utils.EntityTree;
 import com.github.pagehelper.Page;
 import com.webapp.support.page.PageResult;
@@ -33,32 +35,31 @@ public class RcdDtServiceImp  implements RcdDtService {
     private ReportingGroupDao reportingGroupDao;
 
 
+    @Autowired
+    private OriginService originService;
+
     @Override
     public void insertrcddtproj(String proj_name, String is_actived) {
         rcdDtDao.insertrcddtproj(proj_name,is_actived);
     }
 
     @Override
-    public PageResult selectrcddtproj(int currPage, int pageSize,String origin_id) {
+    public PageResult selectrcddtproj(int currPage, int pageSize,Origin userOrigin) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
-        List<EntityTree> lists =  reportingGroupDao.selectoriginid();
-        List<String> lsls = new ArrayList<String>();
-        for (EntityTree x : lists) {
-            if((null != x.getpId() && !"".equals(x.getpId()))  ||  (null != x.getId() && !"".equals(x.getId()) ) ){
-                if(origin_id.equals(x.getpId())){
-                    lsls.add(x.getId());
-                }else if (origin_id.equals(x.getId())){
-                    lsls.add(x.getId());
-                }
-            }
+        List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
+        childrenOrigins.add(0,userOrigin);
+        List<Integer> originIds  = new ArrayList<>();
+        for (Origin childrenOrigin : childrenOrigins) {
+            originIds.add(childrenOrigin.getOrigin_id());
         }
         String originid ="";
-        if(lsls.size() > 0){
-            for (String id : lsls){
-                originid += ",";
+        if(originIds.size() > 0){
+            for (Integer id : originIds){
+                originid += "','";
                 originid += id;
             }
-            originid =  originid.substring(1);
+            originid =  originid.substring(2);
+            originid += "'";
         }
         Page<DataDictionary> contactPageDatas = rcdDtDao.selectrcddtproj(currPage, pageSize,originid);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
@@ -72,28 +73,9 @@ public class RcdDtServiceImp  implements RcdDtService {
     }
 
     @Override
-    public PageResult selecttixircddtproj(int currPage, int pageSize, String catg_id,String origin_id) {
+    public PageResult selecttixircddtproj(int currPage, int pageSize, String catg_id) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
-        List<EntityTree> lists =  reportingGroupDao.selectoriginid();
-        List<String> lsls = new ArrayList<String>();
-        for (EntityTree x : lists) {
-            if((null != x.getpId() && !"".equals(x.getpId()))  ||  (null != x.getId() && !"".equals(x.getId()) ) ){
-                if(origin_id.equals(x.getpId())){
-                    lsls.add(x.getId());
-                }else if (origin_id.equals(x.getId())){
-                    lsls.add(x.getId());
-                }
-            }
-        }
-        String originid ="";
-        if(lsls.size() > 0){
-            for (String id : lsls){
-                originid += ",";
-                originid += id;
-            }
-            originid =  originid.substring(1);
-        }
-        Page<RcdDt> contactPageDatas = rcdDtDao.selecttixircddtproj(currPage, pageSize,catg_id,originid);
+        Page<RcdDt> contactPageDatas = rcdDtDao.selecttixircddtproj(currPage, pageSize,catg_id);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
         return pageContactResult;
@@ -141,26 +123,22 @@ public class RcdDtServiceImp  implements RcdDtService {
     }
 
     @Override
-    public PageResult selecttixircddtprojer(int currPage, int pageSize, String proj_id,String origin_id) {
+    public PageResult selecttixircddtprojer(int currPage, int pageSize, String proj_id,Origin userOrigin) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
-        List<EntityTree> lists =  reportingGroupDao.selectoriginid();
-        List<String> lsls = new ArrayList<String>();
-        for (EntityTree x : lists) {
-            if((null != x.getpId() && !"".equals(x.getpId()))  ||  (null != x.getId() && !"".equals(x.getId()) ) ){
-                if(origin_id.equals(x.getpId())){
-                    lsls.add(x.getId());
-                }else if (origin_id.equals(x.getId())){
-                    lsls.add(x.getId());
-                }
-            }
+        List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
+        childrenOrigins.add(0,userOrigin);
+        List<Integer> originIds  = new ArrayList<>();
+        for (Origin childrenOrigin : childrenOrigins) {
+            originIds.add(childrenOrigin.getOrigin_id());
         }
         String originid ="";
-        if(lsls.size() > 0){
-            for (String id : lsls){
-                originid += ",";
+        if(originIds.size() > 0){
+            for (Integer id : originIds){
+                originid += "','";
                 originid += id;
             }
-            originid =  originid.substring(1);
+            originid =  originid.substring(2);
+            originid += "'";
         }
         Page<DataDictionary> contactPageDatas = rcdDtDao.selecttixircddtprojer(currPage, pageSize,proj_id,originid);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);

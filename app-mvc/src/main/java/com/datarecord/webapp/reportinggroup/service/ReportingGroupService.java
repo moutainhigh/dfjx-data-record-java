@@ -9,7 +9,7 @@ import com.webapp.support.page.PageResult;
 import java.util.List;
 
 public interface ReportingGroupService {
-    List<rcdJobConfig> leftrcdjobconfig(String origin_id);
+    List<rcdJobConfig> leftrcdjobconfig(Origin userOrigin);
 
     PageResult rcdjobunitconfiglist(int currPage, int pageSize, String job_id);
 
@@ -24,5 +24,5 @@ public interface ReportingGroupService {
 
     ReportingGroup selectrcdjobunitconfigByjobunitid(String job_unit_id);
 
-    List<RcdJobUnitFld> selectrcdjobunitfld(String origin_id, String job_unit_id);
+    List<RcdJobUnitFld> selectrcdjobunitfld(Origin userOrigin, String job_unit_id);
 }

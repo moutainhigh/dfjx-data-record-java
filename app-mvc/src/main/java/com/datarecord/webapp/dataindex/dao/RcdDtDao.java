@@ -40,10 +40,10 @@ public interface RcdDtDao {
             " rcd_dt_fld a " +
             " INNER JOIN rcd_dt_catg b ON a.catg_id = b.catg_id " +
             " INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id " +
-            " where 1=1  AND  a.fld_creater_origin  IN (#{originid}) " +
+            " where 1=1 " +
             "<if test = \"catg_id != null and catg_id != ''\">  and b.catg_id = #{catg_id} </if>" +
             "</script>")
-    Page<RcdDt> selecttixircddtproj(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("catg_id") String catg_id,@Param("originid")String  originid);
+    Page<RcdDt> selecttixircddtproj(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("catg_id") String catg_id );
 
 
     @Insert("INSERT INTO rcd_dt_fld (catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_status,fld_creater,fld_creater_origin) VALUES(#{catg_id},#{fld_name},#{fld_data_type},#{fld_is_null},#{fld_type},#{fld_range},#{fld_visible},#{fld_status},#{fld_creater},#{fld_creater_origin})")
