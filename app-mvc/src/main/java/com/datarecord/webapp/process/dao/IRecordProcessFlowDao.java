@@ -1,11 +1,9 @@
 package com.datarecord.webapp.process.dao;
 
-import com.datarecord.webapp.process.entity.JobConfig;
-import com.datarecord.webapp.process.entity.ReportFldConfig;
-import com.datarecord.webapp.process.entity.ReportJobData;
-import com.datarecord.webapp.process.entity.ReportJobInfo;
+import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.github.pagehelper.Page;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -143,6 +141,25 @@ public interface IRecordProcessFlowDao {
 
     @Update("update rcd_job_config set job_status = #{status} where job_id = #{jobId}")
     void changeJobConfig(@Param("jobId") String jobId,@Param("status") String status);
+
+    @Insert("insert into rcd_job_flowlog " +
+            "(job_id,job_flow_status,job_flow_comment,job_flow_user,job_flow_date) " +
+            "values " +
+            "(#{job_id},#{job_flow_status},#{job_flow_comment},#{job_flow_user},#{job_flow_date})")
+    void recordFlowLog(JobFlowLog jobFlowLog);
+
+    @Select("select " +
+            "rjf.id," +
+            "rjf.job_id," +
+            "rjf.job_flow_status," +
+            "rjf.job_flow_comment," +
+            "rjf.job_flow_date," +
+            "rjf.job_flow_user, " +
+            "u.user_name_cn as job_flow_user_name " +
+            "from rcd_job_flowlog rjf " +
+            "left join user u on " +
+            "rjf.job_flow_user = u.user_id where rjf.job_id = #{jobId}")
+    List<JobFlowLog> listJobFlowLogs(String jobId);
 }
 
 

@@ -70,5 +70,18 @@ ALTER TABLE `rcd_job_interval`
 CHANGE COLUMN `job_start` `job_interval_start` VARCHAR(45) NOT NULL ,
 CHANGE COLUMN `job_end` `job_interval_end` VARCHAR(45) NOT NULL COMMENT '任务填报周期' ;
 
+CREATE TABLE `rcd_job_flowlog` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `job_id` INT NULL,
+  `job_flow_status` INT NULL COMMENT '审批状态:通过还是驳回还是其他,值对应\nrcd_job_config.job_status',
+  `job_flow_comment` VARCHAR(400) NULL COMMENT '审批处理备注',
+  PRIMARY KEY (`id`));
 
+ALTER TABLE `rcd_job_flowlog`
+ADD COLUMN `job_flow_user` INT NULL COMMENT '审批人' AFTER `job_flow_comment`;
+
+ALTER TABLE `rcd_job_flowlog`
+ADD COLUMN `job_flow_date` TIMESTAMP NULL COMMENT '审批时间' AFTER `job_flow_user`;
+
+update rcd_job_config set job_cycle = 2 where job_cycle!=2;
 

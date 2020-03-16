@@ -14,6 +14,7 @@ import com.google.common.base.Strings;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
 import com.workbench.exception.runtime.WorkbenchRuntimeException;
+import com.workbench.shiro.WorkbenchShiroUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,10 +108,11 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void reviewJobItems(String jobId, String reviewStatus) {
-        JobConfig jobConfig = recordProcessDao.getJobConfigByJobId(jobId);
+    public void reviewJobItems( JobFlowLog jobFlowLog) {
+        Integer jobId = jobFlowLog.getJob_id();
+        JobConfig jobConfig = recordProcessDao.getJobConfigByJobId(jobId.toString());
 //        String fldStatus = reviewStatus;
-        Integer reviewStatusInt = new Integer(reviewStatus);
+        Integer reviewStatusInt = new Integer(jobFlowLog.getJob_flow_status());
 //        if(JobConfigStatus.APPROVE.compareWith(reviewStatusInt)){
 //            fldStatus = FldConfigStatus.APPROVE.getValue();
 //        }else if(JobConfigStatus.REJECT.compareWith(reviewStatusInt)){
@@ -118,9 +120,11 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
 //        }
 
         List<JobUnitConfig> jobUnits = jobConfig.getJobUnits();
-
-        recordProcessFlowDao.changeJobConfig(jobId,String.valueOf(JobConfigStatus.getJobConfigStatus(reviewStatus).value()));
-
+        User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+        jobFlowLog.setJob_flow_user(user.getUser_id());
+        jobFlowLog.setJob_flow_date(new Date());
+        recordProcessFlowDao.changeJobConfig(jobId.toString(),jobFlowLog.getJob_flow_status().toString());
+        recordProcessFlowDao.recordFlowLog(jobFlowLog);
 //        for (JobUnitConfig jobUnit : jobUnits) {
 //            this.reviewUnit(String.valueOf(jobUnit.getJob_unit_id()),fldStatus);
 //        }
@@ -179,6 +183,12 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
     @Override
     public void subJobConfig(String jobId) {
         recordProcessFlowDao.changeJobConfig(jobId,String.valueOf(JobConfigStatus.REVIEW.value()));
+    }
+
+    @Override
+    public List<JobFlowLog> getJobFlowLogs(String jobId) {
+        List<JobFlowLog> flowLogs = recordProcessFlowDao.listJobFlowLogs(jobId);
+        return flowLogs;
     }
 
     private List<Origin> checkAuthOrigins(Integer user_id){
