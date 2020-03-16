@@ -16,7 +16,8 @@ package com.datarecord.enums;
 public enum ReportStatus {
 
     NORMAL(0,"填报中"),
-    SUBMIT(1,"审核中"),
+//    SUBMIT(1,"审核中"),
+    SUBMIT(1,"已提交"),
     REVIEW(2,"复核中"),
     LOCK(3,"锁定"),
     REMOVE(4,"失效"),

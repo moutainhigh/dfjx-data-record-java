@@ -236,6 +236,12 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
         recordProcessDao.updateReportStatus(reportId,reportStatus.getValue());
     }
 
+    @Override
+    public ReportJobInfo getReportJobInfo(String reportId) {
+        ReportJobInfo reportJobInfo = recordProcessDao.getReportJobInfoByReportId(reportId);
+        return reportJobInfo;
+    }
+
     protected Map<Integer,ReportFldConfig> getReportFldConfigMap(String unitId){
         Map<Integer, ReportFldConfig> fldConfigMapCache = new HashMap();
         List<ReportFldConfig> flds4Unit = recordProcessDao.getFldByUnitId(unitId);

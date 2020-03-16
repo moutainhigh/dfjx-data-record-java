@@ -62,6 +62,20 @@ public class RecordProcessController {
         return successResult;
     }
 
+    @RequestMapping("getReportData")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult getReportData(String reportId){
+        if(Strings.isNullOrEmpty(reportId)){
+            return JsonSupport.makeJsonpResult(
+                    JsonResult.RESULT.FAILD, "填报编号为空", null, "填报编号为空");
+        }
+        ReportJobInfo reportData = RecordProcessFactory.RecordProcessSerice().getReportJobInfo(reportId);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, reportData);
+        return successResult;
+    }
+
     @RequestMapping("checkUnitStep")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
