@@ -64,8 +64,6 @@ public class FillinataskController {
     ){
         try{
             fillinataskService.deletercdjobconfig(job_id);    //填报任务删除
-            fillinataskService.deletercdjobpersonassign(job_id);    //填报人维护删除
-            fillinataskService.deleteRcdJobUnitConfigsuo(job_id);    //任务关连填报组删除
         }catch(Exception e){
             e.printStackTrace();
             return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报任务删除失败", null, "error");
@@ -99,7 +97,6 @@ public class FillinataskController {
     public String selectrcdjobconfigjobid(
             @RequestParam("job_id")String job_id
     ){
-        String jsonResult = "";
         JobConfig jobConfig = null;
         try{
             jobConfig = fillinataskService.selectrcdjobconfigjobid(job_id);
@@ -179,7 +176,6 @@ public class FillinataskController {
             @RequestParam("job_id")String job_id
     ){
         List<RcdJobPersonAssign> ll = null;
-        String jsonResult = "";
         try{
             ll =   fillinataskService.huixianrcdjobpersonassign(job_id);
         }catch(Exception e){
@@ -235,7 +231,6 @@ public class FillinataskController {
             @RequestParam("job_id")String job_id
     ){
         try{
-              fillinataskService.updateRcdJobUnitConfigsuo(job_id);
               fillinataskService.updateRcdJobUnitConfigyi(jobunitid,job_id);
         }catch(Exception e){
             e.printStackTrace();

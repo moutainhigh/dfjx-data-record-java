@@ -89,10 +89,7 @@ public class FillinataskServiceImp implements FillinataskService {
         }
     }
 
-    @Override
-    public void deletercdjobpersonassign(String job_id) {
-        fillinataskDao.deletercdjobpersonassign(job_id);
-    }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -130,19 +127,17 @@ public class FillinataskServiceImp implements FillinataskService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateRcdJobUnitConfigyi(String jobunitid,String job_id) {
         /*jobunitid.substring(1);
         jobunitid.substring(0,jobunitid.length()-1);*/
+        fillinataskDao.updateRcdJobUnitConfigsuo(job_id);
         String[] split = jobunitid.split(",");
         for (String job_unit_id : split){
             fillinataskDao.updateRcdJobUnitConfigyi(job_unit_id,job_id);
         }
     }
 
-    @Override
-    public void updateRcdJobUnitConfigsuo(String job_id) {
-        fillinataskDao.updateRcdJobUnitConfigsuo(job_id);
-    }
 
     @Override
     public List<RcdJobPersonAssign> huixianrcdjobpersonassign(String job_id) {
@@ -150,14 +145,15 @@ public class FillinataskServiceImp implements FillinataskService {
 }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deletercdjobconfig(String job_id) {
-        fillinataskDao.deletercdjobconfig(job_id);
+        fillinataskDao.deletercdjobconfig(job_id);    //填报任务删除
+        fillinataskDao.deletercdjobpersonassign(job_id);    //填报人维护删除
+        fillinataskDao.deleteRcdJobUnitConfigsuo(job_id);    //任务关连填报组删除
+        fillinataskDao.removeIntervals(new Integer(job_id));
     }
 
-    @Override
-    public void deleteRcdJobUnitConfigsuo(String job_id) {
-        fillinataskDao.deleteRcdJobUnitConfigsuo(job_id);
-    }
+
 
     @Override
     public JobConfig selectrcdjobconfigjobid(String job_id) {

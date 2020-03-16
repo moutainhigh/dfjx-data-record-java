@@ -71,18 +71,13 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void rcdjobunitfld(String fld_id, String jobunitid) {
-       /* jobunitid.substring(1);
-        jobunitid.substring(0,jobunitid.length()-1);*/
+        reportingGroupDao.rcdjobunitflddelete(jobunitid);  //删除之前关系
         String[] split = fld_id.split(",");
         for (String fldid : split){
             reportingGroupDao.rcdjobunitfld(fldid,jobunitid);
         }
-    }
-
-    @Override
-    public void rcdjobunitflddelete(String jobunitid) {
-        reportingGroupDao.rcdjobunitflddelete(jobunitid);
     }
 
 

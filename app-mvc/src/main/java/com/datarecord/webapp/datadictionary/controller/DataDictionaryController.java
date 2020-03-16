@@ -1,7 +1,6 @@
 package com.datarecord.webapp.datadictionary.controller;
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.datadictionary.service.DataDictionaryService;
-import com.webapp.support.httpClient.HttpClientSupport;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
@@ -11,10 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 数据字典Controller
@@ -73,7 +69,6 @@ public class DataDictionaryController {
     public String deleteDataDictionarybydictid(
             @RequestParam("dict_id") String dict_id
     ){
-
         int ll = 0;
         try{
             ll = dataDictionaryService.selectbyrcddtdictcontentdictid(dict_id);
@@ -167,7 +162,6 @@ public class DataDictionaryController {
             @RequestParam("dict_content_name") String dict_content_name,
             @RequestParam("dict_content_value") String dict_content_value
     ){
-
         boolean ss = false;
         if(!dict_content_id.isEmpty() && !dict_id.isEmpty() && !dict_content_name.isEmpty()  && !dict_content_value.isEmpty()){
             try{

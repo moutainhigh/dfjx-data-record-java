@@ -17,7 +17,6 @@ public interface ReportingGroupService {
 
     void rcdjobunitfld(String fld_id, String jobunitid);
 
-    void rcdjobunitflddelete(String jobunitid);
 
     void insertrcdjobunitconfig(ReportingGroup reportingGroup);
 
