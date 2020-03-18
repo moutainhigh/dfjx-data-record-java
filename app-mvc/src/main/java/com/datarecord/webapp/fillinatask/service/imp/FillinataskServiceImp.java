@@ -4,6 +4,7 @@ import com.datarecord.webapp.datadictionary.service.imp.DataDictionaryServiceImp
 import com.datarecord.webapp.fillinatask.bean.*;
 import com.datarecord.webapp.fillinatask.dao.FillinataskDao;
 import com.datarecord.webapp.fillinatask.service.FillinataskService;
+import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.process.entity.JobUnitConfig;
 import com.datarecord.webapp.process.entity.ReportFldConfig;
@@ -29,6 +30,8 @@ public class FillinataskServiceImp implements FillinataskService {
     @Autowired
     private FillinataskDao fillinataskDao;
 
+    @Autowired
+    private IRecordProcessDao recordProcessDao;
 
     @Autowired
     private OriginService originService;
@@ -136,7 +139,7 @@ public class FillinataskServiceImp implements FillinataskService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deletercdjobconfig(String job_id) {
-        fillinataskDao.deletercdjobconfig(job_id);    //填报任务删除
+        fillinataskDao.softDelJobConfig(job_id);    //填报任务删除
         fillinataskDao.deletercdjobpersonassign(job_id);    //填报人维护删除
         fillinataskDao.deleteRcdJobUnitConfigsuo(job_id);    //任务关连填报组删除
         fillinataskDao.removeIntervals(new Integer(job_id));

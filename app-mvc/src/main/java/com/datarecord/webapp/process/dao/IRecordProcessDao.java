@@ -200,6 +200,9 @@ public interface IRecordProcessDao {
             "fld_id=#{rcdReportJobEntity.fld_id}")
     void deleteReportJobData(@Param("rcdReportJobEntity") ReportJobData delData,@Param("job_id") Integer job_id);
 
+    @Update("update rcd_report_job set record_status=4 where job_id = #{job_id}")
+    void softDelJobDatas(@Param("job_id") String job_id);
+
     @Update("update rcd_report_data_job${job_id} set " +
             "colum_id=#{newColumId},record_data=#{rcdReportJobEntity.record_data}" +
             " where " +
@@ -213,4 +216,7 @@ public interface IRecordProcessDao {
 
     @Update("update rcd_report_job set record_status = #{record_status} where report_id = #{report_id}")
     void updateReportStatus(@Param("report_id") String reportId,@Param("record_status") String value);
+
+    @Delete("D")
+    void dropJobDataByJobId(String jobId);
 }

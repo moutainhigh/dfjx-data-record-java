@@ -85,3 +85,4 @@ ADD COLUMN `job_flow_date` TIMESTAMP NULL COMMENT '审批时间' AFTER `job_flow
 
 update rcd_job_config set job_cycle = 2 where job_cycle!=2;
 
+UPDATE `app_module` SET `module_url`='/rcdflow/dtRpReview' WHERE `module_id`='43';
