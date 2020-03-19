@@ -37,5 +37,5 @@ public interface OriginService {
 
     void removeUserOrigin(int userId);
 
-
+    Origin getAllOriginTree();
 }

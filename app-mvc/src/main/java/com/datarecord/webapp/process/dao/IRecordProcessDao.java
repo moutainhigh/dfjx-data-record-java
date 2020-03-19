@@ -21,7 +21,7 @@ public interface IRecordProcessDao {
             "job_status,"+
             "job_start_dt,"+
             "job_end_dt "+
-            "from rcd_job_config where job_id  = #{jobId}")
+            "from rcd_job_config where job_status!='3' and  job_id  = #{jobId}")
     @Results({
             @Result(property = "jobUnits",column = "job_id",many = @Many(select="com.datarecord.webapp.process.dao.IRecordProcessDao.getJobUnitsByJobId")),
             @Result(property = "jobPersons",column = "job_id",many = @Many(select="com.datarecord.webapp.process.dao.IRecordProcessDao.getJobPersonsByJobId")),
@@ -133,7 +133,7 @@ public interface IRecordProcessDao {
             "rrj.job_id = rjc.job_id  " +
             "left join user u on " +
             "rrj.record_user_id = u.user_id " +
-            "where rrj.record_user_id=#{user_id}" +
+            "where rjc.job_status!='3' and rrj.record_user_id=#{user_id}" +
             "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"0\" '>" +
             " and rrj.record_status=#{queryParams.reportStatus} and rjc.job_start_dt &lt; now() and rjc.job_end_dt &gt; now()" +
             "</if>" +
@@ -173,7 +173,7 @@ public interface IRecordProcessDao {
             "rrj.job_id = rjc.job_id  " +
             "left join user u on " +
             "rrj.record_user_id = u.user_id " +
-            "where rrj.report_id=#{reportId}" +
+            "where rjc.job_status!='3' and rrj.report_id=#{reportId}" +
             "</script>")
     ReportJobInfo getReportJobInfoByReportId(String reportId);
 

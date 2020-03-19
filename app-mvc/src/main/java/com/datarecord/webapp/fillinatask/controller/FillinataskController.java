@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 填报任务Controller
@@ -257,7 +259,19 @@ public class FillinataskController {
     }
 
 
+    @RequestMapping("/checkOriginTree")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult checkOriginTree(){
+        User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+        Origin origin = originService.getOriginByUser(user.getUser_id());
+        Origin originTree = originService.getAllOriginTree();
+        Map<String,Origin> result = new HashMap<>();
+        result.put("selfOrigin",origin);
+        result.put("originTree",originTree);
+        return JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "填报任务审批修改状态失败", null, "result");
 
+    }
 
 
 
