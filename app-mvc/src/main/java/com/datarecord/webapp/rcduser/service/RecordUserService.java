@@ -1,14 +1,14 @@
-package com.datarecord.webapp.submittedBy.service;
+package com.datarecord.webapp.rcduser.service;
 
-import com.datarecord.webapp.submittedBy.bean.Originss;
+import com.datarecord.webapp.rcduser.bean.Originss;
 import com.datarecord.webapp.sys.origin.entity.Origin;
-import com.datarecord.webapp.submittedBy.bean.SubmittedBy;
-import com.datarecord.webapp.submittedBy.bean.Useroriginassign;
+import com.datarecord.webapp.rcduser.bean.RecordUser;
+import com.datarecord.webapp.rcduser.bean.Useroriginassign;
 import com.webapp.support.page.PageResult;
 
 import java.util.List;
 
-public interface SubmittedByService {
+public interface RecordUserService {
 
  /*   String selectOrgId(int user_id);
 */
@@ -28,5 +28,9 @@ public interface SubmittedByService {
 
     List<Object> useroriginassignlistsysorigin(String origin_id);
 
-   List<SubmittedBy> rcdpersonconfiglistwufenye(Origin userOrigin);
+   List<RecordUser> rcdpersonconfiglistwufenye(Origin userOrigin);
+
+    PageResult unCheckOriginUser(String currPage, String pageSize,String jobId, String originId);
+
+    PageResult checkedOriginUser(String currPage, String pageSize, String jobId, String originId);
 }

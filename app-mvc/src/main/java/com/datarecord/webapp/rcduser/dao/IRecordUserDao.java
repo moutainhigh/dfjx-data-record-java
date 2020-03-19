@@ -1,16 +1,16 @@
-package com.datarecord.webapp.submittedBy.dao;
+package com.datarecord.webapp.rcduser.dao;
 
-import com.datarecord.webapp.submittedBy.bean.Origin;
-import com.datarecord.webapp.submittedBy.bean.Originss;
-import com.datarecord.webapp.submittedBy.bean.SubmittedBy;
-import com.datarecord.webapp.submittedBy.bean.Useroriginassign;
+import com.datarecord.webapp.rcduser.bean.Originss;
+import com.datarecord.webapp.rcduser.bean.RecordUser;
+import com.datarecord.webapp.rcduser.bean.Useroriginassign;
 import com.datarecord.webapp.utils.EntityTree;
 import com.github.pagehelper.Page;
+import com.workbench.auth.user.entity.User;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
-public interface SubmittedByDao {
+public interface IRecordUserDao {
 
  /*   @Select("SELECT origin_id FROM user_origin_assign WHERE user_id = #{user_id}")
     @Options(useCache = false)
@@ -37,7 +37,7 @@ public interface SubmittedByDao {
             "  </foreach>"+
             " </if>" +
             " <if test = \"user_name != null and user_name != ''\"> AND b.user_name_cn like concat('%',#{user_name},'%') </if> </script>")
-    Page<SubmittedBy> rcdpersonconfiglist(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("user_name") String user_name,@Param("originIds") List<Integer> originIds    );
+    Page<RecordUser> rcdpersonconfiglist(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("user_name") String user_name, @Param("originIds") List<Integer> originIds    );
 
 
     @Select("<script>SELECT " +
@@ -49,7 +49,7 @@ public interface SubmittedByDao {
             "            inner JOIN sys_origin c ON a.origin_id = c.origin_id " +
             "             WHERE  1=1   and  c.origin_id  = #{originid} " +
             " <if test = \"user_name != null and user_name != ''\"> AND b.user_name_cn like concat('%',#{user_name},'%') </if> </script>")
-    Page<SubmittedBy> rcdpersonconfiglistByid(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("user_name") String user_name,@Param("originid") String originid    );
+    Page<RecordUser> rcdpersonconfiglistByid(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("user_name") String user_name, @Param("originid") String originid    );
 
 
 
@@ -144,7 +144,7 @@ public interface SubmittedByDao {
             "  </foreach>"+
             " </if>" +
             " </script>" )
-    List<SubmittedBy> rcdpersonconfiglistwufenye(@Param("originIds") List<Integer> originIds);
+    List<RecordUser> rcdpersonconfiglistwufenye(@Param("originIds") List<Integer> originIds);
 
 
     @Select("<script>SELECT  " +
@@ -156,5 +156,33 @@ public interface SubmittedByDao {
             "            LEFT JOIN sys_origin c ON a.origin_id = c.origin_id " +
             "  where 1=1  and c.origin_id   = #{originid} " +
             " </script>" )
-    List<SubmittedBy> rcdpersonconfiglistwufeByid(@Param("originid") String originid);
+    List<RecordUser> rcdpersonconfiglistwufeByid(@Param("originid") String originid);
+
+    @Select("SELECT  " +
+            "u.user_id, " +
+            "u.user_name_cn " +
+            "FROM rcd_person_config rpc  " +
+            "left join user u on  " +
+            "rpc.user_id = u.user_id " +
+            "left join (select user_id,job_id from rcd_job_person_assign where job_id=#{jobId}) rjpa on " +
+            "rpc.user_id = rjpa.user_id " +
+            "where rpc.origin_id=#{originId} and rjpa.job_id is null" )
+    Page<User> getOriginRecordUser(
+            @Param("currPage") String currPage,
+            @Param("pageSize") String pageSize,
+            @Param("jobId") String jobId,
+            @Param("originId") String originId);
+
+    @Select("select u.user_id, u.user_name_cn,so.origin_name FROM rcd_job_person_assign rjpa " +
+            "left join user u on " +
+            "rjpa.user_id = u.user_id " +
+            "left join user_origin_assign uoa on " +
+            "u.user_id = uoa.user_id " +
+            "left join sys_origin so on " +
+            "uoa.origin_id = so.origin_id " +
+            "where rjpa.job_id = #{jobId} ")
+    Page<User> checkedOriginUser( @Param("currPage") String currPage,
+                                  @Param("pageSize") String pageSize,
+                                  @Param("jobId") String jobId,
+                                  @Param("originId") String originId);
 }

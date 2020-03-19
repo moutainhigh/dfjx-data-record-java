@@ -86,3 +86,18 @@ ADD COLUMN `job_flow_date` TIMESTAMP NULL COMMENT '审批时间' AFTER `job_flow
 update rcd_job_config set job_cycle = 2 where job_cycle!=2;
 
 UPDATE `app_module` SET `module_url`='/rcdflow/dtRpReview' WHERE `module_id`='43';
+
+ALTER TABLE `rcd_job_unit_interval`
+ADD COLUMN `interval_status` INT NOT NULL COMMENT '0:有效\n1:无效' AFTER `job_unit_end`;
+
+ALTER TABLE `rcd_person_config`
+ADD COLUMN `config_status` INT NULL COMMENT '0:有效\n1:无效' AFTER `origin_id`;
+
+ALTER TABLE `rcd_person_config`
+CHANGE COLUMN `config_status` `config_status` INT(11) NULL DEFAULT 0 COMMENT '0:有效\n1:无效' ;
+ALTER TABLE `rcd_job_unit_interval`
+CHANGE COLUMN `interval_status` `interval_status` INT(11) NOT NULL DEFAULT 0 COMMENT '0:有效\n1:无效' ;
+ALTER TABLE `rcd_job_person_assign`
+ADD COLUMN `assign_status` INT NOT NULL DEFAULT 0 AFTER `job_id`;
+ALTER TABLE `rcd_job_person_assign`
+CHANGE COLUMN `assign_status` `assign_status` INT(11) NOT NULL DEFAULT '0' COMMENT '0:有效\n1:无效' ;

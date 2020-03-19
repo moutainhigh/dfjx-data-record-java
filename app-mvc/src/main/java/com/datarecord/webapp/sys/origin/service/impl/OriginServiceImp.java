@@ -238,7 +238,23 @@ public class OriginServiceImp implements OriginService {
             }
         }
 
+        Origin originTree = originsMap.get(rootOrigin);
+
+        makeOriginTreeLevel(originTree,1);
+
         return originsMap.get(rootOrigin);
+    }
+
+    private void makeOriginTreeLevel(Origin preOrigin,Integer level){
+        if(preOrigin!=null){
+            preOrigin.setOrigin_level(level);
+            List<Origin> children = preOrigin.getChildren();
+            if(children!=null){
+                for (Origin child : children) {
+                    this.makeOriginTreeLevel(child,level+1);
+                }
+            }
+        }
     }
 
     private Map<Integer, Origin> getParentOrigin(Map<Integer,Origin> fullOriginTMp, Integer checkOriginId){

@@ -12,6 +12,7 @@ public class Origin {
     private Date create_date;
     private String create_user;
     private String origin_type;
+    private Integer origin_level;
 
     private String origin_address_province;
     private String origin_address_city;
@@ -142,5 +143,13 @@ public class Origin {
 
     public void setOrigin_nature(String origin_nature) {
         this.origin_nature = origin_nature;
+    }
+
+    public Integer getOrigin_level() {
+        return origin_level;
+    }
+
+    public void setOrigin_level(Integer origin_level) {
+        this.origin_level = origin_level;
     }
 }

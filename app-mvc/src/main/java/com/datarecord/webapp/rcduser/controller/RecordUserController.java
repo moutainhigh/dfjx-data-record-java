@@ -1,9 +1,9 @@
-package com.datarecord.webapp.submittedBy.controller;
+package com.datarecord.webapp.rcduser.controller;
 
-import com.datarecord.webapp.submittedBy.bean.Originss;
-import com.datarecord.webapp.submittedBy.bean.SubmittedBy;
-import com.datarecord.webapp.submittedBy.bean.Useroriginassign;
-import com.datarecord.webapp.submittedBy.service.SubmittedByService;
+import com.datarecord.webapp.rcduser.bean.Originss;
+import com.datarecord.webapp.rcduser.bean.RecordUser;
+import com.datarecord.webapp.rcduser.bean.Useroriginassign;
+import com.datarecord.webapp.rcduser.service.RecordUserService;
 import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.service.OriginService;
 import com.datarecord.webapp.sys.origin.service.RecordOriginService;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,11 +28,11 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/reporting")
-public class SubmittedByController {
+public class RecordUserController {
 
 
     @Autowired
-    private SubmittedByService submittedByService;
+    private RecordUserService recordUserService;
 
     @Autowired
     private RecordOriginService recordOriginService;
@@ -66,12 +65,12 @@ public class SubmittedByController {
         //判断用户是否登录然后查出用户所在组织机构id
         /*HashMap<Object, Object> reslltMap = new HashMap<>();
         User user = (User) SecurityUtils.getSubject().getPrincipal();
-        String orgId = submittedByService.selectOrgId(user.getUser_id());
+        String orgId = recordUserService.selectOrgId(user.getUser_id());
      */
       //  String orgId = "0";
       //  Map<String, Object> returnmap = new HashMap<>();
       //  MenuTreeUtil menuTree = new MenuTreeUtil();
-        List<Originss> list =  submittedByService.listOrgData(orgId);
+        List<Originss> list =  recordUserService.listOrgData(orgId);
       //  List<Object> menuList = menuTree.menuList(list,orgId);
      //   returnmap.put("list", menuList);
         String jsonpResponse = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取成功", null, list);
@@ -92,7 +91,7 @@ public class SubmittedByController {
         try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
             Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            pageResult = submittedByService.rcdpersonconfiglist(currPage,pageSize,user_name,userOrigin);
+            pageResult = recordUserService.rcdpersonconfiglist(currPage,pageSize,user_name,userOrigin);
         }catch(Exception e){
             e.printStackTrace();
             return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报人列表失败", null, "error");
@@ -106,11 +105,11 @@ public class SubmittedByController {
     @CrossOrigin(allowCredentials="true")
     public String rcdpersonconfiglistwu(
     ){
-        List<SubmittedBy> pageResult = null;
+        List<RecordUser> pageResult = null;
         try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
             Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            pageResult  = submittedByService.rcdpersonconfiglistwufenye(userOrigin);
+            pageResult  = recordUserService.rcdpersonconfiglistwufenye(userOrigin);
         }catch(Exception e){
             e.printStackTrace();
             return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报人列表失败", null, "error");
@@ -129,7 +128,7 @@ public class SubmittedByController {
     ){
       List<Object>  ll = null;
         try{
-            ll = submittedByService.useroriginassignlist(origin_id);
+            ll = recordUserService.useroriginassignlist(origin_id);
         }catch(Exception e){
             e.printStackTrace();
             return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取弹框列表失败", null, "error");
@@ -147,7 +146,7 @@ public class SubmittedByController {
         //List<Useroriginassign>  ll = new ArrayList<Useroriginassign>();
         List<Object>  ll = null;
         try{
-            ll = submittedByService.useroriginassignlistsysorigin(origin_id);
+            ll = recordUserService.useroriginassignlistsysorigin(origin_id);
         }catch(Exception e){
             e.printStackTrace();
             return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报任务中填报人维护获取弹框列表失败", null, "error");
@@ -166,7 +165,7 @@ public class SubmittedByController {
             @RequestParam("userid")String userid
     ){
         try{
-            submittedByService.insertrcdpersonconfig(origin_id,userid);   //新增
+            recordUserService.insertrcdpersonconfig(origin_id,userid);   //新增
         }catch(Exception e){
             e.printStackTrace();
             return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "失败", null, "error");
@@ -183,8 +182,8 @@ public class SubmittedByController {
             @RequestParam("userid")String userid
     ){
         try{
-            submittedByService.deletercdpersonconfig(origin_id);   //修改前如有则删除后新增
-            submittedByService.insertrcdpersonconfig(origin_id,userid);   //新增
+            recordUserService.deletercdpersonconfig(origin_id);   //修改前如有则删除后新增
+            recordUserService.insertrcdpersonconfig(origin_id,userid);   //新增
         }catch(Exception e){
             e.printStackTrace();
             return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "失败", null, "error");
@@ -202,7 +201,7 @@ public class SubmittedByController {
     ){
         List<Useroriginassign>  ll = null;
         try{
-            ll = submittedByService.selectrcdpersonconfig(origin_id);
+            ll = recordUserService.selectrcdpersonconfig(origin_id);
         }catch(Exception e){
             e.printStackTrace();
             return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取弹框列表失败", null, "error");
@@ -219,7 +218,7 @@ public class SubmittedByController {
             @RequestParam("user_id")String user_id
     ){
         try{
-            submittedByService.deletercdpersonconfigbyuserid(user_id);   //根据用户id删除
+            recordUserService.deletercdpersonconfigbyuserid(user_id);   //根据用户id删除
         }catch(Exception e){
             e.printStackTrace();
             return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除失败", null, "error");
@@ -228,15 +227,27 @@ public class SubmittedByController {
     }
 
 
+    @RequestMapping("unCheckOriginUser")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult unCheckOriginUser(
+            String currPage,
+            String pageSize,
+            String jobId,
+            String originId){
+        PageResult recordUserPage = recordUserService.unCheckOriginUser(currPage,pageSize,jobId,originId);
+        return JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "删除成功", null, recordUserPage);
+    }
 
-
-
-
-
-
-
-
-
-
-
+    @RequestMapping("checkedOriginUser")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult checkedOriginUser(
+            String currPage,
+            String pageSize,
+            String jobId,
+            String originId){
+        PageResult recordUserPage = recordUserService.checkedOriginUser(currPage,pageSize,jobId,originId);
+        return JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "删除成功", null, recordUserPage);
+    }
 }

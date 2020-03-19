@@ -284,14 +284,24 @@ public class FillinataskController {
         Origin origin = originService.getOriginByUser(user.getUser_id());
         Origin originTree = originService.getAllOriginTree();
         Map<String,Origin> result = new HashMap<>();
+        Integer selfLevel = this.checkSelfLevel(origin.getOrigin_id(), originTree);
+        origin.setOrigin_level(selfLevel);
         result.put("selfOrigin",origin);
         result.put("originTree",originTree);
-        return JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "填报任务审批修改状态失败", null, "result");
-
+        return JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "机构树获取完成", null, result);
     }
 
-
-
-
+    private Integer checkSelfLevel(Integer checkOriginId,Origin originTree){
+        if(originTree.getOrigin_id()==checkOriginId){
+            return originTree.getOrigin_level();
+        }else{
+            int levelVAL = 0;
+            List<Origin> children = originTree.getChildren();
+            for (Origin child : children) {
+                levelVAL = this.checkSelfLevel(checkOriginId,child);
+            }
+            return levelVAL;
+        }
+    }
 
 }

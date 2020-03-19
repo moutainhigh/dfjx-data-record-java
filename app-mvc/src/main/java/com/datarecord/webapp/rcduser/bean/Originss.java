@@ -1,4 +1,4 @@
-package com.datarecord.webapp.submittedBy.bean;
+package com.datarecord.webapp.rcduser.bean;
 
 public class Originss {
 

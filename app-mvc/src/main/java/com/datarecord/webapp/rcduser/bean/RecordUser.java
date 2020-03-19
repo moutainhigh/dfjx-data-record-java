@@ -1,7 +1,7 @@
-package com.datarecord.webapp.submittedBy.bean;
+package com.datarecord.webapp.rcduser.bean;
 
 
-public class SubmittedBy {
+public class RecordUser {
 
        private int     user_id;
        private int       origin_id;
@@ -51,7 +51,7 @@ public class SubmittedBy {
 
     @Override
     public String toString() {
-        return "SubmittedBy{" +
+        return "RecordUser{" +
                 "user_id=" + user_id +
                 ", origin_id=" + origin_id +
                 ", user_name='" + user_name + '\'' +
