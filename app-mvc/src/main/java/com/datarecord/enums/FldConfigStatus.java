@@ -2,15 +2,15 @@ package com.datarecord.enums;
 
 /**
  * 指标状态：
- * 0：待审批
- * 1：审批通过
- * 2：审批驳回
+ * 0：待审核
+ * 1：审核通过
+ * 2：审核驳回
  * 3：作废
  */
 public enum FldConfigStatus {
-    REVIEW(0,"待审批"),
-    APPROVE(1,"审批通过"),
-    REJECT(2,"审批驳回"),
+    REVIEW(0,"待审核"),
+    APPROVE(1,"审核通过"),
+    REJECT(2,"审核驳回"),
     REMOVE(3,"作废");
 
     private Integer value;

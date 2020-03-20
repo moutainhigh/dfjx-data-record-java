@@ -7,20 +7,20 @@ package com.datarecord.enums;
  * 3:软删除
  * 4:已发布
  * 5:发布中
- * 6:待审批
- * 7:审批通过
- * 8:审批驳回
+ * 6:待审核
+ * 7:审核通过
+ * 8:审核驳回
  */
 public enum JobConfigStatus {
 
     NORMAL(0,"编辑中"),
     FAIL(1,"失效"),
     LOCK(2,"锁定"),
-    DELETE(3,"软删除"),
+    DELETE(3,"已删除"),
     SUBMITING(5,"发布中"),
-    REVIEW(6,"待审批"),
-    APPROVE(7,"审批通过"),
-    REJECT(8,"审批驳回"),
+    REVIEW(6,"待审核"),
+    APPROVE(7,"审核通过"),
+    REJECT(8,"审核驳回"),
     SUBMIT(4,"已发布");
 
     private Integer value;
