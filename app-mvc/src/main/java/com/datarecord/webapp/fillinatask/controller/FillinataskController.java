@@ -292,13 +292,18 @@ public class FillinataskController {
     }
 
     private Integer checkSelfLevel(Integer checkOriginId,Origin originTree){
-        if(originTree.getOrigin_id()==checkOriginId){
+        if(originTree.getOrigin_id().equals(checkOriginId)){
             return originTree.getOrigin_level();
         }else{
-            int levelVAL = 0;
+            Integer levelVAL = null;
             List<Origin> children = originTree.getChildren();
-            for (Origin child : children) {
-                levelVAL = this.checkSelfLevel(checkOriginId,child);
+            if(children!=null){
+                for (Origin child : children) {
+                    Integer levelVALChild = this.checkSelfLevel(checkOriginId, child);
+                    if(levelVALChild!=null){
+                        levelVAL = levelVALChild;
+                    }
+                }
             }
             return levelVAL;
         }
