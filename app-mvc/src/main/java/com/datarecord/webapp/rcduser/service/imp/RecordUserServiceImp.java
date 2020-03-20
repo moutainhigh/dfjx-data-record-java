@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -46,9 +47,9 @@ public class RecordUserServiceImp implements RecordUserService {
     }
 
     @Override
-    public PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name,Origin userOrigin) {
+    public PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
-        List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
+      /*  List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
         List<Integer> originIds  = new ArrayList<>();
         for (com.datarecord.webapp.sys.origin.entity.Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id()); }
@@ -57,8 +58,10 @@ public class RecordUserServiceImp implements RecordUserService {
             contactPageDatas = recordUserDao.rcdpersonconfiglist(currPage, pageSize,user_name,originIds);
         }else {
             String originid  = userOrigin.getOrigin_id().toString();
-            contactPageDatas = recordUserDao.rcdpersonconfiglistByid(currPage, pageSize,user_name,originid);
-        }
+            contactPageDatas = recordUserDao.rcdpersonconfiglistByid(currPage, pageSize,user_name);
+        }*/
+        Page<RecordUser> contactPageDatas  = recordUserDao.rcdpersonconfiglistByid(currPage, pageSize,user_name);
+
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
         return pageContactResult;
@@ -105,8 +108,8 @@ public class RecordUserServiceImp implements RecordUserService {
     }
 
     @Override
-    public List<RecordUser> rcdpersonconfiglistwufenye(Origin userOrigin) {
-        List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
+    public List<RecordUser> rcdpersonconfiglistwufenye() {
+       /* List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
         List<Integer> originIds  = new ArrayList<>();
         for (com.datarecord.webapp.sys.origin.entity.Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id()); }
@@ -115,7 +118,8 @@ public class RecordUserServiceImp implements RecordUserService {
         }else {
             String originid  = userOrigin.getOrigin_id().toString();
             return recordUserDao.rcdpersonconfiglistwufeByid(originid);
-        }
+        }*/
+        return recordUserDao.rcdpersonconfiglistwufeByid();
     }
 
     @Override
@@ -133,26 +137,30 @@ public class RecordUserServiceImp implements RecordUserService {
     }
 
 
-    /*@Override
-    public void insertrcdpersonconfig(String origin_id, String userid) {
-      *//*  userid.substring(1);
-        userid.substring(0,userid.length()-1);*//*
-        String[] split = userid.split(",");
-        for (String user_id : split){
-            recordUserDao.insertrcdpersonconfig(origin_id,user_id);
-        }
-    }*/
+
+
     @Override
     public void insertrcdpersonconfig(String origin_id, String userid) {
         String[] split = userid.split(",");
         for (String user_id : split){
             List<String> orgId = recordUserDao.selectuserid(user_id);
-            //for (int i=0; i<orgId.size(); i++){
                 for(String orgid : orgId){
                     recordUserDao.insertrcdpersonconfig(orgid,user_id);
                 }
+        }
+    }
 
-           // }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updaterRdpersonconfig(String origin_id, String userid) {
+        recordUserDao.deletercdpersonconfig(origin_id);
+        String[] split = userid.split(",");
+        for (String user_id : split){
+            List<String> orgId = recordUserDao.selectuserid(user_id);
+            for(String orgid : orgId){
+                recordUserDao.insertrcdpersonconfig(orgid,user_id);
+            }
         }
     }
 
@@ -161,10 +169,6 @@ public class RecordUserServiceImp implements RecordUserService {
         return recordUserDao.selectrcdpersonconfig(origin_id);
     }
 
-    @Override
-    public void deletercdpersonconfig(String origin_id) {
-        recordUserDao.deletercdpersonconfig(origin_id);
-    }
 
     @Override
     public void deletercdpersonconfigbyuserid(String user_id) {

@@ -14,7 +14,7 @@ public interface RecordUserService {
 */
     List<Originss> listOrgData(String orgId);
 
-    PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name,Origin userOrigin);
+    PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name);
 
     List<Object> useroriginassignlist(String origin_id);
 
@@ -22,15 +22,16 @@ public interface RecordUserService {
 
     List<Useroriginassign> selectrcdpersonconfig(String origin_id);
 
-    void deletercdpersonconfig(String origin_id);
 
     void deletercdpersonconfigbyuserid(String user_id);
 
     List<Object> useroriginassignlistsysorigin(String origin_id);
 
-   List<RecordUser> rcdpersonconfiglistwufenye(Origin userOrigin);
+   List<RecordUser> rcdpersonconfiglistwufenye();
 
     PageResult unCheckOriginUser(String currPage, String pageSize,String jobId, String originId);
 
     PageResult checkedOriginUser(String currPage, String pageSize, String jobId, String originId);
+
+    void updaterRdpersonconfig(String origin_id, String userid);
 }
