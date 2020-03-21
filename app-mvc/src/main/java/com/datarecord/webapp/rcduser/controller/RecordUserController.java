@@ -138,7 +138,7 @@ public class RecordUserController {
         return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取弹框列表成功", null, ll);
     }
 
-    //填报任务填报人维护（获取机构下用户）
+    //填报任务页面填报人维护（获取机构下用户）
     @RequestMapping("/useroriginassignlistsysorigin")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
@@ -166,13 +166,22 @@ public class RecordUserController {
             @RequestParam("origin_id")String origin_id,
             @RequestParam("userid")String userid
     ){
-        try{
-            recordUserService.insertrcdpersonconfig(origin_id,userid);   //新增
-        }catch(Exception e){
-            e.printStackTrace();
-            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "失败", null, "error");
+        if (!origin_id.isEmpty() && !userid.isEmpty()){
+            try{
+                 int  ii  =    recordUserService.countRcdPersonConfig(userid);
+                 if (ii>0){
+                     return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "用户已存在无法添加", null, "error");
+                 }else{
+                     recordUserService.insertrcdpersonconfig(origin_id,userid);   //新增
+                 }
+            }catch(Exception e){
+                e.printStackTrace();
+                return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报人新增失败", null, "error");
+            }
+        }else{
+            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "必选参数为空", null, "error");
         }
-        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "成功", null, "success");
+        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报人新增成功", null, "success");
     }
 
     //修改确定
@@ -187,9 +196,9 @@ public class RecordUserController {
             recordUserService.updaterRdpersonconfig(origin_id,userid);   //xiugai
         }catch(Exception e){
             e.printStackTrace();
-            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "失败", null, "error");
+            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报人修改失败", null, "error");
         }
-        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "成功", null, "success");
+        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报人修改成功", null, "success");
     }
 
 

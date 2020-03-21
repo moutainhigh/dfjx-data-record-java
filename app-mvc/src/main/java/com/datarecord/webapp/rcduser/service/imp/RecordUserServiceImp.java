@@ -70,21 +70,25 @@ public class RecordUserServiceImp implements RecordUserService {
     @Override
     public List<Object> useroriginassignlist(String origin_id) {
       List<Object> list = new ArrayList<>();
-        List<Origin> childrenOrigins = originService.checkAllChildren(Integer.valueOf(origin_id));
+      /*  List<Origin> childrenOrigins = originService.checkAllChildren(Integer.valueOf(origin_id));
         List<Integer> originIds  = new ArrayList<>();
         for (com.datarecord.webapp.sys.origin.entity.Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id()); }
-        List<EntityTree> lists = null;
+
         if (originIds.size()!= 0){
            lists  =  recordUserDao.listOrgDatauser(originIds);
         }else{
             lists  =  recordUserDao.listOrgDatauserByid(origin_id);
-        }
-        for (EntityTree x : lists) {
-                    Map<String,String> mapArr = new LinkedHashMap<>();
-                    mapArr.put("user_id", x.getUser_id());
-                    mapArr.put("user_name_cn", x.getUser_name_cn());
-                    list.add(mapArr);
+        }*/
+        List<EntityTree> lists = null;
+        lists  =  recordUserDao.listOrgDatauserByid(origin_id);
+        if(lists.size()>0){
+            for (EntityTree x : lists) {
+                Map<String,String> mapArr = new LinkedHashMap<>();
+                mapArr.put("user_id", x.getUser_id());
+                mapArr.put("user_name_cn", x.getUser_name_cn());
+                list.add(mapArr);
+            }
         }
         return list;
     }
@@ -137,7 +141,16 @@ public class RecordUserServiceImp implements RecordUserService {
     }
 
 
-
+    @Override
+    public int countRcdPersonConfig(String userid) {
+        String[] split = userid.split(",");
+         List<String>  ll = new ArrayList<>();
+        for (String user_id : split){
+            ll.add(user_id);
+        }
+        int   ss  =    recordUserDao.countRcdPersonConfig(ll);
+        return ss;
+    }
 
     @Override
     public void insertrcdpersonconfig(String origin_id, String userid) {
@@ -149,6 +162,9 @@ public class RecordUserServiceImp implements RecordUserService {
                 }
         }
     }
+
+
+
 
 
     @Override
@@ -163,6 +179,8 @@ public class RecordUserServiceImp implements RecordUserService {
             }
         }
     }
+
+
 
     @Override
     public List<Useroriginassign> selectrcdpersonconfig(String origin_id) {

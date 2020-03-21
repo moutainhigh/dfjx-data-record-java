@@ -34,4 +34,6 @@ public interface RecordUserService {
     PageResult checkedOriginUser(String currPage, String pageSize, String jobId, String originId);
 
     void updaterRdpersonconfig(String origin_id, String userid);
+
+    int countRcdPersonConfig(String userid);
 }

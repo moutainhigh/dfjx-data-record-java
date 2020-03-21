@@ -71,6 +71,14 @@ public interface IRecordUserDao {
     void insertrcdpersonconfig(@Param("orgid") String orgid, @Param("user_id") String user_id);
 
 
+    @Select("<script>select count(1) from rcd_person_config  where 1=1  and  user_id  IN " +
+            "  <foreach item=\"item\" index=\"index\" collection=\"ll\" open=\"(\" separator=\",\" close=\")\">" +
+            "  #{item}" +
+            "  </foreach>"+
+            "</script>")
+    int countRcdPersonConfig(List<String> ll);
+
+
     @Select("SELECT user_id from rcd_person_config where origin_id = #{origin_id} ")
     List<Useroriginassign> selectrcdpersonconfig(@Param("origin_id") String origin_id);
 
@@ -185,4 +193,6 @@ public interface IRecordUserDao {
                                   @Param("pageSize") String pageSize,
                                   @Param("jobId") String jobId,
                                   @Param("originId") String originId);
+
+
 }
