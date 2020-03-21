@@ -149,6 +149,9 @@ public interface IRecordProcessDao {
             "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"8\" '>" +
             " and (rrj.record_status=0 or rrj.record_status=8  ) and rjc.job_end_dt &lt; now() " +
             "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"10\" '>" +
+            " and (rrj.record_status=0 or rrj.record_status=1  ) and rjc.job_end_dt &lt; now() " +
+            "</if>" +
             "<if test='queryParams.reportName!=null'>" +
             " and rjc.job_name like concat('%',#{queryParams.reportName},'%') " +
             "</if>" +

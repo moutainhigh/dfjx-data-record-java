@@ -34,10 +34,10 @@ public interface IRecordProcessFlowDao {
             "left join sys_origin so on " +
             "rrj.record_origin_id = so.origin_id " +
             "where " +
-            " rrj.record_status!='4' and  rrj.record_origin_id in " +
-            "<foreach item='item' index='index' collection='originIds' open='(' separator=',' close=')'> " +
-            " #{item.origin_id} " +
-            "</foreach>" +
+            " rrj.record_status!='4' "  +
+            "<if test='userId!=null'>" +
+            " and rjc.job_creater = #{userId} " +
+            "</if>" +
             "<if test='reportStatus!=null and reportStatus== \"0\" '>" +
             " and rrj.record_status=#{reportStatus} and rjc.job_start_dt &lt; now() and rjc.job_end_dt &gt; now()" +
             "</if>" +
@@ -60,7 +60,7 @@ public interface IRecordProcessFlowDao {
     Page<ReportJobInfo> pageReviewDatas(
             @Param("currPage") Integer currPage,
             @Param("pageSize") Integer pageSize,
-            @Param("originIds") List originIds,
+            @Param("userId") Integer userId,
             @Param("reportStatus") String reportStatus,
             @Param("reportName") String reportName);
 

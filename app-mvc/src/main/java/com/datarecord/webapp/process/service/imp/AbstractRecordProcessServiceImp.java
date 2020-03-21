@@ -44,6 +44,7 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
             currPage = "1";
         if(Strings.isNullOrEmpty(pageSize))
             pageSize = "10";
+
         Page<ReportJobInfo> pageData = recordProcessDao.pageJob(new Integer(currPage),new Integer(pageSize),user_id,queryParams);
 
 
@@ -55,6 +56,10 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
         int dayOfMonth = calenday.get(Calendar.DAY_OF_MONTH);
         for (ReportJobInfo reportCustomer : dataList) {
             Integer jobId = reportCustomer.getJob_id();
+            if(ReportStatus.REPORT_DONE.compareTo(reportCustomer.getRecord_status())){
+                continue;
+            }
+
             List<JobInteval> jobIntervals = fillinataskService.getJobIntevals(jobId.toString());
 
             boolean inner = false;

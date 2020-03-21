@@ -72,11 +72,11 @@ public interface IRecordUserDao {
 
 
     @Select("<script>select count(1) from rcd_person_config  where 1=1  and  user_id  IN " +
-            "  <foreach item=\"item\" index=\"index\" collection=\"ll\" open=\"(\" separator=\",\" close=\")\">" +
+            "  <foreach item='item' index='index' collection='users' open='(' separator=',' close=')'>" +
             "  #{item}" +
             "  </foreach>"+
             "</script>")
-    int countRcdPersonConfig(List<String> ll);
+    int countRcdPersonConfig(@Param("users") List<String> users);
 
 
     @Select("SELECT user_id from rcd_person_config where origin_id = #{origin_id} ")

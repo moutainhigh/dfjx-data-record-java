@@ -146,7 +146,7 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
 
     @Override
     public List<RcdJobUnitFld> selectrcdjobunitfldWu(String job_unit_id) {
-        return reportingGroupDao.selectrcdjobunitfldWu(job_unit_id);;
+        return reportingGroupDao.selectrcdjobunitfldWu(job_unit_id);
     }
 
 
