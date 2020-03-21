@@ -161,8 +161,6 @@ public class RcdDtController {
             @RequestParam("proj_id") String proj_id,
             @RequestParam("proj_name") String proj_name,
             @RequestParam("is_actived") String is_actived    ){
-
-        boolean ss = false;
         if(!proj_name.isEmpty() && !is_actived.isEmpty()){
             try{
                 rcdDtService.updatercddtproj(proj_name,is_actived,proj_id);

@@ -154,6 +154,22 @@ public class ReportingGroupController {
         return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "指标获取成功", null, ll);
     }
 
+    //点击指标查出所关联关系  (无限制)
+    @RequestMapping("/selectRcdJobUnitFldWu")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public String selectrcdjobunitfldWu(
+            @RequestParam("job_unit_id")String job_unit_id){
+        List<RcdJobUnitFld> ll = null;
+        try{
+            ll  = reportingGroupService.selectrcdjobunitfldWu(job_unit_id);   //查出有关联的指标id
+        }catch(Exception e){
+            e.printStackTrace();
+            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标(无限制)获取失败", null, "error");
+        }
+        return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "指标(无限制)获取成功", null, ll);
+    }
+
 
     //填报组与指标关联关系维护
     @RequestMapping("/rcdjobunitfld")

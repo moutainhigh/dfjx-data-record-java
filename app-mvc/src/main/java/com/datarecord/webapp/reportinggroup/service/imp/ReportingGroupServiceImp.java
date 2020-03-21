@@ -144,6 +144,11 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
         return reportingGroupDao.selectrcdjobunitfld(user_id,job_unit_id);
     }
 
+    @Override
+    public List<RcdJobUnitFld> selectrcdjobunitfldWu(String job_unit_id) {
+        return reportingGroupDao.selectrcdjobunitfldWu(job_unit_id);;
+    }
+
 
   /*  @Override
     public List<RcdJobUnitFld> selectrcdjobunitfld(String job_unit_id) {

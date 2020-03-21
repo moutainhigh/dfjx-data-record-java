@@ -42,6 +42,17 @@ public interface ReportingGroupDao {
             " </script>")
     List<RcdJobUnitFld> selectrcdjobunitfld(@Param("user_id")int  user_id,@Param("job_unit_id") String job_unit_id);
 
+    @Select("<script>SELECT " +
+            " a.fld_id, " +
+            " b.fld_name " +
+            " FROM " +
+            " rcd_job_unit_fld a " +
+            " LEFT JOIN rcd_dt_fld b ON a.fld_id = b.fld_id " +
+            " WHERE " +
+            " a.job_unit_id = #{job_unit_id} " +
+            " </script>")
+    List<RcdJobUnitFld> selectrcdjobunitfldWu(@Param("job_unit_id") String job_unit_id);
+
     @Insert("INSERT  INTO rcd_job_unit_config(job_unit_name,job_id,job_unit_active,job_unit_type,job_unit_cycle) VALUES " +
             "(#{job_unit_name},#{job_id},#{job_unit_active},#{job_unit_type},#{job_unit_cycle})")
     @Options(useGeneratedKeys = true, keyProperty = "job_unit_id", keyColumn = "job_unit_id")
