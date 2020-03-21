@@ -135,6 +135,7 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
     @Override
     public PageResult pageReviewJobConfigs(int user_id, String currPage, String pageSize, Map<String, String> queryParams) {
         List<Origin> childrenOrigins = new ArrayList<>();
+        /*
         Object fldOrigin = queryParams.get("jobOrigin");
         if(fldOrigin!=null){
             Origin origin = new Origin();
@@ -148,7 +149,7 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
             childrenOrigins.add(origin);
         }else{
             childrenOrigins = this.checkAuthOrigins(user_id);
-        }
+        }*/
         queryParams.put("jobName",Strings.emptyToNull(queryParams.get("jobName")));
         queryParams.put("jobStatus",Strings.emptyToNull(queryParams.get("jobStatus")));
         Page<JobConfig> reviewJobs =  recordProcessFlowDao.pageReviewJobs(currPage,pageSize,childrenOrigins,queryParams);
