@@ -141,7 +141,7 @@ public class FillinataskServiceImp implements FillinataskService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deletercdjobconfig(String job_id) {
-        fillinataskDao.softDelJobConfig(job_id);    //填报任务删除
+        fillinataskDao.deletercdjobconfig(job_id);    //填报任务删除
         fillinataskDao.deletercdjobpersonassign(job_id);    //填报人维护删除
         fillinataskDao.deleteRcdJobUnitConfigsuo(job_id);    //任务关连填报组删除
         fillinataskDao.removeIntervals(new Integer(job_id));

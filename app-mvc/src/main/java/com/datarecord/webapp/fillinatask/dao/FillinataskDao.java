@@ -74,8 +74,6 @@ public interface FillinataskDao {
     @Delete("delete from rcd_job_config where job_id = #{job_id} ")
     void deletercdjobconfig(@Param("job_id")String job_id);
 
-    @Delete("delete from  rcd_job_config set job_status=3 where job_id = #{job_id} ")
-    void softDelJobConfig(@Param("job_id")String job_id);
 
 
     /*任务软删除*/
