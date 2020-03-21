@@ -84,10 +84,6 @@ public interface IRecordProcessFlowDao {
             "left join sys_origin so on " +
             "rjc.job_creater_origin = so.origin_id " +
             " where rjc.job_status!='3' and " +
-            "rjc.job_creater_origin in " +
-            "<foreach item='item' index='index' collection='originIds' open='(' separator=',' close=')'> " +
-            " #{item.origin_id}" +
-            "</foreach> " +
             "<if test='queryParams.jobName!=null'>" +
             " and rjc.job_name like  concat('%',#{queryParams.jobName},'%')" +
             "</if>" +
