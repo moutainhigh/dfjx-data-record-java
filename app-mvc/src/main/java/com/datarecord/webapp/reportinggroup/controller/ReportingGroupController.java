@@ -155,7 +155,7 @@ public class ReportingGroupController {
     }
 
     //点击指标查出所关联关系  (无限制)
-    @RequestMapping("/selectRcdJobUnitFldWu")
+    @RequestMapping("/selJobUnitFld")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public String selectrcdjobunitfldWu(
