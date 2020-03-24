@@ -3,8 +3,11 @@ package com.workbench.auth.authvalidate.controller;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.session.SessionSupport;
+import com.workbench.auth.authvalidate.service.LoginService;
 import com.workbench.auth.user.entity.User;
 import com.workbench.auth.user.service.UserService;
+import com.workbench.shiro.WorkbenchShiroToken;
+import org.apache.shiro.SecurityUtils;
 import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +35,9 @@ public class CasLoginController extends AbstractLoginController{
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private LoginService loginService;
+
     @RequestMapping("doLogin")
     public void casLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         AttributePrincipal principal = (AttributePrincipal)request.getUserPrincipal();
@@ -40,11 +46,14 @@ public class CasLoginController extends AbstractLoginController{
         logger.info("CAS登录重定向请求已收到.参数内容为{},用户名为【{}】", allAttributes.toString(), loginUserName);
         User user = new User();
         user.setUser_name(loginUserName);
-        SessionSupport.addUserToSession(user);
-        User usrFromDb = userService.getUserByUserNm(loginUserName);
-        if(usrFromDb==null){
-            userService.createUser(user);
-        }
+//        SessionSupport.addUserToSession(user);
+//        User usrFromDb = userService.getUserByUserNm(loginUserName);
+//        if(usrFromDb==null){
+//            userService.createUser(user);
+//        }
+        String tokenValue = loginService.createToken(null);
+        WorkbenchShiroToken token = new WorkbenchShiroToken(user,tokenValue);
+        SecurityUtils.getSubject().login(token);
 
         String redirectUrl = request.getParameter("redirect");
 
@@ -60,9 +69,7 @@ public class CasLoginController extends AbstractLoginController{
     }
 
     @RequestMapping("doLogout")
-    @ResponseBody
-    @CrossOrigin(allowCredentials="true")
-    public String doLogout(){
+    public String doLogout(HttpServletRequest request, HttpServletResponse response){
         String responseJson = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "退出成功", null, this.getLoginUserInfo());
         return responseJson;
     }
