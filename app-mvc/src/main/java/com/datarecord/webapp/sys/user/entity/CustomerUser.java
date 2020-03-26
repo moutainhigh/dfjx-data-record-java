@@ -2,13 +2,14 @@ package com.datarecord.webapp.sys.user.entity;
 
 import com.webapp.support.json.JsonSupport;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 public class CustomerUser {
     private String origin_city;
     private String origin_province;
 
-    private int user_id;
+    private BigInteger user_id;
     private String user_pwd;
     private String old_user_pwd;
     private String user_name;
@@ -17,19 +18,19 @@ public class CustomerUser {
     private Date reg_date;
     private String user_status;
     private Date last_login_time;
-    private Integer  origin_id;
+    private BigInteger  origin_id;
     private String  origin_name;
     private String office_phone;
     private String mobile_phone;
     private String email;
     private String social_code;
 
-    public int getUser_id()
+    public BigInteger getUser_id()
     {
         return this.user_id;
     }
 
-    public void setUser_id(int user_id) {
+    public void setUser_id(BigInteger user_id) {
         this.user_id = user_id;
     }
 
@@ -93,11 +94,11 @@ public class CustomerUser {
     public void setOrigin_name(String origin_name) {
         this.origin_name = origin_name;
     }
-    public Integer getOrigin_id() {
+    public BigInteger getOrigin_id() {
         return origin_id;
     }
 
-    public void setOrigin_id(Integer origin_id) {
+    public void setOrigin_id(BigInteger origin_id) {
         this.origin_id = origin_id;
     }
 

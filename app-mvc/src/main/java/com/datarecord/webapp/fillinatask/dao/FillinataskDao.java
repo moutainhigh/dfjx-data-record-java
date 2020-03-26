@@ -22,7 +22,7 @@ public interface FillinataskDao {
                                        @Param("pageSize") int pageSize,
                                        @Param("job_name") String job_name,
                                        @Param("job_status") String job_status,
-                                       @Param("user_id") int user_id);
+                                       @Param("user_id") String user_id);
 
 
     @Insert("insert into rcd_job_config " +

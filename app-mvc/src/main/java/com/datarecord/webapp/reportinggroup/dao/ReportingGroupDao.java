@@ -6,6 +6,7 @@ import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Repository
@@ -13,7 +14,7 @@ public interface ReportingGroupDao {
 
     @Select("<script>SELECT job_id,job_name,job_status  FROM rcd_job_config  where   job_creater = #{user_id} " +
             "  </script>")
-    List<rcdJobConfig> leftrcdjobconfig(@Param("user_id") int user_id);
+    List<rcdJobConfig> leftrcdjobconfig(@Param("user_id") BigInteger user_id);
 
     @Select("SELECT job_unit_id,job_unit_name,job_unit_active FROM rcd_job_unit_config where job_id =#{job_id}")
     Page<ReportingGroup> rcdjobunitconfiglist(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("job_id") String job_id);
@@ -37,7 +38,7 @@ public interface ReportingGroupDao {
             " a.job_unit_id = #{job_unit_id} " +
             " AND b.fld_creater  = #{user_id} " +
             " </script>")
-    List<RcdJobUnitFld> selectrcdjobunitfld(@Param("user_id")int  user_id,@Param("job_unit_id") String job_unit_id);
+    List<RcdJobUnitFld> selectrcdjobunitfld(@Param("user_id")BigInteger  user_id,@Param("job_unit_id") String job_unit_id);
 
     @Select("<script>SELECT " +
             " a.fld_id, " +

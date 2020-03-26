@@ -2,6 +2,7 @@ package com.datarecord.webapp.process.entity;
 
 import com.datarecord.enums.JobConfigStatus;
 
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -12,7 +13,7 @@ public class JobFlowLog {
     private Integer job_flow_status;
     private String job_flow_status_cn;
     private String job_flow_comment;
-    private Integer job_flow_user;
+    private BigInteger job_flow_user;
     private String job_flow_user_name;
     private Date job_flow_date;
     private String job_flow_date_str;
@@ -52,11 +53,11 @@ public class JobFlowLog {
         this.job_name = job_name;
     }
 
-    public Integer getJob_flow_user() {
+    public BigInteger getJob_flow_user() {
         return job_flow_user;
     }
 
-    public void setJob_flow_user(Integer job_flow_user) {
+    public void setJob_flow_user(BigInteger job_flow_user) {
         this.job_flow_user = job_flow_user;
     }
 

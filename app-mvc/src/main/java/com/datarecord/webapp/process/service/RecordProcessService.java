@@ -5,12 +5,13 @@ import com.datarecord.enums.ReportStatus;
 import com.datarecord.webapp.process.entity.*;
 import com.webapp.support.page.PageResult;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
 public interface RecordProcessService {
 
-    PageResult pageJob(int user_id, String currPage, String pageSize,Map<String,String> queryParams);
+    PageResult pageJob(BigInteger user_id, String currPage, String pageSize, Map<String,String> queryParams);
 
     JobConfig getJobConfigByReportId(String reportId);
 

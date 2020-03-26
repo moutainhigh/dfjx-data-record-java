@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Controller
@@ -48,7 +49,7 @@ public class OriginController {
     @RequestMapping("userOriginSave")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public JsonResult userOriginSave(Integer originId, Integer userId){
+    public JsonResult userOriginSave(BigInteger originId, BigInteger userId){
         originService.userOriginSave(originId,userId);
         JsonResult jsonpResponse = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "保存成功", null, null);
         return jsonpResponse;
@@ -57,7 +58,7 @@ public class OriginController {
     @RequestMapping("getOriginByUser")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public JsonResult getOriginByUser(Integer userId){
+    public JsonResult getOriginByUser(BigInteger userId){
         Origin origin = originService.getOriginByUser(userId);
         JsonResult jsonpResponse = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "保存成功", null, origin);
         return jsonpResponse;

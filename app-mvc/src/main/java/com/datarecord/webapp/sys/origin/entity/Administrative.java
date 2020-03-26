@@ -1,16 +1,18 @@
 package com.datarecord.webapp.sys.origin.entity;
 
+import java.math.BigInteger;
+
 /**
  * 表organizations
  */
 public class Administrative {
 
-    private Integer origin_id;
+    private BigInteger origin_id;
     private String origin_name;
     private Integer organization_id;
     private String organization_name;
     private String create_time;
-    private int create_user;
+    private BigInteger create_user;
 
     public String getUser_name() {
         return user_name;
@@ -22,11 +24,11 @@ public class Administrative {
 
     private String user_name;
 
-    public Integer getOrigin_id() {
+    public BigInteger getOrigin_id() {
         return origin_id;
     }
 
-    public void setOrigin_id(Integer origin_id) {
+    public void setOrigin_id(BigInteger origin_id) {
         this.origin_id = origin_id;
     }
 
@@ -63,11 +65,11 @@ public class Administrative {
         this.create_time = create_time;
     }
 
-    public int getCreate_user() {
+    public BigInteger getCreate_user() {
         return create_user;
     }
 
-    public void setCreate_user(int create_user) {
+    public void setCreate_user(BigInteger create_user) {
         this.create_user = create_user;
     }
 }

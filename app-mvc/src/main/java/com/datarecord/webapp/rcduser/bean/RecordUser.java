@@ -1,10 +1,12 @@
 package com.datarecord.webapp.rcduser.bean;
 
 
+import java.math.BigInteger;
+
 public class RecordUser {
 
-       private int     user_id;
-       private int       origin_id;
+       private BigInteger user_id;
+       private BigInteger       origin_id;
        private String        user_name;
        private String user_name_cn;
        private String   origin_name;
@@ -17,19 +19,19 @@ public class RecordUser {
         this.user_name_cn = user_name_cn;
     }
 
-    public int getUser_id() {
+    public BigInteger getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(int user_id) {
+    public void setUser_id(BigInteger user_id) {
         this.user_id = user_id;
     }
 
-    public int getOrigin_id() {
+    public BigInteger getOrigin_id() {
         return origin_id;
     }
 
-    public void setOrigin_id(int origin_id) {
+    public void setOrigin_id(BigInteger origin_id) {
         this.origin_id = origin_id;
     }
 

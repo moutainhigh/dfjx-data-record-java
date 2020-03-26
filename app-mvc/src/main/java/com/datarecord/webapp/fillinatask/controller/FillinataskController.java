@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class FillinataskController {
         try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
           //  Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            pageResult = fillinataskService.rcdjobconfiglist(currPage,pageSize,job_name,job_status,user.getUser_id());
+            pageResult = fillinataskService.rcdjobconfiglist(currPage,pageSize,job_name,job_status,String.valueOf(user.getUser_id()));
         }catch(Exception e){
             e.printStackTrace();
             return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报任务列表失败", null, "error");
@@ -140,8 +141,8 @@ public class FillinataskController {
         try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
             Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            Integer job_creater = user.getUser_id();            //创建人
-            Integer job_creater_origin = userOrigin.getOrigin_id();  //创建人所属机构
+            BigInteger job_creater = user.getUser_id();            //创建人
+            BigInteger job_creater_origin = userOrigin.getOrigin_id();  //创建人所属机构
             jobConfig.setJob_creater(job_creater);
             jobConfig.setJob_creater_origin(job_creater_origin);
             fillinataskService.saveJobConfig(jobConfig);
@@ -291,7 +292,7 @@ public class FillinataskController {
         return JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "机构树获取完成", null, result);
     }
 
-    private Integer checkSelfLevel(Integer checkOriginId,Origin originTree){
+    private Integer checkSelfLevel(BigInteger checkOriginId,Origin originTree){
         if(originTree.getOrigin_id().equals(checkOriginId)){
             return originTree.getOrigin_level();
         }else{

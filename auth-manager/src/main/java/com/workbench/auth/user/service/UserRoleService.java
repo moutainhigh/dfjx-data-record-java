@@ -3,6 +3,7 @@ package com.workbench.auth.user.service;
 import com.workbench.auth.role.entity.Role;
 import com.workbench.auth.user.entity.UserRole;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public interface UserRoleService {
 
     void delUserRole(UserRole userRole);
 
-    void delUserRoleByUserId(int user_id);
+    void delUserRoleByUserId(BigInteger user_id);
 
     void getUserByRoleId(int user_role_id);
 }

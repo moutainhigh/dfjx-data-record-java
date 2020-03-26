@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
 
 
     @Override
-    public List<rcdJobConfig> leftrcdjobconfig(int  user_id) {
+    public List<rcdJobConfig> leftrcdjobconfig(BigInteger user_id) {
      /*   List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
         childrenOrigins.add(0,userOrigin);
         List<Integer> originIds  = new ArrayList<>();
@@ -134,7 +135,7 @@ public class ReportingGroupServiceImp  implements ReportingGroupService {
     }
 
     @Override
-    public List<RcdJobUnitFld> selectrcdjobunitfld(int  user_id, String job_unit_id) {
+    public List<RcdJobUnitFld> selectrcdjobunitfld(BigInteger  user_id, String job_unit_id) {
        /* List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
         childrenOrigins.add(0,userOrigin);
         List<Integer> originIds  = new ArrayList<>();

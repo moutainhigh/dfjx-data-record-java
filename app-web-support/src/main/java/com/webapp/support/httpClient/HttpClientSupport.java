@@ -1,5 +1,6 @@
 package com.webapp.support.httpClient;
 
+import com.google.common.net.HttpHeaders;
 import com.webapp.support.json.JsonSupport;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -92,6 +93,7 @@ public class HttpClientSupport {
 
     public CloseableHttpResponse sendPutByJson(String url, Map<String,Object> params) throws IOException {
         HttpPut httpPut = new HttpPut(url);
+
         return sendPutOrPostByJson(httpPut,params);
     }
 
@@ -109,6 +111,8 @@ public class HttpClientSupport {
 
         String sendJson = JsonSupport.objectToJsonWithoutFormatter(params);
 //        String sendJson = params.toString();
+        putOrPost.setHeader(HttpHeaders.ACCEPT,"application/json, text/plain, */*");
+        putOrPost.setHeader(HttpHeaders.CONTENT_TYPE,"application/json;charset=UTF-8");
 
         ByteArrayInputStream inputStream = new ByteArrayInputStream(sendJson.getBytes("UTF-8"));
         InputStreamEntity entity = new InputStreamEntity(inputStream , -1);

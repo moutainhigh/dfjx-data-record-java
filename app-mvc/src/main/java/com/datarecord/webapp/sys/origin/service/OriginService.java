@@ -4,6 +4,7 @@ import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -13,29 +14,29 @@ public interface OriginService {
     List<Origin> listAllOrigin();
     PageResult listOrigin(int currPage, int pageSize);
     void createOrigin(Origin origin);
-    Map<String,Object> getOriginById(Integer origin_id);
+    Map<String,Object> getOriginById(BigInteger origin_id);
 
-    void userOriginSave(Integer originId, Integer userId);
+    void userOriginSave(BigInteger originId, BigInteger userId);
 
-    Origin getOriginByUser(Integer userId);
+    Origin getOriginByUser(BigInteger userId);
 
-    List<Origin> checkAllChildren(Integer originId);
+    List<Origin> checkAllChildren(BigInteger originId);
 
-    List<Origin> checkoutSons(Integer parentOriginId, List<Origin> originList);
+    List<Origin> checkoutSons(BigInteger parentOriginId, List<Origin> originList);
 
-    Map<String,Origin> getFist2Origin(Integer checkOrigin, List<Origin> allOrigins);
+    Map<String,Origin> getFist2Origin(BigInteger checkOrigin, List<Origin> allOrigins);
 
     Collection<Map<String, Object>> checkProvAndCity(List<Origin> allOrigins);
 
     List<Origin> getOriginByName(String searchOriginName);
 
-    Origin getOriginTree(List<Integer> childrenOrigins, List<Origin> allOrigins);
+    Origin getOriginTree(List<BigInteger> childrenOrigins, List<Origin> allOrigins);
 
-    List<User> getUsersByOrigin(Integer originId);
+    List<User> getUsersByOrigin(BigInteger originId);
 
     void updateOrigin(Origin origin);
 
-    void removeUserOrigin(int userId);
+    void removeUserOrigin(BigInteger userId);
 
     Origin getAllOriginTree();
 }

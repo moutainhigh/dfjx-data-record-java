@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,7 @@ public class RecordProcessFlowController {
         String pageSize= postParams.get("pageSize")!=null ? String.valueOf(((Double)postParams.get("pageSize")).intValue()): "10" ;
         Map<String,String> queryParams = (Map<String, String>) postParams.get("queryParams");
         User user = WorkbenchShiroUtils.checkUserFromShiroContext();
-        PageResult fldPageResult = recordProcessFlowService.pageReviewFlds(user.getUser_id(), currPage, pageSize, queryParams);
+        PageResult fldPageResult = recordProcessFlowService.pageReviewFlds(user.getUser_id().toString(), currPage, pageSize, queryParams);
 
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, fldPageResult);
@@ -77,7 +78,7 @@ public class RecordProcessFlowController {
         String pageSize= postParams.get("pageSize")!=null ? String.valueOf(((Double)postParams.get("pageSize")).intValue()): "10" ;
         Map<String,String> queryParams = (Map<String, String>) postParams.get("queryParams");
         User user = WorkbenchShiroUtils.checkUserFromShiroContext();
-        PageResult fldPageResult = recordProcessFlowService.pageReviewJobConfigs(user.getUser_id(), currPage, pageSize, queryParams);
+        PageResult fldPageResult = recordProcessFlowService.pageReviewJobConfigs(user.getUser_id().toString(), currPage, pageSize, queryParams);
 
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, fldPageResult);
@@ -90,9 +91,14 @@ public class RecordProcessFlowController {
     public JsonResult authOrigins(){
         User user = WorkbenchShiroUtils.checkUserFromShiroContext();
         Origin userOrigin = originService.getOriginByUser(user.getUser_id());
+        if(userOrigin==null){
+            JsonResult falidResult = JsonSupport.makeJsonpResult(
+                    JsonResult.RESULT.FAILD, "找不到当前用户所属的机构单位", "找不到当前用户所属的机构单位", "找不到当前用户所属的机构单位");
+            return falidResult;
+        }
         List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
         childrenOrigins.add(0,userOrigin);
-        List<Integer> originIds  = new ArrayList<>();
+        List<BigInteger> originIds  = new ArrayList<>();
         for (Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id());
         }

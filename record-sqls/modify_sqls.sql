@@ -111,3 +111,45 @@ ADD COLUMN `catg_creater_origin` INT NULL AFTER `catg_creater`;
 ALTER TABLE `rcd_dt_dict`
 ADD COLUMN `dict_creater` INT NULL AFTER `dict_name`,
 ADD COLUMN `dict_creater_origin` INT NULL AFTER `dict_creater`;
+
+ALTER TABLE `user_origin_assign`
+CHANGE COLUMN `user_id` `user_id` BIGINT NULL DEFAULT NULL ,
+CHANGE COLUMN `origin_id` `origin_id` BIGINT NULL DEFAULT NULL ;
+
+ALTER TABLE `sys_origin`
+CHANGE COLUMN `origin_id` `origin_id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '机构编号' ,
+CHANGE COLUMN `parent_origin_id` `parent_origin_id` BIGINT NULL DEFAULT NULL COMMENT '上级机构编号' ;
+
+ALTER TABLE `user`
+CHANGE COLUMN `user_id` `user_id` BIGINT NOT NULL ;
+
+ALTER TABLE `rcd_dt_catg`
+CHANGE COLUMN `catg_creater` `catg_creater` BIGINT NULL DEFAULT NULL ,
+CHANGE COLUMN `catg_creater_origin` `catg_creater_origin` BIGINT NULL DEFAULT NULL ;
+
+ALTER TABLE `rcd_dt_dict`
+CHANGE COLUMN `dict_creater` `dict_creater` BIGINT NULL DEFAULT NULL ,
+CHANGE COLUMN `dict_creater_origin` `dict_creater_origin` BIGINT NULL DEFAULT NULL ;
+
+ALTER TABLE `rcd_dt_fld`
+CHANGE COLUMN `fld_creater` `fld_creater` BIGINT NOT NULL ,
+CHANGE COLUMN `fld_creater_origin` `fld_creater_origin` BIGINT NOT NULL DEFAULT '1' ;
+
+ALTER TABLE `rcd_dt_proj`
+CHANGE COLUMN `proj_creater` `proj_creater` BIGINT NULL DEFAULT NULL ,
+CHANGE COLUMN `proj_creater_origin` `proj_creater_origin` BIGINT NULL DEFAULT NULL ;
+
+ALTER TABLE `rcd_job_config`
+CHANGE COLUMN `job_creater` `job_creater` BIGINT NOT NULL COMMENT '任务创建人' ,
+CHANGE COLUMN `job_creater_origin` `job_creater_origin` BIGINT NOT NULL ;
+
+UPDATE `user_role_assign` SET `user_id`='1' WHERE `user_id`='0' and`user_role_id`='2';
+INSERT INTO `user_role_assign` (`user_id`, `user_role_id`) VALUES ('8', '2');
+
+ALTER TABLE `rcd_person_config`
+CHANGE COLUMN `user_id` `user_id` BIGINT NOT NULL ,
+CHANGE COLUMN `origin_id` `origin_id` BIGINT NOT NULL ;
+
+ALTER TABLE `rcd_report_job`
+CHANGE COLUMN `record_user_id` `record_user_id` BIGINT NULL DEFAULT NULL ,
+CHANGE COLUMN `record_origin_id` `record_origin_id` BIGINT NULL DEFAULT NULL ;

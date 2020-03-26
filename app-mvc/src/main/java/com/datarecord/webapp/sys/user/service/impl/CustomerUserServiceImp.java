@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.*;
 
 @Service("cqnyUserService")
@@ -38,7 +39,7 @@ public class CustomerUserServiceImp implements CustomerUserService {
     private static Logger logger = LoggerFactory.getLogger(CustomerUserServiceImp.class);
 
     @Override
-    public PageResult pageCqnyUser(Integer currPage, Integer pageSize, String user_name, String user_type, List<Integer> originList) {
+    public PageResult pageCqnyUser(Integer currPage, Integer pageSize, String user_name, String user_type, List<BigInteger> originList) {
         Page<CustomerUser> userPage = cqnyUserDao.pageCqnyUser(currPage, pageSize, Strings.emptyToNull(user_name), user_type, originList);
 
         PageResult pageResult = PageResult.pageHelperList2PageResult(userPage);
@@ -50,7 +51,7 @@ public class CustomerUserServiceImp implements CustomerUserService {
     @Transactional(rollbackFor = Exception.class)
     public void selectOriginType(String userId, String originType) {
         //获取到该用户对应的机构
-        Origin originByUser = originService.getOriginByUser(new Integer(userId));
+        Origin originByUser = originService.getOriginByUser(new BigInteger(userId));
         //获取到机构下的所有用户
         List<User> allUsers = originService.getUsersByOrigin(originByUser.getOrigin_id());
         //修改该机构下的所有用户状态为 征程
@@ -96,7 +97,7 @@ public class CustomerUserServiceImp implements CustomerUserService {
 
 
     @Override
-    public Map<String, String> getSmsValidateCode(Integer userId, String phone_num) {
+    public Map<String, String> getSmsValidateCode(BigInteger userId, String phone_num) {
 //
 //        String validateCode = this.getValidateCode(6);
 //
@@ -132,20 +133,20 @@ public class CustomerUserServiceImp implements CustomerUserService {
     }
 
     @Override
-    public UserForgetPwdRecord getUserForgetPwdRecord(Integer userId){
+    public UserForgetPwdRecord getUserForgetPwdRecord(BigInteger userId){
         UserForgetPwdRecord userForgetPwdRecord = cqnyUserDao.getUserForgetPwdRecord(userId);
         return userForgetPwdRecord;
     }
 
     @Override
-    public String updateValidateCode(Integer user_id) {
+    public String updateValidateCode(BigInteger user_id) {
         String valiteCode = this.getValidateCode(4);
         cqnyUserDao.updateValidateCode(user_id,valiteCode,new Date());
         return valiteCode;
     }
 
     @Override
-    public String newValidateCode(Integer user_id) {
+    public String newValidateCode(BigInteger user_id) {
         String valiteCode = this.getValidateCode(4);
         cqnyUserDao.newValidateCode(user_id,valiteCode,new Date());
         return valiteCode;    }

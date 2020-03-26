@@ -56,7 +56,7 @@ public class SystemLogAspect {
             }else{
                 Object targer = joinPoint.getTarget();
                 if(!(targer instanceof AbstractLoginController)){
-                    Object user = WorkbenchShiroUtils.checkUserFromShiroContext();
+                    User user = WorkbenchShiroUtils.checkUserFromShiroContext();
                     Object[] allArgs = joinPoint.getArgs();
                     logger.info("User:-->{}<-- called method:-->{}<--,the param values-->{}<--",user,joinPoint.toString(),allArgs);
                 }

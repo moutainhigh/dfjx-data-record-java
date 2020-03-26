@@ -8,7 +8,6 @@ import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.process.entity.JobUnitConfig;
 import com.datarecord.webapp.process.entity.ReportFldConfig;
-import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.service.OriginService;
 import com.github.pagehelper.Page;
 import com.google.common.base.Strings;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service("fillinataskService")
@@ -38,7 +36,7 @@ public class FillinataskServiceImp implements FillinataskService {
 
 
     @Override
-    public PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status,int user_id) {
+    public PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status, String user_id) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
         job_name = Strings.emptyToNull(job_name);
         job_status = Strings.emptyToNull(job_status);

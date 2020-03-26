@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigInteger;
 import java.util.*;
 
 @Controller
@@ -46,14 +47,14 @@ public class CustomerUserController {
     public JsonResult getUserByPage(int currPage, int pageSize, User user, String searchOriginId, String searchOriginName) {
         List<Origin> allReportOrigins = originService.listAllOrigin();
 
-        List<Integer> originSqlParams = new ArrayList<>();
+        List<BigInteger> originSqlParams = new ArrayList<>();
 
 //        List<Integer> originParams = new ArrayList<>();
         if (Strings.isNullOrEmpty(searchOriginId) && Strings.isNullOrEmpty(searchOriginName)) {//全量
 
         } else if (!Strings.isNullOrEmpty(searchOriginId)) {//有机构查询条件
-            originSqlParams.add(new Integer(searchOriginId));
-            List<Origin> allChildrenOrigins = originService.checkoutSons(new Integer(searchOriginId), allReportOrigins);
+            originSqlParams.add(new BigInteger(searchOriginId));
+            List<Origin> allChildrenOrigins = originService.checkoutSons(new BigInteger(searchOriginId), allReportOrigins);
             for (Origin originChild : allChildrenOrigins) {
                 originSqlParams.add(originChild.getOrigin_id());
             }
@@ -61,10 +62,10 @@ public class CustomerUserController {
 
         if (!Strings.isNullOrEmpty(searchOriginName)) {
             List<Origin> origins = originService.getOriginByName(searchOriginName);
-            List<Integer> originParamsTmp = new ArrayList<>();
+            List<BigInteger> originParamsTmp = new ArrayList<>();
 
             for (Origin origin : origins) {
-                Integer originObj = origin.getOrigin_id();
+                BigInteger originObj = origin.getOrigin_id();
                 if (originSqlParams != null && originSqlParams.size() > 0) {
                     if (originSqlParams.contains(originObj)) {
                         originParamsTmp.add(originObj);
@@ -85,7 +86,7 @@ public class CustomerUserController {
 
         List<CustomerUser> cqnyResultData = pageResult.getDataList();
         for (CustomerUser userTmp : cqnyResultData) {
-            Integer reportOriginId = userTmp.getOrigin_id();
+            BigInteger reportOriginId = userTmp.getOrigin_id();
 
             Map<String, Origin> result = originService.getFist2Origin(reportOriginId, allReportOrigins);
             if (result.get("cityOrigin") != null)
@@ -119,7 +120,7 @@ public class CustomerUserController {
     @CrossOrigin(allowCredentials = "true")
     public JsonResult resetPwd(String userId) {
         if(!Strings.isNullOrEmpty(userId)){
-            userService.resetPwd(new Integer(userId));
+            userService.resetPwd(userId);
         }
 
         JsonResult response = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "获取成功", null, null);
@@ -483,7 +484,7 @@ public class CustomerUserController {
     @JsonpCallback
     @CrossOrigin(allowCredentials="true")
     @Transactional(rollbackFor = Exception.class)
-    public String delUserByUserId(Integer user_id){
+    public String delUserByUserId(BigInteger user_id){
         userService.delUserById(user_id);
         originService.removeUserOrigin(user_id);
         JsonResult jsonResult = new JsonResult();
@@ -499,7 +500,7 @@ public class CustomerUserController {
         String office_phone = selectOriginMap.containsKey("office_phone")?(String)selectOriginMap.get("office_phone"):null;
         String email = selectOriginMap.containsKey("email")?(String)selectOriginMap.get("email"):null;
         String social_code = selectOriginMap.containsKey("social_code")?(String)selectOriginMap.get("social_code"):null;
-        User userFromDb = userService.getUserByUserId(new Integer(userId));
+        User userFromDb = userService.getUserByUserId(new BigInteger(userId));
         userFromDb.setUser_name_cn(user_name_cn);
         userFromDb.setMobile_phone(mobile_phone);
         userFromDb.setOffice_phone(office_phone);

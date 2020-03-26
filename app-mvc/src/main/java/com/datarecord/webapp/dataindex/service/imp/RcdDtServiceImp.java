@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,12 +40,12 @@ public class RcdDtServiceImp  implements RcdDtService {
     private OriginService originService;
 
     @Override
-    public void insertrcddtproj(String proj_name, String is_actived,int user_id,int originid) {
+    public void insertrcddtproj(String proj_name, String is_actived, String user_id, String originid) {
         rcdDtDao.insertrcddtproj(proj_name,is_actived,user_id,originid);
     }
 
     @Override
-    public PageResult selectrcddtproj(int currPage, int pageSize,Origin userOrigin,int  user_id) {
+    public PageResult selectrcddtproj(int currPage, int pageSize,Origin userOrigin,String  user_id) {
        /* logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
         List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
         childrenOrigins.add(0,userOrigin);
@@ -58,7 +59,7 @@ public class RcdDtServiceImp  implements RcdDtService {
         return this.selectrcddtprojBycreater(currPage,pageSize,user_id);
     }
 
-    public PageResult selectrcddtprojBycreater(int currPage, int pageSize,int  user_id) {
+    public PageResult selectrcddtprojBycreater(int currPage, int pageSize,String  user_id) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
         Page<DataDictionary> contactPageDatas = rcdDtDao.selectrcddtprojBycreater(currPage, pageSize,user_id);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
@@ -73,7 +74,7 @@ public class RcdDtServiceImp  implements RcdDtService {
     }
 
     @Override
-    public PageResult selecttixircddtproj(int currPage, int pageSize, String catg_id,int user_id) {
+    public PageResult selecttixircddtproj(int currPage, int pageSize, String catg_id,String user_id) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
         Page<RcdDt> contactPageDatas = rcdDtDao.selecttixircddtproj(currPage, pageSize,catg_id,user_id);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
@@ -108,24 +109,24 @@ public class RcdDtServiceImp  implements RcdDtService {
 
 
     @Override
-    public List<Rcddtproj> leftrcddtprojjblx(int user_id) {
+    public List<Rcddtproj> leftrcddtprojjblx(String user_id) {
       //  String originid = userOrigin.getOrigin_id().toString();
         return rcdDtDao.leftrcddtprojjblx(user_id);
     }
 
     @Override
-    public List<RcddtCatg> leftrcddtcatglx(String proj_id,int user_id) {
+    public List<RcddtCatg> leftrcddtcatglx(String proj_id,String user_id) {
        // String originid = userOrigin.getOrigin_id().toString();
         return rcdDtDao.leftrcddtcatglx(proj_id,user_id);
     }
 
     @Override
-    public List<RcdDtFld> leftrcddtfld(String catg_id,int user_id) {
+    public List<RcdDtFld> leftrcddtfld(String catg_id,String user_id) {
         return rcdDtDao.leftrcddtfld(catg_id,user_id);
     }
 
     @Override
-    public PageResult selecttixircddtprojer(int currPage, int pageSize, String proj_id,Origin userOrigin,int user_id) {
+    public PageResult selecttixircddtprojer(int currPage, int pageSize, String proj_id,Origin userOrigin,String user_id) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
       /*  List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
         childrenOrigins.add(0,userOrigin);
@@ -157,7 +158,7 @@ public class RcdDtServiceImp  implements RcdDtService {
     }
 
     @Override
-    public void inserttixircddtprojer(String catg_name, String proj_id,int user_id,int originid) {
+    public void inserttixircddtprojer(String catg_name, String proj_id,String user_id,String originid) {
          rcdDtDao.inserttixircddtprojer(catg_name,proj_id,user_id,originid);
     }
 

@@ -5,6 +5,7 @@ import com.webapp.support.page.PageResult;
 import com.workbench.auth.menu.entity.Menu;
 import com.workbench.auth.user.entity.User;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -22,16 +23,16 @@ public interface UserService {
 
     void updateUser(User user);
 
-    void delUserById(int user_id);
+    void delUserById(BigInteger user_id);
 
-    User getUserByUserId(Integer userId);
+    User getUserByUserId(BigInteger userId);
 
     User getUserByUserNm(String userName);
 
     List<Menu> getMenuList4User(String user_nm);
     Page<User> pageUsers(int currPage,int pageSize,User user);
-    void resetPwd(Integer userId);
+    void resetPwd(String userId);
 
 
-    void changePwd(int userId, String userPwd);
+    void changePwd(String userId, String userPwd);
 }

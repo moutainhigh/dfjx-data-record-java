@@ -7,9 +7,12 @@ import com.datarecord.webapp.utils.EntityTree;
 import com.github.pagehelper.Page;
 import com.workbench.auth.user.entity.User;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Component;
 
+import java.math.BigInteger;
 import java.util.List;
 
+@Component
 public interface IRecordUserDao {
 
  /*   @Select("SELECT origin_id FROM user_origin_assign WHERE user_id = #{user_id}")
@@ -132,7 +135,7 @@ public interface IRecordUserDao {
             "  #{item}" +
             "  </foreach>"+
             "</script>  ")
-    List<EntityTree> useroriginassignlistsysorigin(@Param("originIds")List<Integer> originIds);
+    List<EntityTree> useroriginassignlistsysorigin(@Param("originIds")List<BigInteger> originIds);
 
 
     @Select("select origin_id from user_origin_assign where user_id =#{user_id}")
@@ -174,7 +177,7 @@ public interface IRecordUserDao {
             "rpc.user_id = u.user_id " +
             "left join (select user_id,job_id from rcd_job_person_assign where job_id=#{jobId}) rjpa on " +
             "rpc.user_id = rjpa.user_id " +
-            "where rpc.origin_id=#{originId} and rjpa.job_id is null and u.user_id is not null " )
+            "where rjpa.job_id is null and u.user_id is not null " )
     Page<User> getOriginRecordUser(
             @Param("currPage") String currPage,
             @Param("pageSize") String pageSize,

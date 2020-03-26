@@ -5,10 +5,11 @@ import com.datarecord.webapp.reportinggroup.bean.ReportingGroup;
 import com.datarecord.webapp.reportinggroup.bean.rcdJobConfig;
 import com.webapp.support.page.PageResult;
 
+import java.math.BigInteger;
 import java.util.List;
 
 public interface ReportingGroupService {
-    List<rcdJobConfig> leftrcdjobconfig(int user_id);
+    List<rcdJobConfig> leftrcdjobconfig(BigInteger user_id);
 
     PageResult rcdjobunitconfiglist(int currPage, int pageSize, String job_id);
 
@@ -23,7 +24,7 @@ public interface ReportingGroupService {
 
     ReportingGroup selectrcdjobunitconfigByjobunitid(String job_unit_id);
 
-    List<RcdJobUnitFld> selectrcdjobunitfld(int user_id, String job_unit_id);
+    List<RcdJobUnitFld> selectrcdjobunitfld(BigInteger user_id, String job_unit_id);
 
     List<RcdJobUnitFld> selectrcdjobunitfldWu(String job_unit_id);
 }

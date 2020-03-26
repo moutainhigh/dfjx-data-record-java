@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class RecordOriginServiceImp implements RecordOriginService {
             submitauthorityDao.updateSubmitauthority(recordOrigin);
             String originType = recordOrigin.getOrigin_type();
             //检查该机构下的报表，如果报表类型与修改后的机构类型不符。将报表置为失效
-            List<Integer> origins = new ArrayList<>();
+            List<BigInteger> origins = new ArrayList<>();
             origins.add(recordOrigin.getOrigin_id());
 //            List<ReportCustomer> reportCustomers  = reportCustomerService.allReportForOrigin(recordOrigin.getOrigin_id().toString());
 //            if(reportCustomers!=null){

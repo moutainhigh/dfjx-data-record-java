@@ -7,6 +7,7 @@ import com.workbench.auth.user.service.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -40,7 +41,7 @@ public class UserRoleServiceImp implements UserRoleService {
     }
 
     @Override
-    public void delUserRoleByUserId(int user_id) {
+    public void delUserRoleByUserId(BigInteger user_id) {
         iUserRoleDao.delUserRoleByUserId(user_id);
     }
 

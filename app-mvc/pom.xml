@@ -49,10 +49,17 @@
     </dependency>
 
     <!--权限模块,包含登录、用户、角色、用户组以及菜单管理-->
+    <!--<dependency>-->
+      <!--<groupId>dfjinxin-data-record</groupId>-->
+      <!--<artifactId>auth-manager</artifactId>-->
+      <!--<version>1.2</version>-->
+    <!--</dependency>-->
+
+    <!--對接權限中心-->
     <dependency>
       <groupId>dfjinxin-data-record</groupId>
-      <artifactId>auth-manager</artifactId>
-      <version>1.2</version>
+      <artifactId>auth-synchronization</artifactId>
+      <version>1.0</version>
     </dependency>
 
     <dependency>

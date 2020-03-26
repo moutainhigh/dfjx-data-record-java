@@ -3,6 +3,8 @@ package com.datarecord.webapp.process.entity;
 import com.datarecord.enums.FldDataTypes;
 import com.google.common.base.Strings;
 
+import java.math.BigInteger;
+
 public class ReportFldConfig {
 
     private Integer job_unit_id;
@@ -21,9 +23,9 @@ public class ReportFldConfig {
     private Integer fld_range;    //取值范围：0-所有、1-移动端、2-PC端
     private Integer fld_visible; //可见范围：0-全部、1-移动端可见、2-PC端可见
     private Integer fld_status = 0;   //指标状态：  0：待审核  1：审核通过  2：审核驳回  3：作废'
-    private Integer fld_creater;
+    private BigInteger fld_creater;
     private String fld_creater_name;
-    private Integer fld_creater_origin;
+    private BigInteger fld_creater_origin;
     private String fld_creater_origin_name;
     private String dict_content_id;
 
@@ -166,11 +168,11 @@ public class ReportFldConfig {
         this.fld_status = fld_status;
     }
 
-    public Integer getFld_creater() {
+    public BigInteger getFld_creater() {
         return fld_creater;
     }
 
-    public void setFld_creater(Integer fld_creater) {
+    public void setFld_creater(BigInteger fld_creater) {
         this.fld_creater = fld_creater;
     }
 
@@ -182,11 +184,11 @@ public class ReportFldConfig {
         this.fld_creater_name = fld_creater_name;
     }
 
-    public Integer getFld_creater_origin() {
+    public BigInteger getFld_creater_origin() {
         return fld_creater_origin;
     }
 
-    public void setFld_creater_origin(Integer fld_creater_origin) {
+    public void setFld_creater_origin(BigInteger fld_creater_origin) {
         this.fld_creater_origin = fld_creater_origin;
     }
 

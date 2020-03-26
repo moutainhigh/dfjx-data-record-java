@@ -1,6 +1,5 @@
 package com.datarecord.webapp.process.service.imp;
 
-import com.datarecord.enums.FldConfigStatus;
 import com.datarecord.enums.JobConfigStatus;
 import com.datarecord.enums.ReportStatus;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
@@ -21,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -52,7 +52,7 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
     public PageResult pageJob(String currPage, String pageSize, String reportStatus, String reportName, String reportOrigin) {
         //查询当前用户是否有审批权限
         User user = (User) SecurityUtils.getSubject().getPrincipal();
-        Integer userId = user.getUser_id();
+        BigInteger userId = user.getUser_id();
         if(DataRecordUtil.isSuperUser()){//当前用户是否是超级管理员
             userId = null;
         }
@@ -138,7 +138,7 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
     }
 
     @Override
-    public PageResult pageReviewJobConfigs(int user_id, String currPage, String pageSize, Map<String, String> queryParams) {
+    public PageResult pageReviewJobConfigs(String user_id, String currPage, String pageSize, Map<String, String> queryParams) {
         List<Origin> childrenOrigins = new ArrayList<>();
         /*
         Object fldOrigin = queryParams.get("jobOrigin");
@@ -164,17 +164,16 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
     }
 
     @Override
-    public PageResult pageReviewFlds(int user_id, String currPage, String pageSize, Map<String, String> queryParams) {
+    public PageResult pageReviewFlds(String user_id, String currPage, String pageSize, Map<String, String> queryParams) {
         List<Origin> childrenOrigins = new ArrayList<>();
         Object fldOrigin = queryParams.get("fldOrigin");
         if(fldOrigin!=null){
             Origin origin = new Origin();
             if(fldOrigin instanceof Double){
                 Double fldOriginDb = (Double) fldOrigin;
-                fldOriginDb.intValue();
-                origin.setOrigin_id(fldOriginDb.intValue());
+                origin.setOrigin_id(new BigInteger(String.valueOf(fldOriginDb)));
             }else if(fldOrigin instanceof String){
-                origin.setOrigin_id(new Integer(String.valueOf(fldOrigin)));
+                origin.setOrigin_id(new BigInteger(String.valueOf(fldOrigin)));
             }
             childrenOrigins.add(origin);
         }else{
@@ -199,8 +198,8 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
         return flowLogs;
     }
 
-    private List<Origin> checkAuthOrigins(Integer user_id){
-        Origin userOrigin = originService.getOriginByUser(user_id);
+    private List<Origin> checkAuthOrigins(String user_id){
+        Origin userOrigin = originService.getOriginByUser(new BigInteger(user_id));
         if(userOrigin==null){
             throw new WorkbenchRuntimeException("找不到当前用户对应的机构",new RuntimeException(""));
         }

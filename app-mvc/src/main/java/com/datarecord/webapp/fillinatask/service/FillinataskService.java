@@ -7,14 +7,13 @@ import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
 import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.process.entity.JobUnitConfig;
 import com.datarecord.webapp.process.entity.ReportFldConfig;
-import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.webapp.support.page.PageResult;
 
 import java.util.List;
 
 public interface FillinataskService {
 
-    PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status, int user_id);
+    PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status, String user_id);
 
     void saveJobConfig(JobConfig jobConfig);
 

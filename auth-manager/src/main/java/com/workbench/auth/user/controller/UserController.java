@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -114,7 +115,7 @@ public class UserController {
     @ResponseBody
     @JsonpCallback
     @CrossOrigin(allowCredentials="true")
-    public String delUserByUserId(Integer user_id){
+    public String delUserByUserId(BigInteger user_id){
         userService.delUserById(user_id);
         JsonResult jsonResult = new JsonResult();
         jsonResult.setResult(JsonResult.RESULT.SUCCESS);
@@ -127,7 +128,7 @@ public class UserController {
     @ResponseBody
     @JsonpCallback
     @CrossOrigin(allowCredentials="true")
-    public String getUserByUserId(Integer user_id){
+    public String getUserByUserId(BigInteger user_id){
         User user = userService.getUserByUserId(user_id);
         JsonResult jsonResult = new JsonResult();
         jsonResult.setResult(JsonResult.RESULT.SUCCESS);
@@ -161,7 +162,7 @@ public class UserController {
         User userDb = userService.getUserByUserNm(userName);
         String userPwd = user.getUser_pwd();
 
-        userService.changePwd(userDb.getUser_id(),userPwd);
+        userService.changePwd(String.valueOf(userDb.getUser_id()),userPwd);
 
         User userFromSession = WorkbenchShiroUtils.checkUserFromShiroContext();
         userFromSession.setUser_status(String.valueOf(UserStatus.NORMAL.getStatus()));
@@ -191,7 +192,7 @@ public class UserController {
                 return response;
             }
         }
-        userService.changePwd(user.getUser_id(),newPwd);
+        userService.changePwd(String.valueOf(user.getUser_id()),newPwd);
 
         JsonResult response = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "获取成功", null, JsonResult.RESULT.SUCCESS);
         return response;

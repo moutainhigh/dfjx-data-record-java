@@ -6,6 +6,7 @@ import com.workbench.auth.user.entity.User;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -27,35 +28,35 @@ public interface IOriginDao {
     @Results(value={
             @Result(property = "origin_id",column = "origin_id"),
             @Result(property = "childrens",column = "origin_id" ,javaType= List.class, many=@Many(select="getSonOrigins"))})
-    Map<String,Object> getOriginById(Integer origin_id);
+    Map<String,Object> getOriginById(BigInteger origin_id);
 
     @Select("select * from sys_origin where parent_origin_id=#{parent_id}")
     @Results(value={
             @Result(property = "origin_id",column = "origin_id"),
             @Result(property = "childrens",column = "origin_id" ,javaType= List.class, many=@Many(select="getSonOrigins"))})
-    List<Map<String,Object>> getSonOrigins(Integer parent_id);
+    List<Map<String,Object>> getSonOrigins(BigInteger parent_id);
 
     @Insert("insert into origin_template_assign (origin_id,template_id) values (#{originId},#{templateId})")
-    void saveOriginTemplate(@Param("originId") Integer originId, @Param("templateId") Integer templateId);
+    void saveOriginTemplate(@Param("originId") BigInteger originId, @Param("templateId") Integer templateId);
 
     @Delete("delete from user_origin_assign where user_id = #{userId}")
-    void removeUserOrigin(@Param("userId") Integer userId);
+    void removeUserOrigin(@Param("userId") BigInteger userId);
 
     @Insert("insert into user_origin_assign (origin_id,user_id) values (#{originId},#{userId})")
-    void userOriginSave(@Param("originId") Integer originId, @Param("userId") Integer userId);
+    void userOriginSave(@Param("originId") BigInteger originId, @Param("userId") BigInteger userId);
 
     @Insert("update user_origin_assign set origin_id = #{originId} where user_id = #{userId}")
-    void userOriginUpdate(@Param("originId") Integer originId, @Param("userId") Integer userId);
+    void userOriginUpdate(@Param("originId") BigInteger originId, @Param("userId") BigInteger userId);
 
     @Select("select distinct so.* from sys_origin so ,user_origin_assign uoa where so.origin_id = uoa.origin_id " +
             "and uoa.user_id = #{userId}")
-    Origin getOriginByUserId(Integer userId);
+    Origin getOriginByUserId(BigInteger userId);
 
     @Select("select * from sys_origin where origin_name like concat('%',#{searchOriginName},'%')")
     List<Origin> getOriginByName(String searchOriginName);
 
     @Select("select u.* from user u ,user_origin_assign uoa where u.user_id = uoa.user_id and uoa.origin_id = #{originId}")
-    List<User> getUsersByOrigin(Integer originId);
+    List<User> getUsersByOrigin(BigInteger originId);
 
     @Update("<script>update sys_origin <set>"
             +"<if test='origin_name!=null'>"

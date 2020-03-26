@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -97,8 +98,8 @@ public class RecordUserServiceImp implements RecordUserService {
     @Override
     public List<Object> useroriginassignlistsysorigin(String origin_id) {
         List<Object> list = new ArrayList<>();
-        List<Origin> childrenOrigins = originService.checkAllChildren(Integer.valueOf(origin_id));
-        List<Integer> originIds  = new ArrayList<>();
+        List<Origin> childrenOrigins = originService.checkAllChildren(new BigInteger(origin_id));
+        List<BigInteger> originIds  = new ArrayList<>();
         for (com.datarecord.webapp.sys.origin.entity.Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id()); }
         List<EntityTree> lists =  recordUserDao.useroriginassignlistsysorigin(originIds);

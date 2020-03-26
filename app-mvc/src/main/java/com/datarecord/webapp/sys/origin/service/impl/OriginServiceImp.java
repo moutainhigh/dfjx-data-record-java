@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.*;
 
 @Service("origin")
@@ -38,12 +39,12 @@ public class OriginServiceImp implements OriginService {
     }
 
     @Override
-    public Map<String, Object> getOriginById(Integer origin_id) {
+    public Map<String, Object> getOriginById(BigInteger origin_id) {
         return originDao.getOriginById(origin_id);
     }
 
     @Override
-    public void userOriginSave(Integer originId, Integer userId) {
+    public void userOriginSave(BigInteger originId, BigInteger userId) {
         Origin originObj = originDao.getOriginByUserId(userId);
         if(originObj!=null){
             originObj.setOrigin_id(originId);
@@ -55,23 +56,23 @@ public class OriginServiceImp implements OriginService {
     }
 
     @Override
-    public Origin getOriginByUser(Integer userId) {
+    public Origin getOriginByUser(BigInteger userId) {
         return originDao.getOriginByUserId(userId);
     }
 
 
     @Override
-    public List<Origin> checkAllChildren(Integer originId){
+    public List<Origin> checkAllChildren(BigInteger originId){
         List<Origin> allOriginList = originDao.listAllOrigin();
         List<Origin> allSons = checkoutSons(originId, allOriginList);
         return allSons;
     }
 
     @Override
-    public List<Origin> checkoutSons(Integer parentOriginId,List<Origin> originList){
+    public List<Origin> checkoutSons(BigInteger parentOriginId,List<Origin> originList){
         List<Origin> sons = new ArrayList();
         for (Origin origin : originList) {
-            Integer parentId = origin.getParent_origin_id();
+            BigInteger parentId = origin.getParent_origin_id();
             if(parentOriginId.equals(parentId)){
                 sons.add(origin);
                 sons.addAll(this.checkoutSons(origin.getOrigin_id(),originList));
@@ -80,19 +81,19 @@ public class OriginServiceImp implements OriginService {
         return sons;
     }
 
-    public Map<String,Origin> getFist2Origin(Integer checkOriginId,List<Origin> allOrigins){
+    public Map<String,Origin> getFist2Origin(BigInteger checkOriginId,List<Origin> allOrigins){
 //        logger.debug("getFist2Origin:{}",checkOriginId);
         Origin cityOrigin = null;
         Origin provinceOrigin = null;
 
-        Map<Integer,Origin> originTmp = new HashMap<>();
+        Map<BigInteger,Origin> originTmp = new HashMap<>();
         for (Origin allOrigin : allOrigins) {
             originTmp.put(allOrigin.getOrigin_id(),allOrigin);
         }
 
         Origin checkOrigin = originTmp.get(checkOriginId);
 
-        Integer parentOriginId = checkOrigin.getParent_origin_id();
+        BigInteger parentOriginId = checkOrigin.getParent_origin_id();
 
 
         Map<String,Origin> resultOrigin = new HashMap<>();
@@ -101,13 +102,13 @@ public class OriginServiceImp implements OriginService {
 
         if(originTmp.containsKey(parentOriginId)){
             Origin parentOrigin = originTmp.get(parentOriginId);
-            if(parentOrigin.getOrigin_id()==1){//判断当前检查的机构是否为省级机构
+            if(parentOrigin.getOrigin_id().equals(1)){//判断当前检查的机构是否为省级机构
                 resultOrigin.put("cityOrigin",null);
                 resultOrigin.put("provinceOrigin",checkOrigin);
                 return resultOrigin;
             }
 
-            if(parentOrigin.getParent_origin_id()==1){//判断当前检查的机构是否为市级机构
+            if(parentOrigin.getParent_origin_id().equals(1)){//判断当前检查的机构是否为市级机构
                 resultOrigin.put("cityOrigin",checkOrigin);
                 resultOrigin.put("provinceOrigin",parentOrigin);
                 return resultOrigin;
@@ -120,7 +121,7 @@ public class OriginServiceImp implements OriginService {
             cityOrigin = originTmp.get(parentOriginId);
             provinceOrigin = originTmp.get(cityOrigin.getParent_origin_id());
 //            logger.debug("city origin {},{}",cityOrigin.getOrigin_id(),cityOrigin.getParent_origin_id());
-            if(provinceOrigin.getParent_origin_id()==1){
+            if(provinceOrigin.getParent_origin_id().equals(1)){
                 break;
             }
             parentOriginId = cityOrigin.getParent_origin_id();
@@ -136,10 +137,10 @@ public class OriginServiceImp implements OriginService {
 
     public Collection<Map<String, Object>> checkProvAndCity(List<Origin> allOrigins){
 
-        Map<Integer,Map<String,Object>> provinceOriginTmp = new HashMap<>();
+        Map<BigInteger,Map<String,Object>> provinceOriginTmp = new HashMap<>();
 
         for (Origin allOrigin : allOrigins) {
-            if(allOrigin.getParent_origin_id()==1){
+            if(allOrigin.getParent_origin_id().equals(1)){
                 Map<String,Object> tmp = new HashMap<>();
                 tmp.put("province",allOrigin);
                 tmp.put("citys",new ArrayList<Origin>());
@@ -148,7 +149,7 @@ public class OriginServiceImp implements OriginService {
         }
 
         for (Origin allOrigin : allOrigins) {
-            Integer parentOriId = allOrigin.getParent_origin_id();
+            BigInteger parentOriId = allOrigin.getParent_origin_id();
             if(provinceOriginTmp.containsKey(parentOriId)){
                 ArrayList<Origin> cityList = (ArrayList<Origin>) provinceOriginTmp.get(parentOriId).get("citys");
                 cityList.add(allOrigin);
@@ -166,19 +167,19 @@ public class OriginServiceImp implements OriginService {
         return result;
     }
 
-    public Origin getOriginTree(List<Integer> childrenOrigins, List<Origin> allOrigins){
-        Map<Integer,Origin> fullOriginTMp = new HashMap<>();
+    public Origin getOriginTree(List<BigInteger> childrenOrigins, List<Origin> allOrigins){
+        Map<BigInteger,Origin> fullOriginTMp = new HashMap<>();
         if(allOrigins!=null&&allOrigins.size()>0){
             for (Origin originTmp : allOrigins) {
-                Integer originId = originTmp.getOrigin_id();
+                BigInteger originId = originTmp.getOrigin_id();
                 fullOriginTMp.put(originId,originTmp);
             }
         }
 
-        Map<Integer,Origin> checkoutOriginMap = new HashMap<>();
+        Map<BigInteger,Origin> checkoutOriginMap = new HashMap<>();
 
         if(childrenOrigins!=null){
-            for (Integer originChild : childrenOrigins) {
+            for (BigInteger originChild : childrenOrigins) {
                 checkoutOriginMap.putAll(this.getParentOrigin(fullOriginTMp,originChild));
             }
         }
@@ -191,7 +192,7 @@ public class OriginServiceImp implements OriginService {
     }
 
     @Override
-    public List<User> getUsersByOrigin(Integer originId) {
+    public List<User> getUsersByOrigin(BigInteger originId) {
         List<User> users = originDao.getUsersByOrigin(originId);
         return users;
     }
@@ -202,14 +203,14 @@ public class OriginServiceImp implements OriginService {
     }
 
     @Override
-    public void removeUserOrigin(int userId) {
+    public void removeUserOrigin(BigInteger userId) {
         originDao.removeUserOrigin(userId);
     }
 
     @Override
     public Origin getAllOriginTree() {
         List<Origin> allOrigin = originDao.listAllOrigin();
-        Map<Integer,Origin> originTmp = new HashMap<>();
+        Map<BigInteger,Origin> originTmp = new HashMap<>();
         for (Origin origin : allOrigin) {
             originTmp.put(origin.getOrigin_id(),origin);
         }
@@ -219,12 +220,15 @@ public class OriginServiceImp implements OriginService {
     }
 
 
-    public Origin makeOriginTree(Map<Integer,Origin> originsMap){
-        Set<Integer> originIds = originsMap.keySet();
-        Integer rootOrigin = null;
-        for (Integer originId : originIds) {
+    public Origin makeOriginTree(Map<BigInteger,Origin> originsMap){
+        Set<BigInteger> originIds = originsMap.keySet();
+        BigInteger rootOrigin = null;
+        for (BigInteger originId : originIds) {
             Origin origin = originsMap.get(originId);
-            Integer parentOriginId = origin.getParent_origin_id();
+            BigInteger parentOriginId = origin.getParent_origin_id();
+            if(parentOriginId.equals(BigInteger.ZERO)){
+                System.out.println("get");
+            }
             if(originsMap.containsKey(parentOriginId)){
                 List<Origin> allChildren = originsMap.get(parentOriginId).getChildren();
                 if(allChildren==null){
@@ -234,11 +238,25 @@ public class OriginServiceImp implements OriginService {
 
                 originsMap.get(parentOriginId).getChildren().add(origin);
             }else{
-                rootOrigin = origin.getOrigin_id();
+                rootOrigin = parentOriginId;
             }
         }
 
         Origin originTree = originsMap.get(rootOrigin);
+        if(originTree==null){
+            originTree = new Origin();
+            originTree.setOrigin_level(1);
+            originTree.setOrigin_id(rootOrigin);
+            originTree.setOrigin_name("所有");
+            originTree.setChildren(new ArrayList<Origin>());
+            for (BigInteger originId : originsMap.keySet()) {
+                Origin origin = originsMap.get(originId);
+                if(rootOrigin.equals(origin.getParent_origin_id())){
+                    originTree.getChildren().add(origin);
+                }
+            }
+            originsMap.put(rootOrigin,originTree);
+        }
 
         makeOriginTreeLevel(originTree,1);
 
@@ -257,13 +275,13 @@ public class OriginServiceImp implements OriginService {
         }
     }
 
-    private Map<Integer, Origin> getParentOrigin(Map<Integer,Origin> fullOriginTMp, Integer checkOriginId){
+    private Map<BigInteger, Origin> getParentOrigin(Map<BigInteger,Origin> fullOriginTMp, BigInteger checkOriginId){
         logger.debug("获取上级机构 {}",checkOriginId);
-        Map<Integer,Origin> resultOrigins = new HashMap<>();
+        Map<BigInteger,Origin> resultOrigins = new HashMap<>();
         if(fullOriginTMp.containsKey(checkOriginId)){
             Origin checkOrigin = fullOriginTMp.get(checkOriginId);
             resultOrigins.put(checkOriginId,checkOrigin);
-            Integer parentOrigin = checkOrigin.getParent_origin_id();
+            BigInteger parentOrigin = checkOrigin.getParent_origin_id();
             if(parentOrigin!=null){
                 resultOrigins.putAll(this.getParentOrigin(fullOriginTMp,parentOrigin));
             }

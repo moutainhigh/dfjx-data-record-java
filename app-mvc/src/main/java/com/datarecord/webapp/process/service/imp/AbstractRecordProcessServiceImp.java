@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 @Service("recordProcessService")
@@ -39,7 +40,7 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
     private FillinataskService fillinataskService;
 
     @Override
-    public PageResult pageJob(int user_id, String currPage, String pageSize,Map<String,String> queryParams) {
+    public PageResult pageJob(BigInteger user_id, String currPage, String pageSize, Map<String,String> queryParams) {
         if(Strings.isNullOrEmpty(currPage))
             currPage = "1";
         if(Strings.isNullOrEmpty(pageSize))

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,7 @@ public class RecordMakerImp implements RecordMaker {
     @Autowired
     protected IRecordProcessDao recordProcessDao;
 
-    private boolean debugger = true;
+    private boolean debugger = false;
 
     @Override
     public Map<JsonResult.RESULT, Object> makeJob(String jobId) {
@@ -58,8 +59,8 @@ public class RecordMakerImp implements RecordMaker {
 
                 //循环为每个填报人生成任务
                 for (JobPerson jobPerson : allJobPerson) {
-                    Integer originId = jobPerson.getOrigin_id();
-                    Integer userId = jobPerson.getUser_id();
+                    BigInteger originId = jobPerson.getOrigin_id();
+                    BigInteger userId = jobPerson.getUser_id();
                     ReportJobInfo reportJobInfo = new ReportJobInfo();
                     reportJobInfo.setJob_id(new Integer(jobId));
                     reportJobInfo.setRecord_origin_id(originId);

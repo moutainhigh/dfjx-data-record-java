@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -59,7 +60,7 @@ public class UserServiceImp implements UserService {
 
         Page<User> allUser = userServiceDao.listUsersForPage(
                 currPage,pageSize,
-                user.getUser_id(),user.getUser_name(),
+                String.valueOf(user.getUser_id()),user.getUser_name(),
                 user.getUser_type(),originId);
 
         return allUser;
@@ -69,7 +70,7 @@ public class UserServiceImp implements UserService {
 
         Page<User> allUser = userServiceDao.pageUsers(
                 currPage,pageSize,
-                user.getUser_id(),user.getUser_name(),user.getUser_type());
+                String.valueOf(user.getUser_id()),user.getUser_name(),user.getUser_type());
 
         return allUser;
     }
@@ -82,7 +83,7 @@ public class UserServiceImp implements UserService {
         int user_id = new Integer(builder.toString());
 
         user_id = user_id<<(new Random().nextInt(5));
-        user.setUser_id(user_id);
+        user.setUser_id(BigInteger.valueOf(user_id));
         if(Strings.isNullOrEmpty(user.getUser_pwd())){
             user.setUser_pwd(MD5.getMD5Value(DEFAULT_PWD));
         }
@@ -96,22 +97,22 @@ public class UserServiceImp implements UserService {
         userServiceDao.updateSave(user);
     }
 
-    public void resetPwd(Integer userId){
+    public void resetPwd(String userId){
         userServiceDao.updatePwd(userId,MD5.getMD5Value(DEFAULT_PWD),String.valueOf(UserStatus.PWD_EXPIRED.getStatus()));
     }
 
     @Override
-    public void changePwd(int userId, String userPwd) {
+    public void changePwd(String userId, String userPwd) {
         userServiceDao.updatePwd(userId,MD5.getMD5Value(userPwd),String.valueOf(UserStatus.NORMAL.getStatus()));
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void delUserById(int user_id){
+    public void delUserById(BigInteger user_id){
         userServiceDao.delUserById(user_id);
         userRoleDao.delUserRoleByUserId(user_id);
     }
 
-    public User getUserByUserId(Integer userId){
+    public User getUserByUserId(BigInteger userId){
         User resultUser = userServiceDao.getUserByUserId(userId);
         logger.debug(resultUser.toString());
         return resultUser;

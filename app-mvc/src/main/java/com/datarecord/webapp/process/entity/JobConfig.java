@@ -3,6 +3,7 @@ package com.datarecord.webapp.process.entity;
 import com.datarecord.enums.JobConfigStatus;
 import com.datarecord.webapp.fillinatask.bean.JobInteval;
 
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -17,9 +18,9 @@ public class JobConfig {
     private String job_start_dt_str;
     private Date job_end_dt;
     private String job_end_dt_str;
-    private Integer job_creater;
+    private BigInteger job_creater;
     private String job_creater_name;
-    private Integer job_creater_origin;
+    private BigInteger job_creater_origin;
     private String job_creater_origin_name;
     private Integer job_cycle;
     private List<JobUnitConfig> jobUnits;
@@ -105,11 +106,11 @@ public class JobConfig {
                 toString();
     }
 
-    public Integer getJob_creater() {
+    public BigInteger getJob_creater() {
         return job_creater;
     }
 
-    public void setJob_creater(Integer job_creater) {
+    public void setJob_creater(BigInteger job_creater) {
         this.job_creater = job_creater;
     }
 
@@ -121,11 +122,11 @@ public class JobConfig {
         this.job_creater_name = job_creater_name;
     }
 
-    public Integer getJob_creater_origin() {
+    public BigInteger getJob_creater_origin() {
         return job_creater_origin;
     }
 
-    public void setJob_creater_origin(Integer job_creater_origin) {
+    public void setJob_creater_origin(BigInteger job_creater_origin) {
         this.job_creater_origin = job_creater_origin;
     }
 

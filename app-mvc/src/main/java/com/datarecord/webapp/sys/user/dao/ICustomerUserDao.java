@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public interface ICustomerUserDao {
                                     @Param("pageSize") Integer pageSize,
                                     @Param("user_name_cn") String user_name_cn,
                                     @Param("user_type") String user_type,
-                                    @Param("seachOrigins") List<Integer> seachOrigins);
+                                    @Param("seachOrigins") List<BigInteger> seachOrigins);
 
     @Select("select id," +
             "user_id," +
@@ -39,18 +40,18 @@ public interface ICustomerUserDao {
             "sms_validate_code," +
             "validate_code_time," +
             "sms_validate_code_time from user_forget_pwd_record where user_id=#{userId}")
-    UserForgetPwdRecord getUserForgetPwdRecord(@Param("userId") Integer userId);
+    UserForgetPwdRecord getUserForgetPwdRecord(@Param("userId") BigInteger userId);
 
 
     @Update("update user_forget_pwd_record set validate_code=#{valiteCode},validate_code_time=#{date} where user_id = #{user_id}")
-    void updateValidateCode(@Param("user_id") Integer user_id, @Param("valiteCode") String valiteCode, @Param("date") Date date);
+    void updateValidateCode(@Param("user_id") BigInteger user_id, @Param("valiteCode") String valiteCode, @Param("date") Date date);
 
     @Insert("insert into user_forget_pwd_record " +
             "(validate_code,validate_code_time,user_id) values (#{valiteCode},#{date},#{user_id})" )
-    void newValidateCode(@Param("user_id") Integer user_id, @Param("valiteCode") String valiteCode, @Param("date") Date date);
+    void newValidateCode(@Param("user_id") BigInteger user_id, @Param("valiteCode") String valiteCode, @Param("date") Date date);
 
     @Update("update user_forget_pwd_record set sms_validate_code=#{validateCode},sms_validate_code_time =#{date} where user_id = #{userId}")
-    void updateSmsValidateCode(@Param("userId") Integer userId, @Param("validateCode") String validateCode, @Param("date") Date date);
+    void updateSmsValidateCode(@Param("userId") BigInteger userId, @Param("validateCode") String validateCode, @Param("date") Date date);
 
     @Select("<script>" +
             "SELECT id," +

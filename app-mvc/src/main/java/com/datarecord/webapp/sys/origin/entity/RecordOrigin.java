@@ -1,5 +1,6 @@
 package com.datarecord.webapp.sys.origin.entity;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -7,20 +8,20 @@ import java.util.Date;
  */
 public class RecordOrigin {
 
-    private Integer origin_id;
+    private BigInteger origin_id;
     private String origin_name;
-    private Integer parent_origin_id;
+    private BigInteger parent_origin_id;
     private String origin_status;
     private String origin_type;
     private Date create_date;
     private String create_user;
 
 
-    public Integer getOrigin_id() {
+    public BigInteger getOrigin_id() {
         return origin_id;
     }
 
-    public void setOrigin_id(Integer origin_id) {
+    public void setOrigin_id(BigInteger origin_id) {
         this.origin_id = origin_id;
     }
 
@@ -32,11 +33,11 @@ public class RecordOrigin {
         this.origin_name = origin_name;
     }
 
-    public Integer getParent_origin_id() {
+    public BigInteger getParent_origin_id() {
         return parent_origin_id;
     }
 
-    public void setParent_origin_id(Integer parent_origin_id) {
+    public void setParent_origin_id(BigInteger parent_origin_id) {
         this.parent_origin_id = parent_origin_id;
     }
 

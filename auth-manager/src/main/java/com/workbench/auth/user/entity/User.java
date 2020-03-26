@@ -3,6 +3,7 @@ package com.workbench.auth.user.entity;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,7 +13,7 @@ import java.util.List;
  * Created by pc on 2017/6/29.
  */
 public class User {
-    private int user_id;
+    private BigInteger user_id;
     private String user_pwd;
     private String user_name;
     private String user_name_cn;
@@ -20,7 +21,7 @@ public class User {
     private Date reg_date;
     private String user_status;
     private Date last_login_time;
-    private Integer  origin_id;
+    private BigInteger  origin_id;
     private String  origin_name;
     private String office_phone;
     private String mobile_phone;
@@ -28,12 +29,12 @@ public class User {
     private String social_code;
 
 
-    public int getUser_id()
+    public BigInteger getUser_id()
     {
         return this.user_id;
     }
 
-    public void setUser_id(int user_id) {
+    public void setUser_id(BigInteger user_id) {
         this.user_id = user_id;
     }
 
@@ -125,11 +126,11 @@ public class User {
     public void setOrigin_name(String origin_name) {
         this.origin_name = origin_name;
     }
-    public Integer getOrigin_id() {
+    public BigInteger getOrigin_id() {
         return origin_id;
     }
 
-    public void setOrigin_id(Integer origin_id) {
+    public void setOrigin_id(BigInteger origin_id) {
         this.origin_id = origin_id;
     }
 

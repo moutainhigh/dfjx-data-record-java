@@ -9,6 +9,7 @@ import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -158,7 +159,7 @@ public interface IRecordProcessDao {
             "</script>")
     Page<ReportJobInfo> pageJob(@Param("currPage") Integer currPage,
                                 @Param("pageSize") Integer pageSize,
-                                @Param("user_id") Integer user_id,
+                                @Param("user_id") BigInteger user_id,
                                 @Param("queryParams") Map<String,String> queryParams);
 
     @Select("<script>" +

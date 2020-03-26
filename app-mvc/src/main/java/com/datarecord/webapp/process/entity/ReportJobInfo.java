@@ -2,6 +2,7 @@ package com.datarecord.webapp.process.entity;
 
 import com.datarecord.enums.ReportStatus;
 
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -10,9 +11,9 @@ public class ReportJobInfo {
     private Integer report_id;
     private Integer job_id;
     private String job_name;
-    private Integer record_origin_id;
+    private BigInteger record_origin_id;
     private String record_origin_name;
-    private Integer record_user_id;
+    private BigInteger record_user_id;
     private String record_user_name;
     private Integer record_status;
     private String record_status_cn;
@@ -38,19 +39,19 @@ public class ReportJobInfo {
         this.job_id = job_id;
     }
 
-    public Integer getRecord_origin_id() {
+    public BigInteger getRecord_origin_id() {
         return record_origin_id;
     }
 
-    public void setRecord_origin_id(Integer record_origin_id) {
+    public void setRecord_origin_id(BigInteger record_origin_id) {
         this.record_origin_id = record_origin_id;
     }
 
-    public Integer getRecord_user_id() {
+    public BigInteger getRecord_user_id() {
         return record_user_id;
     }
 
-    public void setRecord_user_id(Integer record_user_id) {
+    public void setRecord_user_id(BigInteger record_user_id) {
         this.record_user_id = record_user_id;
     }
 

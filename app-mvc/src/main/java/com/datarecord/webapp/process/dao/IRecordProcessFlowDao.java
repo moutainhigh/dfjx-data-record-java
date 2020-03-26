@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +61,7 @@ public interface IRecordProcessFlowDao {
     Page<ReportJobInfo> pageReviewDatas(
             @Param("currPage") Integer currPage,
             @Param("pageSize") Integer pageSize,
-            @Param("userId") Integer userId,
+            @Param("userId") BigInteger userId,
             @Param("reportStatus") String reportStatus,
             @Param("reportName") String reportName);
 

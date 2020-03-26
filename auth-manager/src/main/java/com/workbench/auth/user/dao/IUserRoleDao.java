@@ -3,12 +3,15 @@ package com.workbench.auth.user.dao;
 import com.workbench.auth.role.entity.Role;
 import com.workbench.auth.user.entity.UserRole;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Component;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
  * Created by pc on 2017/7/6.
  */
+@Component
 public interface IUserRoleDao {
 
     @Select("SELECT r.* FROM user_role_assign ura " +
@@ -26,7 +29,7 @@ public interface IUserRoleDao {
 
     @Delete("delete from user_role_assign where user_id=#{user_id}")
     @Options(useCache = false)
-    void delUserRoleByUserId(int user_id);
+    void delUserRoleByUserId(BigInteger user_id);
 
     @Delete("delete from user_role_assign where user_role_id=#{user_role_id}")
     @Options(useCache = false)

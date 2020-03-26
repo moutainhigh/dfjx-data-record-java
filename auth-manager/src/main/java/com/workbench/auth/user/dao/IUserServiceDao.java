@@ -6,6 +6,7 @@ import com.workbench.auth.user.entity.User;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +49,7 @@ public interface IUserServiceDao {
     @Select(query_user_columns + " FROM "+TABLE_NAME+" " +
             "WHERE user_id=#{userId}")
     @Options(useCache = false)
-    User getUserByUserId(int userId);
+    User getUserByUserId(BigInteger userId);
 
     @Select(query_user_columns + " FROM "+TABLE_NAME)
     @Options(useCache = false)
@@ -66,7 +67,7 @@ public interface IUserServiceDao {
             "</script>" )
     @Options(useCache = false)
     Page<User> listUsersForPage(@Param("currPage") int currPage, @Param("pageSize") int pageSize
-            ,@Param("user_id") int user_id,@Param("user_name") String user_name,@Param("user_type")String user_type,@Param("originId") String originId);
+            ,@Param("user_id") String user_id,@Param("user_name") String user_name,@Param("user_type")String user_type,@Param("originId") String originId);
 
     @Select("<script>"+query_user_columns + " FROM "+TABLE_NAME +
             " where  <if test=\"user_type != null\">    u.user_type=#{user_type}  </if> " +
@@ -75,7 +76,7 @@ public interface IUserServiceDao {
             "</script>" )
     @Options(useCache = false)
     Page<User> pageUsers(@Param("currPage") int currPage, @Param("pageSize") int pageSize
-            ,@Param("user_id") int user_id,@Param("user_name") String user_name,@Param("user_type")String user_type);
+            ,@Param("user_id") String user_id,@Param("user_name") String user_name,@Param("user_type")String user_type);
 
     @Insert("INSERT INTO user (user_id,user_name,user_type,reg_date,user_status,last_login_time,user_pwd" +
             ",user_name_cn,office_phone,mobile_phone,email,social_code) " +
@@ -86,7 +87,7 @@ public interface IUserServiceDao {
 
     @Delete("DELETE FROM user WHERE user_id = #{user_id}")
     @Options(useCache = false)
-    void delUserById(int user_id);
+    void delUserById(BigInteger user_id);
 
     @Select("select distinct am.* from user u " +
             "inner join user_role_assign ura on u.user_id = ura.user_id and u.user_name=#{user_nm} " +
@@ -115,7 +116,7 @@ public interface IUserServiceDao {
             "<if test='status!=null'> ,user_status=#{status}</if>" +
             " where user_id = #{userId}" +
             "</script>")
-    void updatePwd(@Param("userId") Integer userId,
+    void updatePwd(@Param("userId") String userId,
                    @Param("md5Value") String md5Value,
                    @Param("status") String status);
 

@@ -6,13 +6,15 @@ import com.datarecord.webapp.process.entity.ReportFldConfig;
 import com.github.pagehelper.Page;
 import com.webapp.support.page.PageResult;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public interface RcdDtDao {
 
     @Insert("INSERT INTO rcd_dt_proj (proj_name,is_actived,proj_creater,proj_creater_origin) VALUES(#{proj_name},#{is_actived},#{user_id},#{originid}) ")
-    void insertrcddtproj(@Param("proj_name") String proj_name, @Param("is_actived") String is_actived,@Param("user_id")int user_id,@Param("originid")int originid);
+    void insertrcddtproj(@Param("proj_name") String proj_name, @Param("is_actived") String is_actived,@Param("user_id")String user_id,@Param("originid")String originid);
 
     @Select("<script>select c.proj_id,c.proj_name,c.is_actived   from   rcd_dt_fld a  INNER JOIN rcd_dt_catg b ON a.catg_id = b.catg_id\n" +
             " INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id   where 1 = 1  and   a.fld_creater_origin IN " +
@@ -26,7 +28,7 @@ public interface RcdDtDao {
 
     @Select("<script>select proj_id,proj_name,is_actived  from   rcd_dt_proj    where 1 = 1  and   proj_creater = #{user_id}" +
             "  GROUP BY  proj_id  </script>")
-    Page<DataDictionary> selectrcddtprojBycreater(@Param("currPage")int currPage, @Param("pageSize")int pageSize, @Param("user_id")int   user_id);
+    Page<DataDictionary> selectrcddtprojBycreater(@Param("currPage")int currPage, @Param("pageSize")int pageSize, @Param("user_id")String   user_id);
 
     @Update("UPDATE rcd_dt_proj SET proj_name=#{proj_name}, is_actived =#{is_actived}  WHERE  proj_id = #{proj_id}")
     void updatercddtproj(@Param("proj_name") String proj_name, @Param("is_actived") String is_actived, @Param("proj_id") String proj_id);
@@ -52,7 +54,7 @@ public interface RcdDtDao {
             " where 1=1  and  a.fld_creater   = #{user_id}" +
             "<if test = \"catg_id != null and catg_id != ''\">  and b.catg_id = #{catg_id} </if>" +
             "</script>")
-    Page<RcdDt> selecttixircddtproj(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("catg_id") String catg_id ,@Param("user_id") int user_id);
+    Page<RcdDt> selecttixircddtproj(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("catg_id") String catg_id ,@Param("user_id") String user_id);
 
 
     @Insert("INSERT INTO rcd_dt_fld (catg_id,fld_name,fld_data_type,fld_is_null,fld_type,fld_range,fld_visible,fld_status,fld_creater,fld_creater_origin,fld_point) VALUES(#{catg_id},#{fld_name},#{fld_data_type},#{fld_is_null},#{fld_type},#{fld_range},#{fld_visible},#{fld_status},#{fld_creater},#{fld_creater_origin},#{fld_point})")
@@ -80,7 +82,7 @@ public interface RcdDtDao {
             " rcd_dt_proj " +
             "WHERE " +
             " 1=1   and  proj_creater  = #{user_id}   GROUP BY  proj_id  ")
-    List<Rcddtproj> leftrcddtprojjblx(@Param("user_id") int user_id);
+    List<Rcddtproj> leftrcddtprojjblx(@Param("user_id") String user_id);
 
    /* @Select("SELECT catg_id,catg_name FROM rcd_dt_catg  where  proj_id = #{proj_id}")*/
     @Select("SELECT " +
@@ -92,10 +94,10 @@ public interface RcdDtDao {
             " proj_id = #{proj_id}  and   catg_creater  = #{user_id} " +
             "  GROUP BY  " +
             " catg_id ")
-    List<RcddtCatg> leftrcddtcatglx(@Param("proj_id") String proj_id,@Param("user_id") int user_id);
+    List<RcddtCatg> leftrcddtcatglx(@Param("proj_id") String proj_id,@Param("user_id") String user_id);
 
     @Select("SELECT fld_id,fld_name FROM rcd_dt_fld  where  catg_id = #{catg_id}  and   fld_creater = #{user_id}")
-    List<RcdDtFld> leftrcddtfld(@Param("catg_id") String catg_id,@Param("user_id")int user_id );
+    List<RcdDtFld> leftrcddtfld(@Param("catg_id") String catg_id,@Param("user_id")String user_id );
 
 
     @Select("<script>SELECT b.catg_id,c.proj_name,b.catg_name  " +
@@ -116,14 +118,14 @@ public interface RcdDtDao {
             "             INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id  " +
             "             where 1=1  AND  b.catg_creater  = #{user_id} " +
             "   and  b.proj_id = #{proj_id}   GROUP BY  b.catg_id")
-    Page<DataDictionary> selecttixircddtprojerByid(@Param("currPage")int currPage, @Param("pageSize")int pageSize,@Param("proj_id") String proj_id,@Param("user_id") int user_id);
+    Page<DataDictionary> selecttixircddtprojerByid(@Param("currPage")int currPage, @Param("pageSize")int pageSize,@Param("proj_id") String proj_id,@Param("user_id") String user_id);
 
 
     @Select("select  MAX(fld_id) from  rcd_dt_fld")
     int selectmax();
 
     @Insert("insert into rcd_dt_catg (catg_name,proj_id,catg_creater,catg_creater_origin) values(#{catg_name},#{proj_id},#{user_id},#{originid})")
-    void inserttixircddtprojer(@Param("catg_name")String catg_name, @Param("proj_id")String proj_id,@Param("user_id")int user_id,@Param("originid")int originid);
+    void inserttixircddtprojer(@Param("catg_name")String catg_name, @Param("proj_id")String proj_id,@Param("user_id")String user_id,@Param("originid")String originid);
 
     @Update("update rcd_dt_catg set catg_name = #{catg_name},proj_id =#{proj_id} where  catg_id =#{catg_id}")
     void updatetixircddtprojer(@Param("catg_id")String catg_id, @Param("catg_name")String catg_name, @Param("proj_id")String proj_id);

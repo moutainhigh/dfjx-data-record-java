@@ -1,10 +1,12 @@
 package com.datarecord.webapp.process.entity;
 
+import java.math.BigInteger;
+
 public class JobPerson {
     private Integer job_id ;
-    private Integer user_id;
+    private BigInteger user_id;
     private String user_name;
-    private Integer origin_id;
+    private BigInteger origin_id;
     private String origin_name;
 
     public Integer getJob_id() {
@@ -15,11 +17,11 @@ public class JobPerson {
         this.job_id = job_id;
     }
 
-    public Integer getUser_id() {
+    public BigInteger getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(Integer user_id) {
+    public void setUser_id(BigInteger user_id) {
         this.user_id = user_id;
     }
 
@@ -31,11 +33,11 @@ public class JobPerson {
         this.user_name = user_name;
     }
 
-    public Integer getOrigin_id() {
+    public BigInteger getOrigin_id() {
         return origin_id;
     }
 
-    public void setOrigin_id(Integer origin_id) {
+    public void setOrigin_id(BigInteger origin_id) {
         this.origin_id = origin_id;
     }
 
