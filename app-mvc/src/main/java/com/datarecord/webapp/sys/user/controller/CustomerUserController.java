@@ -85,15 +85,15 @@ public class CustomerUserController {
                 originSqlParams != null && originSqlParams.size() > 0 ? originSqlParams : null);
 
         List<CustomerUser> cqnyResultData = pageResult.getDataList();
-        for (CustomerUser userTmp : cqnyResultData) {
-            BigInteger reportOriginId = userTmp.getOrigin_id();
-
-            Map<String, Origin> result = originService.getFist2Origin(reportOriginId, allReportOrigins);
-            if (result.get("cityOrigin") != null)
-                userTmp.setOrigin_city(result.get("cityOrigin").getOrigin_name());
-            if (result.get("provinceOrigin") != null)
-                userTmp.setOrigin_province(result.get("provinceOrigin").getOrigin_name());
-        }
+//        for (CustomerUser userTmp : cqnyResultData) {
+//            BigInteger reportOriginId = userTmp.getOrigin_id();
+//
+//            Map<String, Origin> result = originService.getFist2Origin(reportOriginId, allReportOrigins);
+//            if (result.get("cityOrigin") != null)
+//                userTmp.setOrigin_city(result.get("cityOrigin").getOrigin_name());
+//            if (result.get("provinceOrigin") != null)
+//                userTmp.setOrigin_province(result.get("provinceOrigin").getOrigin_name());
+//        }
 
         Collection<Map<String, Object>> first2Origin = originService.checkProvAndCity(allReportOrigins);
 

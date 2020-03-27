@@ -177,7 +177,7 @@ public interface IRecordUserDao {
             "rpc.user_id = u.user_id " +
             "left join (select user_id,job_id from rcd_job_person_assign where job_id=#{jobId}) rjpa on " +
             "rpc.user_id = rjpa.user_id " +
-            "where rjpa.job_id is null and u.user_id is not null " )
+            "where rjpa.job_id is null and rpc.origin_id=#{originId} and u.user_id is not null " )
     Page<User> getOriginRecordUser(
             @Param("currPage") String currPage,
             @Param("pageSize") String pageSize,

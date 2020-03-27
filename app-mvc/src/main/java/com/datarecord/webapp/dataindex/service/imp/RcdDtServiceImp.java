@@ -110,7 +110,7 @@ public class RcdDtServiceImp  implements RcdDtService {
 
     @Override
     public List<Rcddtproj> leftrcddtprojjblx(String user_id) {
-      //  String originid = userOrigin.getOrigin_id().toString();
+      //  String originid = userOrigin.getOrigin_id().toString();selectrcddtproj
         return rcdDtDao.leftrcddtprojjblx(user_id);
     }
 

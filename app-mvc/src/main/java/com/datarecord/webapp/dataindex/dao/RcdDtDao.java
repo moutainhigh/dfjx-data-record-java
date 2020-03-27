@@ -26,7 +26,10 @@ public interface RcdDtDao {
 
 
 
-    @Select("<script>select proj_id,proj_name,is_actived  from   rcd_dt_proj    where 1 = 1  and   proj_creater = #{user_id}" +
+    @Select("<script>select proj_id,proj_name,is_actived  from   rcd_dt_proj    where 1 = 1  " +
+            "<if test='user_id!=null'>" +
+            "and  proj_creater  = #{user_id}" +
+            "</if>" +
             "  GROUP BY  proj_id  </script>")
     Page<DataDictionary> selectrcddtprojBycreater(@Param("currPage")int currPage, @Param("pageSize")int pageSize, @Param("user_id")String   user_id);
 
@@ -44,6 +47,7 @@ public interface RcdDtDao {
             "  a.fld_data_type, " +
             "  a.fld_range, " +
             "  a.fld_type, " +
+            "  a.fld_point, " +
             "  a.fld_status, " +
             "  a.fld_visible, " +
             "  a.fld_is_null " +
@@ -51,7 +55,8 @@ public interface RcdDtDao {
             " rcd_dt_fld a " +
             " INNER JOIN rcd_dt_catg b ON a.catg_id = b.catg_id " +
             " INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id " +
-            " where 1=1  and  a.fld_creater   = #{user_id}" +
+            " where 1=1 " +
+            "<if test = \"user_id != null and user_id != ''\">  and a.fld_creater = #{user_id} </if>" +
             "<if test = \"catg_id != null and catg_id != ''\">  and b.catg_id = #{catg_id} </if>" +
             "</script>")
     Page<RcdDt> selecttixircddtproj(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("catg_id") String catg_id ,@Param("user_id") String user_id);
@@ -75,32 +80,48 @@ public interface RcdDtDao {
     void updatercddtfld(ReportFldConfig reportFldConfig);
 /*
     @Select("SELECT proj_id,proj_name FROM rcd_dt_proj ")*/
-    @Select("SELECT " +
+    @Select("<script>" +
+            "SELECT " +
             " proj_id, " +
             " proj_name " +
             "FROM " +
             " rcd_dt_proj " +
             "WHERE " +
-            " 1=1   and  proj_creater  = #{user_id}   GROUP BY  proj_id  ")
+            " 1=1   " +
+            "<if test='user_id!=null'>" +
+            "and  proj_creater  = #{user_id}" +
+            "</if>" +
+            " GROUP BY  proj_id " +
+            "</script> ")
     List<Rcddtproj> leftrcddtprojjblx(@Param("user_id") String user_id);
 
    /* @Select("SELECT catg_id,catg_name FROM rcd_dt_catg  where  proj_id = #{proj_id}")*/
-    @Select("SELECT " +
+    @Select("<script>" +
+            "SELECT " +
             " catg_id, " +
             " catg_name " +
             "FROM " +
             " rcd_dt_catg " +
             "WHERE " +
-            " proj_id = #{proj_id}  and   catg_creater  = #{user_id} " +
+            " proj_id = #{proj_id}   " +
+            "<if test='user_id!=null'>" +
+            "and  catg_creater  = #{user_id}" +
+            "</if>" +
             "  GROUP BY  " +
-            " catg_id ")
+            " catg_id " +
+            "</script>")
     List<RcddtCatg> leftrcddtcatglx(@Param("proj_id") String proj_id,@Param("user_id") String user_id);
 
-    @Select("SELECT fld_id,fld_name FROM rcd_dt_fld  where  catg_id = #{catg_id}  and   fld_creater = #{user_id}")
+    @Select("<script>SELECT fld_id,fld_name FROM rcd_dt_fld  where  catg_id = #{catg_id} " +
+            "<if test='user_id!=null'>" +
+            "and  fld_creater  = #{user_id}" +
+            "</if>" +
+            "</script>" )
     List<RcdDtFld> leftrcddtfld(@Param("catg_id") String catg_id,@Param("user_id")String user_id );
 
 
-    @Select("<script>SELECT b.catg_id,c.proj_name,b.catg_name  " +
+    @Select("<script>" +
+            "SELECT b.catg_id,c.proj_name,b.catg_name  " +
             "             FROM  rcd_dt_fld a   " +
             "             INNER JOIN rcd_dt_catg b ON a.catg_id = b.catg_id  " +
             "             INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id  " +
@@ -113,11 +134,16 @@ public interface RcdDtDao {
 
 
 
-    @Select("SELECT b.catg_id,c.proj_name,b.catg_name  " +
+    @Select("<script>" +
+            "SELECT b.catg_id,c.proj_name,b.catg_name  " +
             "             FROM  rcd_dt_catg b   " +
             "             INNER JOIN rcd_dt_proj c ON c.proj_id = b.proj_id  " +
-            "             where 1=1  AND  b.catg_creater  = #{user_id} " +
-            "   and  b.proj_id = #{proj_id}   GROUP BY  b.catg_id")
+            "             where 1=1  " +
+            "<if test='user_id!=null'>" +
+            "AND  b.catg_creater  = #{user_id}" +
+            "</if>" +
+            "   and  b.proj_id = #{proj_id}   GROUP BY  b.catg_id" +
+            "</script>")
     Page<DataDictionary> selecttixircddtprojerByid(@Param("currPage")int currPage, @Param("pageSize")int pageSize,@Param("proj_id") String proj_id,@Param("user_id") String user_id);
 
 

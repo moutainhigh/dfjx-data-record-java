@@ -13,6 +13,7 @@ import com.github.pagehelper.Page;
 import com.google.common.base.Strings;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
+import com.workbench.auth.user.entity.UserType;
 import com.workbench.exception.runtime.WorkbenchRuntimeException;
 import com.workbench.shiro.WorkbenchShiroUtils;
 import org.apache.shiro.SecurityUtils;
@@ -154,9 +155,12 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
             }
             childrenOrigins.add(origin);
         }
-//        else{
-//            childrenOrigins = this.checkAuthOrigins(user_id);
-//        }
+        else{
+//            User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+//            if(!UserType.SYSMANAGER.compareTo(user.getUser_type())){
+//                childrenOrigins = this.checkAuthOrigins(user_id);
+//            }
+        }
         queryParams.put("jobName",Strings.emptyToNull(queryParams.get("jobName")));
         queryParams.put("jobStatus",Strings.emptyToNull(queryParams.get("jobStatus")));
         Page<JobConfig> reviewJobs =  recordProcessFlowDao.pageReviewJobs(currPage,pageSize,childrenOrigins,queryParams);

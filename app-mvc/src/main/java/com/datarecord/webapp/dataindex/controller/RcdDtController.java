@@ -14,6 +14,7 @@ import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
+import com.workbench.auth.user.entity.UserType;
 import com.workbench.shiro.WorkbenchShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -150,7 +151,11 @@ public class RcdDtController {
             try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
             Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            pageResult = rcdDtService.selectrcddtproj(currPage,pageSize,userOrigin,String.valueOf(user.getUser_id()));
+            if(UserType.SYSMANAGER.compareTo(user.getUser_type())){
+                pageResult = rcdDtService.selectrcddtproj(currPage,pageSize,userOrigin,null);
+            }else{
+                pageResult = rcdDtService.selectrcddtproj(currPage,pageSize,userOrigin,String.valueOf(user.getUser_id()));
+            }
         }catch(Exception e){
             e.printStackTrace();
             return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标体系基本类别列表失败", null, "error");
@@ -198,7 +203,11 @@ public class RcdDtController {
 
       try{
           User user = WorkbenchShiroUtils.checkUserFromShiroContext();
-          pageResult = rcdDtService.selecttixircddtproj(currPage,pageSize,catg_id,String.valueOf(user.getUser_id()));
+          if(UserType.SYSMANAGER.compareTo(user.getUser_type())){
+              pageResult = rcdDtService.selecttixircddtproj(currPage,pageSize,catg_id,null);
+          }else{
+              pageResult = rcdDtService.selecttixircddtproj(currPage,pageSize,catg_id,String.valueOf(user.getUser_id()));
+          }
       }catch(Exception e){
           e.printStackTrace();
           return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标体系类别列表失败", null, "error");
@@ -220,7 +229,11 @@ public class RcdDtController {
         try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
             Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            pageResult = rcdDtService.selecttixircddtprojer(currPage,pageSize,proj_id,userOrigin,String.valueOf(user.getUser_id()));
+            if(UserType.SYSMANAGER.compareTo(user.getUser_type())){
+                pageResult = rcdDtService.selecttixircddtprojer(currPage,pageSize,proj_id,userOrigin,null);
+            }else{
+                pageResult = rcdDtService.selecttixircddtprojer(currPage,pageSize,proj_id,userOrigin,String.valueOf(user.getUser_id()));
+            }
         }catch(Exception e){
             e.printStackTrace();
             return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取指标二级体系类别列表失败", null, "error");
@@ -365,7 +378,11 @@ public class RcdDtController {
         try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
         //    Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            ll  = rcdDtService.leftrcddtprojjblx(String.valueOf(user.getUser_id()));
+            if(UserType.SYSMANAGER.compareTo(user.getUser_type())){
+                ll  = rcdDtService.leftrcddtprojjblx(null);
+            }else{
+                ll  = rcdDtService.leftrcddtprojjblx(String.valueOf(user.getUser_id()));
+            }
         }catch(Exception e){
             e.printStackTrace();
            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "基本类型获取失败", null, "error");
@@ -381,8 +398,13 @@ public class RcdDtController {
         List<RcddtCatg> ll =null;
         try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+            Origin userOrigin = originService.getOriginByUser(user.getUser_id());
+            if(UserType.SYSMANAGER.compareTo(user.getUser_type())){
+                ll  = rcdDtService.leftrcddtcatglx(proj_id,null);
+            }else{
+                ll  = rcdDtService.leftrcddtcatglx(proj_id,String.valueOf(user.getUser_id()));
+            }
            // Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            ll  = rcdDtService.leftrcddtcatglx(proj_id,String.valueOf(user.getUser_id()));
         }catch(Exception e){
             e.printStackTrace();
             return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "类型获取失败", null, "error");
@@ -398,7 +420,11 @@ public class RcdDtController {
         List<RcdDtFld> ll = null;
         try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
-            ll  = rcdDtService.leftrcddtfld(catg_id,String.valueOf(user.getUser_id()));
+            if(UserType.SYSMANAGER.compareTo(user.getUser_type())){
+                ll  = rcdDtService.leftrcddtfld(catg_id,null);
+            }else{
+                ll  = rcdDtService.leftrcddtfld(catg_id,String.valueOf(user.getUser_id()));
+            }
         }catch(Exception e){
             e.printStackTrace();
             return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标类型获取失败", null, "error");

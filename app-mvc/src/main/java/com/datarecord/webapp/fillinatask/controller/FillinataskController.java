@@ -13,6 +13,7 @@ import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
+import com.workbench.auth.user.entity.UserType;
 import com.workbench.shiro.WorkbenchShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,8 +50,12 @@ public class FillinataskController {
         PageResult pageResult = null;
         try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
-          //  Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            pageResult = fillinataskService.rcdjobconfiglist(currPage,pageSize,job_name,job_status,String.valueOf(user.getUser_id()));
+            if(UserType.SYSMANAGER.compareTo(user.getUser_type())){
+                pageResult = fillinataskService.rcdjobconfiglist(currPage,pageSize,job_name,job_status,null);
+            }else{
+                pageResult = fillinataskService.rcdjobconfiglist(currPage,pageSize,job_name,job_status,String.valueOf(user.getUser_id()));
+            }
+            //  Origin userOrigin = originService.getOriginByUser(user.getUser_id());
         }catch(Exception e){
             e.printStackTrace();
             return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报任务列表失败", null, "error");

@@ -12,6 +12,7 @@ import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
+import com.workbench.auth.user.entity.UserType;
 import com.workbench.shiro.WorkbenchShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -78,7 +79,12 @@ public class RecordProcessFlowController {
         String pageSize= jobReviewRequest.getPageSize() ;
         Map<String,String> queryParams = jobReviewRequest.getQueryParams();
         User user = WorkbenchShiroUtils.checkUserFromShiroContext();
-        PageResult fldPageResult = recordProcessFlowService.pageReviewJobConfigs(user.getUser_id().toString(), currPage, pageSize, queryParams);
+        PageResult fldPageResult = null;
+        if(UserType.SYSMANAGER.compareTo(user.getUser_type())){
+             fldPageResult = recordProcessFlowService.pageReviewJobConfigs(null, currPage, pageSize, queryParams);
+        }else{
+             fldPageResult = recordProcessFlowService.pageReviewJobConfigs(user.getUser_id().toString(), currPage, pageSize, queryParams);
+        }
 
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, fldPageResult);
