@@ -73,10 +73,10 @@ public class RecordProcessFlowController {
     @RequestMapping("pageReviewJobConfigs")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
-    public JsonResult pageReviewJobConfigs(@RequestBody Map<String,Object> postParams){
-        String currPage= postParams.get("currPage")!=null ? String.valueOf(((Double)postParams.get("currPage")).intValue()): "1";
-        String pageSize= postParams.get("pageSize")!=null ? String.valueOf(((Double)postParams.get("pageSize")).intValue()): "10" ;
-        Map<String,String> queryParams = (Map<String, String>) postParams.get("queryParams");
+    public JsonResult pageReviewJobConfigs(@RequestBody JobReviewRequest jobReviewRequest){
+        String currPage= jobReviewRequest.getCurrPage();
+        String pageSize= jobReviewRequest.getPageSize() ;
+        Map<String,String> queryParams = jobReviewRequest.getQueryParams();
         User user = WorkbenchShiroUtils.checkUserFromShiroContext();
         PageResult fldPageResult = recordProcessFlowService.pageReviewJobConfigs(user.getUser_id().toString(), currPage, pageSize, queryParams);
 
@@ -89,20 +89,22 @@ public class RecordProcessFlowController {
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
     public JsonResult authOrigins(){
-        User user = WorkbenchShiroUtils.checkUserFromShiroContext();
-        Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-        if(userOrigin==null){
-            JsonResult falidResult = JsonSupport.makeJsonpResult(
-                    JsonResult.RESULT.FAILD, "找不到当前用户所属的机构单位", "找不到当前用户所属的机构单位", "找不到当前用户所属的机构单位");
-            return falidResult;
-        }
-        List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
-        childrenOrigins.add(0,userOrigin);
-        List<BigInteger> originIds  = new ArrayList<>();
-        for (Origin childrenOrigin : childrenOrigins) {
-            originIds.add(childrenOrigin.getOrigin_id());
-        }
-        Origin originTree = originService.getOriginTree(originIds, childrenOrigins);
+//        User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+//        Origin userOrigin = originService.getOriginByUser(user.getUser_id());
+//        if(userOrigin==null){
+//            JsonResult falidResult = JsonSupport.makeJsonpResult(
+//                    JsonResult.RESULT.FAILD, "找不到当前用户所属的机构单位", "找不到当前用户所属的机构单位", "找不到当前用户所属的机构单位");
+//            return falidResult;
+//        }
+//        List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
+//        childrenOrigins.add(0,userOrigin);
+//        List<BigInteger> originIds  = new ArrayList<>();
+//        for (Origin childrenOrigin : childrenOrigins) {
+//            originIds.add(childrenOrigin.getOrigin_id());
+//        }
+//        Origin originTree = originService.getOriginTree(originIds, childrenOrigins);
+
+        Origin originTree = originService.getAllOriginTree();
 
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, originTree);
@@ -162,6 +164,37 @@ public class RecordProcessFlowController {
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "更新成功", null, jobFlowLogs);
         return successResult;
+    }
+
+
+    class JobReviewRequest{
+        private String currPage;
+        private String pageSize;
+        private Map<String,String> queryParams;
+
+        public String getCurrPage() {
+            return currPage;
+        }
+
+        public void setCurrPage(String currPage) {
+            this.currPage = currPage;
+        }
+
+        public String getPageSize() {
+            return pageSize;
+        }
+
+        public void setPageSize(String pageSize) {
+            this.pageSize = pageSize;
+        }
+
+        public Map<String, String> getQueryParams() {
+            return queryParams;
+        }
+
+        public void setQueryParams(Map<String, String> queryParams) {
+            this.queryParams = queryParams;
+        }
     }
 
 }

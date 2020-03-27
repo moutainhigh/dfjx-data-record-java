@@ -139,22 +139,24 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
 
     @Override
     public PageResult pageReviewJobConfigs(String user_id, String currPage, String pageSize, Map<String, String> queryParams) {
-        List<Origin> childrenOrigins = new ArrayList<>();
-        /*
+        List<Origin> childrenOrigins = null;
+
         Object fldOrigin = queryParams.get("jobOrigin");
         if(fldOrigin!=null){
+            childrenOrigins = new ArrayList<>();
             Origin origin = new Origin();
             if(fldOrigin instanceof Double){
                 Double fldOriginDb = (Double) fldOrigin;
                 fldOriginDb.intValue();
-                origin.setOrigin_id(fldOriginDb.intValue());
+                origin.setOrigin_id(new BigInteger(fldOriginDb.toString()));
             }else if(fldOrigin instanceof String){
-                origin.setOrigin_id(new Integer(String.valueOf(fldOrigin)));
+                origin.setOrigin_id(new BigInteger(String.valueOf(fldOrigin)));
             }
             childrenOrigins.add(origin);
-        }else{
-            childrenOrigins = this.checkAuthOrigins(user_id);
-        }*/
+        }
+//        else{
+//            childrenOrigins = this.checkAuthOrigins(user_id);
+//        }
         queryParams.put("jobName",Strings.emptyToNull(queryParams.get("jobName")));
         queryParams.put("jobStatus",Strings.emptyToNull(queryParams.get("jobStatus")));
         Page<JobConfig> reviewJobs =  recordProcessFlowDao.pageReviewJobs(currPage,pageSize,childrenOrigins,queryParams);

@@ -7,6 +7,7 @@ import java.util.List;
 public class Origin {
 
     private BigInteger origin_id;
+    private String origin_id_str;
     private String origin_name;
     private BigInteger parent_origin_id;
     private String origin_status;
@@ -32,6 +33,7 @@ public class Origin {
 
     public void setOrigin_id(BigInteger origin_id) {
         this.origin_id = origin_id;
+        this.origin_id_str = origin_id.toString();
     }
 
     public String getOrigin_name() {
@@ -152,5 +154,13 @@ public class Origin {
 
     public void setOrigin_level(Integer origin_level) {
         this.origin_level = origin_level;
+    }
+
+    public String getOrigin_id_str() {
+        return origin_id_str;
+    }
+
+    public void setOrigin_id_str(String origin_id_str) {
+        this.origin_id_str = origin_id_str;
     }
 }
