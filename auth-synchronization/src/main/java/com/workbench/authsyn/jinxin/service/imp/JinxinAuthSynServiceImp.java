@@ -9,11 +9,14 @@ import com.webapp.support.json.JsonSupport;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.menu.entity.Menu;
 import com.workbench.auth.menu.service.MenuService;
+import com.workbench.auth.user.entity.User;
+import com.workbench.auth.user.service.UserService;
 import com.workbench.authsyn.config.UserCenterProperties;
 import com.workbench.authsyn.dao.IUserSynDao;
 import com.workbench.authsyn.jinxin.entity.JinxinOrganization;
 import com.workbench.authsyn.jinxin.entity.JinxinUser;
 import com.workbench.authsyn.jinxin.service.JinxinAuthSynService;
+import com.workbench.shiro.WorkbenchShiroUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,9 @@ public class JinxinAuthSynServiceImp implements JinxinAuthSynService {
     
     @Autowired
     private MenuService menuService;
+    
+    @Autowired
+    private UserService userService;
 
     private static final Integer BATCH_USER_LIMIT = 100;
 
@@ -147,6 +153,15 @@ public class JinxinAuthSynServiceImp implements JinxinAuthSynService {
 
     @Override
     public List<Menu> getUserAuths(BigInteger user_id) throws IOException, URISyntaxException {
+       if(userCenterProperties.getEnable()){
+           return getMenusFromCenter(user_id);
+       }else{
+           User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+           return userService.getMenuList4User(user.getUser_name());
+       }
+    }
+
+    private List<Menu> getMenusFromCenter(BigInteger user_id) throws IOException, URISyntaxException {
         HttpClientSupport jinxinUserCenter = this.getJinxinUserCenter();
         Map<String,Object> params = new HashMap<>();
         params.put("userId",user_id);
