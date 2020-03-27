@@ -48,6 +48,7 @@ CHANGE COLUMN `job_status` `job_status` INT(11) NOT NULL DEFAULT '0' COMMENT ' *
 UPDATE `app_module` SET `module_id`='43', `super_module_id`='4' WHERE `module_id`='32';
 update user_role_privilege set module_id = '43' where module_id = '32';
 
+DROP TABLE IF EXISTS `rcd_job_interval`;
 CREATE TABLE `rcd_job_interval` (
   `job_id` INT NOT NULL,
   `job_start` VARCHAR(45) NOT NULL,
@@ -70,6 +71,7 @@ ALTER TABLE `rcd_job_interval`
 CHANGE COLUMN `job_start` `job_interval_start` VARCHAR(45) NOT NULL ,
 CHANGE COLUMN `job_end` `job_interval_end` VARCHAR(45) NOT NULL COMMENT '任务填报周期' ;
 
+DROP TABLE IF EXISTS `rcd_job_flowlog`
 CREATE TABLE `rcd_job_flowlog` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `job_id` INT NULL,
