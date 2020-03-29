@@ -13,10 +13,10 @@ import java.util.Map;
 @Repository
 public interface IOriginDao {
 
-    @Select("select origin_id,origin_name,parent_origin_id,origin_status,create_date,create_user,origin_type from sys_origin")
+    @Select("select origin_id,origin_name,parent_origin_id,origin_status,create_date,create_user,origin_type from sys_origin where origin_status!='3'")
     List<Origin> listAllOrigin();
 
-    @Select("select origin_id,origin_name,parent_origin_id,origin_status,create_date,create_user from sys_origin")
+    @Select("select origin_id,origin_name,parent_origin_id,origin_status,create_date,create_user from sys_origin  where origin_status!='3'")
     Page<Origin> listOrigin(@Param("currPage") int currPage, @Param("pageSize") int pageSize);
 
     @Insert("insert into sys_origin (origin_name,parent_origin_id,origin_status,create_date,create_user) values " +
@@ -24,13 +24,13 @@ public interface IOriginDao {
     @Options(useGeneratedKeys = true, keyProperty = "origin_id", keyColumn = "origin_id")
     void createOrigin(Origin origin);
 
-    @Select("select * from sys_origin where origin_id = #{origin_id}")
+    @Select("select * from sys_origin where origin_id = #{origin_id} and origin_status!='3'")
     @Results(value={
             @Result(property = "origin_id",column = "origin_id"),
             @Result(property = "childrens",column = "origin_id" ,javaType= List.class, many=@Many(select="getSonOrigins"))})
     Map<String,Object> getOriginById(BigInteger origin_id);
 
-    @Select("select * from sys_origin where parent_origin_id=#{parent_id}")
+    @Select("select * from sys_origin where parent_origin_id=#{parent_id} and origin_status!='3'")
     @Results(value={
             @Result(property = "origin_id",column = "origin_id"),
             @Result(property = "childrens",column = "origin_id" ,javaType= List.class, many=@Many(select="getSonOrigins"))})
@@ -49,10 +49,10 @@ public interface IOriginDao {
     void userOriginUpdate(@Param("originId") BigInteger originId, @Param("userId") BigInteger userId);
 
     @Select("select distinct so.* from sys_origin so ,user_origin_assign uoa where so.origin_id = uoa.origin_id " +
-            "and uoa.user_id = #{userId}")
+            "and uoa.user_id = #{userId} and  so.origin_status!='3'")
     Origin getOriginByUserId(BigInteger userId);
 
-    @Select("select * from sys_origin where origin_name like concat('%',#{searchOriginName},'%')")
+    @Select("select * from sys_origin  where origin_status!='3' and origin_name like concat('%',#{searchOriginName},'%')")
     List<Origin> getOriginByName(String searchOriginName);
 
     @Select("select u.* from user u ,user_origin_assign uoa where u.user_id = uoa.user_id and uoa.origin_id = #{originId}")

@@ -46,6 +46,14 @@ public interface ISubmitauthorityDao {
             "</foreach></script>")
     void deleteByListId(@Param("listId") List listId);
 
+    @Update("<script>delete from sys_origin <set>" +
+            "</set>" +
+            "where origin_id in"+
+            "<foreach item='item' index='index' collection='listId' open='(' separator=',' close=')'> " +
+            " #{item} " +
+            "</foreach></script>")
+    void delOriginById(@Param("originId") List listId);
+
     @Update("<script>update sys_origin <set>"
             +"<if test='origin_name!=null'>"
             +"origin_name=#{origin_name} ,"

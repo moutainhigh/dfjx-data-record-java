@@ -19,6 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
@@ -143,9 +146,9 @@ public class UserController {
     @ResponseBody
     @JsonpCallback
     @CrossOrigin(allowCredentials="true")
-    public String updateSaveUser(@RequestBody User user){
+    public String updateSaveUser(@RequestBody User user) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         userService.updateUser(user);
-
+        WorkbenchShiroUtils.updateShiroUser(user);
         JsonResult jsonResult = new JsonResult();
         jsonResult.setResult(JsonResult.RESULT.SUCCESS);
         jsonResult.setResult_msg("保存成功");

@@ -212,7 +212,9 @@ public class OriginServiceImp implements OriginService {
         List<Origin> allOrigin = originDao.listAllOrigin();
         Map<BigInteger,Origin> originTmp = new HashMap<>();
         for (Origin origin : allOrigin) {
-            originTmp.put(origin.getOrigin_id(),origin);
+            if(origin.getOrigin_status().equals("0")){
+                originTmp.put(origin.getOrigin_id(),origin);
+            }
         }
 
         Origin origin = this.makeOriginTree(originTmp);
