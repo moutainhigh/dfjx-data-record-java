@@ -5,6 +5,7 @@ import com.datarecord.webapp.reportinggroup.bean.ReportingGroup;
 import com.datarecord.webapp.reportinggroup.bean.rcdJobConfig;
 import com.datarecord.webapp.reportinggroup.service.ReportingGroupService;
 import com.datarecord.webapp.sys.origin.service.OriginService;
+import com.datarecord.webapp.utils.DataRecordUtil;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -38,8 +40,12 @@ public class ReportingGroupController {
 
        try{
            User user = WorkbenchShiroUtils.checkUserFromShiroContext();
+           BigInteger userId = user.getUser_id();
+           if(DataRecordUtil.isSuperUser()){//当前用户是否是超级管理员
+               userId = null;
+           }
        //    Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-           ll  = reportingGroupService.leftrcdjobconfig(user.getUser_id());
+           ll  = reportingGroupService.leftrcdjobconfig(userId);
        }catch(Exception e){
            e.printStackTrace();
            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "left填报任务获取失败", null, "error");
@@ -142,7 +148,11 @@ public class ReportingGroupController {
         try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
           //  Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            ll  = reportingGroupService.selectrcdjobunitfld(user.getUser_id(),job_unit_id);   //查出有关联的指标id
+            BigInteger userId = user.getUser_id();
+            if(DataRecordUtil.isSuperUser()){//当前用户是否是超级管理员
+                userId = null;
+            }
+            ll  = reportingGroupService.selectrcdjobunitfld(userId,job_unit_id);   //查出有关联的指标id
         }catch(Exception e){
             e.printStackTrace();
             return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "指标获取失败", null, "error");
