@@ -12,8 +12,11 @@ import java.util.List;
 @Repository
 public interface ReportingGroupDao {
 
-    @Select("<script>SELECT job_id,job_name,job_status  FROM rcd_job_config  where   job_creater = #{user_id} " +
-            "  </script>")
+    @Select("<script>SELECT job_id,job_name,job_status  FROM rcd_job_config " +
+            "<if test='user_id!=null'>" +
+            " where job_creater = #{user_id} " +
+            "</if>" +
+            "</script>")
     List<rcdJobConfig> leftrcdjobconfig(@Param("user_id") BigInteger user_id);
 
     @Select("SELECT job_unit_id,job_unit_name,job_unit_active FROM rcd_job_unit_config where job_id =#{job_id}")
@@ -36,7 +39,9 @@ public interface ReportingGroupDao {
             " LEFT JOIN rcd_dt_fld b ON a.fld_id = b.fld_id " +
             " WHERE " +
             " a.job_unit_id = #{job_unit_id} " +
+            "<if test='user_id!=null'>" +
             " AND b.fld_creater  = #{user_id} " +
+            "</if>" +
             " </script>")
     List<RcdJobUnitFld> selectrcdjobunitfld(@Param("user_id")BigInteger  user_id,@Param("job_unit_id") String job_unit_id);
 
