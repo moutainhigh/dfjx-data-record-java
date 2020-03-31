@@ -229,8 +229,8 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
                 List<ReportFldTypeConfig> pcGroupFldList = this.groupFLdCatge(pcGroupFlds);
                 return pcGroupFldList;
             }else if (RcdClientType.MOBILE.toString().equals(clientType)){
-                List<ReportFldTypeConfig> pcGroupFldList = this.groupFLdCatge(pcGroupFlds);
-                return pcGroupFldList;
+                List<ReportFldTypeConfig> mobileGroupFldList = this.groupFLdCatge(mobileGroupFlds);
+                return mobileGroupFldList;
             }else{
                 return null;
             }
@@ -294,6 +294,8 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
                     if(FldDataTypes.STRING.compareTo(fldDataType)){//字符串类型
                     }else if(FldDataTypes.DATE.compareTo(fldDataType)){//日期类型
                     }else if(FldDataTypes.DICT.compareTo(fldDataType)){//字典类型
+                    }else if(FldDataTypes.POINT.compareTo(fldDataType)){//定位 经纬度 坐标
+                    }else if(FldDataTypes.PICTURE.compareTo(fldDataType)){//图片
                     }else if(FldDataTypes.NUMBER.compareTo(fldDataType)){//数字类型
                         try{
                             Integer dataInt = new Integer(reportData);

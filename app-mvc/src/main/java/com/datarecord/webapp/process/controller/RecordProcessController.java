@@ -112,7 +112,7 @@ public class RecordProcessController {
             clientTypeInt = RcdClientType.PC.getValue();
         }
         if(!Strings.isNullOrEmpty(clientType)&&clientType.equals(RcdClientType.MOBILE.toString())){
-            clientTypeInt = RcdClientType.PC.getValue();
+            clientTypeInt = RcdClientType.MOBILE.getValue();
         }
 
         if(clientTypeInt==820){

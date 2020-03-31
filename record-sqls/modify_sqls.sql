@@ -155,3 +155,6 @@ CHANGE COLUMN `origin_id` `origin_id` BIGINT NOT NULL ;
 ALTER TABLE `rcd_report_job`
 CHANGE COLUMN `record_user_id` `record_user_id` BIGINT NULL DEFAULT NULL ,
 CHANGE COLUMN `record_origin_id` `record_origin_id` BIGINT NULL DEFAULT NULL ;
+
+ALTER TABLE `rcd_dt_fld`
+CHANGE COLUMN `fld_data_type` `fld_data_type` VARCHAR(45) NOT NULL COMMENT '指标数据类型\n0:字符串\r\n1:数字\r\n2:日期\r\n3:数据字典\n4.坐标\n5.图片\n6.附件' ;
