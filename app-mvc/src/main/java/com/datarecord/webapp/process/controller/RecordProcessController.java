@@ -17,8 +17,12 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -157,6 +161,24 @@ public class RecordProcessController {
     public JsonResult saveGridDatas(@RequestBody SaveReportJobInfos reportJobInfo){
         RecordProcessFactory.RecordProcessSerice(JobUnitType.GRID).saveDatas(reportJobInfo);
 
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "保存成功", null, JsonResult.RESULT.SUCCESS);
+        return successResult;
+    }
+
+    @RequestMapping("uploadPic")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult uploadPic(MultipartHttpServletRequest muliRequest){
+        Iterator<String> fileNames = muliRequest.getFileNames();
+        while (fileNames.hasNext()){
+            MultipartFile multiUploadFile = muliRequest.getFile(fileNames.next());
+            String fileName = multiUploadFile.getOriginalFilename();
+//            File uploadFile = new File(classPathStr+"/"+fileName);
+//            uploadFile.deleteOnExit();
+//            multiUploadFile.transferTo(uploadFile);
+//            fileMap.put(multiUploadFile.getName(),uploadFile);
+        }
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "保存成功", null, JsonResult.RESULT.SUCCESS);
         return successResult;
