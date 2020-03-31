@@ -54,7 +54,7 @@ public class CasLoginController extends AbstractLoginController{
             throw new WorkbenchRuntimeException("未找到用户",new RuntimeException());
         }
         String tokenValue = loginService.createToken(null);
-        WorkbenchShiroToken token = new WorkbenchShiroToken(user,tokenValue);
+        WorkbenchShiroToken token = new WorkbenchShiroToken(usrFromDb,tokenValue);
         SecurityUtils.getSubject().login(token);
 
         String redirectUrl = request.getParameter("redirect");
