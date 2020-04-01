@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 public class RcdJobPersonAssign {
     private BigInteger user_id;
+    private String user_id_str;
     private BigInteger  origin_id;
     private String user_name_cn;
 
@@ -21,6 +22,9 @@ public class RcdJobPersonAssign {
 
     public void setUser_id(BigInteger user_id) {
         this.user_id = user_id;
+        if(user_id!=null){
+            this.user_id_str = user_id.toString();
+        }
     }
 
     public BigInteger getOrigin_id() {
@@ -38,5 +42,13 @@ public class RcdJobPersonAssign {
                 ", origin_id=" + origin_id +
                 ", user_name_cn='" + user_name_cn + '\'' +
                 '}';
+    }
+
+    public String getUser_id_str() {
+        return user_id_str;
+    }
+
+    public void setUser_id_str(String user_id_str) {
+        this.user_id_str = user_id_str;
     }
 }
