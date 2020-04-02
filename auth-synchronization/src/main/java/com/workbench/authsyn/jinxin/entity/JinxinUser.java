@@ -36,6 +36,7 @@ public class JinxinUser {
     private Object lastLoginTime;
     private Object permissionCodes;
     private Boolean tenantManager;
+    private Boolean systemManager;
     private Object appKeys;
 
     private List<JinxinRole> roles;
@@ -329,5 +330,13 @@ public class JinxinUser {
 
     public void setUserInfoVOS(Object userInfoVOS) {
         this.userInfoVOS = userInfoVOS;
+    }
+
+    public Boolean getSystemManager() {
+        return systemManager;
+    }
+
+    public void setSystemManager(Boolean systemManager) {
+        this.systemManager = systemManager;
     }
 }

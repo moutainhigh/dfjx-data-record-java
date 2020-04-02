@@ -34,10 +34,10 @@ public interface IUserSynDao {
             "values (" +
             "#{userId}," +
             "#{username}," +
-            "<if test='systemUser==true'>" +
+            "<if test='systemManager==true'>" +
             " '3', " +
             "</if>" +
-            "<if test='systemUser==false'>" +
+            "<if test='systemManager==false'>" +
             " '1', " +
             "</if>" +
             "<if test='enabled==true'>" +
