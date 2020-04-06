@@ -155,3 +155,14 @@ CHANGE COLUMN `origin_id` `origin_id` BIGINT NOT NULL ;
 ALTER TABLE `rcd_report_job`
 CHANGE COLUMN `record_user_id` `record_user_id` BIGINT NULL DEFAULT NULL ,
 CHANGE COLUMN `record_origin_id` `record_origin_id` BIGINT NULL DEFAULT NULL ;
+
+ALTER TABLE `rcd_job_person_assign`
+CHANGE COLUMN `user_id` `user_id` BIGINT NOT NULL ;
+
+ALTER TABLE `rcd_job_flowlog`
+CHANGE COLUMN `job_flow_user` `job_flow_user` BIGINT NULL DEFAULT NULL COMMENT '审批人' ;
+
+ALTER TABLE `sys_origin`
+CHANGE COLUMN `origin_id` `origin_id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '机构编号' ,
+CHANGE COLUMN `parent_origin_id` `parent_origin_id` BIGINT NULL DEFAULT NULL COMMENT '上级机构编号' ,
+CHANGE COLUMN `create_user` `create_user` BIGINT NULL DEFAULT NULL COMMENT '创建人' ;
