@@ -25,7 +25,7 @@
     <!-- CAS融合 配置 Start -->
     <context-param>
         <param-name>casSwitch</param-name>
-        <param-value>true</param-value>
+        <param-value>false</param-value>
     </context-param>
 
     <context-param>
@@ -99,7 +99,7 @@
         </init-param>
     </filter>
 
-    <filter>
+    <!--filter>
     <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
     <filter-class>org.jasig.cas.client.util.HttpServletRequestWrapperFilter</filter-class>
     </filter>
@@ -122,7 +122,7 @@
     <filter-mapping>
     <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
     <url-pattern>/*</url-pattern>
-    </filter-mapping>
+    </filter-mapping-->
     <!-- CAS融合 配置 End -->
 
 

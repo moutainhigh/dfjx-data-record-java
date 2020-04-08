@@ -16,6 +16,96 @@ import java.util.Map;
 @Repository
 public interface IRecordProcessFlowDao {
 
+
+    @Select("<script>" +
+            "select " +
+            "rjc.job_id," +
+            "rjc.job_creater," +
+            "u.user_name_cn as job_creater_name," +
+            "rjc.job_start_dt, " +
+            "rjc.job_end_dt, " +
+            "rjc.job_status, " +
+            "rjc.job_name " +
+            "from rcd_job_config rjc  " +
+            "left join user u on " +
+            "rjc.job_creater = u.user_id " +
+            "where rjc.job_status=4 " +
+            "<if test='user_id!=null and user_id!= \"0\" '>" +
+            " and rjc.job_creater = #{user_id} " +
+            "</if>" +
+//            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"0\" '>" +
+//            " and rrj.record_status=#{queryParams.reportStatus} and rjc.job_start_dt &lt; now() and rjc.job_end_dt &gt; now()" +
+//            "</if>" +
+//            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"1\" '>" +
+//            " and rrj.record_status=#{queryParams.reportStatus} " +
+//            "</if>" +
+//            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"9\" '>" +
+//            " and rrj.record_status=#{queryParams.reportStatus} " +
+//            "</if>" +
+//            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"7\" '>" +
+//            " and rrj.record_status=0  and rjc.job_start_dt &gt; now() " +
+//            "</if>" +
+//            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"8\" '>" +
+//            " and (rrj.record_status=0 or rrj.record_status=8  ) and rjc.job_end_dt &lt; now() " +
+//            "</if>" +
+//            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"10\" '>" +
+//            " and (rrj.record_status=0 or rrj.record_status=1  ) and rjc.job_end_dt &lt; now() " +
+//            "</if>" +
+            "<if test='queryParams.reportName!=null'>" +
+            " and rjc.job_name like concat('%',#{queryParams.reportName},'%') " +
+            "</if>" +
+            "</script>")
+    Page<JobConfig> pageReportDatas(@Param("currPage") String currPage,
+                                @Param("pageSize") String pageSize,
+                                @Param("user_id") BigInteger user_id,
+                                @Param("queryParams") Map<String,String> queryParams);
+
+    @Select("<script>" +
+            "select rrj.report_id," +
+            "rrj.job_id," +
+            "rrj.record_user_id," +
+            "u.user_name_cn as record_user_name," +
+            "rrj.record_origin_id," +
+            "so.origin_name as record_origin_name," +
+            "rrj.record_status, " +
+            "rjc.job_start_dt, " +
+            "rjc.job_end_dt, " +
+            "rjc.job_name " +
+            "from rcd_report_job rrj " +
+            "left join rcd_job_config rjc on " +
+            "rrj.job_id = rjc.job_id  " +
+            "left join user u on " +
+            "rrj.record_user_id = u.user_id " +
+            "left join sys_origin so on " +
+            "rrj.record_origin_id = so.origin_id " +
+            "where " +
+            " rrj.record_status!='4' and rrj.job_id=#{jobId} "  +
+            "<if test='reportStatus!=null and reportStatus== \"0\" '>" +
+            " and rrj.record_status=#{reportStatus} and rjc.job_start_dt &lt; now() and rjc.job_end_dt &gt; now()" +
+            "</if>" +
+            "<if test='reportStatus!=null and reportStatus== \"1\" '>" +
+            " and rrj.record_status=#{reportStatus} " +
+            "</if>" +
+            "<if test='reportStatus!=null and reportStatus== \"9\" '>" +
+            " and rrj.record_status=#{reportStatus} " +
+            "</if>" +
+            "<if test='reportStatus!=null and reportStatus== \"7\" '>" +
+            " and rrj.record_status=0 and rjc.job_start_dt &gt; now()" +
+            "</if>" +
+            "<if test='reportStatus!=null and reportStatus== \"8\" '>" +
+            "  and (rrj.record_status=0 or rrj.record_status=8  ) and rjc.job_end_dt &lt; now()  " +
+            "</if>" +
+            "<if test='reportName!=null'>" +
+            " and rjc.job_name like concat('%',#{reportName},'%')"+
+            "</if>"+
+            "</script>")
+    Page<ReportJobInfo> pageReviewDatasByJob(
+            @Param("currPage") String currPage,
+            @Param("pageSize") String pageSize,
+            @Param("jobId") String jobId,
+            @Param("reportStatus") String reportStatus,
+            @Param("reportName") String reportName);
+
     @Select("<script>" +
             "select rrj.report_id," +
             "rrj.job_id," +
@@ -164,6 +254,7 @@ public interface IRecordProcessFlowDao {
             "left join user u on " +
             "rjf.job_flow_user = u.user_id where rjf.job_id = #{jobId}")
     List<JobFlowLog> listJobFlowLogs(String jobId);
+
 }
 
 

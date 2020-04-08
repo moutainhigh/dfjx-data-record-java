@@ -4,6 +4,7 @@ import com.datarecord.webapp.process.entity.JobFlowLog;
 import com.webapp.support.page.PageResult;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -25,4 +26,8 @@ public interface RecordProcessFlowService {
     void subJobConfig(String jobId);
 
     List<JobFlowLog> getJobFlowLogs(String jobId);
+
+    PageResult pageReportDatas(BigInteger user_id, String currPage, String pageSize, Map<String, String> queryParams);
+
+    PageResult pageReviewDatas(String currPage, String pageSize, String jobId,String reportStatus);
 }

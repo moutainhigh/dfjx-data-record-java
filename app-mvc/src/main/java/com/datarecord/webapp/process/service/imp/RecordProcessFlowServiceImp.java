@@ -39,6 +39,22 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
     @Autowired
     protected IRecordProcessDao recordProcessDao;
 
+    @Override
+    public PageResult pageReportDatas(BigInteger user_id, String currPage, String pageSize, Map<String, String> queryParams) {
+        Page<JobConfig> pageData = recordProcessFlowDao.pageReportDatas(currPage, pageSize, user_id, queryParams);
+
+        PageResult result = PageResult.pageHelperList2PageResult(pageData);
+
+        return result;
+    }
+
+    @Override
+    public PageResult pageReviewDatas(String currPage, String pageSize, String jobId,String reportStatus) {
+        Page<ReportJobInfo> pageData =  recordProcessFlowDao.pageReviewDatasByJob(currPage,pageSize,jobId,reportStatus,null);
+        PageResult result = PageResult.pageHelperList2PageResult(pageData);
+        return result;
+    }
+
     /**
      * 审批列表,查询当前用户发布的填报任务.
      * 如果当前用户为系统管理员user_type=3,则可查询全部数据
