@@ -1,8 +1,11 @@
 package com.datarecord.webapp.fillinatask.controller;
 
 
+import ch.qos.logback.core.util.FileUtil;
+import com.datarecord.webapp.fillinatask.bean.ExcelP;
 import com.datarecord.webapp.fillinatask.bean.Lieming;
 import com.datarecord.webapp.fillinatask.service.FillinataskService;
+import com.datarecord.webapp.utils.SimpleExcelPath;
 import com.google.gson.internal.LinkedTreeMap;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
@@ -28,6 +31,9 @@ public class SimpleExcelWrite {
 
     @Autowired
     private FillinataskService fillinataskService;
+
+    @Autowired
+    private ExcelP excelP;
 
     //生成excel
     @RequestMapping("/generateexcel")
@@ -61,13 +67,11 @@ public class SimpleExcelWrite {
             //第三步创建行row:添加表头0行
             HSSFRow row = sheet.createRow(0);
             HSSFCellStyle style = wb.createCellStyle();
-            String fldids = "";       //拼接需要字段id
+            List fldids = new ArrayList();       //需要字段id
             List<String> lsls = (List<String>) DS.get("fldList");
             for (Object fldlie : lsls){
-                fldids += ",";
-                fldids += fldlie;
+                fldids.add(fldlie);
             }
-            fldids =   fldids.substring(1);
             List<Lieming>  LS = fillinataskService.selectrcdreportdatajob(jobid,reportid,DS.get("unitId").toString(),fldids);
             HSSFCell cell =null;
               for (int j = 0 ;j<LS.size();j++){
@@ -78,8 +82,16 @@ public class SimpleExcelWrite {
                   row.createCell(j).setCellValue(LS.get(j).getRecord_data());     //创建单元格并且添加数据 // 第五步插入数据
               }
         }
+            //利用反射加载properties文件
+        /*   String url = ExcelP.class.getResource("/excelpath.properties").toURI().getPath();
+            InputStream inStream;
+            inStream  = new FileInputStream(url);
+            Properties prop = new Properties();
+            prop.load(inStream);
+            url = prop.getProperty("url");*/
             //第六步将生成excel文件保存到指定路径下
-            FileOutputStream fout = new FileOutputStream("D:\\excel\\"+jobname+".xls");
+
+            FileOutputStream fout = new FileOutputStream(""+excelP.getPath()+""+jobname+".xls");
             wb.write(fout);
             fout.close();
         } catch (Exception e) {
@@ -88,4 +100,5 @@ public class SimpleExcelWrite {
         }
         return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "生成excel文件成功", null, "success");
     }
+
 }

@@ -180,7 +180,7 @@ public class FillinataskServiceImp implements FillinataskService {
 
 
     @Override
-    public List<Lieming> selectrcdreportdatajob(int jobid, int reportid, String unitId, String fldids) {
+    public List<Lieming> selectrcdreportdatajob(int jobid, int reportid, String unitId, List fldids) {
         return fillinataskDao.selectrcdreportdatajob(jobid,reportid,unitId,fldids);
     }
 
