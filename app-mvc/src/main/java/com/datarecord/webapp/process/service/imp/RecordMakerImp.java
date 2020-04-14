@@ -2,10 +2,14 @@ package com.datarecord.webapp.process.service.imp;
 
 import com.datarecord.webapp.fillinatask.bean.JobUnitAcitve;
 import com.datarecord.enums.JobConfigStatus;
+import com.datarecord.webapp.fillinatask.dao.FillinataskDao;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordMaker;
+import com.datarecord.webapp.rcduser.bean.RecordUserGroup;
+import com.datarecord.webapp.rcduser.service.RecordUserService;
 import com.webapp.support.jsonp.JsonResult;
+import com.workbench.auth.user.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service("recordMaker")
 public class RecordMakerImp implements RecordMaker {
@@ -26,16 +27,29 @@ public class RecordMakerImp implements RecordMaker {
     @Autowired
     protected IRecordProcessDao recordProcessDao;
 
+    @Autowired
+    private RecordUserService recordUserService;
+
+    @Autowired
+    private FillinataskDao fillinataskDao;
+
+
     private boolean debugger = false;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Map<JsonResult.RESULT, Object> makeJob(String jobId) {
-        JobConfig jobConfigEntity = recordProcessDao.getJobConfigByJobId(jobId);
 
-        Map<JsonResult.RESULT, Object> preMakeResult = this.preMake(jobConfigEntity);
+        JobConfig jobConfigEntity = null;
+
+        Map<JsonResult.RESULT, Object> preMakeResult = this.preMake(jobId);
         if(preMakeResult!=null&&preMakeResult.containsKey(JsonResult.RESULT.FAILD)){
             return preMakeResult;
+        }else{
+            jobConfigEntity = (JobConfig) preMakeResult.get(JsonResult.RESULT.SUCCESS);
         }
+
+        this.makeRecordPersons(jobId);
 
         Map<JsonResult.RESULT,Object> makeResultMap = new HashMap<>();
         logger.info("job config entity : {}",jobConfigEntity);
@@ -47,14 +61,13 @@ public class RecordMakerImp implements RecordMaker {
         recordProcessDao.makeJobDataTable(jobId);
 
         //根据任务对应的填报人和填报单位,下发任务
-
         String debuggerMainThreadWait = "";
-
+        String jobName = jobConfigEntity.getJob_name();
         new Thread(new Runnable() {
             @Override
             @Transactional(rollbackFor = Exception.class)
             public void run() {
-                logger.info("开始发布填报任务:{}",jobConfigEntity.getJob_name());
+                logger.info("开始发布填报任务:{}", jobName);
                 recordProcessDao.changeRecordJobConfigStatus(jobId, JobConfigStatus.SUBMITING.value() );
 
                 //循环为每个填报人生成任务
@@ -89,7 +102,7 @@ public class RecordMakerImp implements RecordMaker {
                     }
                 }
 
-                logger.info("填报任务发布完成:{}",jobConfigEntity.getJob_name());
+                logger.info("填报任务发布完成:{}", jobName);
                 recordProcessDao.changeRecordJobConfigStatus(jobId, JobConfigStatus.SUBMIT.value());
                 if(debugger){
                     synchronized (debuggerMainThreadWait){
@@ -113,24 +126,59 @@ public class RecordMakerImp implements RecordMaker {
     }
 
     @Override
-    public Map<JsonResult.RESULT, Object> preMake(JobConfig jobConfigEntity) {
+    public Map<JsonResult.RESULT, Object> preMake(String jobId) {
 
-        Map<JsonResult.RESULT, Object> checkPersonResult = this.checkReportPersons(jobConfigEntity);
-        if(checkPersonResult.containsKey(JsonResult.RESULT.FAILD)){
-            return checkPersonResult;
+        //记录当前下发任务时生效的填报用户组状态(供后续查询之类的使用)
+        Map<JsonResult.RESULT, Object> makePersonResult = this.checkPersonGroup(jobId);
+        if(makePersonResult!=null&&makePersonResult.containsKey(JsonResult.RESULT.FAILD)){
+            return makePersonResult;
         }
+
+        JobConfig jobConfigEntity = recordProcessDao.getJobConfigByJobId(jobId);
+
+//        Map<JsonResult.RESULT, Object> checkPersonGroupResult = this.checkPersonGroup(jobConfigEntity);
+//        if(checkPersonGroupResult.containsKey(JsonResult.RESULT.FAILD)){
+//            return checkPersonGroupResult;
+//        }
+
+//        Map<JsonResult.RESULT, Object> checkPersonResult = this.checkReportPersons(jobConfigEntity);
+//        if(checkPersonResult.containsKey(JsonResult.RESULT.FAILD)){
+//            return checkPersonResult;
+//        }
 
         Map<JsonResult.RESULT, Object> checkConfigResult = this.checkJobConfig(jobConfigEntity);
         if(checkConfigResult.containsKey(JsonResult.RESULT.FAILD)){
             return checkConfigResult;
         }
 
+        Map<JsonResult.RESULT, Object> sucessResult = this.checkJobConfig(jobConfigEntity);
+        sucessResult.put(JsonResult.RESULT.SUCCESS,jobConfigEntity);
 //        Map<JsonResult.RESULT, Object> checkFlowItemsResult = this.checkFlowItems(jobConfigEntity);
 //        if(checkFlowItemsResult.containsKey(JsonResult.RESULT.FAILD)){
 //            return checkFlowItemsResult;
 //        }
 
-        return null;
+        return sucessResult;
+    }
+
+    public Map<JsonResult.RESULT, Object> checkPersonGroup(String jobId) {
+        RecordUserGroup activeUserGroup = recordUserService.getActiveUserGroup();
+        Map<JsonResult.RESULT,Object> makeResultMap = new HashMap<>();
+        if(activeUserGroup==null){
+            makeResultMap.put(JsonResult.RESULT.FAILD,"请联系管理员设置填报用户分组");
+            return makeResultMap;
+        }else{
+            makeResultMap.put(JsonResult.RESULT.SUCCESS,activeUserGroup);
+        }
+
+        List<User> recordUsers = recordUserService.groupUsers(activeUserGroup.getGroup_id().toString());
+        if(recordUsers!=null&&recordUsers.size()>0){
+
+        }else{
+            makeResultMap.put(JsonResult.RESULT.FAILD,"当前填报用户组中无任何用户,请联系系统管理员");
+        }
+
+        return makeResultMap;
     }
 
     /**
@@ -151,7 +199,7 @@ public class RecordMakerImp implements RecordMaker {
         Map<JsonResult.RESULT,Object> makeResultMap = new HashMap<>();
         List<JobUnitConfig> jobUnits = jobConfigEntity.getJobUnits();
         if(!(jobUnits!=null&&jobUnits.size()>0)){
-            makeResultMap.put(JsonResult.RESULT.FAILD,"任务没有关联的任务组");
+            makeResultMap.put(JsonResult.RESULT.FAILD,"任务没有关联的上报信息表");
             return makeResultMap;
         }else{
             int activeUnitCount = 0;
@@ -208,5 +256,29 @@ public class RecordMakerImp implements RecordMaker {
         }
         
         return makeResultMap;
+    }
+
+    public void makeRecordPersons(String jobId){
+        RecordUserGroup activeUserGroup = recordUserService.getActiveUserGroup();
+
+        List<User> recordUsers = recordUserService.groupUsers(activeUserGroup.getGroup_id().toString());
+
+        JobPersonGroupLog jobPersonGroupLog = new JobPersonGroupLog();
+        jobPersonGroupLog.setJob_id(new Integer(jobId));
+        jobPersonGroupLog.setGroup_id(activeUserGroup.getGroup_id());
+        jobPersonGroupLog.setGroup_name(activeUserGroup.getGroup_name());
+        jobPersonGroupLog.setJob_make_date(new Date());
+        recordProcessDao.delLogUserGroupHistory(jobId);
+        recordProcessDao.logUserGroup(jobPersonGroupLog);
+
+        fillinataskDao.delJobPersonAssign(jobId);
+        if(recordUsers!=null){
+            for (User recordUser : recordUsers) {
+                BigInteger userId = recordUser.getUser_id();
+                fillinataskDao.saveJobPersonAssign(jobId,userId.toString());
+            }
+        }
+
+
     }
 }

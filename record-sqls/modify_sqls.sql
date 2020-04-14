@@ -166,3 +166,22 @@ ALTER TABLE `sys_origin`
 CHANGE COLUMN `origin_id` `origin_id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '机构编号' ,
 CHANGE COLUMN `parent_origin_id` `parent_origin_id` BIGINT NULL DEFAULT NULL COMMENT '上级机构编号' ,
 CHANGE COLUMN `create_user` `create_user` BIGINT NULL DEFAULT NULL COMMENT '创建人' ;
+
+CREATE TABLE `rcd_person_group` (
+  `group_id` INT NOT NULL AUTO_INCREMENT COMMENT '填报组id',
+  `group_name` VARCHAR(200) NOT NULL COMMENT '填报用户组名称',
+  `group_active` INT NOT NULL COMMENT '填报组是否启用',
+  PRIMARY KEY (`group_id`));
+
+ALTER TABLE `rcd_person_config`
+ADD COLUMN `group_id` INT(11) NULL COMMENT '所属填报组id' AFTER `config_status`;
+
+ALTER TABLE `rcd_person_config`
+CHANGE COLUMN `origin_id` `origin_id` BIGINT(20) NULL ;
+
+CREATE TABLE `rcd_job_person_group_log` (
+  `job_id` INT NOT NULL,
+  `group_id` INT NULL,
+  `group_name` VARCHAR(200) NULL,
+  `job_make_date` DATE NULL,
+  PRIMARY KEY (`job_id`));

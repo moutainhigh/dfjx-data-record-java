@@ -178,9 +178,8 @@ public class RecordProcessFlowController {
     @CrossOrigin(allowCredentials = "true")
     public JsonResult reviewJob(@RequestBody JobFlowLog jobFlowLog){
         Integer jobId = jobFlowLog.getJob_id();
-        JobConfig jobCOnfig = recordProcessService.getJobConfigByJobId(jobId.toString());
         if(jobFlowLog.getJob_flow_status()==JobConfigStatus.APPROVE.value()){
-            Map<JsonResult.RESULT, Object> checkResult = recordMaker.preMake(jobCOnfig);
+            Map<JsonResult.RESULT, Object> checkResult = recordMaker.preMake(jobId.toString());
 
             if(checkResult!=null&&checkResult.containsKey(JsonResult.RESULT.FAILD)){
                 Object faildResult = checkResult.get(JsonResult.RESULT.FAILD);

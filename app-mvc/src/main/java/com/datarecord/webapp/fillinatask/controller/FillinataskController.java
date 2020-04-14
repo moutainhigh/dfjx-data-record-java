@@ -1,7 +1,6 @@
 package com.datarecord.webapp.fillinatask.controller;
 
 
-import com.datarecord.webapp.fillinatask.bean.Fillinatask;
 import com.datarecord.webapp.fillinatask.bean.JobInteval;
 import com.datarecord.webapp.fillinatask.bean.RcdJobPersonAssign;
 import com.datarecord.webapp.fillinatask.bean.RcdJobUnitConfig;
@@ -38,10 +37,10 @@ public class FillinataskController {
     private OriginService originService;
 
     //填报任务列表
-    @RequestMapping("/rcdjobconfiglist")
+    @RequestMapping("/pageJobConfigs")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public String rcdjobconfiglist(
+    public String pageJobConfigs(
             @RequestParam("currPage") int currPage,
             @RequestParam("pageSize")int pageSize,
             @RequestParam("job_name")String job_name,
@@ -116,15 +115,15 @@ public class FillinataskController {
     }
 
     //任务id查看详情
-    @RequestMapping("/selectrcdjobconfigjobid")
+    @RequestMapping("/getJobConfigById")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public String selectrcdjobconfigjobid(
+    public String getJobConfigById(
             @RequestParam("job_id")String job_id
     ){
         JobConfig jobConfig = null;
         try{
-            jobConfig = fillinataskService.selectrcdjobconfigjobid(job_id);
+            jobConfig = fillinataskService.getJobConfig(job_id);
             List<JobInteval> jobIntevals = fillinataskService.getJobIntevals(job_id);
             jobConfig.setJob_intervals(jobIntevals);
         }catch(Exception e){
@@ -183,7 +182,7 @@ public class FillinataskController {
             @RequestParam("job_id")String job_id
     ){
         try{
-          //  fillinataskService.deletercdjobpersonassign(job_id);    //把原先的删除再新增
+          //  fillinataskService.delJobPersonAssign(job_id);    //把原先的删除再新增
             fillinataskService.insertrcdjobpersonassign(job_id,userid);
         }catch(Exception e){
             e.printStackTrace();

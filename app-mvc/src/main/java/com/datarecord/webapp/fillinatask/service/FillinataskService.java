@@ -35,7 +35,7 @@ public interface FillinataskService {
     void deletercdjobconfig(String job_id);
 
 
-    JobConfig selectrcdjobconfigjobid(String job_id);
+    JobConfig getJobConfig(String job_id);
 
     void deletercdjobpersonassignbyuseridandjobid(String job_id, String user_id);
 

@@ -41,10 +41,10 @@ public interface FillinataskDao {
 
 
     @Insert("INSERT INTO rcd_job_person_assign(user_id,job_id)  VALUES(#{user_id},#{job_id})")
-    void insertrcdjobpersonassign(@Param("job_id") String job_id, @Param("user_id") String user_id);
+    void saveJobPersonAssign(@Param("job_id") String job_id, @Param("user_id") String user_id);
 
     @Delete("delete from rcd_job_person_assign where  job_id = #{job_id}")
-    void deletercdjobpersonassign(@Param("job_id") String job_id);
+    void delJobPersonAssign(@Param("job_id") String job_id);
 
 
 

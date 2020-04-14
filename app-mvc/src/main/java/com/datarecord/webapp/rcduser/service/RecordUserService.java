@@ -1,10 +1,12 @@
 package com.datarecord.webapp.rcduser.service;
 
 import com.datarecord.webapp.rcduser.bean.Originss;
-import com.datarecord.webapp.sys.origin.entity.Origin;
+import com.datarecord.webapp.rcduser.bean.RecordUserGroup;
 import com.datarecord.webapp.rcduser.bean.RecordUser;
 import com.datarecord.webapp.rcduser.bean.Useroriginassign;
+import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.webapp.support.page.PageResult;
+import com.workbench.auth.user.entity.User;
 
 import java.util.List;
 
@@ -12,28 +14,35 @@ public interface RecordUserService {
 
  /*   String selectOrgId(int user_id);
 */
-    List<Originss> listOrgData(String orgId);
+    PageResult pageRecordUserGroup(String currPage, String pageNum);
 
-    PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name);
+    void saveUserGroup(String groupName);
 
-    List<Object> useroriginassignlist(String origin_id);
+    void updateUserGroup(RecordUserGroup recordUserGroup);
 
-    void insertrcdpersonconfig(String origin_id, String userid);
+    void delUserGroup(String groupId);
 
-    List<Useroriginassign> selectrcdpersonconfig(String origin_id);
+    void activeUserGroup(String groupId);
 
+    List<User> groupUsers(String groupId);
 
-    void deletercdpersonconfigbyuserid(String user_id);
+    List<Origin> groupOrigins(String groupId);
 
-    List<Object> useroriginassignlistsysorigin(String origin_id);
+    List<String> groupOriginIds(String groupId);
 
-   List<RecordUser> rcdpersonconfiglistwufenye();
+    List<RecordUser> groupOriginUsers(String groupId, List<String> originIds);
+
+    void addUserToGroup(RecordUser recordUser);
+
+    void delUserFromGroup(RecordUser recordUser);
 
     PageResult unCheckOriginUser(String currPage, String pageSize,String jobId, String originId);
 
     PageResult checkedOriginUser(String currPage, String pageSize, String jobId, String originId);
 
-    void updaterRdpersonconfig(String origin_id, String userid);
+    RecordUserGroup getActiveUserGroup();
 
-    int countRcdPersonConfig(String userid);
+   List<Origin> getJobOriginHis(String reportId);
+
+    RecordUserGroup jobUserGroupHis(String jobId);
 }
