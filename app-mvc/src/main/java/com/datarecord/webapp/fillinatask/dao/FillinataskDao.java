@@ -106,8 +106,12 @@ public interface FillinataskDao {
 
 
 
-    @Select("SELECT a.record_data,b.fld_name  from  rcd_report_data_job${jobid}  a  LEFT JOIN   rcd_dt_fld  b  on a.fld_id = b.fld_id   where  a.report_id = #{reportid} and  a.unit_id = #{unitId}  and  a.fld_id  in  (#{fldids})     ")
-    List<Lieming> selectrcdreportdatajob(@Param("jobid")int jobid,@Param("reportid") int reportid, @Param("unitId")String unitId, @Param("fldids")String fldids);
+    @Select("<script>SELECT a.record_data,b.fld_name  from  rcd_report_data_job${jobid}  a  LEFT JOIN   rcd_dt_fld  b  on a.fld_id = b.fld_id   where  a.report_id = #{reportid} and  a.unit_id = #{unitId}  and  a.fld_id  in" +
+            "<foreach item='item' index='index' collection='fldids' open='(' separator=',' close=')'> " +
+            " #{item} " +
+            "</foreach>"+
+            "    </script> ")
+    List<Lieming> selectrcdreportdatajob(@Param("jobid")int jobid,@Param("reportid") int reportid, @Param("unitId")String unitId, @Param("fldids")List fldids);
 
 
 
