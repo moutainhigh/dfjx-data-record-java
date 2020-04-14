@@ -1,15 +1,12 @@
 package com.datarecord.webapp.fillinatask.controller;
 
 
-import ch.qos.logback.core.util.FileUtil;
-import com.datarecord.webapp.fillinatask.bean.ExcelP;
+import com.datarecord.webapp.fillinatask.bean.UpDownLoadFileConfig;
 import com.datarecord.webapp.fillinatask.bean.Lieming;
 import com.datarecord.webapp.fillinatask.service.FillinataskService;
-import com.datarecord.webapp.utils.SimpleExcelPath;
 import com.google.gson.internal.LinkedTreeMap;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
-import com.webapp.support.page.PageResult;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -33,7 +30,7 @@ public class SimpleExcelWrite {
     private FillinataskService fillinataskService;
 
     @Autowired
-    private ExcelP excelP;
+    private UpDownLoadFileConfig upDownLoadFileConfig;
 
     //生成excel
     @RequestMapping("/generateExcel")
@@ -82,7 +79,7 @@ public class SimpleExcelWrite {
                 }
             }
             //利用反射加载properties文件
-        /*   String url = ExcelP.class.getResource("/excelpath.properties").toURI().getPath();
+        /*   String url = ExcelP.class.getResource("/excelpath.properties").toURI().getExportFilePath();
             InputStream inStream;
             inStream  = new FileInputStream(url);
             Properties prop = new Properties();
@@ -90,7 +87,7 @@ public class SimpleExcelWrite {
             url = prop.getProperty("url");*/
             //第六步将生成excel文件保存到指定路径下
 
-            FileOutputStream fout = new FileOutputStream("" + excelP.getPath() + "" + jobname + ".xls");
+            FileOutputStream fout = new FileOutputStream("" + upDownLoadFileConfig.getExportFilePath() + "" + jobname + ".xls");
             wb.write(fout);
             fout.close();
         } catch (Exception e) {

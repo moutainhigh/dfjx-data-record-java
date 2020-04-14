@@ -16,7 +16,6 @@
 	<aop:aspectj-autoproxy proxy-target-class="true" />
 	<!-- 使用responseBody注解时,会将返回字符串写到responsebody中,注解的默认编码是ISO(spring mvc使用的默认处理字符串编码为ISO-8859-1),
 	JSON报文没有问题,JS解析时会根据页面编码将其转换,但是如果单纯返回字符串,不是JSON的就会造成乱码.加上这段可以解决乱码问题 -->
-	
 	<mvc:annotation-driven>
 		<mvc:message-converters register-defaults="true">
 			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
@@ -30,7 +29,7 @@
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 	<!-- 自动加载Controller层 -->
-	<context:component-scan base-package="com.webapp.**">
+	<context:component-scan base-package="com.*.webapp.**">
 		<!-- avoid job beans been created twice -->
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
 	</context:component-scan>
@@ -41,38 +40,4 @@
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
 	</context:component-scan>
 
-	<!--<mvc:interceptors>-->
-		<!--<mvc:interceptor>-->
-			<!--<mvc:mapping exportFilePath="/**/main.do" />-->
-			<!--<mvc:mapping exportFilePath="/camp/campMag/addSave.do" />-->
-			<!--<mvc:mapping exportFilePath="/camp/campMag/crtCamp.do" />-->
-			<!--<mvc:mapping exportFilePath="/camp/campMag/sendTestMsg.do" />-->
-			<!--<mvc:mapping exportFilePath="/camp/campMag/viewTestMsg.do" />-->
-			<!--<mvc:mapping exportFilePath="/camp/campRec/listData.do" />-->
-			<!--<mvc:mapping exportFilePath="/camp/campRec/recycle.do" />-->
-			<!--<mvc:mapping exportFilePath="/camp/campView/copyEvtData.do" />-->
-			<!--<mvc:mapping exportFilePath="/camp/campView/listMainData.do" />-->
-			<!--<mvc:mapping exportFilePath="/camp/campView/listTagData.do" />-->
-			<!--<mvc:mapping exportFilePath="/camp/campView/stopEvt.do" />-->
-			<!--<mvc:mapping exportFilePath="/camp/campView/workflowCamp.do" />-->
-			<!--<mvc:mapping exportFilePath="/sys/group/deleteGroupById.do" />-->
-			<!--<mvc:mapping exportFilePath="/sys/group/modifyGroupActiveInd.do" />-->
-			<!--<mvc:mapping exportFilePath="/sys/group/saveOneGroup.do" />-->
-			<!--<mvc:mapping exportFilePath="/sys/mainframe.do" />-->
-			<!--<mvc:mapping exportFilePath="/sys/modifyUserPwd.do" />-->
-			<!--<mvc:mapping exportFilePath="/sys/user/deleteUserById.do" />-->
-			<!--<mvc:mapping exportFilePath="/sys/user/findUserListByPageNoAdmin.do" />-->
-			<!--<mvc:mapping exportFilePath="/sys/user/modifyUserActiveInd.do" />-->
-			<!--<mvc:mapping exportFilePath="/sys/user/saveOneUser.do" />-->
-			<!--<mvc:mapping exportFilePath="/sys/modifyUserPwd.do" />-->
-			<!--<mvc:mapping exportFilePath="/usertags/tag/favors/cleanup.do" />-->
-			<!--<mvc:mapping exportFilePath="/usertags/tag/favors/include/*.do" />-->
-			<!--<mvc:mapping exportFilePath="/usertags/tag/favors/list.do" />-->
-			<!--<mvc:mapping exportFilePath="/usertags/tag/favors/remove/*.do" />-->
-			<!--<mvc:mapping exportFilePath="/usertags/tag/tagListFavor.do" />-->
-			<!--<mvc:mapping exportFilePath="/files/**/*.do" />-->
-			<!--<mvc:mapping exportFilePath="/files/*.do" />-->
-			<!--<bean class="com.evergrande.hdmp.sys.interceptor.SessionInterceptor"></bean>-->
-		<!--</mvc:interceptor>-->
-	<!--</mvc:interceptors>-->
 </beans>  

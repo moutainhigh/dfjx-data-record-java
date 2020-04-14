@@ -188,3 +188,19 @@ CREATE TABLE `rcd_job_person_group_log` (
   `group_name` VARCHAR(200) NULL,
   `job_make_date` DATE NULL,
   PRIMARY KEY (`job_id`));
+
+CREATE TABLE `rcd_reportfile_log` (
+`log_id` INT NOT NULL AUTO_INCREMENT,
+`report_id` INT NOT NULL,
+`job_id` INT NOT NULL,
+`start_time` TIMESTAMP NULL,
+`end_time` TIMESTAMP NULL,
+`log_status` INT NOT NULL COMMENT '0:生成中\n1:生成完毕\n2:生成失败',
+`log_user` BIGINT NOT NULL,
+PRIMARY KEY (`log_id`));
+
+ALTER TABLE `rcd_reportfile_log`
+ADD COLUMN `comment` VARCHAR(500) NULL AFTER `log_user`;
+
+ALTER TABLE `rcd_reportfile_log`
+ADD COLUMN `file_path` VARCHAR(200) NOT NULL AFTER `comment`;

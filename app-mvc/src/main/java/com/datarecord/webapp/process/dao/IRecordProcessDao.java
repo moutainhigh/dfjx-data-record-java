@@ -169,6 +169,7 @@ public interface IRecordProcessDao {
             "rrj.record_user_id," +
             "u.user_name_cn as record_user_name," +
             "rrj.record_origin_id," +
+            "so.origin_name as record_origin_name," +
             "rrj.record_status, " +
             "rjc.job_start_dt, " +
             "rjc.job_end_dt, " +
@@ -178,6 +179,8 @@ public interface IRecordProcessDao {
             "rrj.job_id = rjc.job_id  " +
             "left join user u on " +
             "rrj.record_user_id = u.user_id " +
+            "left join sys_origin so on " +
+            "rrj.record_origin_id = so.origin_id " +
             "where rjc.job_status!='3' and rrj.report_id=#{reportId}" +
             "</script>")
     ReportJobInfo getReportJobInfoByReportId(String reportId);
