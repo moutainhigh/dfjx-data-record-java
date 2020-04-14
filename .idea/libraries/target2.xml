@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="target2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app-web-support/target/app-web-support-1.4-jar-with-dependencies.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app-web-support/target/app-web-support-1.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

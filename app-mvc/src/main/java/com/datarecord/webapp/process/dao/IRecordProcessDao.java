@@ -5,6 +5,7 @@ import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.process.entity.JobPerson;
 import com.datarecord.webapp.process.entity.JobUnitConfig;
 import com.datarecord.webapp.process.entity.*;
+import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -223,4 +224,12 @@ public interface IRecordProcessDao {
 
     @Delete("D")
     void dropJobDataByJobId(String jobId);
+
+    @Delete("delete from rcd_job_person_group_log where job_id = #{jobId}")
+    void delLogUserGroupHistory(String jobId);
+
+    @Insert("insert into rcd_job_person_group_log (job_id,group_id,group_name,job_make_date)" +
+            " values (#{job_id},#{group_id},#{group_name},#{job_make_date})")
+    void logUserGroup(JobPersonGroupLog jobPersonGroupLog);
+
 }

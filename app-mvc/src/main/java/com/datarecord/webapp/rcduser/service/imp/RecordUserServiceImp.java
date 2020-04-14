@@ -1,14 +1,12 @@
 package com.datarecord.webapp.rcduser.service.imp;
 
 import com.datarecord.webapp.datadictionary.service.imp.DataDictionaryServiceImp;
-import com.datarecord.webapp.rcduser.bean.Originss;
 import com.datarecord.webapp.rcduser.bean.RecordUser;
-import com.datarecord.webapp.rcduser.bean.Useroriginassign;
+import com.datarecord.webapp.rcduser.bean.RecordUserGroup;
 import com.datarecord.webapp.rcduser.dao.IRecordUserDao;
 import com.datarecord.webapp.rcduser.service.RecordUserService;
 import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.service.OriginService;
-import com.datarecord.webapp.utils.EntityTree;
 import com.github.pagehelper.Page;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
@@ -20,9 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service("recordUserService")
 public class RecordUserServiceImp implements RecordUserService {
@@ -35,96 +31,72 @@ public class RecordUserServiceImp implements RecordUserService {
     @Autowired
     private OriginService originService;
 
-   /* @Override
-    public String selectOrgId(int user_id) {
-        String orgId = recordUserDao.getOrgId(user_id);
-        return orgId;
-    }
-*/
     @Override
-    public List<Originss> listOrgData(String orgId) {
-        List<Originss> entityTrees = recordUserDao.listOrgData(orgId);
-        return  entityTrees;
+    public PageResult pageRecordUserGroup(String currPage, String pageNum) {
+        Page<RecordUserGroup> pageData = recordUserDao.pageRecordUserGroup(currPage,pageNum);
+        PageResult pageResult = PageResult.pageHelperList2PageResult(pageData);
+        return pageResult;
     }
 
     @Override
-    public PageResult rcdpersonconfiglist(int currPage, int pageSize, String user_name) {
-        logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
-      /*  List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
-        List<Integer> originIds  = new ArrayList<>();
-        for (com.datarecord.webapp.sys.origin.entity.Origin childrenOrigin : childrenOrigins) {
-            originIds.add(childrenOrigin.getOrigin_id()); }
-        Page<RecordUser> contactPageDatas = null;
-        if(originIds.size() != 0){
-            contactPageDatas = recordUserDao.rcdpersonconfiglist(currPage, pageSize,user_name,originIds);
-        }else {
-            String originid  = userOrigin.getOrigin_id().toString();
-            contactPageDatas = recordUserDao.rcdpersonconfiglistByid(currPage, pageSize,user_name);
-        }*/
-        Page<RecordUser> contactPageDatas  = recordUserDao.rcdpersonconfiglistByid(currPage, pageSize,user_name);
-
-        PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
-        logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
-        return pageContactResult;
+    public void saveUserGroup(String groupName) {
+        Boolean active = false;
+        Page<RecordUserGroup> pageResult = recordUserDao.pageRecordUserGroup(null, null);
+        int total = pageResult.size();
+        if(total==0)
+            active = true;
+        recordUserDao.saveUserGroup(groupName,active?"1":"0");
     }
 
     @Override
-    public List<Object> useroriginassignlist(String origin_id) {
-      List<Object> list = new ArrayList<>();
-      /*  List<Origin> childrenOrigins = originService.checkAllChildren(Integer.valueOf(origin_id));
-        List<Integer> originIds  = new ArrayList<>();
-        for (com.datarecord.webapp.sys.origin.entity.Origin childrenOrigin : childrenOrigins) {
-            originIds.add(childrenOrigin.getOrigin_id()); }
+    public void updateUserGroup(RecordUserGroup recordUserGroup) {
+        recordUserDao.updateUserGroup(recordUserGroup);
+    }
 
-        if (originIds.size()!= 0){
-           lists  =  recordUserDao.listOrgDatauser(originIds);
-        }else{
-            lists  =  recordUserDao.listOrgDatauserByid(origin_id);
-        }*/
-        List<EntityTree> lists = null;
-        lists  =  recordUserDao.listOrgDatauserByid(origin_id);
-        if(lists.size()>0){
-            for (EntityTree x : lists) {
-                Map<String,String> mapArr = new LinkedHashMap<>();
-                mapArr.put("user_id", x.getUser_id());
-                mapArr.put("user_name_cn", x.getUser_name_cn());
-                list.add(mapArr);
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delUserGroup(String groupId) {
+        recordUserDao.delGroupPerson(groupId);
+        recordUserDao.delUserGroup(groupId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void activeUserGroup(String groupId) {
+        recordUserDao.disableGroups( groupId);
+        recordUserDao.enableGroups( groupId);
+    }
+
+    @Override
+    public List<User> groupUsers(String groupId) {
+        List<User> groupUsers = recordUserDao.groupUsers(groupId);
+       return groupUsers;
+    }
+
+    @Override
+    public List<Origin> groupOrigins(String groupId) {
+        List<Origin> groupOrigins = recordUserDao.groupOrigins(groupId);
+        return groupOrigins;
+    }
+
+    @Override
+    public List<String> groupOriginIds(String groupId) {
+        List<Origin> groupOrigins = this.groupOrigins(groupId);
+        List<String> originIds = new ArrayList<>();
+
+        if(groupOrigins!=null&&groupOrigins.size()>0){
+            for (Origin groupOrigin : groupOrigins) {
+                BigInteger originId = groupOrigin.getOrigin_id();
+                originIds.add(originId.toString());
             }
         }
-        return list;
-    }
-
-
-    @Override
-    public List<Object> useroriginassignlistsysorigin(String origin_id) {
-        List<Object> list = new ArrayList<>();
-        List<Origin> childrenOrigins = originService.checkAllChildren(new BigInteger(origin_id));
-        List<BigInteger> originIds  = new ArrayList<>();
-        for (com.datarecord.webapp.sys.origin.entity.Origin childrenOrigin : childrenOrigins) {
-            originIds.add(childrenOrigin.getOrigin_id()); }
-        List<EntityTree> lists =  recordUserDao.useroriginassignlistsysorigin(originIds);
-        for (EntityTree x : lists) {
-                    Map<String,String> mapArr = new LinkedHashMap<>();
-                    mapArr.put("user_id", x.getUser_id());
-                    mapArr.put("user_name_cn", x.getUser_name_cn());
-                    list.add(mapArr);
-        }
-        return list;
+        return originIds;
     }
 
     @Override
-    public List<RecordUser> rcdpersonconfiglistwufenye() {
-       /* List<Origin> childrenOrigins = originService.checkAllChildren(userOrigin.getOrigin_id());
-        List<Integer> originIds  = new ArrayList<>();
-        for (com.datarecord.webapp.sys.origin.entity.Origin childrenOrigin : childrenOrigins) {
-            originIds.add(childrenOrigin.getOrigin_id()); }
-        if(originIds.size() != 0){
-            return recordUserDao.rcdpersonconfiglistwufenye(originIds);
-        }else {
-            String originid  = userOrigin.getOrigin_id().toString();
-            return recordUserDao.rcdpersonconfiglistwufeByid(originid);
-        }*/
-        return recordUserDao.rcdpersonconfiglistwufeByid();
+    public List<RecordUser> groupOriginUsers(String groupId, List<String> originIds) {
+        List<RecordUser> recordUsers = recordUserDao.groupOriginUsers(groupId,originIds);
+        return recordUsers;
     }
 
     @Override
@@ -141,58 +113,32 @@ public class RecordUserServiceImp implements RecordUserService {
         return pageResult;
     }
 
-
     @Override
-    public int countRcdPersonConfig(String userid) {
-        String[] split = userid.split(",");
-         List<String>  ll = new ArrayList<>();
-        for (String user_id : split){
-            ll.add(user_id);
-        }
-        int   ss  =    recordUserDao.countRcdPersonConfig(ll);
-        return ss;
+    public RecordUserGroup getActiveUserGroup() {
+        return recordUserDao.getActiveUserGroup();
     }
 
     @Override
-    public void insertrcdpersonconfig(String origin_id, String userid) {
-        String[] split = userid.split(",");
-        for (String user_id : split){
-            List<String> orgId = recordUserDao.selectuserid(user_id);
-                for(String orgid : orgId){
-                    recordUserDao.insertrcdpersonconfig(orgid,user_id);
-                }
-        }
+    public List<Origin> getJobOriginHis(String reportId) {
+        List<Origin> resultOrigins = recordUserDao.getJobOriginHis(reportId);
+        return resultOrigins;
     }
 
-
-
-
-
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void updaterRdpersonconfig(String origin_id, String userid) {
-        recordUserDao.deletercdpersonconfig(origin_id);
-        String[] split = userid.split(",");
-        for (String user_id : split){
-            List<String> orgId = recordUserDao.selectuserid(user_id);
-            for(String orgid : orgId){
-                recordUserDao.insertrcdpersonconfig(orgid,user_id);
-            }
-        }
-    }
-
-
-
-    @Override
-    public List<Useroriginassign> selectrcdpersonconfig(String origin_id) {
-        return recordUserDao.selectrcdpersonconfig(origin_id);
+    public RecordUserGroup jobUserGroupHis(String jobId) {
+        RecordUserGroup jobUserGroup = recordUserDao.jobUserGroupHis(jobId);
+        return jobUserGroup;
     }
 
 
     @Override
-    public void deletercdpersonconfigbyuserid(String user_id) {
-        recordUserDao.deletercdpersonconfigbyuserid(user_id);
+    public void addUserToGroup(RecordUser recordUser) {
+        recordUserDao.addRecordUser(recordUser);
     }
 
+    @Override
+    public void delUserFromGroup(RecordUser recordUser) {
+        recordUserDao.delRecordUser(recordUser);
+    }
 
 }

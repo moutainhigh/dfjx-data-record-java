@@ -2,7 +2,9 @@ package com.datarecord.webapp.rcduser.dao;
 
 import com.datarecord.webapp.rcduser.bean.Originss;
 import com.datarecord.webapp.rcduser.bean.RecordUser;
+import com.datarecord.webapp.rcduser.bean.RecordUserGroup;
 import com.datarecord.webapp.rcduser.bean.Useroriginassign;
+import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.utils.EntityTree;
 import com.github.pagehelper.Page;
 import com.workbench.auth.user.entity.User;
@@ -70,9 +72,11 @@ public interface IRecordUserDao {
     List<Useroriginassign> useroriginassignlist(@Param("origin_id") String origin_id);
 
 
-    @Insert("insert into rcd_person_config (user_id,origin_id) values(#{user_id},#{orgid})")
-    void insertrcdpersonconfig(@Param("orgid") String orgid, @Param("user_id") String user_id);
+    @Insert("insert into rcd_person_config (user_id,origin_id,group_id) values(#{user_id},#{origin_id},#{group_id})")
+    void addRecordUser(RecordUser recordUser);
 
+    @Insert("delete from rcd_person_config where user_id = #{user_id} and (group_id=#{group_id} or origin_id=#{origin_id})")
+    void delRecordUser(RecordUser recordUser);
 
     @Select("<script>select count(1) from rcd_person_config  where 1=1  and  user_id  IN " +
             "  <foreach item='item' index='index' collection='users' open='(' separator=',' close=')'>" +
@@ -198,4 +202,102 @@ public interface IRecordUserDao {
                                   @Param("originId") String originId);
 
 
+    @Select("select group_id,group_name,group_active from rcd_person_group")
+    Page<RecordUserGroup> pageRecordUserGroup(String currPage, String pageNum);
+
+    @Insert("insert into rcd_person_group (group_name,group_active) values (#{groupName},#{groupActive})")
+    void saveUserGroup(@Param("groupName") String groupName,@Param("groupActive") String groupActive);
+
+    @Update("update rcd_person_group set group_name = #{group_name},group_active=#{group_active} where group_id = #{group_id}")
+    void updateUserGroup(RecordUserGroup recordUserGroup);
+
+    @Update("<script>" +
+            "update rcd_person_group set group_active=0 " +
+            "<if test='groupId!=null'>" +
+            " where group_id != #{groupId}" +
+            "</if>" +
+            "</script>")
+    void disableGroups(@Param("groupId") String groupId);
+
+    @Update("update rcd_person_group set group_active=1 where group_id = #{groupId}")
+    void enableGroups(String groupId);
+
+    @Select("<script>" +
+            "SELECT u.user_id,u.user_name,so.origin_id,so.origin_name,rpcg.group_id,rpcg.group_name FROM user u " +
+            "left join user_origin_assign uoa on u.user_id = uoa.user_id " +
+            "left join sys_origin so on uoa.origin_id = so.origin_id " +
+            "left join " +
+            "(select rpc.user_id,rpc.group_id,rpg.group_name,rpg.group_active from rcd_person_config rpc,rcd_person_group rpg " +
+            " where rpc.group_id = rpg.group_id and rpc.group_id = #{groupId}) rpcg on u.user_id = rpcg.user_id " +
+            "where so.origin_id in " +
+            "<foreach item='item' index='index' collection='originIds' open='(' separator=',' close=')'>" +
+            "#{item}" +
+            "</foreach> " +
+            " order by so.origin_id" +
+            "</script>")
+    List<RecordUser> groupOriginUsers(@Param("groupId") String groupId,@Param("originIds") List<String> originIds);
+
+    @Delete("delete from rcd_person_config where group_id = #{groupId}")
+    void delGroupPerson(String groupId);
+
+    @Delete("delete from rcd_person_group where group_id = #{groupId}")
+    void delUserGroup(String groupId);
+
+    @Select("SELECT " +
+            "so.origin_id," +
+            "so.origin_name, " +
+            "so.parent_origin_id, " +
+            "so.origin_status, " +
+            "so.create_date, " +
+            "so.create_user, " +
+            "so.origin_type FROM rcd_person_group rpg left join rcd_person_config rpc " +
+            "on rpg.group_id = rpc.group_id left join user_origin_assign uoa " +
+            "on rpc.user_id = uoa.user_id left join sys_origin so " +
+            "on uoa.origin_id = so.origin_id " +
+            "where rpg.group_id = #{groupId} and so.origin_id is not null " )
+    List<Origin> groupOrigins(String groupId);
+
+    @Select("select group_id,group_name,group_active from rcd_person_group where group_active ='1' ")
+    RecordUserGroup getActiveUserGroup();
+
+    @Select("SELECT " +
+            "u.user_id," +
+            "u.user_name," +
+            "u.user_name_cn," +
+            "u.user_type," +
+            "u.reg_date," +
+            "u.user_status," +
+            "u.office_phone," +
+            "u.mobile_phone," +
+            "u.email," +
+            "u.social_code," +
+            "u.last_login_time from " +
+            "rcd_person_config rpc left join user u on " +
+            "rpc.user_id = u.user_id where rpc.group_id = #{groupId}")
+    List<User> groupUsers(String groupId);
+
+
+    @Select("select " +
+            "so.origin_id," +
+            "so.origin_name, " +
+            "so.parent_origin_id, " +
+            "so.origin_status, " +
+            "so.create_date, " +
+            "so.create_user, " +
+            "so.origin_type " +
+            "from rcd_job_config rjc left join rcd_job_person_assign rjpa on " +
+            "rjc.job_id = rjpa.job_id left join user_origin_assign uoa on " +
+            "rjpa.user_id = uoa.user_id left join sys_origin so on " +
+            "uoa.origin_id = so.origin_id " +
+            "where rjc.job_id=#{jobId} and so.origin_id is not null")
+    List<Origin> getJobOriginHis(String jobId);
+
+    @Select("SELECT " +
+            "rjpgl.group_id," +
+            "rjpgl.group_name," +
+            "rjpgl.job_make_date " +
+            "FROM rcd_job_config rjc left join rcd_job_person_group_log rjpgl on " +
+            "rjc.job_id = rjpgl.job_id " +
+            "where rrj.report_id = #{reportId}")
+    RecordUserGroup jobUserGroupHis(String jobId);
 }

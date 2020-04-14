@@ -1,0 +1,10 @@
+/mnt/wine/IdeaWorkspace/dfjinxin-data-record-webapp/dfjx-data-record-java/auth-synchronization/src/main/java/com/workbench/authsyn/config/UserCenterProperties.java
+/mnt/wine/IdeaWorkspace/dfjinxin-data-record-webapp/dfjx-data-record-java/auth-synchronization/src/main/java/com/workbench/authsyn/jinxin/controller/JinxinUserAuthController.java
+/mnt/wine/IdeaWorkspace/dfjinxin-data-record-webapp/dfjx-data-record-java/auth-synchronization/src/main/java/com/workbench/authsyn/jinxin/entity/JinxinUser.java
+/mnt/wine/IdeaWorkspace/dfjinxin-data-record-webapp/dfjx-data-record-java/auth-synchronization/src/main/java/com/workbench/authsyn/jinxin/service/JinxinAuthSynService.java
+/mnt/wine/IdeaWorkspace/dfjinxin-data-record-webapp/dfjx-data-record-java/auth-synchronization/src/main/java/com/workbench/authsyn/jinxin/entity/JinxinRole.java
+/mnt/wine/IdeaWorkspace/dfjinxin-data-record-webapp/dfjx-data-record-java/auth-synchronization/src/main/java/com/workbench/authsyn/jinxin/service/imp/JinxinAuthSynServiceImp.java
+/mnt/wine/IdeaWorkspace/dfjinxin-data-record-webapp/dfjx-data-record-java/auth-synchronization/src/main/java/com/workbench/authsyn/jinxin/batch/JinxinUserSynchronization.java
+/mnt/wine/IdeaWorkspace/dfjinxin-data-record-webapp/dfjx-data-record-java/auth-synchronization/src/main/java/com/workbench/authsyn/jinxin/entity/JinxinOrganization.java
+/mnt/wine/IdeaWorkspace/dfjinxin-data-record-webapp/dfjx-data-record-java/auth-synchronization/src/main/java/com/workbench/authsyn/jinxin/entity/JinxinAuth.java
+/mnt/wine/IdeaWorkspace/dfjinxin-data-record-webapp/dfjx-data-record-java/auth-synchronization/src/main/java/com/workbench/authsyn/dao/IUserSynDao.java

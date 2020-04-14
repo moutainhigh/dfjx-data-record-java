@@ -17,7 +17,7 @@ import java.util.Map;
 @Repository
 public interface IUserServiceDao {
 
-    String query_user_columns = "SELECT " +
+    String query_user_columns = "SELECT distinct " +
             "u.user_id," +
             "u.user_name," +
             "u.user_name_cn," +

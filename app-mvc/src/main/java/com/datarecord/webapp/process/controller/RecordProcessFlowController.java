@@ -8,6 +8,7 @@ import com.datarecord.webapp.process.service.RecordProcessFlowService;
 import com.datarecord.webapp.process.service.RecordProcessService;
 import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.service.OriginService;
+import com.datarecord.webapp.utils.DataRecordUtil;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
@@ -38,6 +39,40 @@ public class RecordProcessFlowController {
 
     @Autowired
     private RecordProcessService recordProcessService;
+
+
+    @RequestMapping("pageReportDatas")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult pageReportDatas(@RequestBody Map<String,Object> postParams){
+        BigInteger userID = null;
+        if(!DataRecordUtil.isSuperUser()){
+            userID = WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id();
+        }
+        String currPage= postParams.get("currPage")!=null ? String.valueOf(((Double)postParams.get("currPage")).intValue()): "1";
+        String pageSize= postParams.get("pageSize")!=null ? String.valueOf(((Double)postParams.get("pageSize")).intValue()): "10" ;
+        Map<String,String> queryParams = (Map<String, String>) postParams.get("queryParams");
+        PageResult pageData = recordProcessFlowService.pageReportDatas(userID,currPage, pageSize,queryParams);
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, pageData);
+        return successResult;
+    }
+
+    @RequestMapping("pageReviewDatas")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult pageReviewDatas( String currPage,
+                               String pageSize,
+                               String reportStatus,
+                               String jobId
+    ){
+        PageResult pageData = recordProcessFlowService.pageReviewDatas(currPage, pageSize,jobId,reportStatus);
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, pageData);
+        return successResult;
+    }
 
     @RequestMapping("pageJob")
     @ResponseBody
@@ -143,9 +178,8 @@ public class RecordProcessFlowController {
     @CrossOrigin(allowCredentials = "true")
     public JsonResult reviewJob(@RequestBody JobFlowLog jobFlowLog){
         Integer jobId = jobFlowLog.getJob_id();
-        JobConfig jobCOnfig = recordProcessService.getJobConfigByJobId(jobId.toString());
         if(jobFlowLog.getJob_flow_status()==JobConfigStatus.APPROVE.value()){
-            Map<JsonResult.RESULT, Object> checkResult = recordMaker.preMake(jobCOnfig);
+            Map<JsonResult.RESULT, Object> checkResult = recordMaker.preMake(jobId.toString());
 
             if(checkResult!=null&&checkResult.containsKey(JsonResult.RESULT.FAILD)){
                 Object faildResult = checkResult.get(JsonResult.RESULT.FAILD);

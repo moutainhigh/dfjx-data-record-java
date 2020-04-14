@@ -1,241 +1,166 @@
 package com.datarecord.webapp.rcduser.controller;
 
-import com.datarecord.webapp.rcduser.bean.Originss;
+import com.datarecord.enums.JobConfigStatus;
+import com.datarecord.webapp.fillinatask.service.FillinataskService;
+import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.rcduser.bean.RecordUser;
-import com.datarecord.webapp.rcduser.bean.Useroriginassign;
+import com.datarecord.webapp.rcduser.bean.RecordUserGroup;
 import com.datarecord.webapp.rcduser.service.RecordUserService;
 import com.datarecord.webapp.sys.origin.entity.Origin;
-import com.datarecord.webapp.sys.origin.service.OriginService;
-import com.datarecord.webapp.sys.origin.service.RecordOriginService;
-import com.datarecord.webapp.sys.origin.tree.EntityTree;
-import com.datarecord.webapp.sys.origin.tree.TreeUtil;
+import com.google.common.base.Strings;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
-import com.workbench.shiro.WorkbenchShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 填报人Controller
  */
 @Controller
-@RequestMapping("/reporting")
+@RequestMapping("/recordUser")
 public class RecordUserController {
-
-
     @Autowired
     private RecordUserService recordUserService;
 
     @Autowired
-    private RecordOriginService recordOriginService;
+    private FillinataskService jobConfigService;
 
-    @Autowired
-    private OriginService originService;
-
-    //组织机构
-    @RequestMapping("/getOriginDatas")
+    @RequestMapping("pageUserGroup")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public String getOriginDatas(
-            @RequestParam("orgId") String orgId
-    ){
-        String topId = orgId;
-        List<EntityTree> list =  recordOriginService.listAllRecordOrigin();
-        List<EntityTree> tree = TreeUtil.getTreeList(topId, list);
-        String jsonpResponse = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取机构成功", null, tree);
-        return jsonpResponse;
+    public JsonResult pageRecordUserGroup(String currPage,String pageNum){
+        PageResult pageResult = recordUserService.pageRecordUserGroup(currPage,pageNum);
+        JsonResult jsonResult = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "获取成功", null, pageResult);
+        return jsonResult;
     }
 
 
-    //组织机构
-    @RequestMapping("/getOriginDatasorgId")
+    @RequestMapping("saveUserGroup")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public String getOriginDatasorgId(
-            @RequestParam("orgId") String orgId
-    ){
-        //判断用户是否登录然后查出用户所在组织机构id
-        /*HashMap<Object, Object> reslltMap = new HashMap<>();
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
-        String orgId = recordUserService.selectOrgId(user.getUser_id());
+    public JsonResult saveUserGroup(String groupName){
+        recordUserService.saveUserGroup(groupName);
+        JsonResult jsonResult = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "添加成功", null, null);
+        return jsonResult;
+    }
+
+    @RequestMapping("updateUserGroup")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult updateUserGroup(@RequestBody RecordUserGroup recordUserGroup){
+        recordUserService.updateUserGroup(recordUserGroup);
+        JsonResult jsonResult = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "添加成功", null, null);
+        return jsonResult;
+    }
+
+    @RequestMapping("delUserGroup")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult delUserGroup(String groupId){
+        recordUserService.delUserGroup(groupId);
+        JsonResult jsonResult = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "删除成功", null, null);
+        return jsonResult;
+    }
+
+    @RequestMapping("activeUserGroup")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult activeUserGroup(String groupId){
+        recordUserService.activeUserGroup(groupId);
+        JsonResult jsonResult = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "添加成功", null, null);
+        return jsonResult;
+    }
+
+    @RequestMapping("getActiveUserGroup")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult getActiveUserGroup(){
+        RecordUserGroup recordUserGroup = recordUserService.getActiveUserGroup();
+        JsonResult jsonResult = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "获取成功", null, recordUserGroup);
+        return jsonResult;
+    }
+
+    @RequestMapping("getActiveGpOrgs")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult getActiveGpOrgs(){
+        RecordUserGroup recordUserGroup = recordUserService.getActiveUserGroup();
+        if(recordUserGroup!=null){
+            List<Origin> origins = recordUserService.groupOrigins(recordUserGroup.getGroup_id().toString());
+            JsonResult jsonResult = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "获取成功", null, origins);
+            return jsonResult;
+        }
+        JsonResult jsonResult = JsonSupport.makeJsonpResult(JsonResult.RESULT.FAILD, "获取失败", "未找到默认用户组", null);
+        return jsonResult;
+    }
+
+    @RequestMapping("groupUsers")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    /**
+     * 当前填报分组下所有用户
      */
-      //  String orgId = "0";
-      //  Map<String, Object> returnmap = new HashMap<>();
-      //  MenuTreeUtil menuTree = new MenuTreeUtil();
-        List<Originss> list =  recordUserService.listOrgData(orgId);
-      //  List<Object> menuList = menuTree.menuList(list,orgId);
-     //   returnmap.put("list", menuList);
-        String jsonpResponse = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取成功", null, list);
-        return jsonpResponse;
+    public JsonResult groupUsers(String groupId){
+        List<User> groupUsers = recordUserService.groupUsers(groupId);
+        JsonResult jsonResult = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "获取成功", null, groupUsers);
+        return jsonResult;
     }
 
-
-    //填报人列表rcd_person_config
-    @RequestMapping("/rcdpersonconfiglist")
+    @RequestMapping("groupOriginIds")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public String rcdpersonconfiglist(
-            @RequestParam("currPage") int currPage,
-            @RequestParam("pageSize")int pageSize,
-            @RequestParam("user_name")String user_name
-    ){
-        PageResult pageResult = null;
-        try{
-          /*  User user = WorkbenchShiroUtils.checkUserFromShiroContext();
-            Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            pageResult = recordUserService.rcdpersonconfiglist(currPage,pageSize,user_name,userOrigin);*/
-            pageResult = recordUserService.rcdpersonconfiglist(currPage,pageSize,user_name);
-        }catch(Exception e){
-            e.printStackTrace();
-            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报人列表失败", null, "error");
-        }
-        return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取填报人列表成功", null, pageResult);
+    public JsonResult groupOriginIds(String groupId){
+        List<String> groupOriginIds = recordUserService.groupOriginIds(groupId);
+        JsonResult jsonResult = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "获取成功", null, groupOriginIds);
+        return jsonResult;
     }
 
-    //填报人列表rcd_person_config （无分页）
-    @RequestMapping("/rcdpersonconfiglistwu")
+    @RequestMapping("groupOrigins")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public String rcdpersonconfiglistwu(
-    ){
-        List<RecordUser> pageResult = null;
-        try{
-          /*  User user = WorkbenchShiroUtils.checkUserFromShiroContext();
-            Origin userOrigin = originService.getOriginByUser(user.getUser_id());
-            pageResult  = recordUserService.rcdpersonconfiglistwufenye(userOrigin);*/
-            pageResult  = recordUserService.rcdpersonconfiglistwufenye();
-        }catch(Exception e){
-            e.printStackTrace();
-            return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取填报人列表失败", null, "error");
-        }
-        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取填报人列表成功", null, pageResult);
+    public JsonResult groupOrigins(String groupId){
+        List<Origin> groupOrigins = recordUserService.groupOrigins(groupId);
+        JsonResult jsonResult = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "获取成功", null, groupOrigins);
+        return jsonResult;
     }
 
-
-
-    //新增弹框列表
-    @RequestMapping("/useroriginassignlist")
+    @RequestMapping("groupOriginUsers")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public String useroriginassignlist(
-            @RequestParam("origin_id")String origin_id
-    ){
-      List<Object>  ll = null;
-        try{
-            ll = recordUserService.useroriginassignlist(origin_id);
-        }catch(Exception e){
-            e.printStackTrace();
-            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取弹框列表失败", null, "error");
+    /**
+     * 当前填报分组下所选机构下所有用户 包括关联了和未关联
+     */
+    public JsonResult groupOriginUsers(@RequestBody OriginGroupRq originGroupRq){
+        List<RecordUser> groupOriginUsers = new ArrayList<>();
+        if(originGroupRq.originIds!=null&&originGroupRq.originIds.size()>0){
+            groupOriginUsers = recordUserService.groupOriginUsers(originGroupRq.groupId,originGroupRq.originIds);
         }
-        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取弹框列表成功", null, ll);
+        JsonResult jsonResult = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "获取成功", null, groupOriginUsers);
+        return jsonResult;
     }
-
-    //填报任务页面填报人维护（获取机构下用户）
-    @RequestMapping("/useroriginassignlistsysorigin")
-    @ResponseBody
-    @CrossOrigin(allowCredentials="true")
-    public String useroriginassignlistsysorigin(
-            @RequestParam("origin_id")String origin_id
-    ){
-        //List<Useroriginassign>  ll = new ArrayList<Useroriginassign>();
-        List<Object>  ll = null;
-        try{
-            ll = recordUserService.useroriginassignlistsysorigin(origin_id);
-        }catch(Exception e){
-            e.printStackTrace();
-            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报任务中填报人维护获取弹框列表失败", null, "error");
-        }
-        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报任务中填报人维护获取弹框列表成功", null, ll);
-    }
-
-
 
     //新增确定
-    @RequestMapping("/insertrcdpersonconfig")
+    @RequestMapping("/addUserToGroup")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public String insertrcdpersonconfig(
-            @RequestParam("origin_id")String origin_id,
-            @RequestParam("userid")String userid
-    ){
-        if (!origin_id.isEmpty() && !userid.isEmpty()){
-            try{
-                 int  ii  =    recordUserService.countRcdPersonConfig(userid);
-                 if (ii>0){
-                     return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "用户已存在无法添加", null, "error");
-                 }else{
-                     recordUserService.insertrcdpersonconfig(origin_id,userid);   //新增
-                 }
-            }catch(Exception e){
-                e.printStackTrace();
-                return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报人新增失败", null, "error");
-            }
-        }else{
-            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "必选参数为空", null, "error");
-        }
+    public String addUserToGroup(@RequestBody RecordUser recordUser){
+        recordUserService.addUserToGroup(recordUser);   //新增
         return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报人新增成功", null, "success");
     }
 
-    //修改确定
-    @RequestMapping("/updatercdpersonconfig")
+    @RequestMapping("/delUserFromGroup")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public String updatercdpersonconfig(
-            @RequestParam("origin_id")String origin_id,
-            @RequestParam("userid")String userid
-    ){
-        try{
-            recordUserService.updaterRdpersonconfig(origin_id,userid);   //xiugai
-        }catch(Exception e){
-            e.printStackTrace();
-            return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报人修改失败", null, "error");
-        }
-        return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报人修改成功", null, "success");
+    public String delUserFromGroup(@RequestBody RecordUser recordUser){
+        recordUserService.delUserFromGroup(recordUser);
+        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "填报人删除成功", null, "success");
     }
-
-
-    //修改查询机构对应用户idlist
-    @RequestMapping("/selectrcdpersonconfig")
-    @ResponseBody
-    @CrossOrigin(allowCredentials="true")
-    public String selectrcdpersonconfig(
-            @RequestParam("origin_id")String origin_id
-    ){
-        List<Useroriginassign>  ll = null;
-        try{
-            ll = recordUserService.selectrcdpersonconfig(origin_id);
-        }catch(Exception e){
-            e.printStackTrace();
-            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "获取弹框列表失败", null, "error");
-        }
-        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "获取弹框列表成功", null, ll);
-    }
-
-
-    //删除
-    @RequestMapping("/deletercdpersonconfig")
-    @ResponseBody
-    @CrossOrigin(allowCredentials="true")
-    public String deletercdpersonconfig(
-            @RequestParam("user_id")String user_id
-    ){
-        try{
-            recordUserService.deletercdpersonconfigbyuserid(user_id);   //根据用户id删除
-        }catch(Exception e){
-            e.printStackTrace();
-            return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "删除失败", null, "error");
-        }
-        return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "删除成功", null, "success");
-    }
-
 
     @RequestMapping("unCheckOriginUser")
     @ResponseBody
@@ -259,5 +184,58 @@ public class RecordUserController {
             String originId){
         PageResult recordUserPage = recordUserService.checkedOriginUser(currPage,pageSize,jobId,originId);
         return JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "删除成功", null, recordUserPage);
+    }
+
+
+    @RequestMapping("jobUserGroupHis")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult jobUserGroupHis(String jobId){
+        RecordUserGroup recordUserGroup = recordUserService.jobUserGroupHis(jobId);
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, recordUserGroup);
+        return successResult;
+    }
+
+    @RequestMapping("getJobOriginHis")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult getJobOriginHis(String jobId){
+        List<Origin> resultOrigins = recordUserService.getJobOriginHis(jobId);
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, resultOrigins);
+        return successResult;
+    }
+
+    @RequestMapping("getJobOrigins")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult getJobOrigins(String jobId){
+        List<Origin> resultOrigins = null;
+        if(Strings.isNullOrEmpty(jobId)){
+            RecordUserGroup activeUserGroup = recordUserService.getActiveUserGroup();
+            resultOrigins = recordUserService.groupOrigins(activeUserGroup.getGroup_id().toString());
+        }else{
+            JobConfig jobConfig = jobConfigService.getJobConfig(jobId);
+            Integer jobConfigStatus = jobConfig.getJob_status();
+            if(JobConfigStatus.SUBMIT.compareWith(jobConfigStatus)||
+                    JobConfigStatus.SUBMITING.compareWith(jobConfigStatus)){
+                resultOrigins = recordUserService.getJobOriginHis(jobId);
+            }else {
+                RecordUserGroup activeUserGroup = recordUserService.getActiveUserGroup();
+                resultOrigins = recordUserService.groupOrigins(activeUserGroup.getGroup_id().toString());
+            }
+        }
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, resultOrigins);
+        return successResult;
+    }
+
+    class OriginGroupRq{
+        String groupId;
+        List<String> originIds;
     }
 }

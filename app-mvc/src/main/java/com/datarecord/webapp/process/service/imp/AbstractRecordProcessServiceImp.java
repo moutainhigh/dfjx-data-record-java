@@ -12,6 +12,7 @@ import com.datarecord.enums.FldDataTypes;
 import com.datarecord.webapp.reportinggroup.bean.RcdJobUnitFlow;
 import com.datarecord.webapp.reportinggroup.bean.ReportGroupInterval;
 import com.datarecord.webapp.reportinggroup.dao.ReportingGroupDao;
+import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.github.pagehelper.Page;
 import com.google.common.base.Strings;
 import com.webapp.support.page.PageResult;

@@ -75,7 +75,7 @@ public class FillinataskServiceImp implements FillinataskService {
         userid.substring(0,userid.length()-1);*/
         String[] split = userid.split(",");
         for (String user_id : split){
-            fillinataskDao.insertrcdjobpersonassign(job_id,user_id);
+            fillinataskDao.saveJobPersonAssign(job_id,user_id);
         }
     }
 
@@ -140,7 +140,7 @@ public class FillinataskServiceImp implements FillinataskService {
     @Transactional(rollbackFor = Exception.class)
     public void deletercdjobconfig(String job_id) {
         fillinataskDao.deletercdjobconfig(job_id);    //填报任务删除
-        fillinataskDao.deletercdjobpersonassign(job_id);    //填报人维护删除
+        fillinataskDao.delJobPersonAssign(job_id);    //填报人维护删除
         fillinataskDao.deleteRcdJobUnitConfigsuo(job_id);    //任务关连填报组删除
         fillinataskDao.removeIntervals(new Integer(job_id));
     }
@@ -159,7 +159,7 @@ public class FillinataskServiceImp implements FillinataskService {
 
 
     @Override
-    public JobConfig selectrcdjobconfigjobid(String job_id) {
+    public JobConfig getJobConfig(String job_id) {
         return   fillinataskDao.selectrcdjobconfigjobid(job_id);
     }
 

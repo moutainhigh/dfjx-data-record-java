@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class User {
     private BigInteger user_id;
+    private String user_id_str;
     private String user_pwd;
     private String user_name;
     private String user_name_cn;
@@ -36,6 +37,9 @@ public class User {
 
     public void setUser_id(BigInteger user_id) {
         this.user_id = user_id;
+        if(user_id!=null){
+            this.user_id_str = user_id.toString();
+        }
     }
 
     public String getUser_name() {
@@ -164,5 +168,13 @@ public class User {
 
     public void setSocial_code(String social_code) {
         this.social_code = social_code;
+    }
+
+    public String getUser_id_str() {
+        return user_id_str;
+    }
+
+    public void setUser_id_str(String user_id_str) {
+        this.user_id_str = user_id_str;
     }
 }

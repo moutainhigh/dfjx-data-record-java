@@ -8,6 +8,6 @@ import java.util.Map;
 public interface RecordMaker {
 
     Map<JsonResult.RESULT,Object> makeJob(String jobId);
-    Map<JsonResult.RESULT,Object> preMake(JobConfig jobConfigEntity);
+    Map<JsonResult.RESULT,Object> preMake(String jobId);
 
 }

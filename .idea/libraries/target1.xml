@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="target1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/relation-db-support/target/relation-db-support-1.2-jar-with-dependencies.jar!/" />
+      <root url="jar://$PROJECT_DIR$/relation-db-support/target/relation-db-support-1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

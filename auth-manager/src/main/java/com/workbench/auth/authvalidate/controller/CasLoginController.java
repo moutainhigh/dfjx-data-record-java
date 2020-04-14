@@ -6,6 +6,7 @@ import com.webapp.support.session.SessionSupport;
 import com.workbench.auth.authvalidate.service.LoginService;
 import com.workbench.auth.user.entity.User;
 import com.workbench.auth.user.service.UserService;
+import com.workbench.exception.runtime.WorkbenchRuntimeException;
 import com.workbench.shiro.WorkbenchShiroToken;
 import org.apache.shiro.SecurityUtils;
 import org.jasig.cas.client.authentication.AttributePrincipal;
@@ -47,12 +48,13 @@ public class CasLoginController extends AbstractLoginController{
         User user = new User();
         user.setUser_name(loginUserName);
 //        SessionSupport.addUserToSession(user);
-//        User usrFromDb = userService.getUserByUserNm(loginUserName);
-//        if(usrFromDb==null){
+        User usrFromDb = userService.getUserByUserNm(loginUserName);
+        if(usrFromDb==null){
 //            userService.createUser(user);
-//        }
+            throw new WorkbenchRuntimeException("未找到用户",new RuntimeException());
+        }
         String tokenValue = loginService.createToken(null);
-        WorkbenchShiroToken token = new WorkbenchShiroToken(user,tokenValue);
+        WorkbenchShiroToken token = new WorkbenchShiroToken(usrFromDb,tokenValue);
         SecurityUtils.getSubject().login(token);
 
         String redirectUrl = request.getParameter("redirect");

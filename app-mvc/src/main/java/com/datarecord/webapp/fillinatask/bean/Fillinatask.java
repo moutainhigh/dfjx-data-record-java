@@ -1,9 +1,12 @@
 package com.datarecord.webapp.fillinatask.bean;
 
+import com.datarecord.enums.JobConfigStatus;
+
 public class Fillinatask {
     private int  job_id;
     private String job_name;
     private int job_status;
+    private String job_status_str;
     private String job_start_dt;
     private String job_end_dt;
 
@@ -29,6 +32,7 @@ public class Fillinatask {
 
     public void setJob_status(int job_status) {
         this.job_status = job_status;
+        this.job_status_str = JobConfigStatus.getJobConfigStatus(job_status).getComment();
     }
 
     public String getJob_start_dt() {
@@ -57,5 +61,13 @@ public class Fillinatask {
                 ", job_start_dt='" + job_start_dt + '\'' +
                 ", job_end_dt='" + job_end_dt + '\'' +
                 '}';
+    }
+
+    public String getJob_status_str() {
+        return job_status_str;
+    }
+
+    public void setJob_status_str(String job_status_str) {
+        this.job_status_str = job_status_str;
     }
 }
