@@ -138,7 +138,15 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
                             List<ReportFldConfig> unitFldConfigs = exportUnitConfig.getUnitFlds();
                             Map<Integer,String> reportFldNames = new HashMap<>();
                             for (ReportFldConfig unitFldConfig : unitFldConfigs) {
-                                reportFldNames.put(unitFldConfig.getFld_id(),unitFldConfig.getFld_name());
+                                StringBuilder fldNameSb = new StringBuilder();
+                                fldNameSb.append(unitFldConfig.getFld_name());
+                                if(!Strings.isNullOrEmpty(unitFldConfig.getFld_point())){
+                                    fldNameSb.append("(");
+                                    fldNameSb.append(unitFldConfig.getFld_point());
+                                    fldNameSb.append(")");
+                                }
+
+                                reportFldNames.put(unitFldConfig.getFld_id(),fldNameSb.toString());
                             }
                             Integer dataRowIndex = 0;
                             Integer dataCellIndex = 0;
