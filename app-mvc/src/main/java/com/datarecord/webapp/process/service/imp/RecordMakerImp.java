@@ -49,7 +49,8 @@ public class RecordMakerImp implements RecordMaker {
             jobConfigEntity = (JobConfig) preMakeResult.get(JsonResult.RESULT.SUCCESS);
         }
 
-        this.makeRecordPersons(jobId);
+        List<JobPerson> recordPersons = this.makeRecordPersons(jobId);
+        jobConfigEntity.setJobPersons(recordPersons);
 
         Map<JsonResult.RESULT,Object> makeResultMap = new HashMap<>();
         logger.info("job config entity : {}",jobConfigEntity);
@@ -258,10 +259,12 @@ public class RecordMakerImp implements RecordMaker {
         return makeResultMap;
     }
 
-    public void makeRecordPersons(String jobId){
+    public List<JobPerson> makeRecordPersons(String jobId){
         RecordUserGroup activeUserGroup = recordUserService.getActiveUserGroup();
 
         List<User> recordUsers = recordUserService.groupUsers(activeUserGroup.getGroup_id().toString());
+
+        List<JobPerson> jobPersons = new ArrayList<>();
 
         JobPersonGroupLog jobPersonGroupLog = new JobPersonGroupLog();
         jobPersonGroupLog.setJob_id(new Integer(jobId));
@@ -276,9 +279,12 @@ public class RecordMakerImp implements RecordMaker {
             for (User recordUser : recordUsers) {
                 BigInteger userId = recordUser.getUser_id();
                 fillinataskDao.saveJobPersonAssign(jobId,userId.toString());
+                JobPerson jobPerson = new JobPerson();
+                jobPerson.setUser_id(userId);
+                jobPerson.setOrigin_id(jobPerson.getOrigin_id());
             }
         }
-
+        return jobPersons;
 
     }
 }

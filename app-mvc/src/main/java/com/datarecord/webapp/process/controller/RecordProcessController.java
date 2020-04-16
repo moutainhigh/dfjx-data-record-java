@@ -9,6 +9,7 @@ import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordMaker;
 import com.datarecord.webapp.process.service.RecordProcessFactory;
 import com.datarecord.webapp.sys.origin.entity.Origin;
+import com.datarecord.webapp.utils.DataRecordUtil;
 import com.google.common.base.Strings;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -57,10 +59,15 @@ public class RecordProcessController {
                               String reportStatus,
                               String reportName){
         User user = (User) SecurityUtils.getSubject().getPrincipal();
+        BigInteger userId = user.getUser_id();
+        if(DataRecordUtil.isSuperUser()){
+            userId = null;
+        }
+
         Map<String,String> queryParams = new HashMap<>();
         queryParams.put("reportName",reportName);
         queryParams.put("reportStatus",reportStatus);
-        PageResult pageResult = RecordProcessFactory.RecordProcessSerice().pageJob(user.getUser_id(),currPage,pageSize,queryParams);
+        PageResult pageResult = RecordProcessFactory.RecordProcessSerice().pageJob(userId,currPage,pageSize,queryParams);
 
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, pageResult);

@@ -228,9 +228,6 @@ public class OriginServiceImp implements OriginService {
         for (BigInteger originId : originIds) {
             Origin origin = originsMap.get(originId);
             BigInteger parentOriginId = origin.getParent_origin_id();
-            if(parentOriginId.equals(BigInteger.ZERO)){
-                System.out.println("get");
-            }
             if(originsMap.containsKey(parentOriginId)){
                 List<Origin> allChildren = originsMap.get(parentOriginId).getChildren();
                 if(allChildren==null){

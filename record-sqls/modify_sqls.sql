@@ -204,3 +204,6 @@ ADD COLUMN `comment` VARCHAR(500) NULL AFTER `log_user`;
 
 ALTER TABLE `rcd_reportfile_log`
 ADD COLUMN `file_path` VARCHAR(200) NOT NULL AFTER `comment`;
+
+ALTER TABLE `rcd_reportfile_log`
+CHANGE COLUMN `file_path` `file_path` VARCHAR(200) NULL ;

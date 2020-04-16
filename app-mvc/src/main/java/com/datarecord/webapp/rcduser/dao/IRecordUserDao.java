@@ -261,6 +261,8 @@ public interface IRecordUserDao {
     RecordUserGroup getActiveUserGroup();
 
     @Select("SELECT " +
+            "so.origin_id," +
+            "so.origin_name," +
             "u.user_id," +
             "u.user_name," +
             "u.user_name_cn," +
@@ -273,7 +275,10 @@ public interface IRecordUserDao {
             "u.social_code," +
             "u.last_login_time from " +
             "rcd_person_config rpc left join user u on " +
-            "rpc.user_id = u.user_id where rpc.group_id = #{groupId}")
+            "rpc.user_id = u.user_id left join user_origin_assign uoa " +
+            "u.user_id =uoa.user_id  left join sys_origin so on " +
+            "uoa.origin_id = so.origin_id " +
+            "where rpc.group_id = #{groupId}")
     List<User> groupUsers(String groupId);
 
 

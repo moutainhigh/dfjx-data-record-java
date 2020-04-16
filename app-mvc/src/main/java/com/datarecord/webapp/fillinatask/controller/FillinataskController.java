@@ -133,8 +133,14 @@ public class FillinataskController {
         return    JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "任务id查看详情成功", null, jobConfig);
     }
 
-
-
+    @RequestMapping("/getJobIntevals")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult getJobIntevals(String jobId){
+        List<JobInteval> jobIntevals = fillinataskService.getJobIntevals(jobId);
+        JsonResult result = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "获取成功", null, jobIntevals);
+        return result;
+    }
 
 
     //新增任务

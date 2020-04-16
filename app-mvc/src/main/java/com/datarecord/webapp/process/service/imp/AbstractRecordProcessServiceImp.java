@@ -65,6 +65,11 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
         Date currDate = new Date();
         Calendar calenday = Calendar.getInstance();
         calenday.setTime(currDate);
+        calenday.set(Calendar.HOUR_OF_DAY, 0);
+        calenday.set(Calendar.MINUTE, 0);
+        calenday.set(Calendar.SECOND, 0);
+        calenday.set(Calendar.MILLISECOND, 0);
+
         int dayOfMonth = calenday.get(Calendar.DAY_OF_MONTH);
         for (ReportJobInfo reportCustomer : dataList) {
             Integer jobId = reportCustomer.getJob_id();
@@ -95,10 +100,11 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
             Date startDate = reportCustomer.getJob_start_dt();
             Date endDate = reportCustomer.getJob_end_dt();
 
-            if(currDate.compareTo(startDate)<0){//未到填报日期
+            if(calenday.getTime().compareTo(startDate)<0){//未到填报日期
                 reportCustomer.setRecord_status(ReportStatus.TOO_EARLY.getValueInteger());
             }
-            if(currDate.compareTo(endDate)>0){//已过期
+
+            if(calenday.getTime().compareTo(endDate)>0){//已过期pageJob
                 reportCustomer.setRecord_status(ReportStatus.OVER_TIME.getValueInteger());
                 recordProcessDao.changeRecordJobStatus(reportCustomer.getReport_id(),ReportStatus.OVER_TIME.getValueInteger());
             }
