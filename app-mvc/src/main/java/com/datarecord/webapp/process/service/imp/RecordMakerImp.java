@@ -281,7 +281,7 @@ public class RecordMakerImp implements RecordMaker {
                 fillinataskDao.saveJobPersonAssign(jobId,userId.toString());
                 JobPerson jobPerson = new JobPerson();
                 jobPerson.setUser_id(userId);
-                jobPerson.setOrigin_id(jobPerson.getOrigin_id());
+                jobPerson.setOrigin_id(recordUser.getOrigin_id());
                 jobPersons.add(jobPerson);
             }
         }

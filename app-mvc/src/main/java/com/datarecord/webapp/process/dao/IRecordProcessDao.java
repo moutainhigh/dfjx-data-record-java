@@ -136,7 +136,7 @@ public interface IRecordProcessDao {
             "left join user u on " +
             "rrj.record_user_id = u.user_id " +
             "where rjc.job_status!='3'  " +
-            "<if test='user_id!=null and user_id== \"\" '>" +
+            "<if test='user_id!=null and user_id!= \"\" '>" +
             " and rrj.record_user_id=#{user_id}" +
             "</if>" +
             "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"0\" '>" +
