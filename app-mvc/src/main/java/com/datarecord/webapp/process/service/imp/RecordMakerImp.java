@@ -282,6 +282,7 @@ public class RecordMakerImp implements RecordMaker {
                 JobPerson jobPerson = new JobPerson();
                 jobPerson.setUser_id(userId);
                 jobPerson.setOrigin_id(jobPerson.getOrigin_id());
+                jobPersons.add(jobPerson);
             }
         }
         return jobPersons;

@@ -1,8 +1,10 @@
 package com.datarecord.webapp.process.service.imp;
 
+import com.datarecord.enums.FldDataTypes;
 import com.datarecord.enums.JobConfigStatus;
 import com.datarecord.enums.ReportFileLogStatus;
 import com.datarecord.enums.ReportStatus;
+import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.fillinatask.bean.UpDownLoadFileConfig;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.dao.IRecordProcessFlowDao;
@@ -137,6 +139,7 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
                             //生成标题
                             List<ReportFldConfig> unitFldConfigs = exportUnitConfig.getUnitFlds();
                             Map<Integer,String> reportFldNames = new HashMap<>();
+                            Map<Integer, Map<String,String>> fldDicts = new HashMap<>();
                             for (ReportFldConfig unitFldConfig : unitFldConfigs) {
                                 StringBuilder fldNameSb = new StringBuilder();
                                 fldNameSb.append(unitFldConfig.getFld_name());
@@ -145,8 +148,20 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
                                     fldNameSb.append(unitFldConfig.getFld_point());
                                     fldNameSb.append(")");
                                 }
-
                                 reportFldNames.put(unitFldConfig.getFld_id(),fldNameSb.toString());
+                                String fldDataType = unitFldConfig.getFld_data_type();
+                                if(FldDataTypes.DICT.compareTo(fldDataType)){
+                                    List<DataDictionary> dictList = recordProcessDao.getDictcontent4Fld(unitFldConfig.getFld_id());
+                                    Map<String,String> dictMapTmp = new HashMap<>();
+                                    if(dictList!=null&&dictList.size()>0){
+                                        for (DataDictionary dataDictionary : dictList) {
+                                            String val = dataDictionary.getDict_content_value();
+                                            String name = dataDictionary.getDict_content_name();
+                                            dictMapTmp.put(val,name);
+                                        }
+                                    }
+                                    fldDicts.put(unitFldConfig.getFld_id(),dictMapTmp);
+                                }
                             }
                             Integer dataRowIndex = 0;
                             Integer dataCellIndex = 0;
@@ -166,6 +181,10 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
                                 Map<Integer, String> exportFldDatas = reportDatasMap.get(exportColumId);
                                 for (Integer exportFldsId : exportFldsIds) {
                                     String data = exportFldDatas.get(exportFldsId);
+                                    //是否为字典
+                                    if(fldDicts.containsKey(exportFldsId)){
+                                        data = fldDicts.get(exportFldsId).get(data);
+                                    }
                                     HSSFCell dataCell = rowTmp.createCell(dataCellIndex);
                                     dataCell.setCellValue(data);
                                     logger.debug("写入行:{},列:{},值--{}",dataRowIndex,dataCellIndex,data);
