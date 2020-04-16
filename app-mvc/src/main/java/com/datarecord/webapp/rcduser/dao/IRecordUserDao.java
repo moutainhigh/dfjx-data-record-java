@@ -275,7 +275,7 @@ public interface IRecordUserDao {
             "u.social_code," +
             "u.last_login_time from " +
             "rcd_person_config rpc left join user u on " +
-            "rpc.user_id = u.user_id left join user_origin_assign uoa " +
+            "rpc.user_id = u.user_id left join user_origin_assign uoa on " +
             "u.user_id =uoa.user_id  left join sys_origin so on " +
             "uoa.origin_id = so.origin_id " +
             "where rpc.group_id = #{groupId}")
