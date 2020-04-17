@@ -223,7 +223,7 @@ public interface IRecordUserDao {
     void enableGroups(String groupId);
 
     @Select("<script>" +
-            "SELECT u.user_id,u.user_name,so.origin_id,so.origin_name,rpcg.group_id,rpcg.group_name FROM user u " +
+            "SELECT u.user_id,u.user_name,u.user_name_cn,so.origin_id,so.origin_name,rpcg.group_id,rpcg.group_name FROM user u " +
             "left join user_origin_assign uoa on u.user_id = uoa.user_id " +
             "left join sys_origin so on uoa.origin_id = so.origin_id " +
             "left join " +
