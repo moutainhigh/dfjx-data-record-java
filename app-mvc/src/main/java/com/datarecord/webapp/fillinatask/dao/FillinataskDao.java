@@ -18,7 +18,7 @@ public interface FillinataskDao {
             "<if test = 'job_name != null' > AND job_name like concat('%',#{job_name},'%') </if> "+
             "<if test = 'job_status != null' > AND job_status =#{job_status} </if> "+
             "<if test = 'user_id != null' > AND job_creater =#{user_id} </if> "+
-            " order by job_start_dt desc </script> ")
+            " order by job_id </script> ")
     Page<Fillinatask> rcdjobconfiglist(@Param("currPage") int currPage,
                                        @Param("pageSize") int pageSize,
                                        @Param("job_name") String job_name,

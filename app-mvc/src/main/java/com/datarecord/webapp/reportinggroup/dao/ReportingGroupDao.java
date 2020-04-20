@@ -19,7 +19,7 @@ public interface ReportingGroupDao {
             "</script>")
     List<rcdJobConfig> leftrcdjobconfig(@Param("user_id") BigInteger user_id);
 
-    @Select("SELECT job_unit_id,job_unit_name,job_unit_active FROM rcd_job_unit_config where job_id =#{job_id}")
+    @Select("SELECT job_unit_id,job_unit_name,job_unit_active FROM rcd_job_unit_config where job_id =#{job_id} order by job_id")
     Page<ReportingGroup> rcdjobunitconfiglist(@Param("currPage") int currPage, @Param("pageSize") int pageSize, @Param("job_id") String job_id);
 
     @Delete("DELETE FROM rcd_job_unit_config WHERE  job_unit_id =#{job_unit_id}")

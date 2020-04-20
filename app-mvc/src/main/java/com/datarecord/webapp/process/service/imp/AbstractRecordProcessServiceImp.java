@@ -61,55 +61,9 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
 
 
         PageResult pageResult = PageResult.pageHelperList2PageResult(pageData);
-        List<ReportJobInfo> dataList = pageResult.getDataList();
-        Date currDate = new Date();
-        Calendar calenday = Calendar.getInstance();
-        calenday.setTime(currDate);
-        calenday.set(Calendar.HOUR_OF_DAY, 0);
-        calenday.set(Calendar.MINUTE, 0);
-        calenday.set(Calendar.SECOND, 0);
-        calenday.set(Calendar.MILLISECOND, 0);
 
-        int dayOfMonth = calenday.get(Calendar.DAY_OF_MONTH);
-        for (ReportJobInfo reportCustomer : dataList) {
-            Integer jobId = reportCustomer.getJob_id();
-            if(ReportStatus.REPORT_DONE.compareTo(reportCustomer.getRecord_status())){
-                continue;
-            }
 
-            List<JobInteval> jobIntervals = fillinataskService.getJobIntevals(jobId.toString());
-
-            boolean inner = false;
-            if(jobIntervals!=null&&jobIntervals.size()>0){
-                for (JobInteval jobInterval : jobIntervals) {
-                    String startDay = jobInterval.getJob_interval_start();
-                    String endDay = jobInterval.getJob_interval_end();
-                    Integer startDayInt = new Integer(startDay);
-                    Integer endDayInt = new Integer(endDay);
-                    if(dayOfMonth>=startDayInt&&dayOfMonth<=endDayInt){
-                        inner = true;
-                    }
-                }
-            }else{
-                inner = true;
-            }
-            if(!inner){
-                reportCustomer.setRecord_status(ReportStatus.OVER_INTERVAL.getValueInteger());
-            }
-
-            Date startDate = reportCustomer.getJob_start_dt();
-            Date endDate = reportCustomer.getJob_end_dt();
-
-            if(calenday.getTime().compareTo(startDate)<0){//未到填报日期
-                reportCustomer.setRecord_status(ReportStatus.TOO_EARLY.getValueInteger());
-            }
-
-            if(calenday.getTime().compareTo(endDate)>0){//已过期pageJob
-                reportCustomer.setRecord_status(ReportStatus.OVER_TIME.getValueInteger());
-                recordProcessDao.changeRecordJobStatus(reportCustomer.getReport_id(),ReportStatus.OVER_TIME.getValueInteger());
-            }
-
-        }
+        this.checkReportStatus(pageResult.getDataList());
 
 
         logger.debug("Page Result :{}",pageResult);
@@ -263,6 +217,60 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
     public ReportJobInfo getReportJobInfo(String reportId) {
         ReportJobInfo reportJobInfo = recordProcessDao.getReportJobInfoByReportId(reportId);
         return reportJobInfo;
+    }
+
+    @Override
+    public List<ReportJobInfo> checkReportStatus(List<ReportJobInfo> dataList) {
+        Date currDate = new Date();
+        Calendar calenday = Calendar.getInstance();
+        calenday.setTime(currDate);
+        calenday.set(Calendar.HOUR_OF_DAY, 0);
+        calenday.set(Calendar.MINUTE, 0);
+        calenday.set(Calendar.SECOND, 0);
+        calenday.set(Calendar.MILLISECOND, 0);
+
+        int dayOfMonth = calenday.get(Calendar.DAY_OF_MONTH);
+        for (ReportJobInfo reportCustomer : dataList) {
+            Integer jobId = reportCustomer.getJob_id();
+            if(ReportStatus.REPORT_DONE.compareTo(reportCustomer.getRecord_status())){
+                continue;
+            }
+
+            List<JobInteval> jobIntervals = fillinataskService.getJobIntevals(jobId.toString());
+
+            boolean inner = false;
+            if(jobIntervals!=null&&jobIntervals.size()>0){
+                for (JobInteval jobInterval : jobIntervals) {
+                    String startDay = jobInterval.getJob_interval_start();
+                    String endDay = jobInterval.getJob_interval_end();
+                    Integer startDayInt = new Integer(startDay);
+                    Integer endDayInt = new Integer(endDay);
+                    if(dayOfMonth>=startDayInt&&dayOfMonth<=endDayInt){
+                        inner = true;
+                    }
+                }
+            }else{
+                inner = true;
+            }
+            if(!inner){
+                reportCustomer.setRecord_status(ReportStatus.OVER_INTERVAL.getValueInteger());
+            }
+
+            Date startDate = reportCustomer.getJob_start_dt();
+            Date endDate = reportCustomer.getJob_end_dt();
+
+            if(calenday.getTime().compareTo(startDate)<0){//未到填报日期
+                reportCustomer.setRecord_status(ReportStatus.TOO_EARLY.getValueInteger());
+            }
+
+            if(calenday.getTime().compareTo(endDate)>0){//已过期pageJob
+                reportCustomer.setRecord_status(ReportStatus.OVER_TIME.getValueInteger());
+                recordProcessDao.changeRecordJobStatus(reportCustomer.getReport_id(),ReportStatus.OVER_TIME.getValueInteger());
+            }
+
+        }
+
+        return dataList;
     }
 
     protected Map<Integer,ReportFldConfig> getReportFldConfigMap(String unitId){

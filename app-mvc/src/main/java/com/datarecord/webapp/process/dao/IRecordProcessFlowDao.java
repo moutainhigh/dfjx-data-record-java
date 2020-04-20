@@ -50,7 +50,8 @@ public interface IRecordProcessFlowDao {
 //            "</if>" +
             "<if test='queryParams.reportName!=null'>" +
             " and rjc.job_name like concat('%',#{queryParams.reportName},'%') " +
-            "</if>" +
+            "</if> " +
+            " order by rjc.job_id" +
             "</script>")
     Page<JobConfig> pageReportDatas(@Param("currPage") String currPage,
                                 @Param("pageSize") String pageSize,
@@ -94,7 +95,8 @@ public interface IRecordProcessFlowDao {
             "</if>" +
             "<if test='reportName!=null'>" +
             " and rjc.job_name like concat('%',#{reportName},'%')"+
-            "</if>"+
+            "</if> " +
+            " order by rrj.job_id"+
             "</script>")
     Page<ReportJobInfo> pageReviewDatasByJob(
             @Param("currPage") String currPage,

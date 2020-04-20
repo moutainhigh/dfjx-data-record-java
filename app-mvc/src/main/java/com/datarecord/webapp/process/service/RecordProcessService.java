@@ -34,4 +34,6 @@ public interface RecordProcessService {
 
     ReportJobInfo getReportJobInfo(String reportId);
 
+    List<ReportJobInfo> checkReportStatus(List<ReportJobInfo> dataList);
+
 }

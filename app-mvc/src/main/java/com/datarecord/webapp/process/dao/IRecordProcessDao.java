@@ -164,7 +164,8 @@ public interface IRecordProcessDao {
             "</if>" +
             "<if test='queryParams.reportName!=null'>" +
             " and rjc.job_name like concat('%',#{queryParams.reportName},'%') " +
-            "</if>" +
+            "</if> " +
+            "order by rrj.report_id " +
             "</script>")
     Page<ReportJobInfo> pageJob(@Param("currPage") Integer currPage,
                                 @Param("pageSize") Integer pageSize,

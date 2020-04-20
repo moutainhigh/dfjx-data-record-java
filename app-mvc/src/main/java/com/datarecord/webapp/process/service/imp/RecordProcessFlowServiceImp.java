@@ -11,6 +11,7 @@ import com.datarecord.webapp.process.dao.IRecordProcessFlowDao;
 import com.datarecord.webapp.process.dao.ReportFileLog;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessFlowService;
+import com.datarecord.webapp.process.service.RecordProcessService;
 import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.service.OriginService;
 import com.datarecord.webapp.utils.DataRecordUtil;
@@ -57,6 +58,9 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
     @Autowired
     private UpDownLoadFileConfig upDownLoadFileConfig;
 
+    @Autowired
+    private RecordProcessService recordProcessService;
+
     @Override
     public PageResult pageReportDatas(BigInteger user_id, String currPage, String pageSize, Map<String, String> queryParams) {
         Page<JobConfig> pageData = recordProcessFlowDao.pageReportDatas(currPage, pageSize, user_id, queryParams);
@@ -70,6 +74,7 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
     public PageResult pageReviewDatas(String currPage, String pageSize, String jobId,String reportStatus) {
         Page<ReportJobInfo> pageData =  recordProcessFlowDao.pageReviewDatasByJob(currPage,pageSize,jobId,reportStatus,null);
         PageResult result = PageResult.pageHelperList2PageResult(pageData);
+        recordProcessService.checkReportStatus(result.getDataList());
         return result;
     }
 
@@ -80,8 +85,8 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
         reportFileLog.setJob_id(exportParams.getJobConfig().getJob_id());
         reportFileLog.setLog_status(ReportFileLogStatus.CREATING.getValue());
         reportFileLog.setStart_time(new Date());
-//        reportFileLog.setLog_user(WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id());
-        reportFileLog.setLog_user(new BigInteger("1"));
+        reportFileLog.setLog_user(WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id());
+//        reportFileLog.setLog_user(new BigInteger("1"));
         recordProcessFlowDao.recordFileLog(reportFileLog);
 
         new Thread(new Runnable() {
