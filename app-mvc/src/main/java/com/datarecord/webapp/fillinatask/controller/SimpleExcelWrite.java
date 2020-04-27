@@ -3,7 +3,7 @@ package com.datarecord.webapp.fillinatask.controller;
 
 import com.datarecord.webapp.fillinatask.bean.UpDownLoadFileConfig;
 import com.datarecord.webapp.fillinatask.bean.Lieming;
-import com.datarecord.webapp.fillinatask.service.FillinataskService;
+import com.datarecord.webapp.fillinatask.service.JobConfigService;
 import com.google.gson.internal.LinkedTreeMap;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
@@ -27,7 +27,7 @@ import java.util.Map;
 public class SimpleExcelWrite {
 
     @Autowired
-    private FillinataskService fillinataskService;
+    private JobConfigService jobConfigService;
 
     @Autowired
     private UpDownLoadFileConfig upDownLoadFileConfig;
@@ -53,12 +53,12 @@ public class SimpleExcelWrite {
 
             //第一步创建workbook
             HSSFWorkbook wb = new HSSFWorkbook();
-            String jobname = fillinataskService.selectrcdjobconfig(jobid);           //查询出此任务名称   excel名称
+            String jobname = jobConfigService.selectrcdjobconfig(jobid);           //查询出此任务名称   excel名称
             //第二步创建sheet
             for (int aa = 0; aa < unitList.size(); aa++) {
                 LinkedTreeMap<String, Object> DS = (LinkedTreeMap<String, Object>) unitList.get(aa);
                 //   String UNI = unitList.
-                String job_unit_name = fillinataskService.selectrcdjobunitconfig(DS.get("unitId").toString());//查出任务组名称 sheet页名称
+                String job_unit_name = jobConfigService.selectrcdjobunitconfig(DS.get("unitId").toString());//查出任务组名称 sheet页名称
                 HSSFSheet sheet = wb.createSheet(job_unit_name);     //创建sheet页
                 //第三步创建行row:添加表头0行
                 HSSFRow row = sheet.createRow(0);
@@ -68,7 +68,7 @@ public class SimpleExcelWrite {
                 for (Object fldlie : lsls) {
                     fldids.add(fldlie);
                 }
-                List<Lieming> LS = fillinataskService.selectrcdreportdatajob(jobid, reportid, DS.get("unitId").toString(), fldids);
+                List<Lieming> LS = jobConfigService.selectrcdreportdatajob(jobid, reportid, DS.get("unitId").toString(), fldids);
                 HSSFCell cell = null;
                 for (int j = 0; j < LS.size(); j++) {
                     cell = row.createCell(j);

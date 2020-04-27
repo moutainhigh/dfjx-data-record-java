@@ -210,6 +210,9 @@ public interface IRecordProcessDao {
     @Delete("delete from rcd_report_data_job${job_id} where report_id=#{report_id} and unit_id =#{unit_id}")
     void deleteRecordDataByUnit(@Param("job_id") Integer job_id,@Param("report_id") Integer report_id,@Param("unit_id") Integer unitId);
 
+    @Delete("delete from rcd_report_data_job${job_id} where report_id=#{report_id}")
+    void deleteRecordDataByReport(@Param("job_id") Integer job_id,@Param("report_id") Integer report_id);
+
     @Delete("delete from rcd_report_data_job${job_id} where " +
             "report_id=#{rcdReportJobEntity.report_id} and " +
             "unit_id =#{rcdReportJobEntity.unit_id} and " +
@@ -244,4 +247,11 @@ public interface IRecordProcessDao {
             " values (#{job_id},#{group_id},#{group_name},#{job_make_date})")
     void logUserGroup(JobPersonGroupLog jobPersonGroupLog);
 
+    @Select("select id,report_id,unit_id,colum_id,fld_id,record_data from rcd_report_data_job${jobId} " +
+            "where report_id =  #{report_id} and unit_id = #{unit_id}")
+    List<ReportJobData> getUnitDatas(@Param("job_id") String job_id,@Param("report_id") String report_id,@Param("unit_id") String unit_id);
+
+    @Select("select distinct colum_id from rcd_report_data_job${job_id} " +
+            "where report_id =  #{report_id} and unit_id = #{unit_id}")
+    List<Integer> getUnitColums(@Param("job_id") String job_id,@Param("report_id") String report_id,@Param("unit_id") String unit_id);
 }

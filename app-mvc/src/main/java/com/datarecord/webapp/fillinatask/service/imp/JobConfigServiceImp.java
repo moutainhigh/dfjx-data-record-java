@@ -2,8 +2,8 @@ package com.datarecord.webapp.fillinatask.service.imp;
 
 import com.datarecord.webapp.datadictionary.service.imp.DataDictionaryServiceImp;
 import com.datarecord.webapp.fillinatask.bean.*;
-import com.datarecord.webapp.fillinatask.dao.FillinataskDao;
-import com.datarecord.webapp.fillinatask.service.FillinataskService;
+import com.datarecord.webapp.fillinatask.dao.IJobConfigDao;
+import com.datarecord.webapp.fillinatask.service.JobConfigService;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.process.entity.JobUnitConfig;
@@ -20,13 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service("fillinataskService")
-public class FillinataskServiceImp implements FillinataskService {
+@Service("jobConfigService")
+public class JobConfigServiceImp implements JobConfigService {
 
     private Logger logger = LoggerFactory.getLogger(DataDictionaryServiceImp.class);
 
     @Autowired
-    private FillinataskDao fillinataskDao;
+    private IJobConfigDao jobConfigDao;
 
     @Autowired
     private IRecordProcessDao recordProcessDao;
@@ -46,7 +46,7 @@ public class FillinataskServiceImp implements FillinataskService {
         for (Origin childrenOrigin : childrenOrigins) {
             originIds.add(childrenOrigin.getOrigin_id());
         }*/
-        Page<Fillinatask> contactPageDatas = fillinataskDao.rcdjobconfiglist(currPage, pageSize,job_name,job_status,user_id);
+        Page<Fillinatask> contactPageDatas = jobConfigDao.rcdjobconfiglist(currPage, pageSize,job_name,job_status,user_id);
         PageResult pageContactResult = PageResult.pageHelperList2PageResult(contactPageDatas);
         logger.debug("获取到的分页结果数据 --> {}",pageContactResult);
         return pageContactResult;
@@ -57,14 +57,14 @@ public class FillinataskServiceImp implements FillinataskService {
     public void saveJobConfig(JobConfig jobConfig) {
         jobConfig.setJob_start_dt(jobConfig.getJob_start_dt());
         jobConfig.setJob_end_dt(jobConfig.getJob_end_dt());
-        fillinataskDao.saveJobConfig(jobConfig);
+        jobConfigDao.saveJobConfig(jobConfig);
         List<JobInteval> jobIntervals = jobConfig.getJob_intervals();
         for (JobInteval jobInterval : jobIntervals) {
             if(Strings.isNullOrEmpty(jobInterval.getJob_interval_start())||Strings.isNullOrEmpty(jobInterval.getJob_interval_end())){
                 continue;
             }else{
                 jobInterval.setJob_id(jobConfig.getJob_id());
-                fillinataskDao.saveJobInterval(jobInterval);
+                jobConfigDao.saveJobInterval(jobInterval);
             }
         }
     }
@@ -75,7 +75,7 @@ public class FillinataskServiceImp implements FillinataskService {
         userid.substring(0,userid.length()-1);*/
         String[] split = userid.split(",");
         for (String user_id : split){
-            fillinataskDao.saveJobPersonAssign(job_id,user_id);
+            jobConfigDao.saveJobPersonAssign(job_id,user_id);
         }
     }
 
@@ -84,8 +84,8 @@ public class FillinataskServiceImp implements FillinataskService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateJobConfig(JobConfig jobConfig) {
-        fillinataskDao.updatercdjobconfig(jobConfig);
-        fillinataskDao.removeIntervals(jobConfig.getJob_id());
+        jobConfigDao.updatercdjobconfig(jobConfig);
+        jobConfigDao.removeIntervals(jobConfig.getJob_id());
         List<JobInteval> intervals = jobConfig.getJob_intervals();
         if(intervals!=null){
             for (JobInteval interval : intervals) {
@@ -93,7 +93,7 @@ public class FillinataskServiceImp implements FillinataskService {
                     continue;
                 }else{
                     interval.setJob_id(jobConfig.getJob_id());
-                    fillinataskDao.saveJobInterval(interval);
+                    jobConfigDao.saveJobInterval(interval);
                 }
 
             }
@@ -103,19 +103,19 @@ public class FillinataskServiceImp implements FillinataskService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void removeJobIntervals(String jobId){
-        fillinataskDao.removeIntervals(new Integer(jobId));
+        jobConfigDao.removeIntervals(new Integer(jobId));
     }
 
 
 
     @Override
     public List<RcdJobUnitConfig> selectRcdJobUnitConfig(String job_id) {
-        return fillinataskDao.selectRcdJobUnitConfig(job_id);
+        return jobConfigDao.selectRcdJobUnitConfig(job_id);
     }
 
     @Override
     public List<RcdJobUnitConfig> selectRcdJobUnitConfigyi(String job_id) {
-        return fillinataskDao.selectRcdJobUnitConfigyi(job_id);
+        return jobConfigDao.selectRcdJobUnitConfigyi(job_id);
     }
 
     @Override
@@ -123,84 +123,84 @@ public class FillinataskServiceImp implements FillinataskService {
     public void updateRcdJobUnitConfigyi(String jobunitid,String job_id) {
         /*jobunitid.substring(1);
         jobunitid.substring(0,jobunitid.length()-1);*/
-        fillinataskDao.updateRcdJobUnitConfigsuo(job_id);
+        jobConfigDao.updateRcdJobUnitConfigsuo(job_id);
         String[] split = jobunitid.split(",");
         for (String job_unit_id : split){
-            fillinataskDao.updateRcdJobUnitConfigyi(job_unit_id,job_id);
+            jobConfigDao.updateRcdJobUnitConfigyi(job_unit_id,job_id);
         }
     }
 
 
     @Override
     public List<RcdJobPersonAssign> huixianrcdjobpersonassign(String job_id) {
-        return fillinataskDao.huixianrcdjobpersonassign(job_id);
+        return jobConfigDao.huixianrcdjobpersonassign(job_id);
 }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deletercdjobconfig(String job_id) {
-        fillinataskDao.deletercdjobconfig(job_id);    //填报任务删除
-        fillinataskDao.delJobPersonAssign(job_id);    //填报人维护删除
-        fillinataskDao.deleteRcdJobUnitConfigsuo(job_id);    //任务关连填报组删除
-        fillinataskDao.removeIntervals(new Integer(job_id));
+        jobConfigDao.deletercdjobconfig(job_id);    //填报任务删除
+        jobConfigDao.delJobPersonAssign(job_id);    //填报人维护删除
+        jobConfigDao.deleteRcdJobUnitConfigsuo(job_id);    //任务关连填报组删除
+        jobConfigDao.removeIntervals(new Integer(job_id));
     }
 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateByIdConfig(String job_id) {
-        fillinataskDao.updsoftDelJobConfig(job_id);    //填报任务软删除
-        fillinataskDao.updateRcdjobpersonassign(job_id);    //填报人维护软删除
-        fillinataskDao.updateByidRcdJobUnitConfigsuo(job_id);    //任务关连填报组软删除
-        fillinataskDao.updateRcdReportJob(job_id);    //已下发的填报状态修改
-        fillinataskDao.removeIntervals(new Integer(job_id));
+        jobConfigDao.updsoftDelJobConfig(job_id);    //填报任务软删除
+        jobConfigDao.updateRcdjobpersonassign(job_id);    //填报人维护软删除
+        jobConfigDao.updateByidRcdJobUnitConfigsuo(job_id);    //任务关连填报组软删除
+        jobConfigDao.updateRcdReportJob(job_id);    //已下发的填报状态修改
+        jobConfigDao.removeIntervals(new Integer(job_id));
     }
 
 
 
     @Override
     public JobConfig getJobConfig(String job_id) {
-        return   fillinataskDao.selectrcdjobconfigjobid(job_id);
+        return   jobConfigDao.selectrcdjobconfigjobid(job_id);
     }
 
     @Override
     public void deletercdjobpersonassignbyuseridandjobid(String job_id, String user_id) {
-        fillinataskDao.deletercdjobpersonassignbyuseridandjobid(job_id,user_id);
+        jobConfigDao.deletercdjobpersonassignbyuseridandjobid(job_id,user_id);
     }
 
     @Override
     public String selectrcdjobconfig(Integer jobid) {
-        return fillinataskDao.selectrcdjobconfig(jobid);
+        return jobConfigDao.selectrcdjobconfig(jobid);
     }
 
     @Override
     public String selectrcdjobunitconfig(String unitId) {
-        return fillinataskDao.selectrcdjobunitconfig(unitId);
+        return jobConfigDao.selectrcdjobunitconfig(unitId);
     }
 
 
     @Override
     public List<Lieming> selectrcdreportdatajob(int jobid, int reportid, String unitId, List fldids) {
-        return fillinataskDao.selectrcdreportdatajob(jobid,reportid,unitId,fldids);
+        return jobConfigDao.selectrcdreportdatajob(jobid,reportid,unitId,fldids);
     }
 
     @Override
     public void fillInTaskApprovalByJobid(String job_id) {
-        fillinataskDao.approveJobConfig(job_id);
+        jobConfigDao.approveJobConfig(job_id);
     }
 
     @Override
     public List<JobUnitConfig> taskDetailsjobUnitConfig(String job_id) {
-        return  fillinataskDao.taskDetailsjobUnitConfig(job_id);
+        return  jobConfigDao.taskDetailsjobUnitConfig(job_id);
     }
 
     @Override
     public List<ReportFldConfig> taskDetailsreportFldConfig(String job_id) {
-        return fillinataskDao.taskDetailsreportFldConfig(job_id);
+        return jobConfigDao.taskDetailsreportFldConfig(job_id);
     }
 
     @Override
     public List<JobInteval> getJobIntevals(String job_id){
-        return fillinataskDao.getJobIntevals(job_id);
+        return jobConfigDao.getJobIntevals(job_id);
     }
 }

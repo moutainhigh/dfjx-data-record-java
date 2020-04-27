@@ -33,9 +33,5 @@ public interface RecordProcessFlowService {
 
     PageResult pageReviewDatas(String currPage, String pageSize, String jobId,String reportStatus);
 
-    void exportRecordData(ExportParams exportParams);
-
     List<ReportFileLog> listReportFile(String reportId);
-
-    ReportFileLog getReportFile(String reportId);
 }

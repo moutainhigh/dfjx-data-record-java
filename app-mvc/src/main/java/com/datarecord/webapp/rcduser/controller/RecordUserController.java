@@ -1,7 +1,7 @@
 package com.datarecord.webapp.rcduser.controller;
 
 import com.datarecord.enums.JobConfigStatus;
-import com.datarecord.webapp.fillinatask.service.FillinataskService;
+import com.datarecord.webapp.fillinatask.service.JobConfigService;
 import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.rcduser.bean.RecordUser;
 import com.datarecord.webapp.rcduser.bean.RecordUserGroup;
@@ -29,7 +29,7 @@ public class RecordUserController {
     private RecordUserService recordUserService;
 
     @Autowired
-    private FillinataskService jobConfigService;
+    private JobConfigService jobConfigService;
 
     @RequestMapping("pageUserGroup")
     @ResponseBody

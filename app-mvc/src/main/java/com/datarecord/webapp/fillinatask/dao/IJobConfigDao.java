@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface FillinataskDao {
+public interface IJobConfigDao {
 
    @Select("<script> select * from  rcd_job_config  where  1=1  " +
             "<if test = 'job_name != null' > AND job_name like concat('%',#{job_name},'%') </if> "+

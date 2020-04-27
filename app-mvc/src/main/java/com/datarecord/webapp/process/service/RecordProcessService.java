@@ -36,4 +36,9 @@ public interface RecordProcessService {
 
     List<ReportJobInfo> checkReportStatus(List<ReportJobInfo> dataList);
 
+    List<DataDictionary> getDictcontent4Fld(Integer fld_id);
+
+    List<ReportJobData> getUnitDatas(String jobId,String reportId,String unitId);
+
+    List<Integer> getUnitColums(String jobId,String reportId,String unitId);
 }

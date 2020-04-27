@@ -2,7 +2,7 @@ package com.datarecord.webapp.process.service.imp;
 
 import com.datarecord.webapp.fillinatask.bean.JobUnitAcitve;
 import com.datarecord.enums.JobConfigStatus;
-import com.datarecord.webapp.fillinatask.dao.FillinataskDao;
+import com.datarecord.webapp.fillinatask.dao.IJobConfigDao;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordMaker;
@@ -31,7 +31,7 @@ public class RecordMakerImp implements RecordMaker {
     private RecordUserService recordUserService;
 
     @Autowired
-    private FillinataskDao fillinataskDao;
+    private IJobConfigDao jobConfigDao;
 
 
     private boolean debugger = false;
@@ -274,11 +274,11 @@ public class RecordMakerImp implements RecordMaker {
         recordProcessDao.delLogUserGroupHistory(jobId);
         recordProcessDao.logUserGroup(jobPersonGroupLog);
 
-        fillinataskDao.delJobPersonAssign(jobId);
+        jobConfigDao.delJobPersonAssign(jobId);
         if(recordUsers!=null){
             for (User recordUser : recordUsers) {
                 BigInteger userId = recordUser.getUser_id();
-                fillinataskDao.saveJobPersonAssign(jobId,userId.toString());
+                jobConfigDao.saveJobPersonAssign(jobId,userId.toString());
                 JobPerson jobPerson = new JobPerson();
                 jobPerson.setUser_id(userId);
                 jobPerson.setOrigin_id(recordUser.getOrigin_id());

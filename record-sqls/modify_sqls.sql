@@ -207,3 +207,39 @@ ADD COLUMN `file_path` VARCHAR(200) NOT NULL AFTER `comment`;
 
 ALTER TABLE `rcd_reportfile_log`
 CHANGE COLUMN `file_path` `file_path` VARCHAR(200) NULL ;
+
+ALTER TABLE `rcd_reportfile_log`
+ADD COLUMN `log_type` INT NOT NULL DEFAULT 1 COMMENT '0:单独填报任务中填报组合导出\n1:任选填报任务中部分填报指标导出' AFTER `file_path`;
+
+CREATE TABLE `rcd_imp_template_log` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `job_id` INT NOT NULL,
+  `template_file_path` VARCHAR(500) NOT NULL,
+  `template_create_date` DATE NOT NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `rcd_imp_template_unit_log` (
+  `id` INT NOT NULL,
+  `job_id` INT NOT NULL,
+  `unit_id` INT NOT NULL,
+  `unit_order` INT NOT NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `rcd_imp_template_fld_log` (
+  `id` INT NOT NULL,
+  `job_id` INT NOT NULL,
+  `unit_id` INT NOT NULL,
+  `fld_id` INT NOT NULL,
+  `fld_order` INT NOT NULL,
+  PRIMARY KEY (`id`));
+
+ALTER TABLE `rcd_imp_template_log`
+DROP COLUMN `id`,
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`job_id`);
+
+ALTER TABLE `rcd_imp_template_unit_log`
+CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;
+
+ALTER TABLE `rcd_imp_template_fld_log`
+CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;

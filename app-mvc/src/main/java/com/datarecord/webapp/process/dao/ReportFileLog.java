@@ -20,6 +20,7 @@ public class ReportFileLog {
     private String log_user_name;
     private String comment;
     private String file_path;
+    private Integer log_type ;
 
     public Integer getLog_id() {
         return log_id;
@@ -132,5 +133,13 @@ public class ReportFileLog {
 
     public void setLog_status_str(String log_status_str) {
         this.log_status_str = log_status_str;
+    }
+
+    public Integer getLog_type() {
+        return log_type;
+    }
+
+    public void setLog_type(Integer log_type) {
+        this.log_type = log_type;
     }
 }

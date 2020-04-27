@@ -11,7 +11,7 @@ import com.webapp.support.page.PageResult;
 
 import java.util.List;
 
-public interface FillinataskService {
+public interface JobConfigService {
 
     PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status, String user_id);
 

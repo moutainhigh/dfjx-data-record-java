@@ -3,8 +3,7 @@ package com.datarecord.webapp.process.service.imp;
 import com.datarecord.enums.RcdClientType;
 import com.datarecord.enums.ReportStatus;
 import com.datarecord.webapp.fillinatask.bean.JobInteval;
-import com.datarecord.webapp.fillinatask.bean.UpDownLoadFileConfig;
-import com.datarecord.webapp.fillinatask.service.FillinataskService;
+import com.datarecord.webapp.fillinatask.service.JobConfigService;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessService;
@@ -13,27 +12,17 @@ import com.datarecord.enums.FldDataTypes;
 import com.datarecord.webapp.reportinggroup.bean.RcdJobUnitFlow;
 import com.datarecord.webapp.reportinggroup.bean.ReportGroupInterval;
 import com.datarecord.webapp.reportinggroup.dao.ReportingGroupDao;
-import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.github.pagehelper.Page;
 import com.google.common.base.Strings;
 import com.webapp.support.page.PageResult;
 import com.workbench.exception.runtime.WorkbenchRuntimeException;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service("recordProcessService")
@@ -48,7 +37,7 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
     private ReportingGroupDao reportingGroupDao;
 
     @Autowired
-    private FillinataskService fillinataskService;
+    private JobConfigService jobConfigService;
 
     @Override
     public PageResult pageJob(BigInteger user_id, String currPage, String pageSize, Map<String,String> queryParams) {
@@ -203,7 +192,10 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
                 List<ReportFldTypeConfig> mobileGroupFldList = this.groupFLdCatge(mobileGroupFlds);
                 return mobileGroupFldList;
             }else{
-                return null;
+                List<ReportFldTypeConfig> allFldList = new ArrayList();
+                allFldList.addAll(this.groupFLdCatge(pcGroupFlds));
+                allFldList.addAll(this.groupFLdCatge(mobileGroupFlds));
+                return allFldList;
             }
         }
     }
@@ -236,7 +228,7 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
                 continue;
             }
 
-            List<JobInteval> jobIntervals = fillinataskService.getJobIntevals(jobId.toString());
+            List<JobInteval> jobIntervals = jobConfigService.getJobIntevals(jobId.toString());
 
             boolean inner = false;
             if(jobIntervals!=null&&jobIntervals.size()>0){
@@ -271,6 +263,22 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
         }
 
         return dataList;
+    }
+
+    @Override
+    public List<DataDictionary> getDictcontent4Fld(Integer fld_id) {
+        return recordProcessDao.getDictcontent4Fld(fld_id);
+    }
+
+    @Override
+    public List<ReportJobData> getUnitDatas(String jobId, String reportId, String unitId) {
+
+        return recordProcessDao.getUnitDatas(jobId,reportId,unitId);
+    }
+
+    @Override
+    public List<Integer> getUnitColums(String jobId, String reportId, String unitId) {
+        return recordProcessDao.getUnitColums(jobId,reportId,unitId);
     }
 
     protected Map<Integer,ReportFldConfig> getReportFldConfigMap(String unitId){
