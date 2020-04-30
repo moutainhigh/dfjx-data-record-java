@@ -52,6 +52,7 @@
             <value>
                 /sys/login/doLogin.do = anon
                 /sys/casLogin/doLogin.do = anon
+                /sys/casLogin/doLogout.do = anon
                 /** = workShiroFilter
             </value>
         </property>

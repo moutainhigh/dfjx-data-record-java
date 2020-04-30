@@ -2,7 +2,6 @@ package com.workbench.auth.authvalidate.controller;
 
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
-import com.webapp.support.session.SessionSupport;
 import com.workbench.auth.authvalidate.service.LoginService;
 import com.workbench.auth.user.entity.User;
 import com.workbench.auth.user.service.UserService;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Map;
 
 /**
@@ -71,8 +71,26 @@ public class CasLoginController extends AbstractLoginController{
     }
 
     @RequestMapping("doLogout")
-    public String doLogout(HttpServletRequest request, HttpServletResponse response){
-        String responseJson = JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "退出成功", null, this.getLoginUserInfo());
+    public JsonResult doLogout(HttpServletRequest request){
+        //{"logoutUser":"admin","ticketId":"ST-5-zO4vJZeTzoR7-QhVPvQQFrO-D6gsong"}
+        String logoutJson = request.getParameter("jsonLogoutRequest");
+        logger.warn("接受到CAS的注销请求,注销信息为:{}",logoutJson);
+
+        Map logoutParams = JsonSupport.jsonToMap(logoutJson);
+        if(logoutParams.containsKey("logoutUser")){
+            String logoutUserName = (String) logoutParams.get("logoutUser");
+
+        }
+
+        JsonResult responseJson = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "退出成功", null, logoutJson);
         return responseJson;
+    }
+
+    @RequestMapping("sloLogout")
+    public void sloLogout(HttpServletRequest request, HttpServletResponse response){
+        Enumeration<String> parameterNames = request.getParameterNames();
+        Enumeration<String> attrNames = request.getAttributeNames();
+
+
     }
 }
