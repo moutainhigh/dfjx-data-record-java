@@ -3,7 +3,6 @@ package com.datarecord.webapp.process.service;
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.enums.ReportStatus;
 import com.datarecord.webapp.process.entity.*;
-import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.webapp.support.page.PageResult;
 
 import java.math.BigInteger;
@@ -41,4 +40,6 @@ public interface RecordProcessService {
     List<ReportJobData> getUnitDatas(String jobId,String reportId,String unitId);
 
     List<Integer> getUnitColums(String jobId,String reportId,String unitId);
+
+    List<Map<Integer, Map<Integer, String>>> validatePcReport(String reportId);
 }

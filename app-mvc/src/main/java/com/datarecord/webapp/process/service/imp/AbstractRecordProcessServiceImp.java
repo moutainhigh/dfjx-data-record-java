@@ -281,6 +281,26 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
         return recordProcessDao.getUnitColums(jobId,reportId,unitId);
     }
 
+    @Override
+    public List<Map<Integer, Map<Integer, String>>> validatePcReport(String reportId) {
+        ReportJobInfo reportJobInfo = recordProcessDao.getReportJobInfoByReportId(reportId);
+        List<ReportJobData> allJobDataList = reportJobInfo.getReportJobDataList();
+        Map<Integer,List<ReportJobData>> unitDataGroup = new HashMap<>();
+        allJobDataList.forEach(reportJobData -> {
+            Integer unitId = reportJobData.getUnit_id();
+            if(!unitDataGroup.containsKey(unitId)){
+                unitDataGroup.put(unitId,new ArrayList<>());
+            }
+            unitDataGroup.get(unitId).add(reportJobData);
+        });
+        List<Map<Integer, Map<Integer, String>>> unitValidateResults = new ArrayList<>();
+        unitDataGroup.keySet().forEach(unitId->{
+            Map<Integer, Map<Integer, String>> unitValidateResult = this.validateDatas(unitDataGroup.get(unitId), unitId.toString(), RcdClientType.PC.toString());
+            unitValidateResults.add(unitValidateResult);
+        });
+        return unitValidateResults;
+    }
+
     protected Map<Integer,ReportFldConfig> getReportFldConfigMap(String unitId){
         Map<Integer, ReportFldConfig> fldConfigMapCache = new HashMap();
         List<ReportFldConfig> flds4Unit = recordProcessDao.getFldByUnitId(unitId);

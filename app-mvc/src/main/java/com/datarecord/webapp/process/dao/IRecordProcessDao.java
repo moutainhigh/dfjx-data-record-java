@@ -95,6 +95,7 @@ public interface IRecordProcessDao {
             "colum_id INT NULL,"+
             "fld_id INT NULL,"+
             "record_data VARCHAR(50) NULL,"+
+            "`data_status` INT NULL DEFAULT 0 COMMENT '0:填报中\\n1:已提交\\n2:未提交' ,"+
             "PRIMARY KEY (id))")
     void makeJobDataTable(@Param("jobId") String jobId);
 

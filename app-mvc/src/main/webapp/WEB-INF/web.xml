@@ -30,7 +30,7 @@
 
     <context-param>
         <param-name>casLogoutRedirect</param-name>
-        <param-value>http://localhost:8043/cas//logout</param-value>
+        <param-value>http://localhost:8043/cas/logout</param-value>
     </context-param>
 
     <filter>

@@ -8,7 +8,6 @@ import com.datarecord.enums.ReportStatus;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordMaker;
 import com.datarecord.webapp.process.service.RecordProcessFactory;
-import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.utils.DataRecordUtil;
 import com.google.common.base.Strings;
 import com.webapp.support.json.JsonSupport;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.io.File;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -189,6 +187,18 @@ public class RecordProcessController {
         }
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "保存成功", null, JsonResult.RESULT.SUCCESS);
+        return successResult;
+    }
+
+    @RequestMapping("validateReport")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult validateReport(String reportId){
+        RecordProcessFactory.RecordProcessSerice().validatePcReport(reportId);
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "校验完成", null, null);
+
         return successResult;
     }
 
