@@ -10,20 +10,21 @@ import com.datarecord.webapp.process.entity.ReportFldConfig;
 import com.webapp.support.page.PageResult;
 
 import java.util.List;
+import java.util.Map;
 
 public interface JobConfigService {
 
-    PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status, String user_id);
+    PageResult jobConfigList(int currPage, int pageSize, String job_name, String job_status, String user_id);
 
     void saveJobConfig(JobConfig jobConfig);
 
-    void insertrcdjobpersonassign(String job_id, String userid);
+    void saveJobPersons(String job_id, String userid);
 
 
 
     void updateJobConfig(JobConfig jobConfig);
 
-    List<RcdJobUnitConfig> selectRcdJobUnitConfig(String job_id);
+    List<RcdJobUnitConfig> getJobUnitConfig(String job_id);
 
     List<RcdJobUnitConfig> selectRcdJobUnitConfigyi(String job_id);
 
@@ -54,6 +55,8 @@ public interface JobConfigService {
     List<ReportFldConfig> taskDetailsreportFldConfig(String job_id);
 
     List<JobInteval> getJobIntevals(String job_id);
+
+    Map<Integer, List<JobInteval>> allJobIntevals();
 
     void removeJobIntervals(String jobId);
 

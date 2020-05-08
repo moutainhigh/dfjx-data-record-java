@@ -1,6 +1,7 @@
 package com.datarecord.webapp.process.controller;
 
 
+import com.datarecord.enums.ReportFldStatus;
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.enums.RcdClientType;
 import com.datarecord.enums.JobUnitType;
@@ -279,10 +280,17 @@ public class RecordProcessController {
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public JsonResult doCommitAuth(String reportId){
-        RecordProcessFactory.RecordProcessSerice().updateReportStatus(reportId, ReportStatus.SUBMIT);
+        List<Map<Integer, Map<Integer, String>>> validateResult = RecordProcessFactory.RecordProcessSerice().validatePcReport(reportId);
+        if(validateResult!=null&&validateResult.size()>0){
+            JsonResult successResult = JsonSupport.makeJsonpResult(
+                    JsonResult.RESULT.SUCCESS, "VALIDATEFAILED", null, "VALIDATEFAILED");
+            return successResult;
+        }
+        
+        RecordProcessFactory.RecordProcessSerice().doCommitAuth(reportId, ReportFldStatus.SUBMIT);
 
         JsonResult successResult = JsonSupport.makeJsonpResult(
-                JsonResult.RESULT.SUCCESS, "提交成功", null, null);
+                JsonResult.RESULT.SUCCESS, "SUCCESS", null, JsonResult.RESULT.SUCCESS);
         return successResult;
     }
 
@@ -305,6 +313,17 @@ public class RecordProcessController {
         }
 
         RecordProcessFactory.RecordProcessSerice().updateReportStatus(reportId, reportStatus);
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "提交成功", null, JsonResult.RESULT.SUCCESS);
+        return successResult;
+    }
+
+    @RequestMapping("closeReportsByJobId")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult closeReportsByJobId(String jobId){
+        RecordProcessFactory.RecordProcessSerice().closeReportByJobId(jobId);
 
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "提交成功", null, JsonResult.RESULT.SUCCESS);

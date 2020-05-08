@@ -41,7 +41,7 @@
         <dependency>
             <groupId>dfjinxin-data-record</groupId>
             <artifactId>app-web-support</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
             <scope>compile</scope>
         </dependency>
 

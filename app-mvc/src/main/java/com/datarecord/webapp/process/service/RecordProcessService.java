@@ -1,5 +1,6 @@
 package com.datarecord.webapp.process.service;
 
+import com.datarecord.enums.ReportFldStatus;
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.enums.ReportStatus;
 import com.datarecord.webapp.process.entity.*;
@@ -33,6 +34,8 @@ public interface RecordProcessService {
 
     ReportJobInfo getReportJobInfo(String reportId);
 
+    List<ReportJobInfo> getReportJobInfosByJobId(String jobId);
+
     List<ReportJobInfo> checkReportStatus(List<ReportJobInfo> dataList);
 
     List<DataDictionary> getDictcontent4Fld(Integer fld_id);
@@ -42,4 +45,10 @@ public interface RecordProcessService {
     List<Integer> getUnitColums(String jobId,String reportId,String unitId);
 
     List<Map<Integer, Map<Integer, String>>> validatePcReport(String reportId);
+
+    void doCommitAuth(String reportId, ReportFldStatus submit);
+
+    Integer getMaxColumId(String jobId,String reportId);
+
+    void closeReportByJobId(String jobId);
 }

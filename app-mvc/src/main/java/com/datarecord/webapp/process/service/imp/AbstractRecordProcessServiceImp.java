@@ -1,14 +1,12 @@
 package com.datarecord.webapp.process.service.imp;
 
-import com.datarecord.enums.RcdClientType;
-import com.datarecord.enums.ReportStatus;
+import com.datarecord.enums.*;
 import com.datarecord.webapp.fillinatask.bean.JobInteval;
 import com.datarecord.webapp.fillinatask.service.JobConfigService;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessService;
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
-import com.datarecord.enums.FldDataTypes;
 import com.datarecord.webapp.reportinggroup.bean.RcdJobUnitFlow;
 import com.datarecord.webapp.reportinggroup.bean.ReportGroupInterval;
 import com.datarecord.webapp.reportinggroup.dao.ReportingGroupDao;
@@ -20,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -212,6 +211,11 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
     }
 
     @Override
+    public List<ReportJobInfo> getReportJobInfosByJobId(String jobId) {
+        return recordProcessDao.getReportJobInfosByJobId(jobId);
+    }
+
+    @Override
     public List<ReportJobInfo> checkReportStatus(List<ReportJobInfo> dataList) {
         Date currDate = new Date();
         Calendar calenday = Calendar.getInstance();
@@ -284,21 +288,51 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
     @Override
     public List<Map<Integer, Map<Integer, String>>> validatePcReport(String reportId) {
         ReportJobInfo reportJobInfo = recordProcessDao.getReportJobInfoByReportId(reportId);
-        List<ReportJobData> allJobDataList = reportJobInfo.getReportJobDataList();
-        Map<Integer,List<ReportJobData>> unitDataGroup = new HashMap<>();
-        allJobDataList.forEach(reportJobData -> {
-            Integer unitId = reportJobData.getUnit_id();
-            if(!unitDataGroup.containsKey(unitId)){
-                unitDataGroup.put(unitId,new ArrayList<>());
-            }
-            unitDataGroup.get(unitId).add(reportJobData);
-        });
+        List<JobUnitConfig> reportUnits = recordProcessDao.getJobUnitsByJobId(reportJobInfo.getJob_id().toString());
         List<Map<Integer, Map<Integer, String>>> unitValidateResults = new ArrayList<>();
-        unitDataGroup.keySet().forEach(unitId->{
-            Map<Integer, Map<Integer, String>> unitValidateResult = this.validateDatas(unitDataGroup.get(unitId), unitId.toString(), RcdClientType.PC.toString());
-            unitValidateResults.add(unitValidateResult);
+
+        reportUnits.forEach(reportUnit->{
+            Integer unitId = reportUnit.getJob_unit_id();
+            List<ReportJobData> reportDatas = recordProcessDao.getReportDataByUnitId(
+                    reportJobInfo.getJob_id().toString(),
+                    reportJobInfo.getReport_id().toString(),
+                    unitId.toString());
+            Map<Integer, Map<Integer, String>> unitValidateResult = this.validateDatas(reportDatas, unitId.toString(), RcdClientType.PC.toString());
+            if(unitValidateResult!=null&&unitValidateResult.size()>0){
+                unitValidateResults.add(unitValidateResult);
+            }
         });
         return unitValidateResults;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void doCommitAuth(String reportId, ReportFldStatus submit) {
+        ReportJobInfo reportJobInfo = recordProcessDao.getReportJobInfoByReportId(reportId);
+        if(submit==ReportFldStatus.SUBMIT){
+            recordProcessDao.updateReportStatus(reportId,ReportStatus.SUBMIT.getValue());
+        }else if(submit==ReportFldStatus.UNSUB){
+            recordProcessDao.updateReportStatus(reportId,ReportStatus.UNSUB.getValue());
+        }
+        recordProcessDao.updateReportDataStatus(reportJobInfo.getJob_id(),reportId,submit.getValue());
+    }
+
+    @Override
+    public Integer getMaxColumId(String jobId, String reportId) {
+        Integer maxColumId = recordProcessDao.getMaxColumId(jobId, reportId);
+        return maxColumId;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void closeReportByJobId(String jobId) {
+        List<ReportJobInfo> reportJobInfos = recordProcessDao.getReportJobInfosByJobId(jobId);
+        if(reportJobInfos!=null&&reportJobInfos.size()>0){
+            for (ReportJobInfo reportJobInfo : reportJobInfos) {
+                recordProcessDao.changeRecordJobStatus(reportJobInfo.getReport_id(),ReportStatus.REPORT_DONE.getValueInteger());
+            }
+        }
+        recordProcessDao.changeRecordJobConfigStatus(jobId, JobConfigStatus.FAIL.value());
     }
 
     protected Map<Integer,ReportFldConfig> getReportFldConfigMap(String unitId){

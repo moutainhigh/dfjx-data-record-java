@@ -95,7 +95,7 @@ public interface IRecordProcessDao {
             "colum_id INT NULL,"+
             "fld_id INT NULL,"+
             "record_data VARCHAR(50) NULL,"+
-            "`data_status` INT NULL DEFAULT 0 COMMENT '0:填报中\\n1:已提交\\n2:未提交' ,"+
+            "data_status INT NULL DEFAULT 0 COMMENT '0:填报中\\n1:已提交\\n2:未提交' ,"+
             "PRIMARY KEY (id))")
     void makeJobDataTable(@Param("jobId") String jobId);
 
@@ -112,7 +112,7 @@ public interface IRecordProcessDao {
     void changeRecordJobConfigStatus(@Param("jobId") String jobId, @Param("jobStatus") int jobStatus);
 
     @Update("update rcd_report_job set record_status = #{jobStatus} where report_id = #{report_id}")
-    void changeRecordJobStatus(@Param("report_id") int jobId,@Param("jobStatus") int jobStatus);
+    void changeRecordJobStatus(@Param("report_id") int report_id,@Param("jobStatus") int jobStatus);
 
     @Insert("insert into rcd_report_job " +
             "(job_id,record_user_id,record_origin_id,record_status) " +
@@ -195,7 +195,29 @@ public interface IRecordProcessDao {
             "</script>")
     ReportJobInfo getReportJobInfoByReportId(String reportId);
 
-    @Select("select id,report_id,unit_id,colum_id,fld_id,record_data from rcd_report_data_job${jobId} where report_id = #{reportId} and unit_id = #{unitId}")
+    @Select("<script>" +
+            "select rrj.report_id," +
+            "rrj.job_id," +
+            "rrj.record_user_id," +
+            "u.user_name_cn as record_user_name," +
+            "rrj.record_origin_id," +
+            "so.origin_name as record_origin_name," +
+            "rrj.record_status, " +
+            "rjc.job_start_dt, " +
+            "rjc.job_end_dt, " +
+            "rjc.job_name " +
+            "from rcd_report_job rrj " +
+            "left join rcd_job_config rjc on " +
+            "rrj.job_id = rjc.job_id  " +
+            "left join user u on " +
+            "rrj.record_user_id = u.user_id " +
+            "left join sys_origin so on " +
+            "rrj.record_origin_id = so.origin_id " +
+            "where rjc.job_status!='3' and rrj.job_id=#{jobId}" +
+            "</script>")
+    List<ReportJobInfo> getReportJobInfosByJobId(String jobId);
+
+    @Select("select id,report_id,unit_id,colum_id,fld_id,record_data,data_status from rcd_report_data_job${jobId} where report_id = #{reportId} and unit_id = #{unitId}")
     List<ReportJobData> getReportDataByUnitId(@Param("jobId") String jobId,@Param("reportId") String reportId,@Param("unitId") String unitId);
 
     @Select("SELECT  " +
@@ -255,4 +277,10 @@ public interface IRecordProcessDao {
     @Select("select distinct colum_id from rcd_report_data_job${job_id} " +
             "where report_id =  #{report_id} and unit_id = #{unit_id}")
     List<Integer> getUnitColums(@Param("job_id") String job_id,@Param("report_id") String report_id,@Param("unit_id") String unit_id);
+
+    @Update("update rcd_report_data_job${jobId} set data_status=${status} where report_id = #{reportId}")
+    void updateReportDataStatus(@Param("jobId") Integer jobId,@Param("reportId") String reportId,@Param("status") String status);
+
+    @Select("SELECT max(colum_id) max_colum_id,report_id FROM rcd_report_data_job${jobId} where report_id = #{reportId} ")
+    Integer getMaxColumId(@Param("jobId") String jobId,@Param("reportId") String reportId);
 }

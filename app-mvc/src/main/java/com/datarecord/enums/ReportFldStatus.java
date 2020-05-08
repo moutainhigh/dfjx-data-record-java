@@ -2,42 +2,25 @@ package com.datarecord.enums;
 
 /**
  * 0：填报中
- * 1：审批中
- * 2：复核中
- * 3：锁定
- * 4：失效
- * 5：报表发布
- * 6：待上传签名
- * 7：过期
- * 8：已过期
- * 9：已完成
- * 10：不在填报时间内
+ * 1：已提交
+ * 2：未提交
  */
-public enum ReportStatus {
+public enum ReportFldStatus {
 
     NORMAL(0,"填报中"),
 //    SUBMIT(1,"审核中"),
     SUBMIT(1,"已提交"),
-    REVIEW(2,"复核中"),
-    LOCK(3,"锁定"),
-    REMOVE(4,"已删除"),
-    APPROVE(5,"报表发布"),
-    UP_SIGIN(6,"待上传签名"),
-    TOO_EARLY(7,"未开始"),
-    OVER_TIME(8,"已过期"),
-    REPORT_DONE(9,"已完成"),
-    OVER_INTERVAL(10,"不在填报时间内"),
-    UNSUB(11,"未提交");
+    UNSUB(2,"未提交");
 
     private Integer value;
     private String comment;
 
-    private ReportStatus(int value,String comment){
+    private ReportFldStatus(int value, String comment){
         this.comment=comment;
         this.value=value;
     }
 
-    private ReportStatus(int value){
+    private ReportFldStatus(int value){
         this.value = value;
     }
 
@@ -69,13 +52,13 @@ public enum ReportStatus {
         return this.comment;
     }
 
-    public static synchronized ReportStatus getReportStatus(String statusStr){
+    public static synchronized ReportFldStatus getReportStatus(String statusStr){
         return getReportStatus(new Integer(statusStr));
     }
 
-    public static synchronized ReportStatus getReportStatus(Integer statusInt){
-        ReportStatus[] allValues = ReportStatus.values();
-        for (ReportStatus status : allValues) {
+    public static synchronized ReportFldStatus getReportStatus(Integer statusInt){
+        ReportFldStatus[] allValues = ReportFldStatus.values();
+        for (ReportFldStatus status : allValues) {
             if(status.value.equals(statusInt)){
                 return status;
             }

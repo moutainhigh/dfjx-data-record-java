@@ -1,5 +1,6 @@
 package com.datarecord.webapp.process.entity;
 
+
 public class ReportJobData {
 
     private Integer id;
@@ -8,6 +9,7 @@ public class ReportJobData {
     private Integer colum_id;
     private Integer fld_id;
     private String record_data;
+    private Integer data_status;
 
     public Integer getId() {
         return id;
@@ -55,5 +57,13 @@ public class ReportJobData {
 
     public void setRecord_data(String record_data) {
         this.record_data = record_data;
+    }
+
+    public Integer getData_status() {
+        return data_status;
+    }
+
+    public void setData_status(Integer data_status) {
+        this.data_status = data_status;
     }
 }

@@ -72,6 +72,7 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
 
     @Override
     public PageResult pageReviewDatas(String currPage, String pageSize, String jobId,String reportStatus) {
+        //2020-5-6按照客户要求，只允许查看已提交的数据
         Page<ReportJobInfo> pageData =  recordProcessFlowDao.pageReviewDatasByJob(currPage,pageSize,jobId,reportStatus,null);
         PageResult result = PageResult.pageHelperList2PageResult(pageData);
         recordProcessService.checkReportStatus(result.getDataList());

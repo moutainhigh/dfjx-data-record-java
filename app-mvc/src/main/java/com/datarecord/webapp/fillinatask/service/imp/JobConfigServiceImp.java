@@ -18,7 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service("jobConfigService")
 public class JobConfigServiceImp implements JobConfigService {
@@ -36,7 +39,7 @@ public class JobConfigServiceImp implements JobConfigService {
 
 
     @Override
-    public PageResult rcdjobconfiglist(int currPage, int pageSize, String job_name, String job_status, String user_id) {
+    public PageResult jobConfigList(int currPage, int pageSize, String job_name, String job_status, String user_id) {
         logger.debug("当前页码:{},页面条数:{}",currPage,pageSize);
         job_name = Strings.emptyToNull(job_name);
         job_status = Strings.emptyToNull(job_status);
@@ -70,7 +73,7 @@ public class JobConfigServiceImp implements JobConfigService {
     }
 
     @Override
-    public void insertrcdjobpersonassign(String job_id, String userid) {
+    public void saveJobPersons(String job_id, String userid) {
        /* userid.substring(1);
         userid.substring(0,userid.length()-1);*/
         String[] split = userid.split(",");
@@ -109,7 +112,7 @@ public class JobConfigServiceImp implements JobConfigService {
 
 
     @Override
-    public List<RcdJobUnitConfig> selectRcdJobUnitConfig(String job_id) {
+    public List<RcdJobUnitConfig> getJobUnitConfig(String job_id) {
         return jobConfigDao.selectRcdJobUnitConfig(job_id);
     }
 
@@ -202,5 +205,20 @@ public class JobConfigServiceImp implements JobConfigService {
     @Override
     public List<JobInteval> getJobIntevals(String job_id){
         return jobConfigDao.getJobIntevals(job_id);
+    }
+
+    @Override
+    public Map<Integer, List<JobInteval>> allJobIntevals() {
+        List<JobInteval> allJobIntevals = jobConfigDao.allJobIntevals();
+        Map<Integer,List<JobInteval>> jobIntevalsMap = new HashMap();
+        if(allJobIntevals!=null&&allJobIntevals.size()>0){
+            for (JobInteval jobInteval : allJobIntevals) {
+                Integer jobId = jobInteval.getJob_id();
+                if(!jobIntevalsMap.containsKey(jobId))
+                    jobIntevalsMap.put(jobId,new ArrayList<>());
+                jobIntevalsMap.get(jobId).add(jobInteval);
+            }
+        }
+        return jobIntevalsMap;
     }
 }

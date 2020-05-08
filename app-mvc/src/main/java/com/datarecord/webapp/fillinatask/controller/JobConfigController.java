@@ -50,9 +50,9 @@ public class JobConfigController {
         try{
             User user = WorkbenchShiroUtils.checkUserFromShiroContext();
             if(UserType.SYSMANAGER.compareTo(user.getUser_type())){
-                pageResult = jobConfigService.rcdjobconfiglist(currPage,pageSize,job_name,job_status,null);
+                pageResult = jobConfigService.jobConfigList(currPage,pageSize,job_name,job_status,null);
             }else{
-                pageResult = jobConfigService.rcdjobconfiglist(currPage,pageSize,job_name,job_status,String.valueOf(user.getUser_id()));
+                pageResult = jobConfigService.jobConfigList(currPage,pageSize,job_name,job_status,String.valueOf(user.getUser_id()));
             }
             //  Origin userOrigin = originService.getOriginByUser(user.getUser_id());
         }catch(Exception e){
@@ -189,7 +189,7 @@ public class JobConfigController {
     ){
         try{
           //  jobConfigService.delJobPersonAssign(job_id);    //把原先的删除再新增
-            jobConfigService.insertrcdjobpersonassign(job_id,userid);
+            jobConfigService.saveJobPersons(job_id,userid);
         }catch(Exception e){
             e.printStackTrace();
             return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增填报维护人失败", null, "error");
@@ -226,7 +226,7 @@ public class JobConfigController {
     ){
         List<RcdJobUnitConfig> ll = null;
         try{
-            ll =  jobConfigService.selectRcdJobUnitConfig(job_id);
+            ll =  jobConfigService.getJobUnitConfig(job_id);
         }catch(Exception e){
             e.printStackTrace();
             return   JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "填报组查询未选择失败", null, "error");

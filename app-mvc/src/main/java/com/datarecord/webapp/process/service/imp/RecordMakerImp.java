@@ -1,5 +1,7 @@
 package com.datarecord.webapp.process.service.imp;
 
+import com.datarecord.enums.JobUnitType;
+import com.datarecord.enums.ReportFldStatus;
 import com.datarecord.webapp.fillinatask.bean.JobUnitAcitve;
 import com.datarecord.enums.JobConfigStatus;
 import com.datarecord.webapp.fillinatask.dao.IJobConfigDao;
@@ -88,18 +90,7 @@ public class RecordMakerImp implements RecordMaker {
                         if(jobUnit.getJob_unit_active() == JobUnitAcitve.UNACTIVE.value()){
                             continue;
                         }
-
-                        List<ReportFldConfig> unitFlds = jobUnit.getUnitFlds();
-                        for (ReportFldConfig unitFld : unitFlds) {
-                            int fldId = unitFld.getFld_id();
-                            ReportJobData reportJobData = new ReportJobData();
-                            reportJobData.setColum_id(0);
-                            reportJobData.setFld_id(fldId);
-                            reportJobData.setReport_id(reportId);
-                            reportJobData.setUnit_id(jobUnit.getJob_unit_id());
-                            reportJobData.setRecord_data("");
-                            recordProcessDao.createRcdReortJobData(reportJobData,jobId);
-                        }
+                        createRecordDatas(jobUnit,reportId);
                     }
                 }
 
@@ -124,6 +115,34 @@ public class RecordMakerImp implements RecordMaker {
         }
 
         return makeResultMap;
+    }
+
+    public void createRecordDatas(JobUnitConfig jobUnit,Integer reportId){
+        if(jobUnit.getJob_unit_type() == JobUnitType.GRID.value()){
+            this.createGridRecordDatas(jobUnit,reportId,0);
+        }
+        if(jobUnit.getJob_unit_type() == JobUnitType.SIMPLE.value()){
+            this.createSimpleRecordData(jobUnit,reportId,0);
+        }
+    }
+
+    public void createSimpleRecordData(JobUnitConfig jobUnit,Integer reportId,Integer columId){
+       this.createGridRecordDatas(jobUnit,reportId,columId);
+    }
+
+    public void createGridRecordDatas(JobUnitConfig jobUnit,Integer reportId,Integer columId){
+        List<ReportFldConfig> unitFlds = jobUnit.getUnitFlds();
+        for (ReportFldConfig unitFld : unitFlds) {
+            int fldId = unitFld.getFld_id();
+            ReportJobData reportJobData = new ReportJobData();
+            reportJobData.setColum_id(columId);
+            reportJobData.setFld_id(fldId);
+            reportJobData.setReport_id(reportId);
+            reportJobData.setUnit_id(jobUnit.getJob_unit_id());
+            reportJobData.setRecord_data("");
+            reportJobData.setData_status(ReportFldStatus.NORMAL.getValueInteger());
+            recordProcessDao.createRcdReortJobData(reportJobData,jobUnit.getJob_id().toString());
+        }
     }
 
     @Override

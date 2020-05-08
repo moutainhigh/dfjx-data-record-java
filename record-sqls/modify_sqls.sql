@@ -243,3 +243,6 @@ CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;
 
 ALTER TABLE `rcd_imp_template_fld_log`
 CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;
+
+ALTER TABLE `rcd_report_data_job5`
+ADD COLUMN `data_status` INT NULL COMMENT '0:填报中\n1:已提交\n2:未提交' AFTER `record_data`;
