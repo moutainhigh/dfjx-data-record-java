@@ -2,6 +2,7 @@ package com.datarecord.webapp.process.service.imp;
 
 import com.datarecord.enums.FldDataTypes;
 import com.datarecord.enums.ReportFileLogStatus;
+import com.datarecord.enums.ReportFldStatus;
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.fillinatask.bean.UpDownLoadFileConfig;
 import com.datarecord.webapp.process.dao.IReportSumDao;
@@ -61,6 +62,10 @@ public class ReportSumServiceImp implements ReportSumService {
                 List<ReportJobData> reportDatas = recordProcessService.getFldReportDatas(jobId.toString(), reportId, groupId.toString());
                 if(reportDatas!=null){
                     for (ReportJobData reportData : reportDatas) {
+                        if(reportData.getData_status()==ReportFldStatus.NORMAL.getValueInteger()){
+                            continue;
+                        }
+
                         if(fldsTmp.contains(reportData.getFld_id())){
                             reportDataResult.add(reportData);
                         }
@@ -278,6 +283,10 @@ public class ReportSumServiceImp implements ReportSumService {
     private Map<Integer, Map<Integer, String>> groupRowDatas(List<ReportJobData> reportDatas){
         Map<Integer,Map<Integer,String>>  reportDatasMap = new LinkedHashMap<>();
         for (ReportJobData reportData : reportDatas) {
+            if(reportData.getData_status()== ReportFldStatus.NORMAL.getValueInteger()){
+                continue;
+            }
+
             Integer columId = reportData.getColum_id();
             if(!reportDatasMap.containsKey(columId)){
                 reportDatasMap.put(columId,new HashMap<>());

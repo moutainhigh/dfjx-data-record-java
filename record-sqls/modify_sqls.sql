@@ -246,3 +246,14 @@ CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;
 
 ALTER TABLE `rcd_report_data_job5`
 ADD COLUMN `data_status` INT NULL COMMENT '0:填报中\n1:已提交\n2:未提交' AFTER `record_data`;
+
+update rcd_person_group set group_active='1';
+
+ALTER TABLE `rcd_job_person_group_log`
+CHANGE COLUMN `group_id` `group_id` INT(11) NOT NULL ,
+ADD COLUMN `id` INT NOT NULL AUTO_INCREMENT FIRST,
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `rcd_person_group`
+ADD COLUMN `group_creater` INT NULL AFTER `group_active`;

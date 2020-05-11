@@ -1,9 +1,7 @@
 package com.datarecord.webapp.rcduser.service;
 
-import com.datarecord.webapp.rcduser.bean.Originss;
 import com.datarecord.webapp.rcduser.bean.RecordUserGroup;
 import com.datarecord.webapp.rcduser.bean.RecordUser;
-import com.datarecord.webapp.rcduser.bean.Useroriginassign;
 import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
@@ -42,7 +40,11 @@ public interface RecordUserService {
 
     RecordUserGroup getActiveUserGroup();
 
-   List<Origin> getJobOriginHis(String reportId);
+   List<Origin> getJobOriginHis(String jobId);
 
-    RecordUserGroup jobUserGroupHis(String jobId);
+    List<User> getJobUserHis(String jobId);
+
+    List<RecordUserGroup> jobUserGroupHis(String jobId);
+
+    List<RecordUserGroup> getUserGroupList();
 }

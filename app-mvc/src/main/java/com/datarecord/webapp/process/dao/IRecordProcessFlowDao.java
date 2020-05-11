@@ -78,7 +78,7 @@ public interface IRecordProcessFlowDao {
             "rrj.record_origin_id = so.origin_id " +
             "where " +
             "  rrj.job_id=#{jobId} "  +
-            "<if test='reportStatus!=null'>" +
+            "<if test='reportStatus!=null and reportStatus!=\"ALL\"'>" +
             " and rrj.record_status=#{reportStatus} " +
             "</if>" +
             "<if test='reportStatus==null'>" +

@@ -51,4 +51,6 @@ public interface RecordProcessService {
     Integer getMaxColumId(String jobId,String reportId);
 
     void closeReportByJobId(String jobId);
+
+    void logUserGroup(List<JobPersonGroupLog> jobPersonGroupLogs);
 }

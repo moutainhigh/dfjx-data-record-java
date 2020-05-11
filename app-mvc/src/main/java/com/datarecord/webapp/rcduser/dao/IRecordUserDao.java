@@ -205,8 +205,8 @@ public interface IRecordUserDao {
     @Select("select group_id,group_name,group_active from rcd_person_group")
     Page<RecordUserGroup> pageRecordUserGroup(String currPage, String pageNum);
 
-    @Insert("insert into rcd_person_group (group_name,group_active) values (#{groupName},#{groupActive})")
-    void saveUserGroup(@Param("groupName") String groupName,@Param("groupActive") String groupActive);
+    @Insert("insert into rcd_person_group (group_name,group_active,group_creater) values (#{groupName},#{groupActive},#{group_creater})")
+    void saveUserGroup(@Param("groupName") String groupName,@Param("groupActive") String groupActive,@Param("group_creater") String group_creater);
 
     @Update("update rcd_person_group set group_name = #{group_name},group_active=#{group_active} where group_id = #{group_id}")
     void updateUserGroup(RecordUserGroup recordUserGroup);
@@ -303,6 +303,39 @@ public interface IRecordUserDao {
             "rjpgl.job_make_date " +
             "FROM rcd_job_config rjc left join rcd_job_person_group_log rjpgl on " +
             "rjc.job_id = rjpgl.job_id " +
-            "where rrj.report_id = #{reportId}")
-    RecordUserGroup jobUserGroupHis(String jobId);
+            "where rjc.job_id = #{jobId}")
+    List<RecordUserGroup> jobUserGroupHis(String jobId);
+
+    @Select("<script>" +
+            "select " +
+            "group_id," +
+            "group_name," +
+            "group_active," +
+            "group_creater " +
+            "from rcd_person_group " +
+            "<if test='userId!=null'>" +
+            "where group_creater=#{userId} " +
+            "</if>" +
+            "</script>")
+    List<RecordUserGroup> getUserGroup(String userId);
+
+    @Select("SELECT distinct " +
+            "uoa.origin_id," +
+            "u.user_id," +
+            "u.user_name," +
+            "u.user_name_cn," +
+            "u.user_type," +
+            "u.reg_date," +
+            "u.user_status," +
+            "u.office_phone," +
+            "u.mobile_phone," +
+            "u.email," +
+            "u.social_code," +
+            "u.last_login_time "+
+            " FROM rcd_job_person_group_log rjpgl " +
+            "left join rcd_person_config rpc on rjpgl.group_id = rpc.group_id " +
+            "left join user u on rpc.user_id = u.user_id " +
+            "left join user_origin_assign uoa on u.user_id=uoa.user_id " +
+            "where rjpgl.job_id = #{jobId} and u.user_id is not null " )
+    List<User> getJobUserHis(String jobId);
 }

@@ -7,6 +7,7 @@ import com.datarecord.webapp.rcduser.bean.RecordUser;
 import com.datarecord.webapp.rcduser.bean.RecordUserGroup;
 import com.datarecord.webapp.rcduser.service.RecordUserService;
 import com.datarecord.webapp.sys.origin.entity.Origin;
+import com.datarecord.webapp.utils.DataRecordUtil;
 import com.google.common.base.Strings;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
@@ -191,7 +192,7 @@ public class RecordUserController {
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public JsonResult jobUserGroupHis(String jobId){
-        RecordUserGroup recordUserGroup = recordUserService.jobUserGroupHis(jobId);
+        List<RecordUserGroup> recordUserGroup = recordUserService.jobUserGroupHis(jobId);
 
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, recordUserGroup);
@@ -224,13 +225,43 @@ public class RecordUserController {
                     JobConfigStatus.SUBMITING.compareWith(jobConfigStatus)){
                 resultOrigins = recordUserService.getJobOriginHis(jobId);
             }else {
-                RecordUserGroup activeUserGroup = recordUserService.getActiveUserGroup();
-                resultOrigins = recordUserService.groupOrigins(activeUserGroup.getGroup_id().toString());
+
+                List<RecordUserGroup> userGroupList = recordUserService.getUserGroupList();
+                if(userGroupList!=null&&userGroupList.size()>0){
+                    for (RecordUserGroup recordUserGroup : userGroupList) {
+                        if(resultOrigins==null)
+                            resultOrigins = recordUserService.groupOrigins(recordUserGroup.getGroup_id().toString());
+                        else
+                            resultOrigins.addAll(recordUserService.groupOrigins(recordUserGroup.getGroup_id().toString()));
+                    }
+                }
+
+//                RecordUserGroup activeUserGroup = recordUserService.getActiveUserGroup();
+//                resultOrigins = recordUserService.groupOrigins(activeUserGroup.getGroup_id().toString());
             }
         }
 
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, resultOrigins);
+        return successResult;
+    }
+
+    @RequestMapping("isSupperUser")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult isSupperUser(){
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, DataRecordUtil.isSuperUser());
+        return successResult;
+    }
+
+
+    @RequestMapping("getUserGroupList")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult getUserGroupList(){
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, recordUserService.getUserGroupList());
         return successResult;
     }
 

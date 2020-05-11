@@ -330,4 +330,14 @@ public class RecordProcessController {
         return successResult;
     }
 
+    @RequestMapping("logUserGroup")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult logUserGroup(@RequestBody  List<JobPersonGroupLog> jobPersonGroupLogs){
+        RecordProcessFactory.RecordProcessSerice().logUserGroup(jobPersonGroupLogs);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "保存成功", null, JsonResult.RESULT.SUCCESS);
+        return successResult;
+    }
+
 }

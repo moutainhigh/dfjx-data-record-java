@@ -335,6 +335,17 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
         recordProcessDao.changeRecordJobConfigStatus(jobId, JobConfigStatus.FAIL.value());
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void logUserGroup(List<JobPersonGroupLog> jobPersonGroupLogs) {
+        if(jobPersonGroupLogs!=null&&jobPersonGroupLogs.size()>0){
+            recordProcessDao.delLogUserGroupHistory(jobPersonGroupLogs.get(0).getJob_id().toString());
+            for (JobPersonGroupLog jobPersonGroupLog : jobPersonGroupLogs) {
+                recordProcessDao.logUserGroup(jobPersonGroupLog);
+            }
+        }
+    }
+
     protected Map<Integer,ReportFldConfig> getReportFldConfigMap(String unitId){
         Map<Integer, ReportFldConfig> fldConfigMapCache = new HashMap();
         List<ReportFldConfig> flds4Unit = recordProcessDao.getFldByUnitId(unitId);

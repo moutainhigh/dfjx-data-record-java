@@ -7,9 +7,11 @@ import com.datarecord.webapp.rcduser.dao.IRecordUserDao;
 import com.datarecord.webapp.rcduser.service.RecordUserService;
 import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.service.OriginService;
+import com.datarecord.webapp.utils.DataRecordUtil;
 import com.github.pagehelper.Page;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
+import com.workbench.shiro.WorkbenchShiroUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +42,14 @@ public class RecordUserServiceImp implements RecordUserService {
 
     @Override
     public void saveUserGroup(String groupName) {
-        Boolean active = false;
-        Page<RecordUserGroup> pageResult = recordUserDao.pageRecordUserGroup(null, null);
-        int total = pageResult.size();
-        if(total==0)
-            active = true;
-        recordUserDao.saveUserGroup(groupName,active?"1":"0");
+//        Boolean active = false;
+//        Page<RecordUserGroup> pageResult = recordUserDao.pageRecordUserGroup(null, null);
+//        int total = pageResult.size();
+//        if(total==0)
+//            active = true;
+//        recordUserDao.saveUserGroup(groupName,active?"1":"0");
+        String ACTIVE = "1";
+        recordUserDao.saveUserGroup(groupName,ACTIVE,WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id_str());
     }
 
     @Override
@@ -119,15 +123,31 @@ public class RecordUserServiceImp implements RecordUserService {
     }
 
     @Override
-    public List<Origin> getJobOriginHis(String reportId) {
-        List<Origin> resultOrigins = recordUserDao.getJobOriginHis(reportId);
+    public List<Origin> getJobOriginHis(String jobId) {
+        List<Origin> resultOrigins = recordUserDao.getJobOriginHis(jobId);
         return resultOrigins;
     }
 
     @Override
-    public RecordUserGroup jobUserGroupHis(String jobId) {
-        RecordUserGroup jobUserGroup = recordUserDao.jobUserGroupHis(jobId);
+    public List<User> getJobUserHis(String jobId) {
+        List<User> resultUsers = recordUserDao.getJobUserHis(jobId);
+        return resultUsers;
+    }
+
+    @Override
+    public List<RecordUserGroup> jobUserGroupHis(String jobId) {
+        List<RecordUserGroup> jobUserGroup = recordUserDao.jobUserGroupHis(jobId);
         return jobUserGroup;
+    }
+
+    @Override
+    public List<RecordUserGroup> getUserGroupList() {
+        String userId = null;
+        if(!DataRecordUtil.isSuperUser()){
+            userId = WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id().toString();
+        }
+        List<RecordUserGroup> userGroupList = recordUserDao.getUserGroup(userId);
+        return userGroupList;
     }
 
 

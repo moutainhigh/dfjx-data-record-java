@@ -148,7 +148,6 @@ public class RecordMakerImp implements RecordMaker {
     @Override
     public Map<JsonResult.RESULT, Object> preMake(String jobId) {
 
-        //记录当前下发任务时生效的填报用户组状态(供后续查询之类的使用)
         Map<JsonResult.RESULT, Object> makePersonResult = this.checkPersonGroup(jobId);
         if(makePersonResult!=null&&makePersonResult.containsKey(JsonResult.RESULT.FAILD)){
             return makePersonResult;
@@ -182,16 +181,19 @@ public class RecordMakerImp implements RecordMaker {
     }
 
     public Map<JsonResult.RESULT, Object> checkPersonGroup(String jobId) {
-        RecordUserGroup activeUserGroup = recordUserService.getActiveUserGroup();
+        List<RecordUserGroup> recordUserGroups = recordUserService.jobUserGroupHis(jobId);
+//        RecordUserGroup activeUserGroup = recordUserService.getActiveUserGroup();
         Map<JsonResult.RESULT,Object> makeResultMap = new HashMap<>();
-        if(activeUserGroup==null){
+        if(recordUserGroups!=null&&recordUserGroups.size()>0){
+            makeResultMap.put(JsonResult.RESULT.SUCCESS,recordUserGroups);
+        }else{
             makeResultMap.put(JsonResult.RESULT.FAILD,"请联系管理员设置填报用户分组");
             return makeResultMap;
-        }else{
-            makeResultMap.put(JsonResult.RESULT.SUCCESS,activeUserGroup);
         }
 
-        List<User> recordUsers = recordUserService.groupUsers(activeUserGroup.getGroup_id().toString());
+        List<User> recordUsers = recordUserService.getJobUserHis(jobId);
+
+//        List<User> recordUsers = recordUserService.groupUsers(activeUserGroup.getGroup_id().toString());
         if(recordUsers!=null&&recordUsers.size()>0){
 
         }else{
@@ -279,20 +281,23 @@ public class RecordMakerImp implements RecordMaker {
     }
 
     public List<JobPerson> makeRecordPersons(String jobId){
-        RecordUserGroup activeUserGroup = recordUserService.getActiveUserGroup();
+//        List<RecordUserGroup> jobUserGroupList = recordUserService.jobUserGroupHis(jobId);
+        List<User> recordUsers = recordUserService.getJobUserHis(jobId);
 
-        List<User> recordUsers = recordUserService.groupUsers(activeUserGroup.getGroup_id().toString());
+//        RecordUserGroup activeUserGroup = recordUserService.getActiveUserGroup();
+
+//        List<User> recordUsers = recordUserService.groupUsers(activeUserGroup.getGroup_id().toString());
 
         List<JobPerson> jobPersons = new ArrayList<>();
 
-        JobPersonGroupLog jobPersonGroupLog = new JobPersonGroupLog();
-        jobPersonGroupLog.setJob_id(new Integer(jobId));
-        jobPersonGroupLog.setGroup_id(activeUserGroup.getGroup_id());
-        jobPersonGroupLog.setGroup_name(activeUserGroup.getGroup_name());
-        jobPersonGroupLog.setJob_make_date(new Date());
-        recordProcessDao.delLogUserGroupHistory(jobId);
-        recordProcessDao.logUserGroup(jobPersonGroupLog);
-
+//        JobPersonGroupLog jobPersonGroupLog = new JobPersonGroupLog();
+//        jobPersonGroupLog.setJob_id(new Integer(jobId));
+//        jobPersonGroupLog.setGroup_id(activeUserGroup.getGroup_id());
+//        jobPersonGroupLog.setGroup_name(activeUserGroup.getGroup_name());
+//        jobPersonGroupLog.setJob_make_date(new Date());
+//        recordProcessDao.delLogUserGroupHistory(jobId);
+//        recordProcessDao.logUserGroup(jobPersonGroupLog);
+//
         jobConfigDao.delJobPersonAssign(jobId);
         if(recordUsers!=null){
             for (User recordUser : recordUsers) {
