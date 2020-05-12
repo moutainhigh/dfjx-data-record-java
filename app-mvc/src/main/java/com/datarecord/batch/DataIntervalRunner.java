@@ -89,7 +89,7 @@ public class DataIntervalRunner  {
         logger.info("建立任务填报周期监听线程，线程将在{}秒后开始执行，并且在首次执行后，每隔24小时执行一次",
                 remainingTime/1000);
 
-        remainingTime = 30000;
+//        remainingTime = 30000;
 
         ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutor.scheduleAtFixedRate(
