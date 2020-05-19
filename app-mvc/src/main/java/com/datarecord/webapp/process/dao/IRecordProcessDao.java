@@ -279,8 +279,110 @@ public interface IRecordProcessDao {
     List<Integer> getUnitColums(@Param("job_id") String job_id,@Param("report_id") String report_id,@Param("unit_id") String unit_id);
 
     @Update("update rcd_report_data_job${jobId} set data_status=${status} where report_id = #{reportId}")
-    void updateReportDataStatus(@Param("jobId") Integer jobId,@Param("reportId") String reportId,@Param("status") String status);
+    void updateReportDataStatus(@Param("jobId") String jobId, @Param("reportId") String reportId, @Param("status") Integer status);
 
     @Select("SELECT max(colum_id) max_colum_id,report_id FROM rcd_report_data_job${jobId} where report_id = #{reportId} ")
     Integer getMaxColumId(@Param("jobId") String jobId,@Param("reportId") String reportId);
+
+    @Select("<script>" +
+            "select " +
+            "distinct "+
+            "rjc.job_id," +
+            "rjc.job_start_dt, " +
+            "rjc.job_end_dt, " +
+            "rjc.job_name " +
+            "from rcd_report_job rrj " +
+            "left join rcd_job_config rjc on " +
+            "rrj.job_id = rjc.job_id  " +
+            "left join user u on " +
+            "rrj.record_user_id = u.user_id " +
+            "left join user_origin_assign uoa on " +
+            "u.user_id = uoa.user_id " +
+            "left join sys_origin so on " +
+            "uoa.origin_id = so.origin_id " +
+            "where rjc.job_status!='3'  " +
+            "<if test='user_id!=null and user_id!= \"\" '>" +
+            " and rrj.record_user_id=#{user_id}" +
+            "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"0\" '>" +
+            " and rrj.record_status=#{queryParams.reportStatus} and rjc.job_start_dt &lt; now() and rjc.job_end_dt &gt; now()" +
+            "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"1\" '>" +
+            " and rrj.record_status=#{queryParams.reportStatus} " +
+            "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"9\" '>" +
+            " and rrj.record_status=#{queryParams.reportStatus} " +
+            "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"7\" '>" +
+            " and rrj.record_status=0  and rjc.job_start_dt &gt; now() " +
+            "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"8\" '>" +
+            " and (rrj.record_status=0 or rrj.record_status=8  ) and rjc.job_end_dt &lt; now() " +
+            "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"10\" '>" +
+            " and (rrj.record_status=0 or rrj.record_status=1  ) and rjc.job_end_dt &lt; now() " +
+            "</if>" +
+            "<if test='queryParams.reportName!=null'>" +
+            " and rjc.job_name like concat('%',#{queryParams.reportName},'%') " +
+            "</if> " +
+            "order by rjc.job_id " +
+            "</script>")
+    Page<JobConfig> pageAuthJobConfig(@Param("user_id") BigInteger userId,
+                                      @Param("currPage") String currPage,
+                                      @Param("pageSize") String pageSize,
+                                      @Param("queryParams")Map<String, String> queryParams);
+
+    @Select("<script>" +
+            "select rrj.report_id," +
+            "rrj.job_id," +
+            "rrj.record_user_id," +
+            "u.user_name_cn as record_user_name," +
+            "rrj.record_origin_id," +
+            "so.origin_name as record_origin_name," +
+            "rrj.record_status, " +
+            "rjc.job_start_dt, " +
+            "rjc.job_end_dt, " +
+            "rjc.job_name " +
+            "from rcd_report_job rrj " +
+            "left join rcd_job_config rjc on " +
+            "rrj.job_id = rjc.job_id  " +
+            "left join user u on " +
+            "rrj.record_user_id = u.user_id " +
+            "left join user_origin_assign uoa on " +
+            "u.user_id = uoa.user_id " +
+            "left join sys_origin so on " +
+            "uoa.origin_id = so.origin_id " +
+            "where rjc.job_status!='3'  " +
+            " and rrj.job_id = #{job_id} " +
+            "<if test='user_id!=null and user_id!= \"\" '>" +
+            " and rrj.record_user_id=#{user_id}" +
+            "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"0\" '>" +
+            " and rrj.record_status=#{queryParams.reportStatus} and rjc.job_start_dt &lt; now() and rjc.job_end_dt &gt; now()" +
+            "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"1\" '>" +
+            " and rrj.record_status=#{queryParams.reportStatus} " +
+            "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"9\" '>" +
+            " and rrj.record_status=#{queryParams.reportStatus} " +
+            "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"7\" '>" +
+            " and rrj.record_status=0  and rjc.job_start_dt &gt; now() " +
+            "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"8\" '>" +
+            " and (rrj.record_status=0 or rrj.record_status=8  ) and rjc.job_end_dt &lt; now() " +
+            "</if>" +
+            "<if test='queryParams.reportStatus!=null and queryParams.reportStatus== \"10\" '>" +
+            " and (rrj.record_status=0 or rrj.record_status=1  ) and rjc.job_end_dt &lt; now() " +
+            "</if>" +
+            "<if test='queryParams.reportName!=null'>" +
+            " and rjc.job_name like concat('%',#{queryParams.reportName},'%') " +
+            "</if> " +
+            "order by rrj.report_id " +
+            "</script>")
+    Page<ReportJobInfo> pageJobDataByJobId(@Param("user_id") BigInteger userId,
+                                       @Param("currPage") String currPage,
+                                       @Param("pageSize") String pageSize,
+                                       @Param("job_id") String jobId,
+                                       @Param("queryParams")Map<String, String> queryParams);
 }

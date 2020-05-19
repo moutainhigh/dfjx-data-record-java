@@ -5,6 +5,7 @@ import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.enums.ReportStatus;
 import com.datarecord.webapp.process.entity.*;
 import com.webapp.support.page.PageResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -13,6 +14,10 @@ import java.util.Map;
 public interface RecordProcessService {
 
     PageResult pageJob(BigInteger user_id, String currPage, String pageSize, Map<String,String> queryParams);
+
+    PageResult pageAuthJobConfig(BigInteger userId, String currPage, String pageSize, Map<String, String> queryParams);
+
+    PageResult pageJobDataByJobId(BigInteger userId, String jobId, String currPage, String pageSize, Map<String, String> queryParams);
 
     JobConfig getJobConfigByReportId(String reportId);
 
@@ -48,9 +53,13 @@ public interface RecordProcessService {
 
     void doCommitAuth(String reportId, ReportFldStatus submit);
 
-    Integer getMaxColumId(String jobId,String reportId);
+    @Transactional(rollbackFor = Exception.class)
+    void changeReportDataStatus(String jobId, String reportId, Integer status);
+
+    Integer getMaxColumId(String jobId, String reportId);
 
     void closeReportByJobId(String jobId);
 
     void logUserGroup(List<JobPersonGroupLog> jobPersonGroupLogs);
+
 }

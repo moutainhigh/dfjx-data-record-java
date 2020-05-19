@@ -10,6 +10,7 @@ import com.datarecord.webapp.process.dao.ReportFileLog;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessService;
 import com.datarecord.webapp.process.service.ReportSumService;
+import com.datarecord.webapp.utils.DataRecordUtil;
 import com.google.common.base.Strings;
 import com.workbench.shiro.WorkbenchShiroUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -50,6 +51,8 @@ public class ReportSumServiceImp implements ReportSumService {
         String reportId = exportParams.getReport_id();
         List<JobUnitConfig> groups = jobConfigParams.getJobUnits();
         Map<Integer,List<ReportJobData>> groupDataMap = new HashMap<>();
+        Boolean isSuperUser = DataRecordUtil.isSuperUser();
+
         if(groups!=null){
             for (JobUnitConfig group : groups) {
                 Integer groupId = group.getJob_unit_id();
@@ -62,8 +65,10 @@ public class ReportSumServiceImp implements ReportSumService {
                 List<ReportJobData> reportDatas = recordProcessService.getFldReportDatas(jobId.toString(), reportId, groupId.toString());
                 if(reportDatas!=null){
                     for (ReportJobData reportData : reportDatas) {
-                        if(reportData.getData_status()==ReportFldStatus.NORMAL.getValueInteger()){
-                            continue;
+                        if(!isSuperUser){
+                            if(reportData.getData_status()==ReportFldStatus.NORMAL.getValueInteger()){
+                                continue;
+                            }
                         }
 
                         if(fldsTmp.contains(reportData.getFld_id())){

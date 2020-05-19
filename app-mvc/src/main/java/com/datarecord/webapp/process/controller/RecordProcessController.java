@@ -15,6 +15,7 @@ import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
+import com.workbench.shiro.WorkbenchShiroUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,6 +51,26 @@ public class RecordProcessController {
         return successResult;
     }
 
+    @RequestMapping("pageAuthJobConfig")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult pageAuthJobConfig(@RequestParam("currPage") String currPage,
+                              @RequestParam("pageSize") String pageSize,
+                              String reportName){
+        Map<String,String> queryParams = new HashMap<>();
+        queryParams.put("reportName",reportName);
+        BigInteger userId = null;
+        if(!DataRecordUtil.isSuperUser()){
+            userId = WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id();
+        }
+
+        PageResult pageData = RecordProcessFactory.RecordProcessSerice().pageAuthJobConfig(userId,currPage,pageSize,queryParams);
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, pageData);
+        return successResult;
+    }
+
     @RequestMapping("pageJob")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
@@ -67,6 +88,28 @@ public class RecordProcessController {
         queryParams.put("reportName",reportName);
         queryParams.put("reportStatus",reportStatus);
         PageResult pageResult = RecordProcessFactory.RecordProcessSerice().pageJob(userId,currPage,pageSize,queryParams);
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, pageResult);
+        return successResult;
+    }
+
+    @RequestMapping("pageJobDataByJobId")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult pageJobDataByJobId(@RequestParam("currPage") String currPage,
+                                      @RequestParam("pageSize") String pageSize,
+                                      @RequestParam("jobId") String jobId,
+                                      String reportStatus
+    ){
+        BigInteger userId = null;
+        if(!DataRecordUtil.isSuperUser()){
+            userId = WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id();
+        }
+
+        Map<String,String> queryParams = new HashMap<>();
+        queryParams.put("reportStatus",reportStatus);
+        PageResult pageResult = RecordProcessFactory.RecordProcessSerice().pageJobDataByJobId(userId,jobId,currPage,pageSize,queryParams);
 
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, pageResult);

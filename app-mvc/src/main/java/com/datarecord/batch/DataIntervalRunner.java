@@ -102,7 +102,15 @@ public class DataIntervalRunner  {
     @Transactional(rollbackFor = Exception.class)
     void makeNewRecord(Integer jobId){
         List<ReportJobInfo> reportJobInfos = recordProcessService.getReportJobInfosByJobId(jobId.toString());
+        if(reportJobInfos!=null&&reportJobInfos.size()>0){
+            logger.error("当前任务id：{}，不存在任何填报数据",jobId);
+            return;
+        }
         JobConfig jobConfig = recordProcessService.getJobConfigByJobId(jobId.toString());
+        recordProcessService.changeReportDataStatus(
+                jobConfig.getJob_id().toString(),
+                reportJobInfos.get(0).getReport_id().toString(),
+                ReportFldStatus.NORMAL.getValueInteger());
         reportJobInfos.forEach(reportJobInfo->{
             Integer reportId = reportJobInfo.getReport_id();
             for (JobUnitConfig jobUnit : jobConfig.getJobUnits()) {

@@ -59,6 +59,33 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
     }
 
     @Override
+    public PageResult pageAuthJobConfig(BigInteger userId, String currPage, String pageSize, Map<String, String> queryParams) {
+        if(Strings.isNullOrEmpty(currPage))
+            currPage = "1";
+        if(Strings.isNullOrEmpty(pageSize))
+            pageSize = "10";
+        Page<JobConfig> aurhJobConfigPageData = recordProcessDao.pageAuthJobConfig(userId,currPage,pageSize,queryParams);
+
+        PageResult pageResultData = PageResult.pageHelperList2PageResult(aurhJobConfigPageData);
+
+        return pageResultData;
+    }
+
+    @Override
+    public PageResult pageJobDataByJobId(BigInteger userId, String jobId, String currPage, String pageSize, Map<String, String> queryParams) {
+        if(Strings.isNullOrEmpty(currPage))
+            currPage = "1";
+        if(Strings.isNullOrEmpty(pageSize))
+            pageSize = "10";
+
+        Page<ReportJobInfo> authJobDatas = recordProcessDao.pageJobDataByJobId(userId,currPage,pageSize,jobId,queryParams);
+
+        PageResult pageResultData = PageResult.pageHelperList2PageResult(authJobDatas);
+
+        return pageResultData;
+    }
+
+    @Override
     public JobConfig getJobConfigByReportId(String reportId) {
         ReportJobInfo reportJobInfo = recordProcessDao.getReportJobInfoByReportId(reportId);
         JobConfig jobConfigEntity = recordProcessDao.getJobConfigByJobId(reportJobInfo.getJob_id().toString());
@@ -314,7 +341,13 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
         }else if(submit==ReportFldStatus.UNSUB){
             recordProcessDao.updateReportStatus(reportId,ReportStatus.UNSUB.getValue());
         }
-        recordProcessDao.updateReportDataStatus(reportJobInfo.getJob_id(),reportId,submit.getValue());
+        this.changeReportDataStatus(reportJobInfo.getJob_id().toString(),reportJobInfo.getReport_id().toString(),submit.getValueInteger());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void changeReportDataStatus(String jobId,String reportId,Integer status){
+        recordProcessDao.updateReportDataStatus(jobId,reportId,status);
     }
 
     @Override
