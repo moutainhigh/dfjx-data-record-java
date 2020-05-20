@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public interface ISubmitauthorityDao {
+public interface IRecordOriginDao {
 
     @Select("SELECT  " +
             " origin_id id,  " +

@@ -10,6 +10,9 @@ import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.reportinggroup.bean.RcdJobUnitFlow;
 import com.datarecord.webapp.reportinggroup.bean.ReportGroupInterval;
 import com.datarecord.webapp.reportinggroup.dao.ReportingGroupDao;
+import com.datarecord.webapp.sys.origin.entity.Origin;
+import com.datarecord.webapp.sys.origin.service.OriginService;
+import com.datarecord.webapp.sys.origin.service.RecordOriginService;
 import com.github.pagehelper.Page;
 import com.google.common.base.Strings;
 import com.webapp.support.page.PageResult;
@@ -37,6 +40,12 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
 
     @Autowired
     private JobConfigService jobConfigService;
+
+    @Autowired
+    private RecordOriginService recordOriginService;
+
+    @Autowired
+    private OriginService originService;
 
     @Override
     public PageResult pageJob(BigInteger user_id, String currPage, String pageSize, Map<String,String> queryParams) {
@@ -79,6 +88,14 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
             pageSize = "10";
 
         Page<ReportJobInfo> authJobDatas = recordProcessDao.pageJobDataByJobId(userId,currPage,pageSize,jobId,queryParams);
+
+        if(authJobDatas!=null&&authJobDatas.size()>0){
+            List<Origin> allOriginList = originService.listAllOrigin();
+            for (ReportJobInfo authJobData : authJobDatas) {
+                String originName = recordOriginService.addParentOriginName(authJobData.getRecord_origin_id().toString(), allOriginList);
+                authJobData.setRecord_origin_name(originName);
+            }
+        }
 
         PageResult pageResultData = PageResult.pageHelperList2PageResult(authJobDatas);
 

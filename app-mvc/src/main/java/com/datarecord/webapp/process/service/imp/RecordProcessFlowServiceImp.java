@@ -14,6 +14,7 @@ import com.datarecord.webapp.process.service.RecordProcessFlowService;
 import com.datarecord.webapp.process.service.RecordProcessService;
 import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.service.OriginService;
+import com.datarecord.webapp.sys.origin.service.RecordOriginService;
 import com.datarecord.webapp.utils.DataRecordUtil;
 import com.github.pagehelper.Page;
 import com.google.common.base.Strings;
@@ -61,6 +62,9 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
     @Autowired
     private RecordProcessService recordProcessService;
 
+    @Autowired
+    private RecordOriginService recordOriginService;
+
     @Override
     public PageResult pageReportDatas(BigInteger user_id, String currPage, String pageSize, Map<String, String> queryParams) {
         Page<JobConfig> pageData = recordProcessFlowDao.pageReportDatas(currPage, pageSize, user_id, queryParams);
@@ -77,6 +81,13 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
             reportStatus = "ALL";
         }
         Page<ReportJobInfo> pageData =  recordProcessFlowDao.pageReviewDatasByJob(currPage,pageSize,jobId,reportStatus,null);
+        if(pageData!=null&&pageData.size()>0){
+            List<Origin> allOriginList = originService.listAllOrigin();
+            for (ReportJobInfo reportJobInfo : pageData) {
+                String originName = recordOriginService.addParentOriginName(reportJobInfo.getRecord_origin_id().toString(), allOriginList);
+                reportJobInfo.setRecord_origin_name(originName);
+            }
+        }
         PageResult result = PageResult.pageHelperList2PageResult(pageData);
         recordProcessService.checkReportStatus(result.getDataList());
         return result;

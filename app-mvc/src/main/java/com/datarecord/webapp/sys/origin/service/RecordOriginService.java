@@ -1,5 +1,6 @@
 package com.datarecord.webapp.sys.origin.service;
 
+import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.entity.RecordOrigin;
 import com.datarecord.webapp.sys.origin.tree.EntityTree;
 import com.webapp.support.page.PageResult;
@@ -19,4 +20,5 @@ public interface RecordOriginService {
 
     List<String> getReportOriginForOrganizationUser(int currUserId);
 
+    String addParentOriginName(String originId, List<Origin> allOriginList);
 }
