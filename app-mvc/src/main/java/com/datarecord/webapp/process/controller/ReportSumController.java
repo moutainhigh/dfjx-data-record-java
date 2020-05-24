@@ -81,6 +81,24 @@ public class ReportSumController {
         return successResult;
     }
 
+    @RequestMapping("sumJobFiles")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult sumJobFiles(String jobId){
+        reportSumService.sumJobFiles(jobId);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "无意义", null, "无意义");
+        return successResult;
+    }
 
+    @RequestMapping("getSumJobFileList")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult getSumJobFileList(String jobId){
+        List<ReportFileLog> fileList = reportSumService.getSumJobFileList(jobId);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, fileList);
+        return successResult;
+    }
 
 }

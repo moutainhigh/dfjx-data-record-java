@@ -5,6 +5,7 @@ import com.datarecord.webapp.process.dao.ReportFileLog;
 import com.datarecord.webapp.process.entity.ExportParams;
 import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.process.entity.JobFlowLog;
+import com.datarecord.webapp.process.entity.ReportJobData;
 import com.datarecord.webapp.process.service.RecordMaker;
 import com.datarecord.webapp.process.service.RecordProcessFlowService;
 import com.datarecord.webapp.process.service.RecordProcessService;
@@ -223,6 +224,16 @@ public class RecordProcessFlowController {
         List<ReportFileLog> reportFileLogs = recordProcessFlowService.listReportFile(reportId);
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, reportFileLogs);
+        return successResult;
+    }
+
+    @RequestMapping("getJobDatas")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult getJobDatas(String jobId){
+        List<ReportJobData> reportDataList = recordProcessFlowService.getJobReportDatas(jobId,null);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, reportDataList);
         return successResult;
     }
 

@@ -3,6 +3,7 @@ package com.datarecord.webapp.process.service;
 import com.datarecord.webapp.process.dao.ReportFileLog;
 import com.datarecord.webapp.process.entity.ExportParams;
 import com.datarecord.webapp.process.entity.JobFlowLog;
+import com.datarecord.webapp.process.entity.ReportJobData;
 import com.webapp.support.page.PageResult;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -32,6 +33,8 @@ public interface RecordProcessFlowService {
     PageResult pageReportDatas(BigInteger user_id, String currPage, String pageSize, Map<String, String> queryParams);
 
     PageResult pageReviewDatas(String currPage, String pageSize, String jobId,String reportStatus);
+
+    List<ReportJobData> getJobReportDatas(String jobId, String reportStatus);
 
     List<ReportFileLog> listReportFile(String reportId);
 }

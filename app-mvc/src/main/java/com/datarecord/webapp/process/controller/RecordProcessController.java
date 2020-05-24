@@ -130,6 +130,16 @@ public class RecordProcessController {
         return successResult;
     }
 
+    @RequestMapping("getJobConfigByJobId")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult getJobConfigByJobId(String jobId){
+        JobConfig jobConfig = RecordProcessFactory.RecordProcessSerice().getJobConfigByJobId(jobId);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, jobConfig);
+        return successResult;
+    }
+
     @RequestMapping("checkUnitStep")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")

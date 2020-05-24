@@ -15,4 +15,8 @@ public interface ReportSumService {
     String exportGroup(String reportId,String jobId, String groupId);
 
     ReportFileLog getReportFile(String logId);
+
+    List<ReportFileLog> getSumJobFileList(String jobId);
+
+    void sumJobFiles(String jobId);
 }

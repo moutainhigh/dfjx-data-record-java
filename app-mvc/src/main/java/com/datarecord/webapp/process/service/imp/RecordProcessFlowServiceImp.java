@@ -1,9 +1,6 @@
 package com.datarecord.webapp.process.service.imp;
 
-import com.datarecord.enums.FldDataTypes;
-import com.datarecord.enums.JobConfigStatus;
-import com.datarecord.enums.ReportFileLogStatus;
-import com.datarecord.enums.ReportStatus;
+import com.datarecord.enums.*;
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.fillinatask.bean.UpDownLoadFileConfig;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
@@ -91,6 +88,23 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
         PageResult result = PageResult.pageHelperList2PageResult(pageData);
         recordProcessService.checkReportStatus(result.getDataList());
         return result;
+    }
+
+    @Override
+    public List<ReportJobData> getJobReportDatas(String jobId, String reportStatus) {
+        List<ReportJobData> allJobDataList = recordProcessDao.getJobReportDatas(jobId,reportStatus);
+        if(DataRecordUtil.isSuperUser()){
+            return allJobDataList;
+        }
+        List<ReportJobData> resultList = new ArrayList<>();
+        if(allJobDataList!=null&&allJobDataList.size()>0){
+            for (ReportJobData reportJobData : allJobDataList) {
+                if(!reportJobData.getData_status().equals(ReportFldStatus.NORMAL.getValueInteger())){
+                    resultList.add(reportJobData);
+                }
+            }
+        }
+        return resultList;
     }
 
     @Override

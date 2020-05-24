@@ -217,6 +217,14 @@ public interface IRecordProcessDao {
             "</script>")
     List<ReportJobInfo> getReportJobInfosByJobId(String jobId);
 
+    @Select("<script>" +
+            "select id,report_id,unit_id,colum_id,fld_id,record_data,data_status from rcd_report_data_job${jobId} " +
+            "<if test='reportStatus!=null'>" +
+            " where data_status=#{reportStatus}" +
+            "</if>" +
+            "</script>")
+    List<ReportJobData> getJobReportDatas(@Param("jobId") String jobId,@Param("reportStatus") String reportStatus);
+
     @Select("select id,report_id,unit_id,colum_id,fld_id,record_data,data_status from rcd_report_data_job${jobId} where report_id = #{reportId} and unit_id = #{unitId}")
     List<ReportJobData> getReportDataByUnitId(@Param("jobId") String jobId,@Param("reportId") String reportId,@Param("unitId") String unitId);
 

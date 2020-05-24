@@ -35,8 +35,8 @@ public class RecordUserController {
     @RequestMapping("pageUserGroup")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
-    public JsonResult pageRecordUserGroup(String currPage,String pageNum){
-        PageResult pageResult = recordUserService.pageRecordUserGroup(currPage,pageNum);
+    public JsonResult pageRecordUserGroup(String currPage,String pageSize){
+        PageResult pageResult = recordUserService.pageRecordUserGroup(currPage,pageSize);
         JsonResult jsonResult = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "获取成功", null, pageResult);
         return jsonResult;
     }
@@ -216,8 +216,15 @@ public class RecordUserController {
     public JsonResult getJobOrigins(String jobId){
         List<Origin> resultOrigins = null;
         if(Strings.isNullOrEmpty(jobId)){
-            RecordUserGroup activeUserGroup = recordUserService.getActiveUserGroup();
-            resultOrigins = recordUserService.groupOrigins(activeUserGroup.getGroup_id().toString());
+            List<RecordUserGroup> userGroupList = recordUserService.getUserGroupList();
+            if(userGroupList!=null&&userGroupList.size()>0){
+                for (RecordUserGroup recordUserGroup : userGroupList) {
+                    if(resultOrigins==null)
+                        resultOrigins = recordUserService.groupOrigins(recordUserGroup.getGroup_id().toString());
+                    else
+                        resultOrigins.addAll(recordUserService.groupOrigins(recordUserGroup.getGroup_id().toString()));
+                }
+            }
         }else{
             JobConfig jobConfig = jobConfigService.getJobConfig(jobId);
             Integer jobConfigStatus = jobConfig.getJob_status();

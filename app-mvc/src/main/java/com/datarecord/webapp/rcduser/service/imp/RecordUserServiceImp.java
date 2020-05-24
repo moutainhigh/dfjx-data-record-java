@@ -35,7 +35,12 @@ public class RecordUserServiceImp implements RecordUserService {
 
     @Override
     public PageResult pageRecordUserGroup(String currPage, String pageNum) {
-        Page<RecordUserGroup> pageData = recordUserDao.pageRecordUserGroup(currPage,pageNum);
+        String userId = null;
+        if(!DataRecordUtil.isSuperUser()){
+            userId = WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id().toString();
+        }
+
+        Page<RecordUserGroup> pageData = recordUserDao.pageRecordUserGroup(currPage,pageNum,userId);
         PageResult pageResult = PageResult.pageHelperList2PageResult(pageData);
         return pageResult;
     }

@@ -94,6 +94,83 @@ public class ReportSumServiceImp implements ReportSumService {
     }
 
     @Override
+    public List<ReportFileLog> getSumJobFileList(String jobId){
+        BigInteger userId = WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id();
+        List<ReportFileLog> sumFileList = reportSumDao.getSumJobFileList(jobId,userId);
+        return sumFileList;
+    }
+
+    @Override
+    public void sumJobFiles(String jobId) {
+        BigInteger userId = WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id();
+//        BigInteger userId = new BigInteger("1");
+        ReportFileLog jobFileLog = this.recordFileCreateLog(null, jobId, userId, 2);
+
+        new Thread(() -> {
+            String fileFullPath = null;
+            FileOutputStream fout = null;
+            try{
+                JobConfig jobConfig = recordProcessService.getJobConfigByJobId(jobId);
+                List<ReportJobInfo> jobInfos = recordProcessService.getReportJobInfosByJobId(jobId);
+                List<JobUnitConfig> allUnits = jobConfig.getJobUnits();
+                HSSFWorkbook wb = new HSSFWorkbook();
+                if(allUnits!=null&&allUnits.size()>0){
+                    for (JobUnitConfig unitConfig : allUnits) {
+                        Integer jobUnitId = unitConfig.getJob_unit_id();
+                        HSSFSheet unitSheet = wb.createSheet(unitConfig.getJob_unit_name());
+                        List<ReportFldConfig> exportUnitFldConfigs = unitConfig.getUnitFlds();
+
+                        writeExcelTitle(exportUnitFldConfigs,unitSheet);
+                        Integer rowIndex = 1;
+                        for (ReportJobInfo jobInfo : jobInfos) {
+                            List<ReportJobData> reportDatas = recordProcessService.getFldReportDatas(jobId, jobInfo.getReport_id().toString(), jobUnitId.toString());
+                            //按行分组数据
+                            Map<Integer, Map<Integer, String>> reportDatasMap = groupRowDatas(reportDatas);
+                            //获取数据字典的字典数据
+                            Map<Integer, Map<String, String>> fldDictMap = getFldDicts(exportUnitFldConfigs);
+                            //生成内容
+                            writeExcelValues(reportDatasMap,exportUnitFldConfigs,fldDictMap ,unitSheet,rowIndex);
+
+                            rowIndex = rowIndex+reportDatasMap.size();
+                        }
+
+                    }
+                }
+
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+                String nowDate = dateFormat.format(new Date());
+                String filePath = createFilePath(new StringBuilder().append("汇总").append("/").append(jobConfig.getJob_name()).toString());
+
+                fileFullPath = new StringBuilder()
+                        .append(filePath)
+                        .append(jobConfig.getJob_name())
+                        .append("-")
+                        .append(nowDate)
+                        .append(".xls")
+                        .toString();
+                fout = new FileOutputStream(fileFullPath);
+                wb.write(fout);
+            }catch (Exception e){
+                this.updateFileLogStatus(jobFileLog.getLog_id(),ReportFileLogStatus.ERROR,null,e.getMessage());
+            }finally {
+                if(fout!=null) {
+                    try {
+                        fout.close();
+                    } catch (IOException e) {
+                        this.updateFileLogStatus(jobFileLog.getLog_id(),ReportFileLogStatus.ERROR,fileFullPath,e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+            }
+            this.updateFileLogStatus(jobFileLog.getLog_id(),ReportFileLogStatus.DONE,fileFullPath,null);
+        },"SumJobFiles").start();
+
+
+
+    }
+
+    @Override
     public void exportRecordFldsData(ExportParams exportParams) {
         ReportFileLog reportFileLog = this.recordFileCreateLog(
                 exportParams.getReport_id(), exportParams.getJobConfig().getJob_id().toString(), WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id(), 1);
@@ -157,7 +234,7 @@ public class ReportSumServiceImp implements ReportSumService {
                             //获取数据字典的字典数据
                             Map<Integer, Map<String, String>> fldDictMap = getFldDicts(exportUnitFldConfigs);
                             //生成内容
-                            writeExcelValues(reportDatasMap,exportUnitFldConfigs,fldDictMap ,unitSheet);
+                            writeExcelValues(reportDatasMap,exportUnitFldConfigs,fldDictMap ,unitSheet,null);
 
                         }
                     }
@@ -213,13 +290,22 @@ public class ReportSumServiceImp implements ReportSumService {
 //        ReportFileLog fileLog = this.recordFileCreateLog(reportId, jobId, new BigInteger("1"), 0);
 
         JobConfig jobConfig = recordProcessService.getJobConfigByJobId(jobId);
+
+        ReportJobInfo reportDataInfo = recordProcessService.getReportJobInfo(reportId);
+
+        return this.exportGroup(reportDataInfo,jobConfig,groupId,fileLog);
+
+    }
+
+    private String exportGroup(ReportJobInfo reportDataInfo, JobConfig jobConfig,String groupId,ReportFileLog fileLog){
         List<JobUnitConfig> allUnits = jobConfig.getJobUnits();
+        String jobId = jobConfig.getJob_id().toString();
+        String reportId = reportDataInfo.getReport_id().toString();
         HSSFWorkbook wb = new HSSFWorkbook();
         for (JobUnitConfig unitConfig : allUnits) {
             if(unitConfig.getJob_unit_id().toString().equals(groupId)){
                 HSSFSheet unitSheet = wb.createSheet(unitConfig.getJob_unit_name());
                 List<ReportFldConfig> unitFlds = unitConfig.getUnitFlds();
-                ReportJobInfo reportDataInfo = recordProcessService.getReportJobInfo(reportId);
                 List<ReportJobData> reportDatas = recordProcessService.getFldReportDatas(jobId, reportId, groupId);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
                 String nowDate = dateFormat.format(new Date());
@@ -240,7 +326,7 @@ public class ReportSumServiceImp implements ReportSumService {
                 writeExcelTitle(unitFlds,unitSheet);
                 Map<Integer, Map<Integer, String>> rowDatas = groupRowDatas(reportDatas);
                 Map<Integer, Map<String, String>> fldDicts = getFldDicts(unitFlds);
-                writeExcelValues(rowDatas,unitFlds,fldDicts,unitSheet);
+                writeExcelValues(rowDatas,unitFlds,fldDicts,unitSheet,null);
                 FileOutputStream fout = null;
                 try {
                     fout = new FileOutputStream(fullFileName);
@@ -260,7 +346,6 @@ public class ReportSumServiceImp implements ReportSumService {
                 return fullFileName;
             }
         }
-
 
         return null;
     }
@@ -325,9 +410,10 @@ public class ReportSumServiceImp implements ReportSumService {
             Map<Integer, Map<Integer, String>> reportDatasMap,
             List<ReportFldConfig> exportUnitFldConfigs,
             Map<Integer, Map<String, String>> fldDicts,
-            HSSFSheet unitSheet) {
-
-        Integer dataRowIndex = 1;
+            HSSFSheet unitSheet,
+            Integer dataRowIndex) {
+        if(dataRowIndex==null)
+            dataRowIndex = 1;
         Integer dataCellIndex = 0;
         for (Integer exportColumId : reportDatasMap.keySet()) {
             HSSFRow rowTmp = unitSheet.createRow(dataRowIndex);
@@ -366,7 +452,7 @@ public class ReportSumServiceImp implements ReportSumService {
 
     public ReportFileLog recordFileCreateLog(String reportId, String jobId, BigInteger userID, Integer logType){
         ReportFileLog reportFileLog = new ReportFileLog();
-        reportFileLog.setReport_id(new Integer(reportId));
+        reportFileLog.setReport_id(Strings.isNullOrEmpty(reportId)?-820:new Integer(reportId));
         reportFileLog.setJob_id(new Integer(jobId));
         reportFileLog.setLog_status(ReportFileLogStatus.CREATING.getValue());
         reportFileLog.setStart_time(new Date());

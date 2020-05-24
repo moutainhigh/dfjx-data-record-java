@@ -202,8 +202,15 @@ public interface IRecordUserDao {
                                   @Param("originId") String originId);
 
 
-    @Select("select group_id,group_name,group_active from rcd_person_group")
-    Page<RecordUserGroup> pageRecordUserGroup(String currPage, String pageNum);
+    @Select("<script>select group_id,group_name,group_active from rcd_person_group " +
+            "<if test='userId!=null'>" +
+            " where group_creater = #{userId}" +
+            "</if>" +
+            "</script>")
+    Page<RecordUserGroup> pageRecordUserGroup(
+            @Param("currPage") String currPage,
+            @Param("pageSize") String pageSize,
+            @Param("userId") String userId);
 
     @Insert("insert into rcd_person_group (group_name,group_active,group_creater) values (#{groupName},#{groupActive},#{group_creater})")
     void saveUserGroup(@Param("groupName") String groupName,@Param("groupActive") String groupActive,@Param("group_creater") String group_creater);
@@ -317,7 +324,7 @@ public interface IRecordUserDao {
             "where group_creater=#{userId} " +
             "</if>" +
             "</script>")
-    List<RecordUserGroup> getUserGroup(String userId);
+    List<RecordUserGroup> getUserGroup(@Param("userId") String userId);
 
     @Select("SELECT distinct " +
             "uoa.origin_id," +
