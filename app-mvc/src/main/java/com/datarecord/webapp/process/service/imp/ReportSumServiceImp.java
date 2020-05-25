@@ -5,6 +5,8 @@ import com.datarecord.enums.ReportFileLogStatus;
 import com.datarecord.enums.ReportFldStatus;
 import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.fillinatask.bean.UpDownLoadFileConfig;
+import com.datarecord.webapp.process.RecordFileService;
+import com.datarecord.webapp.process.dao.IRecordFileDao;
 import com.datarecord.webapp.process.dao.IReportSumDao;
 import com.datarecord.webapp.process.dao.ReportFileLog;
 import com.datarecord.webapp.process.entity.*;
@@ -39,10 +41,16 @@ public class ReportSumServiceImp implements ReportSumService {
     private IReportSumDao reportSumDao;
 
     @Autowired
+    private IRecordFileDao recordFileDao;
+
+    @Autowired
     private RecordProcessService recordProcessService;
 
     @Autowired
     private UpDownLoadFileConfig upDownLoadFileConfig;
+
+    @Autowired
+    private RecordFileService recordFileService;
 
     @Override
     public Map<Integer,List<ReportJobData>> recordDataByFlds(ExportParams exportParams){
@@ -89,7 +97,7 @@ public class ReportSumServiceImp implements ReportSumService {
 
     @Override
     public ReportFileLog getReportFile(String logId) {
-        ReportFileLog reportFileLog = reportSumDao.getReportFile(logId);
+        ReportFileLog reportFileLog = recordFileDao.getReportFile(logId);
         return reportFileLog;
     }
 
@@ -104,7 +112,7 @@ public class ReportSumServiceImp implements ReportSumService {
     public void sumJobFiles(String jobId) {
         BigInteger userId = WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id();
 //        BigInteger userId = new BigInteger("1");
-        ReportFileLog jobFileLog = this.recordFileCreateLog(null, jobId, userId, 2);
+        ReportFileLog jobFileLog = recordFileService.recordFileCreateLog(null, jobId, userId, 2);
 
         new Thread(() -> {
             String fileFullPath = null;
@@ -152,18 +160,18 @@ public class ReportSumServiceImp implements ReportSumService {
                 fout = new FileOutputStream(fileFullPath);
                 wb.write(fout);
             }catch (Exception e){
-                this.updateFileLogStatus(jobFileLog.getLog_id(),ReportFileLogStatus.ERROR,null,e.getMessage());
+                recordFileService.updateFileLogStatus(jobFileLog.getLog_id(),ReportFileLogStatus.ERROR,null,e.getMessage());
             }finally {
                 if(fout!=null) {
                     try {
                         fout.close();
                     } catch (IOException e) {
-                        this.updateFileLogStatus(jobFileLog.getLog_id(),ReportFileLogStatus.ERROR,fileFullPath,e.getMessage());
+                        recordFileService.updateFileLogStatus(jobFileLog.getLog_id(),ReportFileLogStatus.ERROR,fileFullPath,e.getMessage());
                         e.printStackTrace();
                     }
                 }
             }
-            this.updateFileLogStatus(jobFileLog.getLog_id(),ReportFileLogStatus.DONE,fileFullPath,null);
+            recordFileService.updateFileLogStatus(jobFileLog.getLog_id(),ReportFileLogStatus.DONE,fileFullPath,null);
         },"SumJobFiles").start();
 
 
@@ -172,7 +180,7 @@ public class ReportSumServiceImp implements ReportSumService {
 
     @Override
     public void exportRecordFldsData(ExportParams exportParams) {
-        ReportFileLog reportFileLog = this.recordFileCreateLog(
+        ReportFileLog reportFileLog = recordFileService.recordFileCreateLog(
                 exportParams.getReport_id(), exportParams.getJobConfig().getJob_id().toString(), WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id(), 1);
 
         new Thread(new Runnable() {
@@ -256,11 +264,11 @@ public class ReportSumServiceImp implements ReportSumService {
                                 .toString();
                         fout = new FileOutputStream(fullFileName);
                         wb.write(fout);
-                        updateFileLogStatus(reportFileLog.getLog_id(),ReportFileLogStatus.DONE,fullFileName,null);
+                        recordFileService.updateFileLogStatus(reportFileLog.getLog_id(),ReportFileLogStatus.DONE,fullFileName,null);
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        updateFileLogStatus(reportFileLog.getLog_id(),ReportFileLogStatus.ERROR,null,e.getMessage());
+                        recordFileService.updateFileLogStatus(reportFileLog.getLog_id(),ReportFileLogStatus.ERROR,null,e.getMessage());
 
                     }  finally {
                         try {
@@ -274,7 +282,7 @@ public class ReportSumServiceImp implements ReportSumService {
                     reportFileLog.setLog_status(ReportFileLogStatus.ERROR.getValue());
                     reportFileLog.setEnd_time(new Date());
                     reportFileLog.setComment("没有选择组数据");
-                    reportSumDao.updateRecordFileLog(reportFileLog);
+                    recordFileDao.updateRecordFileLog(reportFileLog);
                 }
             }
         },"CreateExportFile").start();
@@ -286,7 +294,7 @@ public class ReportSumServiceImp implements ReportSumService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String exportGroup(String reportId, String jobId,String groupId) {
-        ReportFileLog fileLog = this.recordFileCreateLog(reportId, jobId, WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id(), 0);
+        ReportFileLog fileLog = recordFileService.recordFileCreateLog(reportId, jobId, WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id(), 0);
 //        ReportFileLog fileLog = this.recordFileCreateLog(reportId, jobId, new BigInteger("1"), 0);
 
         JobConfig jobConfig = recordProcessService.getJobConfigByJobId(jobId);
@@ -331,11 +339,11 @@ public class ReportSumServiceImp implements ReportSumService {
                 try {
                     fout = new FileOutputStream(fullFileName);
                     wb.write(fout);
-                    this.updateFileLogStatus(fileLog.getLog_id(),ReportFileLogStatus.DONE,fullFileName,null);
+                    recordFileService.updateFileLogStatus(fileLog.getLog_id(),ReportFileLogStatus.DONE,fullFileName,null);
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    this.updateFileLogStatus(fileLog.getLog_id(),ReportFileLogStatus.ERROR,fullFileName,e.getMessage());
+                    recordFileService.updateFileLogStatus(fileLog.getLog_id(),ReportFileLogStatus.ERROR,fullFileName,e.getMessage());
                 }  finally {
                     try {
                         fout.close();
@@ -373,9 +381,12 @@ public class ReportSumServiceImp implements ReportSumService {
     private Map<Integer, Map<Integer, String>> groupRowDatas(List<ReportJobData> reportDatas){
         Map<Integer,Map<Integer,String>>  reportDatasMap = new LinkedHashMap<>();
         for (ReportJobData reportData : reportDatas) {
-            if(reportData.getData_status()== ReportFldStatus.NORMAL.getValueInteger()){
-                continue;
+            if(!DataRecordUtil.isSuperUser()){
+                if(reportData.getData_status()== ReportFldStatus.NORMAL.getValueInteger()){
+                    continue;
+                }
             }
+
 
             Integer columId = reportData.getColum_id();
             if(!reportDatasMap.containsKey(columId)){
@@ -448,27 +459,5 @@ public class ReportSumServiceImp implements ReportSumService {
             pathDic.mkdirs();
         }
         return filePath;
-    }
-
-    public ReportFileLog recordFileCreateLog(String reportId, String jobId, BigInteger userID, Integer logType){
-        ReportFileLog reportFileLog = new ReportFileLog();
-        reportFileLog.setReport_id(Strings.isNullOrEmpty(reportId)?-820:new Integer(reportId));
-        reportFileLog.setJob_id(new Integer(jobId));
-        reportFileLog.setLog_status(ReportFileLogStatus.CREATING.getValue());
-        reportFileLog.setStart_time(new Date());
-        reportFileLog.setLog_user(userID);
-        reportFileLog.setLog_type(logType);
-        reportSumDao.recordFileLog(reportFileLog);
-        return reportFileLog;
-    }
-
-    public void updateFileLogStatus(Integer logId,ReportFileLogStatus logStatus,String filePath,String comment){
-        ReportFileLog reportFileLog = new ReportFileLog();
-        reportFileLog.setLog_id(logId);
-        reportFileLog.setFile_path(filePath);
-        reportFileLog.setComment(comment);
-        reportFileLog.setLog_status(logStatus.getValue());
-        reportFileLog.setEnd_time(new Date());
-        reportSumDao.updateRecordFileLog(reportFileLog);
     }
 }

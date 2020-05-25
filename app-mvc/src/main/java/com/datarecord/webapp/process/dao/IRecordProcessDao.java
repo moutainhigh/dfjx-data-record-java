@@ -94,7 +94,7 @@ public interface IRecordProcessDao {
             "unit_id INT NULL,"+
             "colum_id INT NULL,"+
             "fld_id INT NULL,"+
-            "record_data VARCHAR(50) NULL,"+
+            "record_data VARCHAR(400) NULL,"+
             "data_status INT NULL DEFAULT 0 COMMENT '0:填报中\\n1:已提交\\n2:未提交' ,"+
             "PRIMARY KEY (id))")
     void makeJobDataTable(@Param("jobId") String jobId);
@@ -264,6 +264,18 @@ public interface IRecordProcessDao {
     void updateReportJobData(@Param("rcdReportJobEntity") ReportJobData updateData,
                              @Param("newColumId") Integer newColumId,
                              @Param("job_id") Integer jobId);
+
+    @Select("select id,report_id,unit_id,colum_id,fld_id,record_data from rcd_report_data_job${jobId}" +
+            " where " +
+            "report_id =#{reportId} and " +
+            "unit_id =#{unitId} and " +
+            "colum_id=#{columId} and " +
+            "fld_id=#{fldId}")
+    ReportJobData getReportJobData(@Param("jobId") String jobId,
+                                   @Param("reportId") String reportId,
+                                   @Param("unitId") String unitId,
+                                   @Param("columId") String columId,
+                                   @Param("fldId") String fldId);
 
     @Update("update rcd_report_job set record_status = #{record_status} where report_id = #{report_id}")
     void updateReportStatus(@Param("report_id") String reportId,@Param("record_status") String value);

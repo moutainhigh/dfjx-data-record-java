@@ -7,6 +7,7 @@ import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +28,7 @@ public class RecordProcessImportController {
     private RecordProcessImportService recordProcessImportService;
 
     @RequestMapping("getImportTemplate")
+    @CrossOrigin(allowCredentials = "true")
     public void getImportTemplate(String jobId, HttpServletResponse response){
         try {
             String filePath = recordProcessImportService.getImportTemplate(jobId);
@@ -47,6 +49,7 @@ public class RecordProcessImportController {
      */
     @RequestMapping("importRecordData")
     @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
     public JsonResult importRecordData(MultipartHttpServletRequest request) {
         Iterator<String> allImportFileNames = request.getFileNames();
         String fileName = null;

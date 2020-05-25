@@ -263,3 +263,6 @@ CHANGE COLUMN `log_type` `log_type` INT(11) NOT NULL DEFAULT '1' COMMENT '0:单�
 
 ALTER TABLE `rcd_person_group`
 CHANGE COLUMN `group_creater` `group_creater` BIGINT NULL DEFAULT NULL ;
+
+ALTER TABLE `rcd_reportfile_log`
+CHANGE COLUMN `log_type` `log_type` INT(11) NOT NULL DEFAULT '1' COMMENT '0:单独填报任务中填报组合导出\n1:任选填报任务中部分填报指标导出\n2:整个任务数据导出\n3:用户上传文件' ;

@@ -23,11 +23,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("record/process")
@@ -392,5 +390,45 @@ public class RecordProcessController {
                 JsonResult.RESULT.SUCCESS, "保存成功", null, JsonResult.RESULT.SUCCESS);
         return successResult;
     }
+
+    @RequestMapping(value="uploadRecordFldFile", method = RequestMethod.POST)
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult uploadRecordFldFile(MultipartHttpServletRequest request){
+//        String reportId,String jobId,String columId,String fldId,
+        String reportId = request.getParameter("reportId");
+        String unitId = request.getParameter("unitId");
+        String columId = request.getParameter("columId");
+        String fldId = request.getParameter("fldId");
+        MultipartFile uploadFile = request.getFile("uploadFile");
+        StringBuilder errorMsgSb = new StringBuilder();
+        if(Strings.isNullOrEmpty(reportId)){
+            errorMsgSb.append("ReportId不能为空");
+        }
+        if(Strings.isNullOrEmpty(unitId)){
+            errorMsgSb.append("unitId不能为空");
+        }
+        if(Strings.isNullOrEmpty(reportId)){
+            errorMsgSb.append("columId不能为空");
+        }
+        if(Strings.isNullOrEmpty(reportId)){
+            errorMsgSb.append("fldId不能为空");
+        }
+        if(uploadFile==null){
+            errorMsgSb.append("uploadFile不能为空");
+        }
+
+        if(!Strings.isNullOrEmpty(errorMsgSb.toString())){
+            JsonResult errorResult = JsonSupport.makeJsonpResult(
+                    JsonResult.RESULT.FAILD, "上传失败", errorMsgSb.toString(), null);
+            return errorResult;
+        }
+
+        RecordProcessFactory.RecordProcessSerice().uploadRecordFldFile(reportId,unitId,columId,fldId,uploadFile);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "上传成功", null, JsonResult.RESULT.SUCCESS);
+        return successResult;
+    }
+
 
 }

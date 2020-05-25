@@ -2,7 +2,9 @@ package com.datarecord.webapp.process.service.imp;
 
 import com.datarecord.enums.*;
 import com.datarecord.webapp.fillinatask.bean.JobInteval;
+import com.datarecord.webapp.fillinatask.bean.UpDownLoadFileConfig;
 import com.datarecord.webapp.fillinatask.service.JobConfigService;
+import com.datarecord.webapp.process.RecordFileService;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessService;
@@ -17,12 +19,16 @@ import com.github.pagehelper.Page;
 import com.google.common.base.Strings;
 import com.webapp.support.page.PageResult;
 import com.workbench.exception.runtime.WorkbenchRuntimeException;
+import com.workbench.shiro.WorkbenchShiroUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
@@ -46,6 +52,12 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
 
     @Autowired
     private OriginService originService;
+
+    @Autowired
+    private UpDownLoadFileConfig upDownLoadFileConfig;
+
+    @Autowired
+    private RecordFileService recordFileService;
 
     @Override
     public PageResult pageJob(BigInteger user_id, String currPage, String pageSize, Map<String,String> queryParams) {
@@ -481,5 +493,44 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
         }
         return validateResultMap;
 
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void uploadRecordFldFile(String reportId,String unitId,String columId, String fldId, MultipartFile uploadFile){
+        try {
+            ReportJobInfo reportJobInfo = recordProcessDao.getReportJobInfoByReportId(reportId);
+            JobConfig jobConfig = recordProcessDao.getJobConfigByJobId(reportJobInfo.getJob_id().toString());
+            String originName = reportJobInfo.getRecord_origin_name();
+            String jobName = jobConfig.getJob_name();
+            String uploadFileFullPath = this.getUploadFilePath(new StringBuilder().append(jobName).append("/").append(originName).toString());
+            File upFilePath = new File(uploadFileFullPath);
+            if(!upFilePath.exists()){
+                upFilePath.mkdirs();
+            }
+            upFilePath.mkdirs();
+            String uploadFileFullName = new StringBuilder().append(uploadFileFullPath).append("/").append(uploadFile.getOriginalFilename()).toString();
+            File upFile = new File(uploadFileFullName);
+            upFile.deleteOnExit();
+            upFile.createNewFile();
+            uploadFile.transferTo(upFile);
+            ReportJobData reportJobData = new ReportJobData();
+            reportJobData.setReport_id(new Integer(reportId));
+            reportJobData.setUnit_id(new Integer(unitId));
+            reportJobData.setColum_id(new Integer(columId));
+            reportJobData.setFld_id(new Integer(fldId));
+            reportJobData.setRecord_data(uploadFileFullName);
+            recordProcessDao.updateReportJobData(reportJobData,new Integer(columId),jobConfig.getJob_id());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw  new WorkbenchRuntimeException(e.getMessage(),e);
+        }
+    }
+
+    private String getUploadFilePath(String custPath){
+        String uploadFilePath = upDownLoadFileConfig.getUploadFilePath();
+        StringBuilder sb = new StringBuilder();
+        sb.append(uploadFilePath).append("/").append(custPath);
+        return sb.toString();
     }
 }
