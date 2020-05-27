@@ -50,7 +50,7 @@ public class RecordProcessImportController {
     @RequestMapping("importRecordData")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
-    public JsonResult importRecordData(MultipartHttpServletRequest request) {
+    public JsonResult importRecordData(MultipartHttpServletRequest request) throws IOException {
         Iterator<String> allImportFileNames = request.getFileNames();
         String fileName = null;
         while (allImportFileNames.hasNext()){
@@ -65,7 +65,11 @@ public class RecordProcessImportController {
 
         MultipartFile multiUploadFile = request.getFile(fileName);
         String oriqinalFileName = multiUploadFile.getOriginalFilename();
+
         File importFile = new File(classPathStr+"/"+oriqinalFileName);
+        importFile.deleteOnExit();
+        importFile.mkdirs();
+        multiUploadFile.transferTo(importFile);
         try{
             if(Strings.isNullOrEmpty(importType))
                 importType = "OVERRIDE";
