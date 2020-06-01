@@ -20,8 +20,6 @@ public interface JobConfigService {
 
     void saveJobPersons(String job_id, String userid);
 
-
-
     void updateJobConfig(JobConfig jobConfig);
 
     List<RcdJobUnitConfig> getJobUnitConfig(String job_id);
@@ -30,11 +28,9 @@ public interface JobConfigService {
 
     void updateRcdJobUnitConfigyi(String jobunitid, String job_id);
 
-
     List<RcdJobPersonAssign> huixianrcdjobpersonassign(String job_id);
 
     void deletercdjobconfig(String job_id);
-
 
     JobConfig getJobConfig(String job_id);
 
@@ -43,8 +39,6 @@ public interface JobConfigService {
     String selectrcdjobconfig(Integer jobid);
 
     String selectrcdjobunitconfig(String unitId);
-
-
 
     List<Lieming> selectrcdreportdatajob(int jobid, int reportid, String unitId, List fldids);
 
