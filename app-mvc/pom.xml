@@ -98,9 +98,15 @@
     </profile>
     <!--测试环境-->
     <profile>
-      <id>test</id>
+      <id>sit</id>
       <properties>
-        <package.environment>test</package.environment>
+        <package.environment>sit</package.environment>
+      </properties>
+    </profile>
+    <profile>
+      <id>uat</id>
+      <properties>
+        <package.environment>uat</package.environment>
       </properties>
     </profile>
     <!--内网生产环境-->
@@ -178,6 +184,8 @@
             WEB-INF/classes/test/**,
             WEB-INF/classes/product/**,
             WEB-INF/classes/product-internet/**,
+            WEB-INF/classes/sit/**,
+            WEB-INF/classes/uat/**,
             WEB-INF/classes/base/**
           </packagingExcludes>
         </configuration>
