@@ -22,7 +22,6 @@
         <param-value>production</param-value>
     </context-param>
 
-    <!-- CAS融合 配置 Start -->
     <context-param>
         <param-name>casSwitch</param-name>
         <param-value>false</param-value>
@@ -127,7 +126,6 @@
     <!--<filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>-->
     <!--<url-pattern>/*</url-pattern>-->
     <!--</filter-mapping>-->
-    <!-- CAS融合 配置 End -->
 
 
     <filter>
@@ -177,12 +175,10 @@
     <filter>
         <filter-name>ShiroFilter</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-        <!-- 设置true由servlet容器控制filter的生命周期 -->
         <init-param>
             <param-name>targetFilterLifecycle</param-name>
             <param-value>true</param-value>
         </init-param>
-        <!-- 设置spring容器filter的bean id，如果不设置则找与filter-name一致的bean-->
         <init-param>
             <param-name>targetBeanName</param-name>
             <param-value>shiroFilter</param-value>
