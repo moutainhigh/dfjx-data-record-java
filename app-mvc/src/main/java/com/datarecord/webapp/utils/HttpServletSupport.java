@@ -16,11 +16,16 @@ public class HttpServletSupport {
     }
 
     public void exportFile(String filePath, HttpServletResponse response) throws IOException {
-        File downloadFile = new File(filePath);
         String[] filePathSplit = filePath.split("/");
         response.setHeader("Content-Type", "application/x-msdownload");
         response.setHeader("Content-Disposition", "attachment; filename="
                 + toUTF8String(filePathSplit[filePathSplit.length-1]));
+        this.viewFile(filePath,response);
+    }
+
+
+    public void viewFile(String filePath, HttpServletResponse response) throws IOException {
+        File downloadFile = new File(filePath);
         ServletOutputStream out = response.getOutputStream();
         FileInputStream fileInputStream = new FileInputStream(downloadFile);
         out.flush();

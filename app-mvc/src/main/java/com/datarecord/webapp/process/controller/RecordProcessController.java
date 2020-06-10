@@ -439,13 +439,26 @@ public class RecordProcessController {
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public void dowloadRecordFldFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        File recordFldFile = this.checkRecordFldFile(request);
+        HttpServletSupport.getInstance().exportFile(recordFldFile.getPath(),response);
+    }
+
+    @RequestMapping(value="viewRecordFldFile", method = RequestMethod.GET)
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public void viewRecordFldFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        File recordFldFile = this.checkRecordFldFile(request);
+        HttpServletSupport.getInstance().viewFile(recordFldFile.getPath(),response);
+    }
+
+    private File checkRecordFldFile(HttpServletRequest request){
         String reportId = request.getParameter("reportId");
         String unitId = request.getParameter("unitId");
         String columId = request.getParameter("columId");
         String fldId = request.getParameter("fldId");
         File recordFldFile = RecordProcessFactory.RecordProcessSerice().dowloadRecordFldFile(reportId, unitId, columId, fldId);
-
-        HttpServletSupport.getInstance().exportFile(recordFldFile.getPath(),response);
+        return recordFldFile;
     }
+
 
 }
