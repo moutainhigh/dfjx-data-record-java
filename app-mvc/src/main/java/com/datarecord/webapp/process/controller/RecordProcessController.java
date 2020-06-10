@@ -10,6 +10,7 @@ import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordMaker;
 import com.datarecord.webapp.process.service.RecordProcessFactory;
 import com.datarecord.webapp.utils.DataRecordUtil;
+import com.datarecord.webapp.utils.HttpServletSupport;
 import com.google.common.base.Strings;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
@@ -24,6 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -424,11 +428,24 @@ public class RecordProcessController {
             return errorResult;
         }
 
-        RecordProcessFactory.RecordProcessSerice().uploadRecordFldFile(reportId,unitId,columId,fldId,uploadFile);
+        String filePath = RecordProcessFactory.RecordProcessSerice().uploadRecordFldFile(reportId,unitId,columId,fldId,uploadFile);
         JsonResult successResult = JsonSupport.makeJsonpResult(
-                JsonResult.RESULT.SUCCESS, "上传成功", null, JsonResult.RESULT.SUCCESS);
+                JsonResult.RESULT.SUCCESS, "上传成功", null, filePath);
         return successResult;
     }
 
+
+    @RequestMapping(value="dowloadRecordFldFile", method = RequestMethod.GET)
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public void dowloadRecordFldFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String reportId = request.getParameter("reportId");
+        String unitId = request.getParameter("unitId");
+        String columId = request.getParameter("columId");
+        String fldId = request.getParameter("fldId");
+        File recordFldFile = RecordProcessFactory.RecordProcessSerice().dowloadRecordFldFile(reportId, unitId, columId, fldId);
+
+        HttpServletSupport.getInstance().exportFile(recordFldFile.getPath(),response);
+    }
 
 }

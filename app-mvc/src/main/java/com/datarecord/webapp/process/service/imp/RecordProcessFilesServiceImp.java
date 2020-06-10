@@ -5,7 +5,7 @@ import com.datarecord.webapp.fillinatask.bean.UpDownLoadFileConfig;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.dao.IRecordProcessImportDao;
 import com.datarecord.webapp.process.entity.*;
-import com.datarecord.webapp.process.service.RecordProcessImportService;
+import com.datarecord.webapp.process.service.RecordProcessFilesService;
 import com.datarecord.webapp.process.service.RecordProcessService;
 import com.google.common.base.Strings;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -29,10 +29,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Service("recordProcessImportService")
-public class RecordProcessImportServiceImp implements RecordProcessImportService {
+@Service("recordProcessFilesService")
+public class RecordProcessFilesServiceImp implements RecordProcessFilesService {
 
-    private Logger logger = LoggerFactory.getLogger(RecordProcessImportServiceImp.class);
+    private Logger logger = LoggerFactory.getLogger(RecordProcessFilesServiceImp.class);
 
     @Autowired
     private RecordProcessService recordProcessService;

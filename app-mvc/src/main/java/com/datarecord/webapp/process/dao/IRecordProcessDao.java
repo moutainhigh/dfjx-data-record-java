@@ -405,4 +405,7 @@ public interface IRecordProcessDao {
                                        @Param("pageSize") String pageSize,
                                        @Param("job_id") String jobId,
                                        @Param("queryParams")Map<String, String> queryParams);
+
+    @Select("select ")
+    String getFldReportData(Integer job_id, String reportId, String unitId, String columId, String fldId);
 }

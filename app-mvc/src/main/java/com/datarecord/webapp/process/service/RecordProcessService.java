@@ -8,6 +8,7 @@ import com.webapp.support.page.PageResult;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
@@ -64,5 +65,7 @@ public interface RecordProcessService {
     void logUserGroup(List<JobPersonGroupLog> jobPersonGroupLogs);
 
     @Transactional(rollbackFor = Exception.class)
-    void uploadRecordFldFile(String reportId, String unitId, String columId, String fldId, MultipartFile uploadFile);
+    String uploadRecordFldFile(String reportId, String unitId, String columId, String fldId, MultipartFile uploadFile);
+
+    File dowloadRecordFldFile(String reportId, String unitId, String columId, String fldId);
 }

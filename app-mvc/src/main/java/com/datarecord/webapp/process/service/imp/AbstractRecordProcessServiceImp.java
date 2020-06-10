@@ -19,7 +19,6 @@ import com.github.pagehelper.Page;
 import com.google.common.base.Strings;
 import com.webapp.support.page.PageResult;
 import com.workbench.exception.runtime.WorkbenchRuntimeException;
-import com.workbench.shiro.WorkbenchShiroUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -497,7 +496,7 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void uploadRecordFldFile(String reportId,String unitId,String columId, String fldId, MultipartFile uploadFile){
+    public String uploadRecordFldFile(String reportId, String unitId, String columId, String fldId, MultipartFile uploadFile){
         try {
             ReportJobInfo reportJobInfo = recordProcessDao.getReportJobInfoByReportId(reportId);
             JobConfig jobConfig = recordProcessDao.getJobConfigByJobId(reportJobInfo.getJob_id().toString());
@@ -521,9 +520,26 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
             reportJobData.setFld_id(new Integer(fldId));
             reportJobData.setRecord_data(uploadFileFullName);
             recordProcessDao.updateReportJobData(reportJobData,new Integer(columId),jobConfig.getJob_id());
+            return uploadFileFullName;
         } catch (IOException e) {
             e.printStackTrace();
             throw  new WorkbenchRuntimeException(e.getMessage(),e);
+        }
+    }
+
+    @Override
+    public File dowloadRecordFldFile(String reportId, String unitId, String columId, String fldId) {
+        ReportJobInfo recordInfo = recordProcessDao.getReportJobInfoByReportId(reportId);
+        ReportJobData reportData = recordProcessDao.getReportJobData(recordInfo.getJob_id().toString(), reportId, unitId, columId, fldId);
+        String reportDataVal = reportData.getRecord_data();
+        if(Strings.isNullOrEmpty(reportDataVal)){
+            return null;
+        }else{
+            File recordFile = new File(reportDataVal);
+            if(recordFile.exists()){
+                return recordFile;
+            }else
+                return null;
         }
     }
 

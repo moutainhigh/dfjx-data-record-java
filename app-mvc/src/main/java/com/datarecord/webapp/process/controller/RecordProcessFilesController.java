@@ -1,6 +1,6 @@
 package com.datarecord.webapp.process.controller;
 
-import com.datarecord.webapp.process.service.RecordProcessImportService;
+import com.datarecord.webapp.process.service.RecordProcessFilesService;
 import com.datarecord.webapp.utils.HttpServletSupport;
 import com.google.common.base.Strings;
 import com.webapp.support.json.JsonSupport;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.MultipartRequest;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -21,17 +20,17 @@ import java.net.URL;
 import java.util.Iterator;
 
 @Controller
-@RequestMapping("record/upload")
-public class RecordProcessImportController {
+@RequestMapping("record/files")
+public class RecordProcessFilesController {
 
     @Autowired
-    private RecordProcessImportService recordProcessImportService;
+    private RecordProcessFilesService recordProcessFilesService;
 
     @RequestMapping("getImportTemplate")
     @CrossOrigin(allowCredentials = "true")
     public void getImportTemplate(String jobId, HttpServletResponse response){
         try {
-            String filePath = recordProcessImportService.getImportTemplate(jobId);
+            String filePath = recordProcessFilesService.getImportTemplate(jobId);
             HttpServletSupport.getInstance().exportFile(filePath,response);
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,9 +73,9 @@ public class RecordProcessImportController {
             if(Strings.isNullOrEmpty(importType))
                 importType = "OVERRIDE";
             if("OVERRIDE".equals(importType)){
-                recordProcessImportService.overrideImport(jobId,reportId,importFile);
+                recordProcessFilesService.overrideImport(jobId,reportId,importFile);
             }else if("EXTEND".equals(importType)){
-                recordProcessImportService.extendImport(jobId,reportId,importFile);
+                recordProcessFilesService.extendImport(jobId,reportId,importFile);
             }
         }catch (Exception e){
             e.printStackTrace();
