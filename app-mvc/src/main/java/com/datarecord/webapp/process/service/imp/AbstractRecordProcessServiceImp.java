@@ -379,8 +379,8 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
     }
 
     @Override
-    public Integer getMaxColumId(String jobId, String reportId) {
-        Integer maxColumId = recordProcessDao.getMaxColumId(jobId, reportId);
+    public Integer getMaxColumId(String jobId, String reportId, String jobUnitId) {
+        Integer maxColumId = recordProcessDao.getMaxColumId(jobId, reportId,jobUnitId);
         return maxColumId;
     }
 

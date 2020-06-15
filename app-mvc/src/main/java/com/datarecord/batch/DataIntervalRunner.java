@@ -66,13 +66,24 @@ public class DataIntervalRunner  {
             Map<String, List<Integer>> checkResult = checkJobs();
             List<Integer> innerJobList = checkResult.get(INNER_JOBS);
             List<Integer> outterJobList = checkResult.get(OUTTER_JOBS);
+            //检查是否有关闭和重新开启都有的任务
+            List<Integer> finalOutterJobList = new ArrayList<>();
+            if(outterJobList!=null&&outterJobList.size()>0){
+                for (Integer outterJobId : outterJobList) {
+                    if(!innerJobList.contains(outterJobId)){
+                        finalOutterJobList.add(outterJobId);
+                    }
+                }
+            }
+
+            for (Integer jobId : finalOutterJobList) {
+                this.closeOutterData(jobId);
+            }
             for (Integer jobId : innerJobList) {
                 this.makeNewRecord(jobId);
             }
 
-            for (Integer jobId : outterJobList) {
-                this.closeOutterData(jobId);
-            }
+
             transactionManager.commit(status);
         }catch(Exception e){
             e.printStackTrace();
@@ -86,10 +97,11 @@ public class DataIntervalRunner  {
             RUNNER();
         }, "DataInTervalRunner");
         long remainingTime = DateSupport.getRemainingTime(DateSupport.Beijing_ShangHai_TimeZone());
+        remainingTime = 30000;
+
         logger.info("建立任务填报周期监听线程，线程将在{}秒后开始执行，并且在首次执行后，每隔24小时执行一次",
                 remainingTime/1000);
 
-//        remainingTime = 30000;
 
         ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutor.scheduleAtFixedRate(
@@ -103,33 +115,34 @@ public class DataIntervalRunner  {
     void makeNewRecord(Integer jobId){
         List<ReportJobInfo> reportJobInfos = recordProcessService.getReportJobInfosByJobId(jobId.toString());
         if(reportJobInfos!=null&&reportJobInfos.size()>0){
+            JobConfig jobConfig = recordProcessService.getJobConfigByJobId(jobId.toString());
+            recordProcessService.changeReportDataStatus(
+                    jobConfig.getJob_id().toString(),
+                    reportJobInfos.get(0).getReport_id().toString(),
+                    ReportFldStatus.NORMAL.getValueInteger());
+            reportJobInfos.forEach(reportJobInfo->{
+                Integer reportId = reportJobInfo.getReport_id();
+                for (JobUnitConfig jobUnit : jobConfig.getJobUnits()) {
+                    logger.info("为填报任务:任务ID：{}-数据组:{}自动生成数据",jobUnit.getJob_id(),jobUnit.getJob_unit_name());
+                    if(jobUnit.getJob_unit_active() == JobUnitAcitve.UNACTIVE.value()){
+                        logger.info("为填报任务:任务ID：{}-数据组:{}自动生成数据--->失败，原因为当前填报数据组未开启",jobUnit.getJob_id(),jobUnit.getJob_unit_name());
+                        continue;
+                    }
+                    recordProcessService.updateReportStatus(reportId.toString(), ReportStatus.NORMAL);
+                    if(jobUnit.getJob_unit_type() == JobUnitType.GRID.value()){
+                        Integer maxColumId = recordProcessService.getMaxColumId(jobId.toString(),reportId.toString(),jobUnit.getJob_unit_id().toString());
+                        recordMaker.createGridRecordDatas(jobUnit,reportId,maxColumId+1);
+                    }
+                    if(jobUnit.getJob_unit_type() == JobUnitType.SIMPLE.value()){
+                        //TO BE CONTINUE!!!!!!!!!!!!!!!!
+                    }
+                    logger.info("为填报任务:任务ID：{}-数据组:{}自动生成数据--->完成",jobUnit.getJob_id(),jobUnit.getJob_unit_name());
+                }
+            });
+        }else {
             logger.error("当前任务id：{}，不存在任何填报数据",jobId);
             return;
         }
-        JobConfig jobConfig = recordProcessService.getJobConfigByJobId(jobId.toString());
-        recordProcessService.changeReportDataStatus(
-                jobConfig.getJob_id().toString(),
-                reportJobInfos.get(0).getReport_id().toString(),
-                ReportFldStatus.NORMAL.getValueInteger());
-        reportJobInfos.forEach(reportJobInfo->{
-            Integer reportId = reportJobInfo.getReport_id();
-            for (JobUnitConfig jobUnit : jobConfig.getJobUnits()) {
-                logger.info("为填报任务:任务ID：{}-数据组:{}自动生成数据",jobUnit.getJob_id(),jobUnit.getJob_unit_name());
-                if(jobUnit.getJob_unit_active() == JobUnitAcitve.UNACTIVE.value()){
-                    logger.info("为填报任务:任务ID：{}-数据组:{}自动生成数据--->失败，原因为当前填报数据组未开启",jobUnit.getJob_id(),jobUnit.getJob_unit_name());
-                    continue;
-                }
-                recordProcessService.updateReportStatus(reportId.toString(), ReportStatus.NORMAL);
-                if(jobUnit.getJob_unit_type() == JobUnitType.GRID.value()){
-                    Integer maxColumId = recordProcessService.getMaxColumId(jobId.toString(),reportId.toString());
-                    recordMaker.createGridRecordDatas(jobUnit,reportId,maxColumId+1);
-                }
-                if(jobUnit.getJob_unit_type() == JobUnitType.SIMPLE.value()){
-                    //TO BE CONTINUE!!!!!!!!!!!!!!!!
-                }
-                logger.info("为填报任务:任务ID：{}-数据组:{}自动生成数据--->完成",jobUnit.getJob_id(),jobUnit.getJob_unit_name());
-            }
-        });
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -151,7 +164,7 @@ public class DataIntervalRunner  {
         logger.info("开始检查当前任务是否开始填报，是否已经超出填报时间范围");
         
         Map<String,List<Integer>> resultJobs = new HashMap<>();
-        resultJobs.put(INNER_JOBS,new ArrayList());
+            resultJobs.put(INNER_JOBS,new ArrayList());
         resultJobs.put(OUTTER_JOBS,new ArrayList());
         Map<Integer, List<JobInteval>> allJobIntevals = jobConfigService.allJobIntevals();
         logger.info("获取所有填报区间数据完成");
