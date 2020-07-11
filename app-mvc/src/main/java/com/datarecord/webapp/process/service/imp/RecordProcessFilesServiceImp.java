@@ -1,5 +1,6 @@
 package com.datarecord.webapp.process.service.imp;
 
+import com.datarecord.enums.FldDataTypes;
 import com.datarecord.enums.JobUnitType;
 import com.datarecord.webapp.fillinatask.bean.UpDownLoadFileConfig;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
@@ -8,11 +9,10 @@ import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordProcessFilesService;
 import com.datarecord.webapp.process.service.RecordProcessService;
 import com.google.common.base.Strings;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import com.workbench.exception.runtime.WorkbenchRuntimeException;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -26,6 +26,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -72,7 +75,10 @@ public class RecordProcessFilesServiceImp implements RecordProcessFilesService {
                 .append("/").append(jobConfig.getJob_name()).append("/").toString();
         File pathDic = new File(filePath);
         if(!pathDic.exists()){
-            pathDic.mkdirs();
+            boolean mkresult = pathDic.mkdirs();
+            if(!mkresult){
+                throw new WorkbenchRuntimeException("创建路径失败:"+filePath,new RuntimeException());
+            }
         }
         templateFilePath = new StringBuilder().append(filePath).append(jobConfig.getJob_id()).append(".xls").toString();
         File templateFile = new File(templateFilePath);
@@ -96,6 +102,10 @@ public class RecordProcessFilesServiceImp implements RecordProcessFilesService {
             groupConfigTmp.put(jobUnit.getJob_unit_name(),jobUnit);
             List<ReportFldConfig> unitFlds = jobUnit.getUnitFlds();
             for (ReportFldConfig unitFld : unitFlds) {
+                if(FldDataTypes.PICTURE.compareTo(unitFld.getFld_data_type())){//图片指标不在导入模板中声称
+                    continue;
+                }
+
                 String catgName = unitFld.getCatg_name();
                 String fldName = unitFld.getFld_name();
                 if(!groupMapTmp.get(jobUnit.getJob_unit_name()).containsKey(catgName)){
@@ -201,6 +211,10 @@ public class RecordProcessFilesServiceImp implements RecordProcessFilesService {
     }
 
     void createGridSheet(JobUnitConfig jobUnitConfig, Map<String, ReportFldConfig> fldConfigTmp, Map<String, List<String>> catgMap, HSSFWorkbook wb){
+        HSSFCellStyle textStyle = wb.createCellStyle();
+        HSSFDataFormat format = wb.createDataFormat();
+        textStyle.setDataFormat(format.getFormat("@"));
+
         if(catgMap!=null&&catgMap.size()>0){
             HSSFSheet unitSheet = wb.createSheet(jobUnitConfig.getJob_unit_name());
             Integer catgNameOffset = 0;
@@ -229,6 +243,10 @@ public class RecordProcessFilesServiceImp implements RecordProcessFilesService {
                     ReportFldConfig fldCOnfig = fldConfigTmp.get(fldName);
                     this.recordTemplateFldLog(jobUnitConfig,fldCOnfig,catgNameIndex);
                     HSSFCell fldNameCell = fldRowObj.createCell(catgNameIndex);
+
+                    fldNameCell.setCellStyle(textStyle);//设置单元格格式为"文本"
+                    fldNameCell.setCellType(CellType.STRING);
+
                     fldNameCell.setCellValue(fldName);
                     catgNameIndex++;
                 }

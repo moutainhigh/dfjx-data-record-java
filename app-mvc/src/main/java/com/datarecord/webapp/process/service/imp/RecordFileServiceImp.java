@@ -6,6 +6,7 @@ import com.datarecord.webapp.process.dao.IRecordFileDao;
 import com.datarecord.webapp.process.dao.IReportSumDao;
 import com.datarecord.webapp.process.dao.ReportFileLog;
 import com.google.common.base.Strings;
+import com.webapp.support.utils.DateSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class RecordFileServiceImp implements RecordFileService {
         reportFileLog.setReport_id(Strings.isNullOrEmpty(reportId) ? -820 : new Integer(reportId));
         reportFileLog.setJob_id(new Integer(jobId));
         reportFileLog.setLog_status(ReportFileLogStatus.CREATING.getValue());
-        reportFileLog.setStart_time(new Date());
+        reportFileLog.setStart_time(DateSupport.getBeijingTime());
         reportFileLog.setLog_user(userID);
         reportFileLog.setLog_type(logType);
         recordFileLog.recordFileLog(reportFileLog);
@@ -40,7 +41,7 @@ public class RecordFileServiceImp implements RecordFileService {
         reportFileLog.setFile_path(filePath);
         reportFileLog.setComment(comment);
         reportFileLog.setLog_status(logStatus.getValue());
-        reportFileLog.setEnd_time(new Date());
+        reportFileLog.setEnd_time(DateSupport.getBeijingTime());
         recordFileLog.updateRecordFileLog(reportFileLog);
     }
 }
