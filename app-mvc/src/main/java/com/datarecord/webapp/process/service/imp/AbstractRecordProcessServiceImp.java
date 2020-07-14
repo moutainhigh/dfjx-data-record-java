@@ -91,6 +91,13 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
         return pageResultData;
     }
 
+
+    @Override
+    public List<JobConfig> allAuthJobConfig(BigInteger userId, Map<String, String> queryParams) {
+        List<JobConfig> aurhJobConfigPageData = recordProcessDao.pageAuthJobConfig(userId,null,null,queryParams);
+        return aurhJobConfigPageData;
+    }
+
     @Override
     public PageResult pageJobDataByJobId(BigInteger userId, String jobId, String currPage, String pageSize, Map<String, String> queryParams) {
         if(Strings.isNullOrEmpty(currPage))

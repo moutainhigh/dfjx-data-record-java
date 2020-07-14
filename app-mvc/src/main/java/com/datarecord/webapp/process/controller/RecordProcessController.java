@@ -73,6 +73,24 @@ public class RecordProcessController {
         return successResult;
     }
 
+    @RequestMapping("allAuthJobConfig")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult allAuthJobConfig(String reportName){
+        Map<String,String> queryParams = new HashMap<>();
+        queryParams.put("reportName",reportName);
+        BigInteger userId = null;
+        if(!DataRecordUtil.isSuperUser()){
+            userId = WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id();
+        }
+
+        List<JobConfig> dataList = RecordProcessFactory.RecordProcessSerice().allAuthJobConfig(userId,queryParams);
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, dataList);
+        return successResult;
+    }
+
     @RequestMapping("pageJob")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")

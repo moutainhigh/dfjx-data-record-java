@@ -266,3 +266,45 @@ CHANGE COLUMN `group_creater` `group_creater` BIGINT NULL DEFAULT NULL ;
 
 ALTER TABLE `rcd_reportfile_log`
 CHANGE COLUMN `log_type` `log_type` INT(11) NOT NULL DEFAULT '1' COMMENT '0:单独填报任务中填报组合导出\n1:任选填报任务中部分填报指标导出\n2:整个任务数据导出\n3:用户上传文件' ;
+
+CREATE TABLE `rcd_sms_templates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `template_id` varchar(45) DEFAULT NULL,
+  `template_name` varchar(45) DEFAULT NULL,
+  `template_content` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `report_sms_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `config_name` varchar(100) DEFAULT NULL COMMENT '配置名称',
+  `report_defined_id` int(11) DEFAULT NULL COMMENT '填报任务定义id',
+  `sms_template_id` varchar(40) DEFAULT NULL COMMENT '短信模板ID',
+  `send_date` date DEFAULT NULL COMMENT '发送日期',
+  `send_time` timestamp NULL DEFAULT NULL COMMENT '发送时间',
+  `pre_days` int(11) DEFAULT NULL,
+  `cross_holiday` char(1) DEFAULT NULL COMMENT 'Y:略过假期 N:不略过',
+  `send_status` char(1) DEFAULT '0' COMMENT '0:待发送\n1:发送中\n2:已发送\n3:发送失败',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `send_sms_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sms_config_id` varchar(45) DEFAULT NULL,
+  `phone_number` varchar(45) DEFAULT NULL,
+  `cust_name` varchar(45) DEFAULT NULL,
+  `send_result` varchar(45) DEFAULT NULL,
+  `faild_reason` varchar(300) DEFAULT NULL,
+  `send_context` varchar(600) DEFAULT NULL,
+  `sms_config_name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `report_sms_config`
+CHANGE COLUMN `pre_days` `distance_days` INT(11) NULL DEFAULT NULL ;
+ALTER TABLE `report_sms_config`
+ADD COLUMN `distance_type` INT(11) NULL AFTER `send_status`;
+ALTER TABLE `report_sms_config`
+ADD COLUMN `config_status` INT(11) NULL AFTER `distance_type`;
+ALTER TABLE `report_sms_config`
+CHANGE COLUMN `config_status` `config_status` INT(11) NULL DEFAULT 0 ;

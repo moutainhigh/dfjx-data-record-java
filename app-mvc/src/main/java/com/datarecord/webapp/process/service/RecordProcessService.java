@@ -19,6 +19,8 @@ public interface RecordProcessService {
 
     PageResult pageAuthJobConfig(BigInteger userId, String currPage, String pageSize, Map<String, String> queryParams);
 
+    List<JobConfig> allAuthJobConfig(BigInteger userId, Map<String, String> queryParams);
+
     PageResult pageJobDataByJobId(BigInteger userId, String jobId, String currPage, String pageSize, Map<String, String> queryParams);
 
     JobConfig getJobConfigByReportId(String reportId);
