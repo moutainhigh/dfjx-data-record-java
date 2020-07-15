@@ -188,7 +188,7 @@ public interface IRecordUserDao {
             @Param("jobId") String jobId,
             @Param("originId") String originId);
 
-    @Select("select u.user_id, u.user_name_cn,so.origin_name FROM rcd_job_person_assign rjpa " +
+    @Select("select u.user_id, u.user_name_cn,so.origin_name,u.mobile_phone FROM rcd_job_person_assign rjpa " +
             "left join user u on " +
             "rjpa.user_id = u.user_id " +
             "left join user_origin_assign uoa on " +

@@ -95,8 +95,8 @@ public interface IReportSmsDao {
             "and rsc.sms_template_id = rst.template_id")
     Page<ReportSmsConfig> pageSms(@Param("currPage") Integer currPage,@Param("pageSize") Integer pageSize);
 
-    @Select("select * from rcd_sms_templates")
-    List<Map<String, Object>> getAliSmsTemplates();
+    @Select("select * from rcd_sms_templates where template_id=#{smsTemplateId}")
+    List<Map<String, Object>> getRcdSmsTemplates(@Param("smsTemplateId") String smsTemplateId);
 
     @Delete("delete from report_sms_config where id = #{smsId}")
     void deleteSmsConfig(@Param("smsId") String smsId);
