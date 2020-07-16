@@ -365,14 +365,14 @@ public class ReportSmsServiceImp implements ReportSmsService {
         }
 
         StringBuilder sendUrlSb = new StringBuilder().append(smsServiceConfig.getHost()).append(":").append(smsServiceConfig.getPort()).append("/")
-                .append(smsServiceConfig.getAppname()).append("/").append(smsServiceConfig.getSmsServicSendurl());
+                .append(smsServiceConfig.getAppname()).append("/").append(smsServiceConfig.getWsdlUrl());
 
 
         String sq = this.randomCode(3);  //必须三位随机数
         String smsid = this.randomCode(36);	//必须36位随机字符串 短信回复里面会用到
         String[] phones = {phoneNum};
         //发送短信
-        logger.debug("发送短信:{}******{}******{}******{}",sq,smsid,phones,sendMsg);
+        logger.debug("发送短信:{}******{}******{}******{}*****{}",sq,smsid,phones,sendMsg,sendUrlSb.toString());
         String sendXml = this.getXmlByAppMessage(smsid,sq,phones,sendMsg);
 
         Object[] resultArray = this.sendMessageByTaiji(smsServiceConfig.getUser(), sendXml,new Integer(smsServiceConfig.getClientcode()),sendUrlSb.toString());
@@ -441,7 +441,8 @@ public class ReportSmsServiceImp implements ReportSmsService {
                 new Integer(20000));
         EndpointReference epr = new EndpointReference(wsdl);
         options.setTo(epr);
-        QName qname = new QName(smsServiceConfig.getSmsServiceHost(),"sendMessageInfo");
+        QName qname = new QName("http://172.25.13.128:8080/webIscp/services/messageInfoService?wsdl","sendMessageInfo");
+//        QName qname = new QName(smsServiceConfig.getSmsServiceHost(),"sendMessageInfo");
 
         logger.info("发送短信请求,{},{}",smsServiceConfig.getSmsServiceHost(),smsServiceConfig.getSmsServicSendurl());
 
