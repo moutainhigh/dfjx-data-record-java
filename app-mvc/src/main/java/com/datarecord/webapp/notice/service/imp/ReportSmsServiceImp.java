@@ -430,6 +430,8 @@ public class ReportSmsServiceImp implements ReportSmsService {
     public Object[] sendMessageByTaiji(String userCode, String xml,int appId,String wsdl) throws AxisFault {
         Object[] result = null;
         logger.info("发送信息，信息内容:{}",xml);
+        logger.info("发送信息，短信服务地址:{}",wsdl);
+        logger.info("发送信息，userCode:{}",userCode);
         RPCServiceClient client;
         client = new RPCServiceClient();
         Options options = client.getOptions();
