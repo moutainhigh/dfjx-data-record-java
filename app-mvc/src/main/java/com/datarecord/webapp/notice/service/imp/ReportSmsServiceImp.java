@@ -90,11 +90,11 @@ public class ReportSmsServiceImp implements ReportSmsService {
         Calendar calendar = DateSupport.getBeijingCalendar();
         int nowMiute = calendar.get(Calendar.MINUTE);
         int firstSendMiute = 0;
-//        if(nowMiute>=30){
-//            firstSendMiute = 60 - nowMiute;
-//        }else{
-//            firstSendMiute = 30 - nowMiute;
-//        }
+        if(nowMiute>=30){
+            firstSendMiute = 60 - nowMiute;
+        }else{
+            firstSendMiute = 30 - nowMiute;
+        }
         logger.info("首次发送短信将在:{}分钟后开始,之后每隔:{}分钟发送一次短信",firstSendMiute,30);
 
         ScheduledExecutorService exceutor = Executors.newSingleThreadScheduledExecutor();
@@ -123,8 +123,8 @@ public class ReportSmsServiceImp implements ReportSmsService {
         List<ReportSmsConfig> sendList= new ArrayList<>();
         Page<ReportSmsConfig> allSmsJob = reportSmsDao.pageSms(null,null);
         for (ReportSmsConfig reportSmsConfig : allSmsJob) {
-//            if(this.needSendMsg(reportSmsConfig)){
-            if(true){
+            if(this.needSendMsg(reportSmsConfig)){
+//            if(true){
                 sendList.add(reportSmsConfig);
             }
         }
