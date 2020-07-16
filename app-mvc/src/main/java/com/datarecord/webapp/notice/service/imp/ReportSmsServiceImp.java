@@ -90,11 +90,11 @@ public class ReportSmsServiceImp implements ReportSmsService {
         Calendar calendar = DateSupport.getBeijingCalendar();
         int nowMiute = calendar.get(Calendar.MINUTE);
         int firstSendMiute = 0;
-        if(nowMiute>=30){
-            firstSendMiute = 60 - nowMiute;
-        }else{
-            firstSendMiute = 30 - nowMiute;
-        }
+//        if(nowMiute>=30){
+//            firstSendMiute = 60 - nowMiute;
+//        }else{
+//            firstSendMiute = 30 - nowMiute;
+//        }
         logger.info("首次发送短信将在:{}分钟后开始,之后每隔:{}分钟发送一次短信",firstSendMiute,30);
 
         ScheduledExecutorService exceutor = Executors.newSingleThreadScheduledExecutor();
@@ -436,19 +436,19 @@ public class ReportSmsServiceImp implements ReportSmsService {
         RPCServiceClient client;
         client = new RPCServiceClient();
         Options options = client.getOptions();
-        options.setProperty(
-                org.apache.axis2.transport.http.HTTPConstants.CONNECTION_TIMEOUT,
-                new Integer(20000));
+        options.setProperty(org.apache.axis2.transport.http.HTTPConstants.CONNECTION_TIMEOUT,new Integer(smsServiceConfig.getTimeout()));
         EndpointReference epr = new EndpointReference(wsdl);
         options.setTo(epr);
-        QName qname = new QName("http://172.25.13.128:8080/webIscp/services/messageInfoService?wsdl","sendMessageInfo");
-//        QName qname = new QName(smsServiceConfig.getSmsServiceHost(),"sendMessageInfo");
+//        QName qname = new QName("http://172.25.13.128:8080/webIscp/services/messageInfoService?wsdl","sendMessageInfo");
+        QName qname = new QName(smsServiceConfig.getSmsServiceHost(),smsServiceConfig.getSmsServicSendurl());
 
         logger.info("发送短信请求,{},{}",smsServiceConfig.getSmsServiceHost(),smsServiceConfig.getSmsServicSendurl());
 
         Object[] objEntryArgs = new Object[] { appId, userCode, xml };
         Class[] returnTypes = new Class[] { String.class };
         result = client.invokeBlocking(qname, objEntryArgs, returnTypes);
+
+        logger.info("发送短信返回数据:{}",result);
 
 //        RPCServiceClient client;
 //        client = new RPCServiceClient();

@@ -38,7 +38,7 @@ public class SmsServiceConfig {
     private String smsServicPort;
     @Value("${sms.query.appname}")
     private String smsServicAppName;
-    @Value("${sms.service.wsdlUrl}")
+    @Value("${sms.query.sendurl}")
     private String smsServicSendurl;
     @Value("${sms.query.sendResultUrl}")
     private String smsServicSendResultUrl;
