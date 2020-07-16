@@ -430,18 +430,36 @@ public class ReportSmsServiceImp implements ReportSmsService {
         Object[] result = null;
         logger.info("发送信息，信息内容:{}",xml);
         logger.info("发送信息，短信服务地址:{}",wsdl);
+        logger.info("发送信息，appId:{}",appId);
         logger.info("发送信息，userCode:{}",userCode);
+
         RPCServiceClient client;
         client = new RPCServiceClient();
-//        Options options = client.getOptions();
-//        options.setProperty(HTTPConstants.CONNECTION_TIMEOUT, new Integer(smsServiceConfig.getTimeout())*1000);
-//        EndpointReference epr = new EndpointReference(wsdl);
-//        options.setTo(epr);
-        QName qname = new QName(smsServiceConfig.getSmsServiceHost(),smsServiceConfig.getSmsServicSendurl());
+        Options options = client.getOptions();
+        options.setProperty(
+                org.apache.axis2.transport.http.HTTPConstants.CONNECTION_TIMEOUT,
+                new Integer(20000));
+        EndpointReference epr = new EndpointReference(wsdl);
+        options.setTo(epr);
+        QName qname = new QName(smsServiceConfig.getSmsServiceHost(),"sendMessageInfo");
+
+        logger.info("发送短信请求,{},{}",smsServiceConfig.getSmsServiceHost(),smsServiceConfig.getSmsServicSendurl());
 
         Object[] objEntryArgs = new Object[] { appId, userCode, xml };
         Class[] returnTypes = new Class[] { String.class };
         result = client.invokeBlocking(qname, objEntryArgs, returnTypes);
+
+//        RPCServiceClient client;
+//        client = new RPCServiceClient();
+////        Options options = client.getOptions();
+////        options.setProperty(HTTPConstants.CONNECTION_TIMEOUT, new Integer(smsServiceConfig.getTimeout())*1000);
+////        EndpointReference epr = new EndpointReference(wsdl);
+////        options.setTo(epr);
+//        QName qname = new QName(smsServiceConfig.getSmsServiceHost(),smsServiceConfig.getSmsServicSendurl());
+//
+//        Object[] objEntryArgs = new Object[] { appId, userCode, xml };
+//        Class[] returnTypes = new Class[] { String.class };
+//        result = client.invokeBlocking(qname, objEntryArgs, returnTypes);
 
         return result;
     }
