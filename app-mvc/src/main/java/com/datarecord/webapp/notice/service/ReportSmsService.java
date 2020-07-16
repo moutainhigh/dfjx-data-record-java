@@ -27,4 +27,6 @@ public interface ReportSmsService {
     String doSmsProcess(String processName,Map<String,Object> smsTemplat,Map<String,Object> sendParams,String phoneNum) throws AxisFault;
 
     ReportSmsConfig getSmsJob(String id);
+
+    void updateConfigStatus(String smsId, String config_status);
 }

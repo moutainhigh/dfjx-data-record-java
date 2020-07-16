@@ -89,6 +89,14 @@ public class ReportSmsController {
         reportSmsService.deleteSmsJob(smsId);
         JsonResult jsonResult = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "删除成功", null,JsonResult.RESULT.SUCCESS);
         return jsonResult;
+    }
 
+    @RequestMapping("updateConfigStatus")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult updateConfigStatus(String smsId,String config_status){
+        reportSmsService.updateConfigStatus(smsId,config_status);
+        JsonResult jsonResult = JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "删除成功", null,JsonResult.RESULT.SUCCESS);
+        return jsonResult;
     }
 }

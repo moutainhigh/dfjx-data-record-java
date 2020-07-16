@@ -19,6 +19,7 @@ public class ReportSmsConfig {
 
     private String distance_days;
     private String distance_type;
+    private String config_status;
 
     /*
     0:待发送
@@ -144,5 +145,13 @@ public class ReportSmsConfig {
 
     public void setSms_template_name(String sms_template_name) {
         this.sms_template_name = sms_template_name;
+    }
+
+    public String getConfig_status() {
+        return config_status;
+    }
+
+    public void setConfig_status(String config_status) {
+        this.config_status = config_status;
     }
 }

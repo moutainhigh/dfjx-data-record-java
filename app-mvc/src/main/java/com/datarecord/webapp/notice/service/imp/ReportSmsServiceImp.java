@@ -121,7 +121,7 @@ public class ReportSmsServiceImp implements ReportSmsService {
 
     private List<ReportSmsConfig> checkSendJobs(){
         List<ReportSmsConfig> sendList= new ArrayList<>();
-        Page<ReportSmsConfig> allSmsJob = reportSmsDao.pageSms(null,null);
+        Page<ReportSmsConfig> allSmsJob = reportSmsDao.pageSms(null,null,"0");
         for (ReportSmsConfig reportSmsConfig : allSmsJob) {
             if(this.needSendMsg(reportSmsConfig)){
 //            if(true){
@@ -192,9 +192,7 @@ public class ReportSmsServiceImp implements ReportSmsService {
                             return true;
                         }
                     }
-                    return false;
                 }
-                return true;
             }
         }
 
@@ -203,7 +201,7 @@ public class ReportSmsServiceImp implements ReportSmsService {
 
     @Override
     public PageResult pagerSms(Integer currPage, Integer pageSize) {
-        Page<ReportSmsConfig> reportSmsConfigPage = reportSmsDao.pageSms(currPage,pageSize);
+        Page<ReportSmsConfig> reportSmsConfigPage = reportSmsDao.pageSms(currPage,pageSize,null);
         PageResult pageResult = PageResult.pageHelperList2PageResult(reportSmsConfigPage);
         return pageResult;
     }
@@ -404,6 +402,11 @@ public class ReportSmsServiceImp implements ReportSmsService {
     public ReportSmsConfig getSmsJob(String id) {
         ReportSmsConfig reportSmsConfig = reportSmsDao.getSmsJob(id);
         return reportSmsConfig;
+    }
+
+    @Override
+    public void updateConfigStatus(String smsId, String config_status) {
+        reportSmsDao.updateConfigStatus(smsId,config_status);
     }
 
 

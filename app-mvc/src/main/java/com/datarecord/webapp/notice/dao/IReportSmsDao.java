@@ -26,8 +26,9 @@ public interface IReportSmsDao {
             "send_time," +
             "pre_days," +
             "cross_holiday," +
+            "config_status," +
             "send_status" +
-            " from report_sms_config where config_status='0'")
+            " from report_sms_config ")
     List<ReportSmsConfig> getTodayReportSmsConfigs(String currDate);
 
     @Insert("insert into report_sms_config (" +
@@ -78,7 +79,7 @@ public interface IReportSmsDao {
     List<Map<String,Object>> getReportCount4Origin(@Param("reportDefinedId") String reportDefinedId, @Param("sendDate") String sendDate);
 
 
-    @Select("select " +
+    @Select("<script>select " +
             "rsc.id," +
             "rsc.config_name," +
             "rsc.report_defined_id," +
@@ -89,11 +90,15 @@ public interface IReportSmsDao {
             "rsc.distance_type," +
             "rsc.distance_days," +
             "rsc.cross_holiday," +
+            "rsc.config_status," +
             "rsc.send_status," +
             "rd.job_name report_defined_name" +
             " from report_sms_config rsc,rcd_job_config rd,rcd_sms_templates rst where rsc.report_defined_id = rd.job_id " +
-            "and rsc.sms_template_id = rst.template_id")
-    Page<ReportSmsConfig> pageSms(@Param("currPage") Integer currPage,@Param("pageSize") Integer pageSize);
+            "and rsc.sms_template_id = rst.template_id " +
+            "<if test='config_status!=null'>" +
+            " and rsc.config_status=#{config_status}" +
+            "</if></script>")
+    Page<ReportSmsConfig> pageSms(@Param("currPage") Integer currPage,@Param("pageSize") Integer pageSize,@Param("config_status") String config_status);
 
     @Select("<script>" +
             "select * from rcd_sms_templates " +
@@ -120,7 +125,11 @@ public interface IReportSmsDao {
             "rsc.distance_type," +
             "rsc.distance_days," +
             "rsc.cross_holiday," +
+            "rsc.config_status," +
             "rsc.send_status" +
             " from report_sms_config rsc where rsc.id=#{id} ")
     ReportSmsConfig getSmsJob(@Param("id") String id);
+
+    @Update("update report_sms_config set config_status=#{config_status} where id=#{smsId} ")
+    void updateConfigStatus(@Param("smsId") String smsId,@Param("config_status") String config_status);
 }
