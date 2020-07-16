@@ -34,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.xml.namespace.QName;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -366,7 +365,7 @@ public class ReportSmsServiceImp implements ReportSmsService {
         }
 
         StringBuilder sendUrlSb = new StringBuilder().append(smsServiceConfig.getHost()).append(":").append(smsServiceConfig.getPort()).append("/")
-                .append(smsServiceConfig.getAppname()).append("/").append(smsServiceConfig.getSendurl());
+                .append(smsServiceConfig.getAppname()).append("/").append(smsServiceConfig.getSmsServicSendurl());
 
 
         String sq = this.randomCode(3);  //必须三位随机数
@@ -434,15 +433,16 @@ public class ReportSmsServiceImp implements ReportSmsService {
         logger.info("发送信息，userCode:{}",userCode);
         RPCServiceClient client;
         client = new RPCServiceClient();
-        Options options = client.getOptions();
-        options.setProperty(HTTPConstants.CONNECTION_TIMEOUT, new Integer(smsServiceConfig.getTimeout())*1000);
-        EndpointReference epr = new EndpointReference(wsdl);
-        options.setTo(epr);
-        QName qname = new QName(smsServiceConfig.getQueryHost(),smsServiceConfig.getQueryurl());
+//        Options options = client.getOptions();
+//        options.setProperty(HTTPConstants.CONNECTION_TIMEOUT, new Integer(smsServiceConfig.getTimeout())*1000);
+//        EndpointReference epr = new EndpointReference(wsdl);
+//        options.setTo(epr);
+        QName qname = new QName(smsServiceConfig.getSmsServiceHost(),smsServiceConfig.getSmsServicSendurl());
 
         Object[] objEntryArgs = new Object[] { appId, userCode, xml };
         Class[] returnTypes = new Class[] { String.class };
         result = client.invokeBlocking(qname, objEntryArgs, returnTypes);
+
         return result;
     }
 //    //获取短信回复

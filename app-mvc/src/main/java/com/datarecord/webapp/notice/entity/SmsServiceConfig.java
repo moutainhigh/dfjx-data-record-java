@@ -17,8 +17,8 @@ public class SmsServiceConfig {
     @Value("${sms.service.appname}")
     private String appname;
 
-    @Value("${sms.service.sendurl}")
-    private String sendurl;
+    @Value("${sms.service.wsdlUrl}")
+    private String wsdlUrl;
 
     @Value("${sms.service.user}")
     private String user;
@@ -33,11 +33,15 @@ public class SmsServiceConfig {
     private String timeout;
 
     @Value("${sms.query.host}")
-    private String queryHost;
+    private String smsServiceHost;
     @Value("${sms.query.port}")
-    private String queryPort;
+    private String smsServicPort;
     @Value("${sms.query.appname}")
-    private String queryAppName;
+    private String smsServicAppName;
+    @Value("${sms.query.sendurl}")
+    private String smsServicSendurl;
+    @Value("${sms.query.sendResultUrl}")
+    private String smsServicSendResultUrl;
     @Value("${sms.query.queryurl}")
     private String queryurl;
 
@@ -46,40 +50,42 @@ public class SmsServiceConfig {
                 append("host:").append(this.host).
                 append(",port:").append(this.port).
                 append(",appname:").append(this.appname).
-                append(",sendurl:").append(this.sendurl).
+                append(",wsdlUrl:").append(this.wsdlUrl).
                 append(",user:").append(this.user).
                 append(",password:").append(this.password).
                 append(",clientcode:").append(this.clientcode).
                 append(",timeout:").append(this.timeout).
-                append(",queryHost:").append(this.queryHost).
-                append(",queryAppName:").append(this.queryPort).
-                append(",host:").append(this.queryAppName).
+                append(",smsServiceHost:").append(this.smsServiceHost).
+                append(",queryApsmsServicPortpName:").append(this.smsServicPort).
+                append(",smsServicAppName:").append(this.smsServicAppName).
+                append(",smsServicSendurl:").append(this.smsServicSendurl).
+                append(",smsServicSendResultUrl:").append(this.smsServicSendResultUrl).
                 append(",queryurl:").append(this.queryurl).
                 append("}").toString();
     }
 
-    public String getQueryHost() {
-        return queryHost;
+    public String getSmsServiceHost() {
+        return smsServiceHost;
     }
 
-    public void setQueryHost(String queryHost) {
-        this.queryHost = queryHost;
+    public void setSmsServiceHost(String smsServiceHost) {
+        this.smsServiceHost = smsServiceHost;
     }
 
-    public String getQueryPort() {
-        return queryPort;
+    public String getSmsServicPort() {
+        return smsServicPort;
     }
 
-    public void setQueryPort(String queryPort) {
-        this.queryPort = queryPort;
+    public void setSmsServicPort(String smsServicPort) {
+        this.smsServicPort = smsServicPort;
     }
 
-    public String getQueryAppName() {
-        return queryAppName;
+    public String getSmsServicAppName() {
+        return smsServicAppName;
     }
 
-    public void setQueryAppName(String queryAppName) {
-        this.queryAppName = queryAppName;
+    public void setSmsServicAppName(String smsServicAppName) {
+        this.smsServicAppName = smsServicAppName;
     }
 
     public String getQueryurl() {
@@ -114,12 +120,12 @@ public class SmsServiceConfig {
         this.appname = appname;
     }
 
-    public String getSendurl() {
-        return sendurl;
+    public String getSmsServicSendurl() {
+        return smsServicSendurl;
     }
 
-    public void setSendurl(String sendurl) {
-        this.sendurl = sendurl;
+    public void setSmsServicSendurl(String smsServicSendurl) {
+        this.smsServicSendurl = smsServicSendurl;
     }
 
     public String getUser() {
@@ -152,5 +158,21 @@ public class SmsServiceConfig {
 
     public void setClientcode(String clientcode) {
         this.clientcode = clientcode;
+    }
+
+    public String getWsdlUrl() {
+        return wsdlUrl;
+    }
+
+    public void setWsdlUrl(String wsdlUrl) {
+        this.wsdlUrl = wsdlUrl;
+    }
+
+    public String getSmsServicSendResultUrl() {
+        return smsServicSendResultUrl;
+    }
+
+    public void setSmsServicSendResultUrl(String smsServicSendResultUrl) {
+        this.smsServicSendResultUrl = smsServicSendResultUrl;
     }
 }
