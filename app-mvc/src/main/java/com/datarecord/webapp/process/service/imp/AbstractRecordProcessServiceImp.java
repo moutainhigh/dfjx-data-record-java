@@ -115,7 +115,9 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
             }
         }
 
+
         PageResult pageResultData = PageResult.pageHelperList2PageResult(authJobDatas);
+        this.checkReportStatus(pageResultData.getDataList());
 
         return pageResultData;
     }
