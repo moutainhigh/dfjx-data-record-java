@@ -388,6 +388,12 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void changeJobDataStatus(String jobId,Integer status){
+        recordProcessDao.updatJobDataStatus(jobId,status);
+    }
+
+    @Override
     public Integer getMaxColumId(String jobId, String reportId, String jobUnitId) {
         Integer maxColumId = recordProcessDao.getMaxColumId(jobId, reportId,jobUnitId);
         return maxColumId;

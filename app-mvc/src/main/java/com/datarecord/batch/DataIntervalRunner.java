@@ -97,7 +97,7 @@ public class DataIntervalRunner  {
             RUNNER();
         }, "DataInTervalRunner");
         long remainingTime = DateSupport.getRemainingTime(DateSupport.Beijing_ShangHai_TimeZone());
-//        remainingTime = 30000;
+        remainingTime = 30000;
 
         logger.info("建立任务填报周期监听线程，线程将在{}秒后开始执行，并且在首次执行后，每隔24小时执行一次",
                 remainingTime/1000);
@@ -116,9 +116,8 @@ public class DataIntervalRunner  {
         List<ReportJobInfo> reportJobInfos = recordProcessService.getReportJobInfosByJobId(jobId.toString());
         if(reportJobInfos!=null&&reportJobInfos.size()>0){
             JobConfig jobConfig = recordProcessService.getJobConfigByJobId(jobId.toString());
-            recordProcessService.changeReportDataStatus(
+            recordProcessService.changeJobDataStatus(
                     jobConfig.getJob_id().toString(),
-                    reportJobInfos.get(0).getReport_id().toString(),
                     ReportFldStatus.NORMAL.getValueInteger());
             reportJobInfos.forEach(reportJobInfo->{
                 Integer reportId = reportJobInfo.getReport_id();

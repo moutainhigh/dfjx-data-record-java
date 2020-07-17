@@ -60,6 +60,9 @@ public interface RecordProcessService {
     @Transactional(rollbackFor = Exception.class)
     void changeReportDataStatus(String jobId, String reportId, Integer status);
 
+    @Transactional(rollbackFor = Exception.class)
+    void changeJobDataStatus(String jobId, Integer status);
+
     Integer getMaxColumId(String jobId, String reportId, String jobUnitId);
 
     void closeReportByJobId(String jobId);

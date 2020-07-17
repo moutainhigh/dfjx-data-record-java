@@ -301,6 +301,9 @@ public interface IRecordProcessDao {
     @Update("update rcd_report_data_job${jobId} set data_status=${status} where report_id = #{reportId}")
     void updateReportDataStatus(@Param("jobId") String jobId, @Param("reportId") String reportId, @Param("status") Integer status);
 
+    @Update("update rcd_report_data_job${jobId} set data_status=${status} ")
+    void updatJobDataStatus(@Param("jobId") String jobId,  @Param("status") Integer status);
+
     @Select("SELECT max(colum_id) max_colum_id,report_id FROM rcd_report_data_job${jobId} where report_id = #{reportId} and unit_id = #{jobUnitId}")
     Integer getMaxColumId(@Param("jobId") String jobId,@Param("reportId") String reportId,@Param("jobUnitId") String jobUnitId);
 
