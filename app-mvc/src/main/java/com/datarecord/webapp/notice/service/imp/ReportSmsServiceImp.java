@@ -183,17 +183,18 @@ public class ReportSmsServiceImp implements ReportSmsService {
                     calenday.get(Calendar.DAY_OF_MONTH),calenday.get(Calendar.HOUR_OF_DAY),calenday.get(Calendar.MINUTE));
 
             if(calenday.get(Calendar.DAY_OF_MONTH) == today){
+                logger.info("发送短信，日期 匹配成功");
                 //小时是否对的上
                 if(HOUR == calenday.get(Calendar.HOUR_OF_DAY)){
-                    logger.info("发送短信，小时匹配成功");
+                    logger.info("发送短信，小时 匹配成功");
                     if(MINUTE<=30){
                         if(Calendar.MINUTE==0){
-                            logger.info("发送短信，分钟匹配成功");
+                            logger.info("发送短信，分钟 匹配成功");
                             return true;
                         }
                     }else{
                         if(Calendar.MINUTE==60){
-                            logger.info("发送短信，分钟匹配成功");
+                            logger.info("发送短信，分钟 匹配成功");
                             return true;
                         }
                     }
