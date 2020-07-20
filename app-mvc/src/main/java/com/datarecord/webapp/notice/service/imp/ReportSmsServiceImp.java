@@ -140,7 +140,7 @@ public class ReportSmsServiceImp implements ReportSmsService {
      * @return
      */
     private boolean needSendMsg(ReportSmsConfig reportSmsConfig){
-        Calendar calenday = Calendar.getInstance();
+        Calendar calenday = DateSupport.getBeijingCalendar();
         Integer today = calenday.get(Calendar.DAY_OF_MONTH);
         Integer HOUR = calenday.get(Calendar.HOUR_OF_DAY);
         Integer MINUTE = calenday.get(Calendar.MINUTE);
