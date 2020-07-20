@@ -123,7 +123,9 @@ public class ReportSmsServiceImp implements ReportSmsService {
         List<ReportSmsConfig> sendList= new ArrayList<>();
         Page<ReportSmsConfig> allSmsJob = reportSmsDao.pageSms(null,null,"0");
         for (ReportSmsConfig reportSmsConfig : allSmsJob) {
-            if(this.needSendMsg(reportSmsConfig)){
+            boolean needSend = this.needSendMsg(reportSmsConfig);
+            logger.info("短信发送任务{},是否需要发送:{}",reportSmsConfig.getConfig_name(),needSend);
+            if(needSend){
 //            if(true){
                 sendList.add(reportSmsConfig);
             }
@@ -183,12 +185,15 @@ public class ReportSmsServiceImp implements ReportSmsService {
             if(calenday.get(Calendar.DAY_OF_MONTH) == today){
                 //小时是否对的上
                 if(HOUR == calenday.get(Calendar.HOUR_OF_DAY)){
+                    logger.info("发送短信，小时匹配成功");
                     if(MINUTE<=30){
                         if(Calendar.MINUTE==0){
+                            logger.info("发送短信，分钟匹配成功");
                             return true;
                         }
                     }else{
                         if(Calendar.MINUTE==60){
+                            logger.info("发送短信，分钟匹配成功");
                             return true;
                         }
                     }
