@@ -178,11 +178,11 @@ public class ReportSmsServiceImp implements ReportSmsService {
             }
             logger.info("当前时间:{}号,{}:{},该任务在:{}号{}:{}会被发送。",
                     today,HOUR,MINUTE,
-                    calenday.get(Calendar.DAY_OF_MONTH),calenday.get(Calendar.HOUR),calenday.get(Calendar.MINUTE));
+                    calenday.get(Calendar.DAY_OF_MONTH),calenday.get(Calendar.HOUR_OF_DAY),calenday.get(Calendar.MINUTE));
 
             if(calenday.get(Calendar.DAY_OF_MONTH) == today){
                 //小时是否对的上
-                if(HOUR == calenday.get(Calendar.HOUR)){
+                if(HOUR == calenday.get(Calendar.HOUR_OF_DAY)){
                     if(MINUTE<=30){
                         if(Calendar.MINUTE==0){
                             return true;
