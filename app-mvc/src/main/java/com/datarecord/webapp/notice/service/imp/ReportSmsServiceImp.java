@@ -191,13 +191,13 @@ public class ReportSmsServiceImp implements ReportSmsService {
                     logger.info("设定的发送分钟为{}",calenday.get(Calendar.MINUTE)==0?"0":
                             calenday.get(Calendar.MINUTE)==60?"60":"不是0也不是60"+calenday.get(Calendar.MINUTE));
 
-                    if(MINUTE<=30){
-                        if(calenday.get(Calendar.MINUTE)==0){
+                    if(MINUTE<=35){
+                        if(calenday.get(Calendar.MINUTE)==30){
                             logger.info("发送短信，分钟 匹配成功");
                             return true;
                         }
                     }else{
-                        if(calenday.get(Calendar.MINUTE)==60){
+                        if(calenday.get(Calendar.MINUTE)==0){
                             logger.info("发送短信，分钟 匹配成功");
                             return true;
                         }
