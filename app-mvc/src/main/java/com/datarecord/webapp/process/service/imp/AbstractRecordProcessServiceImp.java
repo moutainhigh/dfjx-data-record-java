@@ -177,6 +177,39 @@ public class AbstractRecordProcessServiceImp implements RecordProcessService {
     }
 
     @Override
+    public PageResult pageFldReportDatas(String jobId, String reportId, String groupId, String currPage) {
+        final Integer defaultPageSize = 30;//每页200条
+        Integer dataCount = recordProcessDao.checkReportDataCount(jobId, reportId, groupId);
+        Integer totalPageSize = 1;
+        if(dataCount>0){
+            totalPageSize = dataCount/defaultPageSize;
+            if(dataCount%defaultPageSize>0){
+                totalPageSize++;
+            }
+        }
+        Integer currPagePosition = 0;
+        Integer currPageInteger = 0;
+        if(Strings.isNullOrEmpty(currPage)){
+            currPageInteger = totalPageSize;
+        }else{
+            currPageInteger = new Integer(currPage);
+        }
+        if(currPageInteger==1){
+            currPagePosition = (currPageInteger-1)*defaultPageSize;
+        }else{
+            currPagePosition = (currPageInteger-1)*defaultPageSize-1;
+        }
+
+        List<ReportJobData> result = recordProcessDao.pageReportDataByUnitId(jobId,reportId,groupId,currPagePosition,defaultPageSize);
+        PageResult pageResult = new PageResult();
+        pageResult.setCurrPage(currPageInteger);
+        pageResult.setDataList(result);
+        pageResult.setPageSize(defaultPageSize);
+        pageResult.setTotalPage(totalPageSize);
+        return pageResult;
+    }
+
+    @Override
     public Map<Integer, List<DataDictionary>> getUnitDictFldContent(String groupId) {
         Map<Integer,List<DataDictionary>> result = new HashMap<>();
 

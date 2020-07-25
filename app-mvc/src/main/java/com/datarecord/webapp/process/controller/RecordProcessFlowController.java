@@ -2,10 +2,7 @@ package com.datarecord.webapp.process.controller;
 
 import com.datarecord.enums.JobConfigStatus;
 import com.datarecord.webapp.process.dao.ReportFileLog;
-import com.datarecord.webapp.process.entity.ExportParams;
-import com.datarecord.webapp.process.entity.JobConfig;
-import com.datarecord.webapp.process.entity.JobFlowLog;
-import com.datarecord.webapp.process.entity.ReportJobData;
+import com.datarecord.webapp.process.entity.*;
 import com.datarecord.webapp.process.service.RecordMaker;
 import com.datarecord.webapp.process.service.RecordProcessFlowService;
 import com.datarecord.webapp.process.service.RecordProcessService;
@@ -18,6 +15,7 @@ import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
 import com.workbench.auth.user.entity.UserType;
 import com.workbench.shiro.WorkbenchShiroUtils;
+import org.apache.shiro.crypto.hash.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +29,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -224,6 +223,34 @@ public class RecordProcessFlowController {
         List<ReportFileLog> reportFileLogs = recordProcessFlowService.listReportFile(reportId);
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, reportFileLogs);
+        return successResult;
+    }
+
+    @RequestMapping("pageJobUnitDatas")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult pageJobUnitDatas(String jobId,String unitId,String currPage,String pageSize){
+        PageResult pageData = recordProcessFlowService.pageJobUnitDatas(jobId, unitId,currPage,pageSize);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, pageData);
+        return successResult;
+    }
+
+    @RequestMapping("pageJobDatas")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult pageJobDatas(String jobId,String currPage,String pageSize){
+        JobConfig jonConfig = recordProcessService.getJobConfigByJobId(jobId);
+        Map unitMap = new HashMap();
+
+        for (JobUnitConfig jobUnit : jonConfig.getJobUnits()) {
+            Integer unitId = jobUnit.getJob_unit_id();
+            PageResult pageData = recordProcessFlowService.pageJobUnitDatas(jobId, unitId.toString(),currPage,pageSize);
+            unitMap.put(unitId,pageData);
+        }
+
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, unitMap);
         return successResult;
     }
 

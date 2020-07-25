@@ -29,7 +29,9 @@ public interface RecordProcessService {
 
     List<ReportFldTypeConfig> getFldByUnitId(String unitId);
 
-    List<ReportJobData> getFldReportDatas(String jobId,String reportId, String groupId);
+    List<ReportJobData> getFldReportDatas(String jobId, String reportId, String groupId);
+
+    PageResult pageFldReportDatas(String jobId, String reportId, String groupId, String currPage);
 
     Map<Integer, List<DataDictionary>> getUnitDictFldContent(String groupId);
 

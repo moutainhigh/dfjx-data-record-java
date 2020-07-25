@@ -228,6 +228,17 @@ public interface IRecordProcessDao {
     @Select("select id,report_id,unit_id,colum_id,fld_id,record_data,data_status from rcd_report_data_job${jobId} where report_id = #{reportId} and unit_id = #{unitId}")
     List<ReportJobData> getReportDataByUnitId(@Param("jobId") String jobId,@Param("reportId") String reportId,@Param("unitId") String unitId);
 
+
+    @Select("select tmp1.id,tmp1.report_id,tmp1.unit_id,tmp1.colum_id,tmp1.fld_id,tmp1.record_data,tmp1.data_status " +
+            "from rcd_report_data_job${jobId} tmp1 ," +
+            "(SELECT colum_id FROM rcd_report_data_job${jobId} group by colum_id order by colum_id limit #{pageNumber} ,#{eachPageSize}) tmp2 " +
+            "where tmp1.report_id = #{reportId} and tmp1.unit_id = #{unitId} and tmp1.colum_id = tmp2.colum_id order by tmp1.colum_id,tmp1.fld_id ")
+    List<ReportJobData> pageReportDataByUnitId(@Param("jobId") String jobId,
+                                              @Param("reportId") String reportId,
+                                              @Param("unitId") String unitId,
+                                              @Param("pageNumber") Integer currPage,
+                                              @Param("eachPageSize") Integer pageSize);
+
     @Select("SELECT  " +
             "rddc.dict_content_id, " +
             "rddc.dict_content_name, " +
@@ -411,4 +422,45 @@ public interface IRecordProcessDao {
 
     @Select("select ")
     String getFldReportData(Integer job_id, String reportId, String unitId, String columId, String fldId);
+
+    @Select("<script>" +
+            "select count(distinct colum_id) from rcd_report_data_job${jobId} where unit_id = #{unitId}" +
+            "<if test='reportId!=null'>" +
+            " and report_id = #{reportId} " +
+            "</if>" +
+            "</script>")
+    Integer checkReportDataCount(@Param("jobId") String jobId,@Param("reportId")  String reportId,@Param("unitId")  String groupId);
+
+    @Update("<script>update rcd_report_data_job${jobId} set colum_id=(colum_id-${size}) where report_id = #{reportId} " +
+            "and unit_id = #{jobUnitId} and colum_id &gt; #{maxUpdateColumId} </script>")
+    void reOrderColumId(@Param("jobId") Integer jobId,
+                        @Param("reportId") Integer reportId,
+                        @Param("jobUnitId") Integer jobUnitId,
+                        @Param("maxUpdateColumId") Integer maxUpdateColumId,
+                        @Param("size") Integer size);
+
+    @Select("<script>" +
+            "select tmp1.id," +
+            "tmp1.report_id," +
+            "tmp1.unit_id," +
+            "tmp1.colum_id," +
+            "tmp1.fld_id," +
+            "tmp1.record_data," +
+            "tmp1.data_status " +
+            " from rcd_report_data_job${jobId} tmp1, " +
+            " (select colum_id,report_id from rcd_report_data_job${jobId} " +
+            "where unit_id =#{unitId} " +
+            "<if test='reportFldStatus!=null and reportFldStatus.size()>0'> " +
+            " and data_status in " +
+            "<foreach item='item' index='index' collection='reportFldStatus' open='(' separator=',' close=')'> " +
+            " #{item} " +
+            "</foreach>" +
+            "</if>" +
+            " group by colum_id,report_id order by colum_id limit #{pageNumber} ,#{eachPageSize}) tmp2 where tmp1.colum_id = tmp2.colum_id"+
+            "</script>")
+    List<ReportJobData> pageJobReportDatas(@Param("jobId") String jobId,
+                                           @Param("unitId") String unitId,
+                                           @Param("reportFldStatus") List<Integer> reportFldStatus,
+                                           @Param("pageNumber") Integer pageNumber,
+                                           @Param("eachPageSize") Integer eachPageSize);
 }

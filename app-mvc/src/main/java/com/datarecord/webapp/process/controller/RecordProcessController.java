@@ -227,8 +227,10 @@ public class RecordProcessController {
     public JsonResult getFldReportDatas(
             @RequestParam("jobId") String jobId,
             @RequestParam("reportId") String reportId,
-            @RequestParam("groupId") String groupId){
-        List<ReportJobData> reportJobDatas = RecordProcessFactory.RecordProcessSerice().getFldReportDatas(jobId,reportId,groupId);
+            @RequestParam("groupId") String groupId,
+            @RequestParam(value = "currPage",required = false) String currPage
+    ){
+        PageResult reportJobDatas = RecordProcessFactory.RecordProcessSerice().pageFldReportDatas(jobId,reportId,groupId,currPage);
         JsonResult successResult = JsonSupport.makeJsonpResult(
                 JsonResult.RESULT.SUCCESS, "获取成功", null, reportJobDatas);
         return successResult;

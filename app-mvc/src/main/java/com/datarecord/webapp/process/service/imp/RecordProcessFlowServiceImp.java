@@ -1,7 +1,6 @@
 package com.datarecord.webapp.process.service.imp;
 
 import com.datarecord.enums.*;
-import com.datarecord.webapp.datadictionary.bean.DataDictionary;
 import com.datarecord.webapp.fillinatask.bean.UpDownLoadFileConfig;
 import com.datarecord.webapp.process.dao.IRecordProcessDao;
 import com.datarecord.webapp.process.dao.IRecordProcessFlowDao;
@@ -17,13 +16,8 @@ import com.github.pagehelper.Page;
 import com.google.common.base.Strings;
 import com.webapp.support.page.PageResult;
 import com.workbench.auth.user.entity.User;
-import com.workbench.auth.user.entity.UserType;
 import com.workbench.exception.runtime.WorkbenchRuntimeException;
 import com.workbench.shiro.WorkbenchShiroUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,12 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service("recordProcessFlowService")
@@ -111,6 +100,46 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
     public List<ReportFileLog> listReportFile(String reportId) {
         List<ReportFileLog> result = recordProcessFlowDao.listReportFile(reportId);
         return result;
+    }
+
+    @Override
+    public PageResult pageJobUnitDatas(String jobId, String unitId, String currPage, String pageSize) {
+        Integer dataCount = recordProcessDao.checkReportDataCount(jobId, null, unitId);
+        Integer totalPageSize = 1;
+        Integer pageSizeInt = new Integer(pageSize);
+        if(dataCount>0){
+            totalPageSize = dataCount/pageSizeInt;
+            if(dataCount%pageSizeInt>0){
+                totalPageSize++;
+            }
+        }
+        Integer currPagePosition = 0;
+        Integer currPageInteger = 0;
+        if(Strings.isNullOrEmpty(currPage)){
+            currPageInteger = totalPageSize;
+        }else{
+            currPageInteger = new Integer(currPage);
+        }
+        if(currPageInteger==1){
+            currPagePosition = (currPageInteger-1)*pageSizeInt;
+        }else{
+            currPagePosition = (currPageInteger-1)*pageSizeInt-1;
+        }
+
+        List<Integer> reportFldStatus = new ArrayList<>();
+        if(!DataRecordUtil.isSuperUser()){
+            reportFldStatus.add(ReportFldStatus.SUBMIT.getValueInteger());
+            reportFldStatus.add(ReportFldStatus.UNSUB.getValueInteger());
+        }
+
+        List<ReportJobData> result = recordProcessDao.pageJobReportDatas(jobId,unitId,reportFldStatus,currPagePosition,pageSizeInt);
+        PageResult pageResult = new PageResult();
+        pageResult.setCurrPage(currPageInteger);
+        pageResult.setDataList(result);
+        pageResult.setPageSize(pageSizeInt);
+        pageResult.setTotalPage(totalPageSize);
+
+        return pageResult;
     }
 
     /**

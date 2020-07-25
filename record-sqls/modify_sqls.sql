@@ -310,3 +310,8 @@ ALTER TABLE `report_sms_config`
 CHANGE COLUMN `config_status` `config_status` INT(11) NULL DEFAULT 0 ;
 INSERT INTO `rcd_sms_templates` (template_id, `template_name`, `template_content`)
 VALUES ( '1', '填报周期开始前提醒', '您好，您有一个填报任务[${jobName}]需要填写，请您在以下填报日期进行填写：[${reportDate}]');
+
+
+ALTER TABLE `rcd_report_data_job20`
+ADD INDEX `index3` (`colum_id` ASC);
+;

@@ -1,7 +1,6 @@
 package com.datarecord.webapp.process.service;
 
 import com.datarecord.webapp.process.dao.ReportFileLog;
-import com.datarecord.webapp.process.entity.ExportParams;
 import com.datarecord.webapp.process.entity.JobFlowLog;
 import com.datarecord.webapp.process.entity.ReportJobData;
 import com.webapp.support.page.PageResult;
@@ -12,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface RecordProcessFlowService {
+
+    PageResult pageJobUnitDatas(String jobId, String unitId, String currPage, String pageSize);
 
     PageResult pageJob(@RequestParam("currPage") String currPage, @RequestParam("pageSize") String pageSize, String reportStatus, String reportName, String reportOrigin);
 
