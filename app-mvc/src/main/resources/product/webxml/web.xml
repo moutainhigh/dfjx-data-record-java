@@ -29,7 +29,7 @@
 
     <context-param>
         <param-name>casLogoutRedirect</param-name>
-        <param-value>http://10.217.17.116:8094/cas/logout?service=http://10.217.17.116:8097/data-record</param-value>
+        <param-value>http://172.25.117.52:8094/cas/logout?service=http://172.25.117.55:8097/data-record</param-value>
     </context-param>
 
     <filter>
@@ -37,7 +37,7 @@
         <filter-class>org.jasig.cas.client.session.SingleSignOutFilter</filter-class>
         <init-param>
             <param-name>casServerUrlPrefix</param-name>
-            <param-value>http://10.217.17.116:8094/cas/</param-value>
+            <param-value>http://172.25.117.52:8094/cas/</param-value>
         </init-param>
     </filter>
 
@@ -54,13 +54,13 @@
         </init-param>
         <init-param>
             <param-name>casServerLoginUrl</param-name>
-            <param-value>http://10.217.17.116:8094/cas//login?locale=zh_CN</param-value>
+            <param-value>http://172.25.117.52:8094/cas//login?locale=zh_CN</param-value>
         </init-param>
         <init-param>
             <param-name>service</param-name>
             <!--&lt;!&ndash;<param-value>http://localhost:8080/SpiderManage/sys/casLogin/doL
             ogin.do</param-value>&ndash;&gt;-->
-            <param-value>http://10.217.17.116:8097/data-report-service/sys/casLogin/doLogin.do?redirect=http://10.217.17.116:8097/data-record</param-value>
+            <param-value>http://172.25.117.55:8097/data-report-service/sys/casLogin/doLogin.do?redirect=http://172.25.117.55:8097/data-record</param-value>
         </init-param>
         <init-param>
             <param-name>ignorePattern</param-name>
@@ -77,11 +77,11 @@
         <filter-class>org.jasig.cas.client.validation.Cas30ProxyReceivingTicketValidationFilter</filter-class>
         <init-param>
             <param-name>casServerUrlPrefix</param-name>
-            <param-value>http://10.217.17.116:8094/cas/</param-value>
+            <param-value>http://172.25.117.52:8094/cas/</param-value>
         </init-param>
         <init-param>
             <param-name>service</param-name>
-            <param-value>http://10.217.17.116:8097/data-report-service/sys/casLogin/doLogin.do?redirect=http://10.217.17.116:8097/data-record</param-value>
+            <param-value>http://172.25.117.55:8097/data-report-service/sys/casLogin/doLogin.do?redirect=http://172.25.117.55:8097/data-record</param-value>
             <!--<param-value>http://localhost:8080/SpiderManage/sys/casLogin/doLogin.do</param-value>-->
         </init-param>
         <!--<init-param>-->
