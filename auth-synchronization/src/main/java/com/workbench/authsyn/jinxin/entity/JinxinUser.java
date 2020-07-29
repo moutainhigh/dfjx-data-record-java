@@ -38,6 +38,7 @@ public class JinxinUser {
     private Boolean tenantManager;
     private Boolean systemManager;
     private Object appKeys;
+    private String caCode;
 
     private List<JinxinRole> roles;
     private Object groups;
@@ -338,5 +339,13 @@ public class JinxinUser {
 
     public void setSystemManager(Boolean systemManager) {
         this.systemManager = systemManager;
+    }
+
+    public String getCaCode() {
+        return caCode;
+    }
+
+    public void setCaCode(String caCode) {
+        this.caCode = caCode;
     }
 }
