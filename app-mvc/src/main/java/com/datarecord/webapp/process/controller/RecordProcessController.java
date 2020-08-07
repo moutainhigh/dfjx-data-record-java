@@ -237,6 +237,21 @@ public class RecordProcessController {
     }
 
 
+    @RequestMapping("fldReportDatas")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult fldReportDatas(
+            @RequestParam("jobId") String jobId,
+            @RequestParam("reportId") String reportId,
+            @RequestParam("groupId") String groupId
+    ){
+        List<ReportJobData> reportJobDatas = RecordProcessFactory.RecordProcessSerice().getFldReportDatas(jobId, reportId, groupId);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, reportJobDatas);
+        return successResult;
+    }
+
+
     @RequestMapping("saveGridDatas")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")

@@ -70,7 +70,8 @@ public class ReportSumServiceImp implements ReportSumService {
                 for (ReportFldConfig fldConfig : groupFlds) {
                     fldsTmp.add(fldConfig.getFld_id());
                 }
-                List<ReportJobData> reportDatas = recordProcessService.getFldReportDatas(jobId.toString(), reportId, groupId.toString());
+//                List<ReportJobData> reportDatas = recordProcessService.getFldReportDatas(jobId.toString(), reportId, groupId.toString());
+                List<ReportJobData> reportDatas = recordProcessService.getUnitDatas(jobId.toString(), Strings.emptyToNull(reportId), groupId.toString());
                 if(reportDatas!=null){
                     for (ReportJobData reportData : reportDatas) {
                         if(!isSuperUser){
@@ -88,7 +89,11 @@ public class ReportSumServiceImp implements ReportSumService {
             }
         }
         if(exportParams.getNeedExport()!=null&&exportParams.getNeedExport()){
-            this.exportRecordFldsData(exportParams);
+            if(Strings.isNullOrEmpty(exportParams.getReport_id())){
+                this.exportJobFldsData(exportParams);
+            }else{
+                this.exportRecordFldsData(exportParams);
+            }
         }
 
         return groupDataMap;
@@ -103,8 +108,17 @@ public class ReportSumServiceImp implements ReportSumService {
 
     @Override
     public List<ReportFileLog> getSumJobFileList(String jobId){
+        return getJobFileList(jobId,2);
+    }
+
+    @Override
+    public List<ReportFileLog> getSumJobFldFileList(String jobId){
+        return getJobFileList(jobId,4);
+    }
+
+    private List<ReportFileLog> getJobFileList(String jobId,Integer logType){
         BigInteger userId = WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id();
-        List<ReportFileLog> sumFileList = reportSumDao.getSumJobFileList(jobId,userId);
+        List<ReportFileLog> sumFileList = reportSumDao.getSumJobFileList(jobId,userId,logType);
         return sumFileList;
     }
 
@@ -179,10 +193,23 @@ public class ReportSumServiceImp implements ReportSumService {
     }
 
     @Override
+    public void exportJobFldsData(ExportParams exportParams){
+        ReportFileLog reportFileLog = recordFileService.recordFileCreateLog(
+                exportParams.getReport_id(), exportParams.getJobConfig().getJob_id().toString(),
+                WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id(), 4);
+
+        this.threadRunner(exportParams,reportFileLog);
+    }
+
+    @Override
     public void exportRecordFldsData(ExportParams exportParams) {
         ReportFileLog reportFileLog = recordFileService.recordFileCreateLog(
                 exportParams.getReport_id(), exportParams.getJobConfig().getJob_id().toString(), WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id(), 1);
 
+        this.threadRunner(exportParams,reportFileLog);
+    }
+
+    private void threadRunner(ExportParams exportParams, ReportFileLog reportFileLog){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -197,7 +224,7 @@ public class ReportSumServiceImp implements ReportSumService {
                         jobUnitConfigMapTmp.put(jobUnitConfig.getJob_unit_id(),jobUnitConfig);
                     }
 
-                    ReportJobInfo reportDataInfo = recordProcessService.getReportJobInfo(reportId);
+                    ReportJobInfo reportDataInfo = Strings.isNullOrEmpty(reportId)?null:recordProcessService.getReportJobInfo(reportId);
                     HSSFWorkbook wb = new HSSFWorkbook();
                     for (JobUnitConfig exportUnit : exportUnits) {
                         Integer exportUnitId = exportUnit.getJob_unit_id();
@@ -206,8 +233,8 @@ public class ReportSumServiceImp implements ReportSumService {
                             continue;
                         }
 
-                        List<ReportJobData> reportDatas = recordProcessService.getFldReportDatas(jobId.toString(), reportId, exportUnitId.toString());
-
+//                        List<ReportJobData> reportDatas = recordProcessService.getFldReportDatas(jobId.toString(), reportId, exportUnitId.toString());
+                        List<ReportJobData> reportDatas = recordProcessService.getUnitDatas(jobId.toString(),Strings.emptyToNull(reportId),exportUnitId.toString());
                         List<ReportFldConfig> exportFlds = exportUnit.getUnitFlds();
                         if(exportFlds!=null&&exportFlds.size()>0){
                             List<Integer> exportFldsIds = new ArrayList<>();
@@ -238,11 +265,17 @@ public class ReportSumServiceImp implements ReportSumService {
                             //生成标题
                             writeExcelTitle(exportUnitFldConfigs,unitSheet);
                             //按行分组数据
-                            Map<Integer, Map<Integer, String>> reportDatasMap = groupRowDatas(reportDatas);
+//                            Map<Integer, Map<Integer, String>> reportDatasMap = groupRowDatas(reportDatas);
+                            Map<Integer, Map<Integer, Map<Integer, String>>> reportDatasMap = groupReportRowsDatas(reportDatas);
                             //获取数据字典的字典数据
                             Map<Integer, Map<String, String>> fldDictMap = getFldDicts(exportUnitFldConfigs);
                             //生成内容
-                            writeExcelValues(reportDatasMap,exportUnitFldConfigs,fldDictMap ,unitSheet,null);
+                            Integer rowIndex = 1;
+                            for (Integer exportReportId : reportDatasMap.keySet()) {
+                                Map<Integer, Map<Integer, String>> reportRowDatas = reportDatasMap.get(exportReportId);
+                                writeExcelValues(reportRowDatas, exportUnitFldConfigs, fldDictMap, unitSheet, rowIndex);
+                                rowIndex = rowIndex + reportRowDatas.size();
+                            }
 
                         }
                     }
@@ -253,18 +286,21 @@ public class ReportSumServiceImp implements ReportSumService {
                         String nowDate = dateFormat.format(new Date());
                         String filePath = createFilePath(jobConfig.getJob_name());
 
-                        String fullFileName = new StringBuilder()
+                        StringBuilder fullFileNamesb = new StringBuilder()
                                 .append(filePath)
                                 .append(jobConfig.getJob_name())
-                                .append("-")
-                                .append(reportDataInfo.getRecord_origin_name())
-                                .append("-")
-                                .append(nowDate)
+                                .append("-");
+                        if(reportDataInfo!=null){
+                            fullFileNamesb.append(reportDataInfo.getRecord_origin_name())
+                                    .append("-");
+                        }
+
+                        fullFileNamesb.append(nowDate)
                                 .append(".xls")
                                 .toString();
-                        fout = new FileOutputStream(fullFileName);
+                        fout = new FileOutputStream(fullFileNamesb.toString());
                         wb.write(fout);
-                        recordFileService.updateFileLogStatus(reportFileLog.getLog_id(),ReportFileLogStatus.DONE,fullFileName,null);
+                        recordFileService.updateFileLogStatus(reportFileLog.getLog_id(),ReportFileLogStatus.DONE,fullFileNamesb.toString(),null);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -286,8 +322,6 @@ public class ReportSumServiceImp implements ReportSumService {
                 }
             }
         },"CreateExportFile").start();
-
-
 
     }
 
@@ -334,7 +368,9 @@ public class ReportSumServiceImp implements ReportSumService {
                 writeExcelTitle(unitFlds,unitSheet);
                 Map<Integer, Map<Integer, String>> rowDatas = groupRowDatas(reportDatas);
                 Map<Integer, Map<String, String>> fldDicts = getFldDicts(unitFlds);
+
                 writeExcelValues(rowDatas,unitFlds,fldDicts,unitSheet,null);
+
                 FileOutputStream fout = null;
                 try {
                     fout = new FileOutputStream(fullFileName);
@@ -376,6 +412,29 @@ public class ReportSumServiceImp implements ReportSumService {
             logger.debug("写入行:{},列:{},值--{}",0,cellCount,fldNameSb.toString());
 
         }
+    }
+
+    //ReportId:ColumId-->ReportDataValue
+    private Map<Integer,Map<Integer, Map<Integer, String>>> groupReportRowsDatas(List<ReportJobData> reportDatas){
+        Map<Integer,Map<Integer, Map<Integer, String>>>  reportDatasMap = new LinkedHashMap<>();
+        for (ReportJobData reportData : reportDatas) {
+            if(!DataRecordUtil.isSuperUser()){
+                if(reportData.getData_status()== ReportFldStatus.NORMAL.getValueInteger()){
+                    continue;
+                }
+            }
+
+            Integer reportId = reportData.getReport_id();
+            Integer columId = reportData.getColum_id();
+            if(!reportDatasMap.containsKey(reportId)){
+                reportDatasMap.put(reportId,new LinkedHashMap<>());
+            }
+            if(!reportDatasMap.get(reportId).containsKey(columId)){
+                reportDatasMap.get(reportId).put(columId,new LinkedHashMap<>());
+            }
+            reportDatasMap.get(reportId).get(columId).put(reportData.getFld_id(),reportData.getRecord_data());
+        }
+        return reportDatasMap;
     }
 
     private Map<Integer, Map<Integer, String>> groupRowDatas(List<ReportJobData> reportDatas){

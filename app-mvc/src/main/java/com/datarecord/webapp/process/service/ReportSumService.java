@@ -10,6 +10,8 @@ import java.util.Map;
 public interface ReportSumService {
     Map<Integer, List<ReportJobData>> recordDataByFlds(ExportParams exportParams);
 
+    void exportJobFldsData(ExportParams exportParams);
+
     void exportRecordFldsData(ExportParams exportParams);
 
     String exportGroup(String reportId,String jobId, String groupId);
@@ -17,6 +19,8 @@ public interface ReportSumService {
     ReportFileLog getReportFile(String logId);
 
     List<ReportFileLog> getSumJobFileList(String jobId);
+
+    List<ReportFileLog> getSumJobFldFileList(String jobId);
 
     void sumJobFiles(String jobId);
 }

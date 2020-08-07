@@ -19,6 +19,8 @@ public interface IReportSumDao {
             "comment," +
             "file_path," +
             "log_user " +
-            "from rcd_reportfile_log where job_id = #{jobId} and log_user = #{userId} and log_type=2")
-    List<ReportFileLog> getSumJobFileList(@Param("jobId") String jobId, @Param("userId") BigInteger userId);
+            "from rcd_reportfile_log where job_id = #{jobId} and log_user = #{userId} and log_type=#{logType}")
+    List<ReportFileLog> getSumJobFileList(@Param("jobId") String jobId,
+                                          @Param("userId") BigInteger userId,
+                                          @Param("logType") Integer logType);
 }

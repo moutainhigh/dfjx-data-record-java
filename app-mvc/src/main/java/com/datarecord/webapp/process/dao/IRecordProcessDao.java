@@ -301,8 +301,15 @@ public interface IRecordProcessDao {
             " values (#{job_id},#{group_id},#{group_name},#{job_make_date})")
     void logUserGroup(JobPersonGroupLog jobPersonGroupLog);
 
-    @Select("select id,report_id,unit_id,colum_id,fld_id,record_data from rcd_report_data_job${jobId} " +
-            "where report_id =  #{report_id} and unit_id = #{unit_id}")
+    @Select("<script>" +
+            "select " +
+            "id,report_id,unit_id,colum_id,fld_id,record_data,data_status " +
+            " from rcd_report_data_job${job_id} " +
+            "where  unit_id = #{unit_id}" +
+            "<if test='report_id != null'>" +
+            " and report_id =  #{report_id} " +
+            "</if>" +
+            "</script>")
     List<ReportJobData> getUnitDatas(@Param("job_id") String job_id,@Param("report_id") String report_id,@Param("unit_id") String unit_id);
 
     @Select("select distinct colum_id from rcd_report_data_job${job_id} " +
@@ -423,13 +430,15 @@ public interface IRecordProcessDao {
     @Select("select ")
     String getFldReportData(Integer job_id, String reportId, String unitId, String columId, String fldId);
 
-    @Select("<script>" +
-            "select count(distinct colum_id) from rcd_report_data_job${jobId} where unit_id = #{unitId}" +
-            "<if test='reportId!=null'>" +
-            " and report_id = #{reportId} " +
-            "</if>" +
-            "</script>")
+    @Select("select count(distinct colum_id) from rcd_report_data_job${jobId} where unit_id = #{unitId}" +
+            " and report_id = #{reportId} " )
     Integer checkReportDataCount(@Param("jobId") String jobId,@Param("reportId")  String reportId,@Param("unitId")  String groupId);
+
+    @Select("<script>" +
+            " select count(distinct report_id,colum_id) as cnt from rcd_report_data_job${jobId} where unit_id = #{unitId} " +
+            "</script>")
+    Integer checkJobDataCount(@Param("jobId") String jobId,@Param("unitId")  String groupId);
+
 
     @Update("<script>update rcd_report_data_job${jobId} set colum_id=(colum_id-${size}) where report_id = #{reportId} " +
             "and unit_id = #{jobUnitId} and colum_id &gt; #{maxUpdateColumId} </script>")
@@ -448,7 +457,7 @@ public interface IRecordProcessDao {
             "tmp1.record_data," +
             "tmp1.data_status " +
             " from rcd_report_data_job${jobId} tmp1, " +
-            " (select colum_id,report_id from rcd_report_data_job${jobId} " +
+            " (select colum_id,report_id,unit_id from rcd_report_data_job${jobId} " +
             "where unit_id =#{unitId} " +
             "<if test='reportFldStatus!=null and reportFldStatus.size()>0'> " +
             " and data_status in " +
@@ -456,7 +465,8 @@ public interface IRecordProcessDao {
             " #{item} " +
             "</foreach>" +
             "</if>" +
-            " group by colum_id,report_id order by colum_id limit #{pageNumber} ,#{eachPageSize}) tmp2 where tmp1.colum_id = tmp2.colum_id"+
+            " group by colum_id,report_id order by colum_id,unit_id,report_id limit #{pageNumber} ,#{eachPageSize}) tmp2 where tmp1.report_id=tmp2.report_id " +
+            " and tmp1.unit_id = tmp2.unit_id and tmp1.colum_id = tmp2.colum_id"+
             "</script>")
     List<ReportJobData> pageJobReportDatas(@Param("jobId") String jobId,
                                            @Param("unitId") String unitId,

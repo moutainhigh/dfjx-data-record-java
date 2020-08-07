@@ -104,7 +104,7 @@ public class RecordProcessFlowServiceImp implements RecordProcessFlowService {
 
     @Override
     public PageResult pageJobUnitDatas(String jobId, String unitId, String currPage, String pageSize) {
-        Integer dataCount = recordProcessDao.checkReportDataCount(jobId, null, unitId);
+        Integer dataCount = recordProcessDao.checkJobDataCount(jobId, unitId);
         Integer totalPageSize = 1;
         Integer pageSizeInt = new Integer(pageSize);
         if(dataCount>0){

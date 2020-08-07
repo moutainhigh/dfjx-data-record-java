@@ -43,6 +43,16 @@ public class ReportSumController {
         return successResult;
     }
 
+    @RequestMapping("jobDataByFlds")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult jobDataByFlds(@RequestBody ExportParams exportParams){
+        Map<Integer, List<ReportJobData>> groupDatas = reportSumService.recordDataByFlds(exportParams);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "数据获取完毕", null, groupDatas);
+        return successResult;
+    }
+
     @RequestMapping("exportGroup")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")
@@ -61,6 +71,15 @@ public class ReportSumController {
         return successResult;
     }
 
+    @RequestMapping("createJobFile")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult createJobFile(@RequestBody ExportParams exportParams){
+        reportSumService.exportJobFldsData(exportParams);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "已经开始生成文件,请稍后下载", null, "已经开始生成文件,请稍后下载");
+        return successResult;
+    }
 
     @RequestMapping("downLoadReportFile")
     @ResponseBody
@@ -101,4 +120,13 @@ public class ReportSumController {
         return successResult;
     }
 
+    @RequestMapping("getJobFldFileList")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public JsonResult getJobFldFileList(String jobId){
+        List<ReportFileLog> fileList = reportSumService.getSumJobFldFileList(jobId);
+        JsonResult successResult = JsonSupport.makeJsonpResult(
+                JsonResult.RESULT.SUCCESS, "获取成功", null, fileList);
+        return successResult;
+    }
 }
