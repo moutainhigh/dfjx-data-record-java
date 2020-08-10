@@ -53,6 +53,14 @@ public class ReportSumController {
         return successResult;
     }
 
+    @RequestMapping("exportSingleReport")
+    @ResponseBody
+    @CrossOrigin(allowCredentials = "true")
+    public void exportSingleReport(String reportId,HttpServletResponse response) throws IOException {
+        String filePath = reportSumService.exportSigleReportData(reportId);
+        HttpServletSupport.getInstance().exportFile(filePath,response);
+    }
+
     @RequestMapping("exportGroup")
     @ResponseBody
     @CrossOrigin(allowCredentials = "true")

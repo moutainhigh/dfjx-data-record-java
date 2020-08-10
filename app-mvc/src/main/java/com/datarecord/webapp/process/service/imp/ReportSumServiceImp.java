@@ -52,6 +52,13 @@ public class ReportSumServiceImp implements ReportSumService {
     @Autowired
     private RecordFileService recordFileService;
 
+    private final Integer FILE_REPORT_EACH_GROUP = 0;
+    private final Integer FILE_REPORT_SELECT_FLDS = 1;
+    private final Integer FILE_JOB_ALL_REPORT = 2;
+    private final Integer FILE_USER_UPLOAD = 3;
+    private final Integer FILE_JOB_SELECT_FLDS = 4;
+    private final Integer FILE_REPORT_SINGLE = 5;
+
     @Override
     public Map<Integer,List<ReportJobData>> recordDataByFlds(ExportParams exportParams){
         JobConfig jobConfigParams = exportParams.getJobConfig();
@@ -126,7 +133,7 @@ public class ReportSumServiceImp implements ReportSumService {
     public void sumJobFiles(String jobId) {
         BigInteger userId = WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id();
 //        BigInteger userId = new BigInteger("1");
-        ReportFileLog jobFileLog = recordFileService.recordFileCreateLog(null, jobId, userId, 2);
+        ReportFileLog jobFileLog = recordFileService.recordFileCreateLog(null, jobId, userId, FILE_JOB_ALL_REPORT);
 
         new Thread(() -> {
             String fileFullPath = null;
@@ -193,10 +200,23 @@ public class ReportSumServiceImp implements ReportSumService {
     }
 
     @Override
+    public String exportSigleReportData(String reportId){
+        JobConfig jobConfig = recordProcessService.getJobConfigByReportId(reportId);
+        ReportFileLog reportFileLog = recordFileService.recordFileCreateLog(
+                reportId, jobConfig.getJob_id().toString(),
+                WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id(), FILE_REPORT_SINGLE);
+        ExportParams exportParams = new ExportParams();
+        exportParams.setNeedExport(true);
+        exportParams.setReport_id(reportId);
+        exportParams.setJobConfig(jobConfig);
+        return this.doCreateFile(exportParams,reportFileLog);
+    }
+
+    @Override
     public void exportJobFldsData(ExportParams exportParams){
         ReportFileLog reportFileLog = recordFileService.recordFileCreateLog(
                 exportParams.getReport_id(), exportParams.getJobConfig().getJob_id().toString(),
-                WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id(), 4);
+                WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id(), FILE_JOB_SELECT_FLDS);
 
         this.threadRunner(exportParams,reportFileLog);
     }
@@ -204,7 +224,8 @@ public class ReportSumServiceImp implements ReportSumService {
     @Override
     public void exportRecordFldsData(ExportParams exportParams) {
         ReportFileLog reportFileLog = recordFileService.recordFileCreateLog(
-                exportParams.getReport_id(), exportParams.getJobConfig().getJob_id().toString(), WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id(), 1);
+                exportParams.getReport_id(), exportParams.getJobConfig().getJob_id().toString(),
+                WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id(), FILE_REPORT_SELECT_FLDS);
 
         this.threadRunner(exportParams,reportFileLog);
     }
@@ -213,122 +234,129 @@ public class ReportSumServiceImp implements ReportSumService {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<JobUnitConfig> exportUnits = exportParams.getJobConfig().getJobUnits();
-                if(exportUnits!=null&&exportUnits.size()>0){
-                    String reportId = exportParams.getReport_id();
-                    Integer jobId = exportParams.getJobConfig().getJob_id();
-                    JobConfig jobConfig = recordProcessService.getJobConfigByJobId(jobId.toString());
-                    List<JobUnitConfig> jobUnitConfigs = jobConfig.getJobUnits();
-                    Map<Integer,JobUnitConfig> jobUnitConfigMapTmp = new HashMap<>();
-                    for (JobUnitConfig jobUnitConfig : jobUnitConfigs) {
-                        jobUnitConfigMapTmp.put(jobUnitConfig.getJob_unit_id(),jobUnitConfig);
-                    }
-
-                    ReportJobInfo reportDataInfo = Strings.isNullOrEmpty(reportId)?null:recordProcessService.getReportJobInfo(reportId);
-                    HSSFWorkbook wb = new HSSFWorkbook();
-                    for (JobUnitConfig exportUnit : exportUnits) {
-                        Integer exportUnitId = exportUnit.getJob_unit_id();
-                        if(exportUnitId==null){
-                            logger.error("接收到空的组");
-                            continue;
-                        }
-
-//                        List<ReportJobData> reportDatas = recordProcessService.getFldReportDatas(jobId.toString(), reportId, exportUnitId.toString());
-                        List<ReportJobData> reportDatas = recordProcessService.getUnitDatas(jobId.toString(),Strings.emptyToNull(reportId),exportUnitId.toString());
-                        List<ReportFldConfig> exportFlds = exportUnit.getUnitFlds();
-                        if(exportFlds!=null&&exportFlds.size()>0){
-                            List<Integer> exportFldsIds = new ArrayList<>();
-                            for (ReportFldConfig exportFld : exportFlds) {
-                                if(exportFld!=null&&exportFld.getFld_id()!=null){
-                                    exportFldsIds.add(exportFld.getFld_id());
-                                }else
-                                    logger.error("有空的指标项");
-                            }
-                            if(!jobUnitConfigMapTmp.containsKey(exportUnit.getJob_unit_id())){
-                                logger.error("未找到ID为:{}的报送组",exportUnit.getJob_unit_id());
-                                continue;
-                            }
-                            JobUnitConfig exportUnitConfig = jobUnitConfigMapTmp.get(exportUnit.getJob_unit_id());
-
-                            HSSFSheet unitSheet = wb.createSheet(exportUnitConfig.getJob_unit_name());
-                            //按行 分组
-
-                            List<ReportFldConfig> unitFldConfigs = exportUnitConfig.getUnitFlds();
-                            List<ReportFldConfig> exportUnitFldConfigs = new ArrayList<>();
-
-                            for (ReportFldConfig unitFldConfig : unitFldConfigs) {
-                                if(exportFldsIds.contains(unitFldConfig.getFld_id())){
-                                    exportUnitFldConfigs.add(unitFldConfig);
-                                }
-                            }
-
-                            //生成标题
-                            writeExcelTitle(exportUnitFldConfigs,unitSheet);
-                            //按行分组数据
-//                            Map<Integer, Map<Integer, String>> reportDatasMap = groupRowDatas(reportDatas);
-                            Map<Integer, Map<Integer, Map<Integer, String>>> reportDatasMap = groupReportRowsDatas(reportDatas);
-                            //获取数据字典的字典数据
-                            Map<Integer, Map<String, String>> fldDictMap = getFldDicts(exportUnitFldConfigs);
-                            //生成内容
-                            Integer rowIndex = 1;
-                            for (Integer exportReportId : reportDatasMap.keySet()) {
-                                Map<Integer, Map<Integer, String>> reportRowDatas = reportDatasMap.get(exportReportId);
-                                writeExcelValues(reportRowDatas, exportUnitFldConfigs, fldDictMap, unitSheet, rowIndex);
-                                rowIndex = rowIndex + reportRowDatas.size();
-                            }
-
-                        }
-                    }
-
-                    FileOutputStream fout = null;
-                    try {
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-                        String nowDate = dateFormat.format(new Date());
-                        String filePath = createFilePath(jobConfig.getJob_name());
-
-                        StringBuilder fullFileNamesb = new StringBuilder()
-                                .append(filePath)
-                                .append(jobConfig.getJob_name())
-                                .append("-");
-                        if(reportDataInfo!=null){
-                            fullFileNamesb.append(reportDataInfo.getRecord_origin_name())
-                                    .append("-");
-                        }
-
-                        fullFileNamesb.append(nowDate)
-                                .append(".xls")
-                                .toString();
-                        fout = new FileOutputStream(fullFileNamesb.toString());
-                        wb.write(fout);
-                        recordFileService.updateFileLogStatus(reportFileLog.getLog_id(),ReportFileLogStatus.DONE,fullFileNamesb.toString(),null);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        recordFileService.updateFileLogStatus(reportFileLog.getLog_id(),ReportFileLogStatus.ERROR,null,e.getMessage());
-
-                    }  finally {
-                        try {
-                            fout.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                }else{//没有组
-                    reportFileLog.setLog_status(ReportFileLogStatus.ERROR.getValue());
-                    reportFileLog.setEnd_time(new Date());
-                    reportFileLog.setComment("没有选择组数据");
-                    recordFileDao.updateRecordFileLog(reportFileLog);
-                }
+                doCreateFile(exportParams,reportFileLog);
             }
         },"CreateExportFile").start();
 
     }
 
+    private String doCreateFile(ExportParams exportParams, ReportFileLog reportFileLog){
+        List<JobUnitConfig> exportUnits = exportParams.getJobConfig().getJobUnits();
+        if(exportUnits!=null&&exportUnits.size()>0){
+            String reportId = exportParams.getReport_id();
+            Integer jobId = exportParams.getJobConfig().getJob_id();
+            JobConfig jobConfig = recordProcessService.getJobConfigByJobId(jobId.toString());
+            List<JobUnitConfig> jobUnitConfigs = jobConfig.getJobUnits();
+            Map<Integer,JobUnitConfig> jobUnitConfigMapTmp = new HashMap<>();
+            for (JobUnitConfig jobUnitConfig : jobUnitConfigs) {
+                jobUnitConfigMapTmp.put(jobUnitConfig.getJob_unit_id(),jobUnitConfig);
+            }
+
+            ReportJobInfo reportDataInfo = Strings.isNullOrEmpty(reportId)?null:recordProcessService.getReportJobInfo(reportId);
+            HSSFWorkbook wb = new HSSFWorkbook();
+            for (JobUnitConfig exportUnit : exportUnits) {
+                Integer exportUnitId = exportUnit.getJob_unit_id();
+                if(exportUnitId==null){
+                    logger.error("接收到空的组");
+                    continue;
+                }
+
+//                        List<ReportJobData> reportDatas = recordProcessService.getFldReportDatas(jobId.toString(), reportId, exportUnitId.toString());
+                List<ReportJobData> reportDatas = recordProcessService.getUnitDatas(jobId.toString(),Strings.emptyToNull(reportId),exportUnitId.toString());
+                List<ReportFldConfig> exportFlds = exportUnit.getUnitFlds();
+                if(exportFlds!=null&&exportFlds.size()>0){
+                    List<Integer> exportFldsIds = new ArrayList<>();
+                    for (ReportFldConfig exportFld : exportFlds) {
+                        if(exportFld!=null&&exportFld.getFld_id()!=null){
+                            exportFldsIds.add(exportFld.getFld_id());
+                        }else
+                            logger.error("有空的指标项");
+                    }
+                    if(!jobUnitConfigMapTmp.containsKey(exportUnit.getJob_unit_id())){
+                        logger.error("未找到ID为:{}的报送组",exportUnit.getJob_unit_id());
+                        continue;
+                    }
+                    JobUnitConfig exportUnitConfig = jobUnitConfigMapTmp.get(exportUnit.getJob_unit_id());
+
+                    HSSFSheet unitSheet = wb.createSheet(exportUnitConfig.getJob_unit_name());
+                    //按行 分组
+
+                    List<ReportFldConfig> unitFldConfigs = exportUnitConfig.getUnitFlds();
+                    List<ReportFldConfig> exportUnitFldConfigs = new ArrayList<>();
+
+                    for (ReportFldConfig unitFldConfig : unitFldConfigs) {
+                        if(exportFldsIds.contains(unitFldConfig.getFld_id())){
+                            exportUnitFldConfigs.add(unitFldConfig);
+                        }
+                    }
+
+                    //生成标题
+                    writeExcelTitle(exportUnitFldConfigs,unitSheet);
+                    //按行分组数据
+//                            Map<Integer, Map<Integer, String>> reportDatasMap = groupRowDatas(reportDatas);
+                    Map<Integer, Map<Integer, Map<Integer, String>>> reportDatasMap = groupReportRowsDatas(reportDatas);
+                    //获取数据字典的字典数据
+                    Map<Integer, Map<String, String>> fldDictMap = getFldDicts(exportUnitFldConfigs);
+                    //生成内容
+                    Integer rowIndex = 1;
+                    for (Integer exportReportId : reportDatasMap.keySet()) {
+                        Map<Integer, Map<Integer, String>> reportRowDatas = reportDatasMap.get(exportReportId);
+                        writeExcelValues(reportRowDatas, exportUnitFldConfigs, fldDictMap, unitSheet, rowIndex);
+                        rowIndex = rowIndex + reportRowDatas.size();
+                    }
+
+                }
+            }
+
+            FileOutputStream fout = null;
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+                String nowDate = dateFormat.format(new Date());
+                String filePath = createFilePath(jobConfig.getJob_name());
+
+                StringBuilder fullFileNamesb = new StringBuilder()
+                        .append(filePath)
+                        .append(jobConfig.getJob_name())
+                        .append("-");
+                if(reportDataInfo!=null){
+                    fullFileNamesb.append(reportDataInfo.getRecord_origin_name())
+                            .append("-");
+                }
+
+                fullFileNamesb.append(nowDate)
+                        .append(".xls")
+                        .toString();
+                fout = new FileOutputStream(fullFileNamesb.toString());
+                wb.write(fout);
+                recordFileService.updateFileLogStatus(reportFileLog.getLog_id(),ReportFileLogStatus.DONE,fullFileNamesb.toString(),null);
+                return fullFileNamesb.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+                recordFileService.updateFileLogStatus(reportFileLog.getLog_id(),ReportFileLogStatus.ERROR,null,e.getMessage());
+
+            }  finally {
+                try {
+                    fout.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }else{//没有组
+            reportFileLog.setLog_status(ReportFileLogStatus.ERROR.getValue());
+            reportFileLog.setEnd_time(new Date());
+            reportFileLog.setComment("没有选择组数据");
+            recordFileDao.updateRecordFileLog(reportFileLog);
+        }
+
+        return null;
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String exportGroup(String reportId, String jobId,String groupId) {
-        ReportFileLog fileLog = recordFileService.recordFileCreateLog(reportId, jobId, WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id(), 0);
+        ReportFileLog fileLog = recordFileService.recordFileCreateLog(reportId, jobId,
+                WorkbenchShiroUtils.checkUserFromShiroContext().getUser_id(), FILE_REPORT_EACH_GROUP);
 //        ReportFileLog fileLog = this.recordFileCreateLog(reportId, jobId, new BigInteger("1"), 0);
 
         JobConfig jobConfig = recordProcessService.getJobConfigByJobId(jobId);

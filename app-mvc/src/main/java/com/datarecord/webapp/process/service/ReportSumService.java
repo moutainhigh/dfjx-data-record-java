@@ -10,6 +10,8 @@ import java.util.Map;
 public interface ReportSumService {
     Map<Integer, List<ReportJobData>> recordDataByFlds(ExportParams exportParams);
 
+    String exportSigleReportData(String reportId);
+
     void exportJobFldsData(ExportParams exportParams);
 
     void exportRecordFldsData(ExportParams exportParams);
