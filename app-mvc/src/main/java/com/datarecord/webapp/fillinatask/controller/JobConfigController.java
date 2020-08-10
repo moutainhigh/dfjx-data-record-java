@@ -8,6 +8,7 @@ import com.datarecord.webapp.fillinatask.service.JobConfigService;
 import com.datarecord.webapp.process.entity.JobConfig;
 import com.datarecord.webapp.sys.origin.entity.Origin;
 import com.datarecord.webapp.sys.origin.service.OriginService;
+import com.google.common.base.Strings;
 import com.webapp.support.json.JsonSupport;
 import com.webapp.support.jsonp.JsonResult;
 import com.webapp.support.page.PageResult;
@@ -144,7 +145,7 @@ public class JobConfigController {
 
 
     //新增任务
-    @RequestMapping("/insertrcdjobconfig")
+    @RequestMapping("/newJobConfig")
     @ResponseBody
     @CrossOrigin(allowCredentials="true")
     public String saveJobConfig(@RequestBody JobConfig jobConfig){
@@ -161,6 +162,23 @@ public class JobConfigController {
             return  JsonSupport.makeJsonResultStr(JsonResult.RESULT.FAILD, "新增填报任务失败", null, "error");
         }
         return JsonSupport.makeJsonResultStr(JsonResult.RESULT.SUCCESS, "新增填报任务成功", null, "success");
+    }
+
+    @RequestMapping("/proxySaveJobConfig")
+    @ResponseBody
+    @CrossOrigin(allowCredentials="true")
+    public JsonResult proxySaveJobConfig(@RequestBody JobConfig jobConfig){
+        BigInteger job_creater = jobConfig.getJob_creater();
+        if(jobConfig.getJob_creater()!=null&& !Strings.isNullOrEmpty(jobConfig.getJob_creater().toString())){
+            Origin userOrigin = originService.getOriginByUser(job_creater);
+            BigInteger job_creater_origin = userOrigin.getOrigin_id();
+            jobConfig.setJob_creater_origin(job_creater_origin);
+            jobConfigService.saveJobConfig(jobConfig);
+        }else{
+            return JsonSupport.makeJsonpResult(JsonResult.RESULT.FAILD, "被代理用户为空", null, JsonResult.RESULT.FAILD);
+
+        }
+        return JsonSupport.makeJsonpResult(JsonResult.RESULT.SUCCESS, "代理新增填报任务成功", null, "success");
     }
 
 
