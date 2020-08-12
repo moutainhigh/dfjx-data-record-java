@@ -154,7 +154,9 @@ public class ReportSumServiceImp implements ReportSumService {
                         for (ReportJobInfo jobInfo : jobInfos) {
                             List<ReportJobData> reportDatas = recordProcessService.getFldReportDatas(jobId, jobInfo.getReport_id().toString(), jobUnitId.toString());
                             //按行分组数据
-                            Map<Integer, Map<Integer, String>> reportDatasMap = groupRowDatas(reportDatas);
+                            List<ReportFldStatus> filterStatus = new ArrayList();
+                            filterStatus.add(ReportFldStatus.NORMAL);
+                            Map<Integer, Map<Integer, String>> reportDatasMap = groupRowDatas(reportDatas,filterStatus);
                             //获取数据字典的字典数据
                             Map<Integer, Map<String, String>> fldDictMap = getFldDicts(exportUnitFldConfigs);
                             //生成内容
@@ -394,7 +396,7 @@ public class ReportSumServiceImp implements ReportSumService {
                         .append(".xls")
                         .toString();
                 writeExcelTitle(unitFlds,unitSheet);
-                Map<Integer, Map<Integer, String>> rowDatas = groupRowDatas(reportDatas);
+                Map<Integer, Map<Integer, String>> rowDatas = groupRowDatas(reportDatas,null);
                 Map<Integer, Map<String, String>> fldDicts = getFldDicts(unitFlds);
 
                 writeExcelValues(rowDatas,unitFlds,fldDicts,unitSheet,null);
@@ -465,15 +467,16 @@ public class ReportSumServiceImp implements ReportSumService {
         return reportDatasMap;
     }
 
-    private Map<Integer, Map<Integer, String>> groupRowDatas(List<ReportJobData> reportDatas){
+    private Map<Integer, Map<Integer, String>> groupRowDatas(List<ReportJobData> reportDatas,List<ReportFldStatus> filterStatus){
         Map<Integer,Map<Integer,String>>  reportDatasMap = new LinkedHashMap<>();
         for (ReportJobData reportData : reportDatas) {
-            if(!DataRecordUtil.isSuperUser()){
-                if(reportData.getData_status()== ReportFldStatus.NORMAL.getValueInteger()){
-                    continue;
+            if(filterStatus!=null&&filterStatus.size()>0){
+                if(!DataRecordUtil.isSuperUser()){
+                    if(reportData.getData_status()== ReportFldStatus.NORMAL.getValueInteger()){
+                        continue;
+                    }
                 }
             }
-
 
             Integer columId = reportData.getColum_id();
             if(!reportDatasMap.containsKey(columId)){

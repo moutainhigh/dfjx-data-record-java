@@ -60,7 +60,9 @@ public class UserServiceImp implements UserService {
 
         Page<User> allUser = userServiceDao.listUsersForPage(
                 currPage,pageSize,
-                String.valueOf(user.getUser_id()),user.getUser_name(),
+                user.getUser_id()!=null?user.getUser_id().toString():null,
+                user.getUser_name(),
+                user.getUser_name_cn(),
                 user.getUser_type(),originId);
 
         return allUser;
@@ -70,7 +72,7 @@ public class UserServiceImp implements UserService {
 
         Page<User> allUser = userServiceDao.pageUsers(
                 currPage,pageSize,
-                String.valueOf(user.getUser_id()),user.getUser_name(),user.getUser_type());
+                user.getUser_id()!=null?user.getUser_id().toString():null,user.getUser_name(),user.getUser_type());
 
         return allUser;
     }

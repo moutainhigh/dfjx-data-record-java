@@ -57,9 +57,10 @@ public interface IUserServiceDao {
 
     @Select("<script>"+query_user_columns + ",so.origin_id,so.origin_name FROM "+TABLE_NAME +
             "  , user_origin_assign uoa,sys_origin so where u.user_name like concat('%',#{user_name},'%')"+
-            "  <if test=\"user_id !=null \"> and u.user_id = #{user_id} </if> " +
-            "  <if test=\"user_type != null\">   and u.user_type=#{user_type}  </if> " +
-            "  <if test=\"user_type == null\">   and (u.user_type=1 or u.user_type=0)  </if> " +
+            "  <if test='user_id !=null'> and u.user_id = #{user_id} </if> " +
+            "  <if test='user_name_cn !=null'> and u.user_name_cn like concat('%',#{user_name_cn},'%') </if> " +
+            "  <if test='user_type != null'>   and u.user_type=#{user_type}  </if> " +
+            "  <if test='user_type == null'>   and (u.user_type=1 or u.user_type=0)  </if> " +
             " and u.user_id = uoa.user_id " +
             " and so.origin_id = uoa.origin_id"+
             " and so.origin_id = uoa.origin_id"+
@@ -67,7 +68,10 @@ public interface IUserServiceDao {
             "</script>" )
     @Options(useCache = false)
     Page<User> listUsersForPage(@Param("currPage") int currPage, @Param("pageSize") int pageSize
-            ,@Param("user_id") String user_id,@Param("user_name") String user_name,@Param("user_type")String user_type,@Param("originId") String originId);
+            ,@Param("user_id") String user_id,
+                                @Param("user_name") String user_name,
+                                @Param("user_name_cn") String user_name_cn,
+                                @Param("user_type")String user_type,@Param("originId") String originId);
 
     @Select("<script>"+query_user_columns + " FROM "+TABLE_NAME +
             " where  <if test=\"user_type != null\">    u.user_type=#{user_type}  </if> " +

@@ -171,6 +171,9 @@ public class JobConfigController {
         BigInteger job_creater = jobConfig.getJob_creater();
         if(jobConfig.getJob_creater()!=null&& !Strings.isNullOrEmpty(jobConfig.getJob_creater().toString())){
             Origin userOrigin = originService.getOriginByUser(job_creater);
+            if(userOrigin==null)
+                return JsonSupport.makeJsonpResult(JsonResult.RESULT.FAILD, "被代理用户无所属机构，无法为其代理", null, JsonResult.RESULT.FAILD);
+
             BigInteger job_creater_origin = userOrigin.getOrigin_id();
             jobConfig.setJob_creater_origin(job_creater_origin);
             jobConfigService.saveJobConfig(jobConfig);
