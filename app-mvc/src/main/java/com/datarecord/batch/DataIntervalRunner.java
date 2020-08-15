@@ -97,7 +97,7 @@ public class DataIntervalRunner  {
             RUNNER();
         }, "DataInTervalRunner");
         long remainingTime = DateSupport.getRemainingTime(DateSupport.Beijing_ShangHai_TimeZone());
-        remainingTime = 30000;
+//        remainingTime = 30000;
 
         logger.info("建立任务填报周期监听线程，线程将在{}秒后开始执行，并且在首次执行后，每隔24小时执行一次",
                 remainingTime/1000);
@@ -107,7 +107,8 @@ public class DataIntervalRunner  {
         scheduledExecutor.scheduleAtFixedRate(
                 runnable,
                 remainingTime,
-                60*60*24*1000,
+//                60*60*24*1000,
+                (long) (60*60*(0.5)*1000),
                 TimeUnit.MILLISECONDS);
     }
 
