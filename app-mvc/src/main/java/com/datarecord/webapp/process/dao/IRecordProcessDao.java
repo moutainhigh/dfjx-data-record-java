@@ -231,7 +231,7 @@ public interface IRecordProcessDao {
 
     @Select("select tmp1.id,tmp1.report_id,tmp1.unit_id,tmp1.colum_id,tmp1.fld_id,tmp1.record_data,tmp1.data_status " +
             "from rcd_report_data_job${jobId} tmp1 ," +
-            "(SELECT colum_id FROM rcd_report_data_job${jobId} group by colum_id order by colum_id limit #{pageNumber} ,#{eachPageSize}) tmp2 " +
+            "(SELECT colum_id FROM rcd_report_data_job${jobId} where report_id=#{reportId} group by colum_id order by colum_id limit #{pageNumber} ,#{eachPageSize}) tmp2 " +
             "where tmp1.report_id = #{reportId} and tmp1.unit_id = #{unitId} and tmp1.colum_id = tmp2.colum_id order by tmp1.colum_id,tmp1.fld_id ")
     List<ReportJobData> pageReportDataByUnitId(@Param("jobId") String jobId,
                                               @Param("reportId") String reportId,
