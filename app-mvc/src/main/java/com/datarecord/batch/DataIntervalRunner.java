@@ -107,8 +107,8 @@ public class DataIntervalRunner  {
         scheduledExecutor.scheduleAtFixedRate(
                 runnable,
                 remainingTime,
-//                60*60*24*1000,
-                (long) (60*60*(0.5)*1000),
+                60*60*24*1000,
+//                (long) (60*60*(0.5)*1000),
                 TimeUnit.MILLISECONDS);
     }
 
@@ -131,6 +131,8 @@ public class DataIntervalRunner  {
                     recordProcessService.updateReportStatus(reportId.toString(), ReportStatus.NORMAL);
                     if(jobUnit.getJob_unit_type() == JobUnitType.GRID.value()){
                         Integer maxColumId = recordProcessService.getMaxColumId(jobId.toString(),reportId.toString(),jobUnit.getJob_unit_id().toString());
+                        if(maxColumId==null)
+                            maxColumId = 0;
                         recordMaker.createGridRecordDatas(jobUnit,reportId,maxColumId+1);
                     }
                     if(jobUnit.getJob_unit_type() == JobUnitType.SIMPLE.value()){
